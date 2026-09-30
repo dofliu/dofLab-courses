@@ -13,6 +13,18 @@ courses/engineering-math/
   data/manifest.json             已上線單元清單（唯一資料來源）
   manifest.js                    由 manifest.json 自動產生，供頁面讀取
 tools/add_topic.py               新增／更新單元的工具
+courses/ai-tutorials/
+  index.html                     「AI 使用教學」主題頁
+  claude/                        Claude AI 應用動畫課程（中文／English）
+    index.html                   課程目錄（讀取 course.js）
+    course.js                    由 tools/build_claude_course.py 產生
+    <series>/overview.html, epNN.html   各集動畫
+    src/<單元id>.js, .i18n.js    各集原始碼
+    data/curriculum.json         全部單元與狀態（排程依此製作下一集）
+    data/catalog.json            已上線集數
+    data/PROGRESS.md             進度與執行紀錄
+    _studio/                     動畫引擎（build.py、qa.py、kit-claude.js）
+tools/build_claude_course.py     重建 Claude 課程目錄資料
 ```
 
 ## 新增一個工程數學單元
@@ -27,6 +39,15 @@ python3 tools/add_topic.py --slot <排程序號> --src <單元 HTML 檔>
 ## 新增其他課程
 
 在 `courses/<課程代號>/` 建立新目錄，並在根目錄 `index.html` 的「課程」區塊加一張卡片。
+
+## 新增一集 Claude AI 動畫
+
+```bash
+cd courses/ai-tutorials/claude
+python3 _studio/scripts/build.py src/<單元id>.js --out <series>/epNN.html
+python3 _studio/scripts/qa.py <series>/epNN.html --outdir /tmp/qa --langs zh,en
+cd ../../.. && python3 tools/build_claude_course.py
+```
 
 ## GitHub Pages 設定
 

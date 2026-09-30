@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Claude AI 應用動畫課程</title>
+<meta name="description" content="用動畫學 Claude AI：入門、個人工作、專案開發、課程教學、生活應用與 AI 代理人。中文／English。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../../assets/site.css">
+<style>
+.hero .lang{margin-left:auto}
+.hero .seg{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+.hero .seg button{color:#c5cbf0}
+.hero .seg button[aria-pressed="true"]{background:#4dd0c0;color:#0d1026}
+.series-head{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.series-head .ico{font-size:22px}
+.series-desc{color:var(--muted);margin:0;font-size:15px}
+.unit .sub{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="../../../"><i></i>dofLab courses</a>
+      <span class="org" data-zh="國立勤益科技大學 · 智慧自動化工程系" data-en="NCUT · Dept. of Intelligent Automation Engineering">國立勤益科技大學 · 智慧自動化工程系</span>
+      <div class="seg lang" role="group" aria-label="語言 Language"><button data-lang="zh" aria-pressed="true">中文</button><button data-lang="en" aria-pressed="false">EN</button></div>
+    </div>
+    <div class="hero-body">
+      <nav class="crumb"><a href="../" data-zh="← AI 使用教學" data-en="← AI Tutorials">← AI 使用教學</a></nav>
+      <div class="eyebrow">CLAUDE AI · ANIMATED LESSONS · 中文 / ENGLISH</div>
+      <h1 data-zh="Claude AI 應用動畫課程" data-en="Claude AI in Animation">Claude AI 應用動畫課程</h1>
+      <p class="lead" data-zh="每集約 85 秒的分鏡動畫，從提示詞、檔案與搜尋，到專案開發、課堂教學與 AI 代理人。案例橫跨日常生活、智慧自動化與風能運維。" data-en="Animated lessons of about 85 seconds each, from prompts, files and search to software projects, teaching and AI agents. Examples span daily life, smart automation and wind-farm O&amp;M.">每集約 85 秒的分鏡動畫，從提示詞、檔案與搜尋，到專案開發、課堂教學與 AI 代理人。案例橫跨日常生活、智慧自動化與風能運維。</p>
+      <div class="meter">
+        <div class="meter-top"><span data-zh="已上線" data-en="Published">已上線</span><b id="count">–</b></div>
+        <div class="meter-track"><i id="bar"></i></div>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="wrap" id="series"></main>
+<footer data-zh="© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室" data-en="© Dr. Jui-Hung Liu Lab, Dept. of Intelligent Automation Engineering, NCUT">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script src="course.js"></script>
+<script>
+(function(){
+  var D = window.CLAUDE_COURSE, box = document.getElementById('series');
+  var LANG = 'zh';
+  try{ var q=new URLSearchParams(location.search).get('lang'); var sv=localStorage.getItem('rea-lang');
+    LANG = (q==='en'||q==='zh') ? q : (sv==='en'||sv==='zh') ? sv : ((navigator.language||'').toLowerCase().startsWith('zh') ? 'zh' : 'en'); }catch(e){}
+  function t(o){ return typeof o==='string' ? o : (o[LANG] || o.zh || ''); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function render(){
+    document.documentElement.lang = LANG==='zh' ? 'zh-Hant' : 'en';
+    document.querySelectorAll('[data-zh]').forEach(function(el){ el.textContent = el.dataset[LANG]; });
+    document.querySelectorAll('[data-lang]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.lang===LANG); });
+    document.title = LANG==='zh' ? 'Claude AI 應用動畫課程' : 'Claude AI in Animation';
+    if(!D){ box.innerHTML = '<p class="empty">course.js 載入失敗 / failed to load course.js</p>'; return; }
+    document.getElementById('count').textContent = D.live + ' / ' + D.total;
+    document.getElementById('bar').style.width = (D.live/D.total*100) + '%';
+    box.innerHTML = '';
+    D.catalog.series.forEach(function(s){
+      var live = {}; (s.episodes||[]).forEach(function(e){ live[e.id]=e; }); if(s.overview) live[s.overview.id]=s.overview;
+      var sec = document.createElement('section'); sec.className='sec';
+      sec.innerHTML = '<div class="series-head"><span class="ico" aria-hidden="true">'+(s.icon||'')+'</span><h2>'+esc(t(s.title))+'</h2></div><p class="series-desc">'+esc(t(s.description))+'</p>';
+      var ul = document.createElement('ul'); ul.className='units';
+      D.plan.filter(function(u){ return u.series===s.slug; }).forEach(function(u){
+        var e = live[u.id], li = document.createElement('li');
+        var no = '<span class="no">'+(u.type==='overview' ? (LANG==='zh'?'總覽':'Intro') : String(u.no).padStart(2,'0'))+'</span>';
+        var title = LANG==='zh' ? u.title : (u.title_en || u.title);
+        if(e){
+          li.className='unit';
+          li.innerHTML = no+'<div class="t"><a href="'+e.path+(LANG==='en'?'?lang=en':'')+'">'+esc(t(e.title))+'</a><span class="sub">'+esc(t(e.sub))+'</span></div><span class="state live">'+e.shots+(LANG==='zh'?' 分鏡 · ':' shots · ')+e.dur+(LANG==='zh'?' 秒':' s')+'</span>';
+        } else {
+          li.className='unit soon';
+          li.innerHTML = no+'<div class="t"><span class="name">'+esc(title)+'</span></div><span class="state soon">'+(LANG==='zh'?'製作中':'Coming soon')+'</span>';
+        }
+        ul.appendChild(li);
+      });
+      sec.appendChild(ul); box.appendChild(sec);
+    });
+  }
+  document.querySelectorAll('[data-lang]').forEach(function(b){ b.onclick=function(){ LANG=b.dataset.lang; try{localStorage.setItem('rea-lang',LANG);}catch(e){} render(); }; });
+  render();
+})();
+</script>
+</body>
+</html>

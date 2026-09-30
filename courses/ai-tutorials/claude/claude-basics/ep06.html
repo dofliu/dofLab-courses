@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>06 Artifacts 與可分享成果｜入門基礎</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#e7eeec;
+  --surface:#f6f9f8;
+  --ink:#13232e;
+  --muted:#4f6470;
+  --line:#c5d3d2;
+  --chart:#0e2a3b;
+  --signal:#f2c230;
+  --alert:#e8572a;
+  --sea:#1f7f99;
+  --stepdone:#1f7f99;
+  --sans:"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --cond:"Barlow Condensed","Arial Narrow","Noto Sans TC","PingFang TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#08202d;--surface:#0e2a3b;--ink:#e3ecee;--muted:#93aab4;--line:#1f4254;--stepdone:#58b8d0;--sea:#58b8d0;
+  }
+}
+:root[data-theme="dark"]{--bg:#08202d;--surface:#0e2a3b;--ink:#e3ecee;--muted:#93aab4;--line:#1f4254;--stepdone:#58b8d0;--sea:#58b8d0;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1320px;margin:0 auto;padding:18px clamp(12px,3vw,32px) 48px}
+
+/* ---------- title ---------- */
+.masthead{display:grid;grid-template-columns:auto 1fr;gap:6px 22px;align-items:end;margin:6px 0 16px}
+.masthead .mark{grid-row:span 2;width:58px;height:58px;border-radius:14px;background:var(--chart);display:grid;place-items:center}
+.masthead .mark svg{width:40px;height:40px}
+.masthead h1{margin:0;font-size:clamp(24px,3.4vw,38px);font-weight:900;letter-spacing:.02em;line-height:1.15}
+.masthead p{margin:0;color:var(--muted);font-size:clamp(13px,1.5vw,15px);max-width:62ch}
+
+/* ---------- stage ---------- */
+.stage{position:relative;width:100%;aspect-ratio:16/9;background:var(--chart);border-radius:16px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 18px 40px -24px rgba(8,32,45,.55)}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage:fullscreen{border-radius:0;aspect-ratio:auto;width:100vw;height:100vh;display:grid;place-items:center;background:#051620}
+.stage:fullscreen canvas{position:relative;inset:auto;width:min(100vw,calc(100vh*16/9));height:min(100vh,calc(100vw*9/16))}
+.chapcard{position:absolute;left:clamp(10px,2vw,22px);top:clamp(10px,2vw,20px);display:flex;align-items:stretch;gap:12px;pointer-events:none;opacity:0;transform:translateY(-6px);transition:opacity .5s,transform .5s}
+.chapcard.show{opacity:1;transform:none}
+.chapcard .no{font-family:var(--cond);font-weight:700;font-size:clamp(30px,4.6vw,58px);line-height:.9;color:var(--signal);text-shadow:0 2px 12px rgba(0,0,0,.35)}
+.chapcard .tt{display:flex;flex-direction:column;justify-content:center;padding-left:12px;border-left:3px solid var(--signal)}
+.chapcard b{font-size:clamp(15px,2.1vw,26px);font-weight:900;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.45);line-height:1.2}
+.chapcard i{font-style:normal;font-family:var(--cond);font-weight:500;font-size:clamp(12px,1.35vw,17px);color:rgba(255,255,255,.82);letter-spacing:.02em;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.caption{position:absolute;left:50%;bottom:clamp(8px,1.8vw,20px);transform:translateX(-50%);max-width:min(88%,760px);background:rgba(7,26,37,.78);color:#f2f6f7;border-radius:10px;padding:7px 16px;font-size:clamp(12px,1.5vw,17px);font-weight:500;text-align:center;pointer-events:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:opacity .35s}
+.caption:empty{opacity:0}
+.caption .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--signal);margin-right:8px;vertical-align:middle;transform:translateY(-1px)}
+.scale-note{position:absolute;right:12px;top:10px;font-size:11px;color:rgba(255,255,255,.62);pointer-events:none}
+
+/* ---------- controls ---------- */
+.controls{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);height:40px;min-width:40px;border-radius:10px;display:inline-grid;place-items:center;cursor:pointer;font:inherit;font-size:14px;padding:0 10px}
+.btn:hover{border-color:var(--sea)}
+.btn:focus-visible,.seg button:focus-visible,.chap:focus-visible,.timeline:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+.btn svg{width:18px;height:18px}
+.btn.play{background:var(--chart);color:#fff;border-color:var(--chart);min-width:48px}
+.timeline{position:relative;flex:1 1 320px;height:40px;display:flex;align-items:center;cursor:pointer;touch-action:none;border-radius:8px}
+.tl-track{position:relative;display:flex;width:100%;height:12px;border-radius:3px;overflow:hidden;background:var(--line)}
+.tl-seg{height:100%;border-right:2px solid var(--bg);position:relative}
+.tl-seg:nth-child(odd){background:rgba(19,35,46,.10)}
+.tl-seg:last-child{border-right:0}
+.tl-fill{position:absolute;left:0;top:0;bottom:0;background:var(--chart);pointer-events:none}
+:root[data-theme="dark"] .tl-fill{background:var(--sea)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-fill{background:var(--sea)}}
+.tl-head{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--signal);border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.35);pointer-events:none}
+.time{font-family:var(--cond);font-weight:600;font-size:16px;color:var(--muted);min-width:92px;text-align:right;font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:40px;background:var(--surface)}
+.seg button{appearance:none;border:0;background:transparent;color:var(--muted);font-family:var(--cond);font-weight:600;font-size:15px;padding:0 10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--chart);color:#fff}
+.btn.toggle[aria-pressed="false"]{color:var(--muted)}
+
+/* ---------- info ---------- */
+.info{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;margin-top:22px;align-items:start}
+.info h2{margin:0;font-size:clamp(22px,2.6vw,30px);font-weight:900;line-height:1.25;display:flex;align-items:baseline;gap:12px}
+.info h2 .n{font-family:var(--cond);font-weight:700;color:var(--sea);font-size:1.15em}
+.info .en{margin:2px 0 12px;font-family:var(--cond);font-size:18px;font-weight:500;color:var(--muted)}
+.info .desc{margin:0;font-size:16px;line-height:1.85;max-width:44em}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding:0;list-style:none}
+.chips li{font-size:13px;padding:4px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.steps{list-style:none;margin:0;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;counter-reset:s}
+.steps h3{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--muted)}
+.steps li{position:relative;padding:8px 0 8px 34px;font-size:15px;color:var(--muted);border-top:1px dashed var(--line);counter-increment:s;transition:color .3s}
+.steps li:first-of-type{border-top:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-family:var(--cond);font-weight:700;font-size:13px;color:var(--muted);background:var(--surface)}
+.steps li.done{color:var(--ink)}
+.steps li.done::before{content:"✓";background:var(--stepdone);border-color:var(--stepdone);color:#fff}
+.steps li.now{color:var(--ink);font-weight:700}
+.steps li.now::before{background:var(--signal);border-color:var(--signal);color:#13232e}
+
+/* ---------- chapter index ---------- */
+.chapters{margin-top:28px}
+.chapters h3{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--muted)}
+.chap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.chap{appearance:none;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;cursor:pointer;font:inherit;display:flex;gap:10px;align-items:center;min-height:48px}
+.chap .n{font-family:var(--cond);font-weight:700;font-size:20px;color:var(--muted);min-width:24px}
+.chap .t{font-size:14px;line-height:1.3}
+.chap:hover{border-color:var(--sea)}
+.chap.active{background:var(--chart);border-color:var(--chart);color:#fff}
+.chap.active .n{color:var(--signal)}
+.chap.past .n{color:var(--sea)}
+.foot{margin-top:28px;font-size:13px;color:var(--muted);max-width:80ch;line-height:1.7}
+
+@media (max-width:820px){
+  .info{grid-template-columns:1fr;gap:18px}
+  .masthead .mark{width:46px;height:46px;border-radius:12px}
+  .masthead .mark svg{width:32px;height:32px}
+  .scale-note{display:none}
+  .stage{border-radius:12px}
+}
+@media (max-width:560px){
+  .chapcard{gap:8px}
+  .chapcard .tt{padding-left:8px;border-left-width:2px}
+  .caption{padding:5px 10px;border-radius:8px}
+  .time{min-width:0;font-size:14px}
+  .seg button{padding:0 8px}
+}
+@media (prefers-reduced-motion:reduce){
+  .chapcard,.caption{transition:none}
+}
+/* ---------- i18n ---------- */
+:root[lang="ja"]{--sans:"Noto Sans JP","Noto Sans CJK JP","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans TC",system-ui,sans-serif;--cond:"Barlow Condensed","Arial Narrow","Noto Sans JP","Noto Sans TC",sans-serif}
+.masthead{grid-template-columns:auto 1fr auto}
+.langsw{grid-column:3;grid-row:1 / span 2;align-self:start;display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:36px;background:var(--surface)}
+.langsw button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;font-weight:500;padding:0 12px;cursor:pointer;white-space:nowrap}
+.langsw button+button{border-left:1px solid var(--line)}
+.langsw button[aria-pressed="true"]{background:var(--chart);color:#fff}
+.langsw button:focus-visible{outline:3px solid var(--signal);outline-offset:-3px}
+:root[data-theme="dark"] .seg button[aria-pressed="true"],:root[data-theme="dark"] .langsw button[aria-pressed="true"]{background:var(--sea);color:#08202d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"],:root:not([data-theme="light"]) .langsw button[aria-pressed="true"]{background:var(--sea);color:#08202d}}
+
+/* ---------- video export ---------- */
+.btn.rec{display:inline-flex;align-items:center;gap:8px;padding:0 13px}
+.btn.rec .rdot{width:10px;height:10px;border-radius:50%;background:var(--alert);box-shadow:0 0 0 3px rgba(232,87,42,.2)}
+.recdlg{border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);padding:20px clamp(16px,3vw,26px);width:min(540px,calc(100vw - 24px));max-height:calc(100vh - 24px);box-shadow:0 30px 60px -30px rgba(5,22,32,.65)}
+.recdlg::backdrop{background:rgba(5,22,32,.55)}
+.rec-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.rec-head h2{margin:0;font-size:20px;font-weight:900;line-height:1.3}
+.rec-head .btn{height:36px;min-width:36px}
+.rec-intro{margin:8px 0 18px;color:var(--muted);font-size:14px;line-height:1.75}
+.rec-opts{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;align-items:center}
+.rec-opts>span{font-size:14px;font-weight:700;color:var(--muted)}
+.rec-opts .seg{justify-self:start;height:36px}
+.rec-opts .seg button{min-width:54px}
+.seg button.tx{font-family:var(--sans);font-size:13px;font-weight:500;padding:0 12px}
+.recdlg.busy .rec-opts{opacity:.5;pointer-events:none}
+.rec-sum{margin:16px 0 0;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rec-prog{margin-top:14px}
+.rec-prog canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:10px;background:var(--chart)}
+.rec-bar{margin-top:10px;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.rec-bar i{display:block;height:100%;width:0;background:var(--signal)}
+.rec-stat{margin:8px 0 0;font-size:14px;min-height:1.6em}
+.rec-stat.err{color:var(--alert);font-weight:500}
+.rec-note{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.rec-act{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn.primary{background:var(--chart);color:#fff;border-color:var(--chart);padding:0 18px;font-weight:700}
+.btn.primary:disabled{opacity:.5;cursor:default}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+[hidden]{display:none!important}
+@media (max-width:560px){
+  .masthead{grid-template-columns:auto 1fr}
+  .langsw{grid-column:1 / -1;grid-row:auto;justify-self:start;margin-top:4px}
+  .rec-opts{grid-template-columns:1fr;gap:4px}
+  .rec-opts .seg{margin-bottom:8px}
+}
+.masthead .series{grid-column:2;margin:0;font-size:13px;color:var(--muted);font-weight:500}
+.masthead .series a{color:inherit}
+.shots{margin-top:28px}
+.shots h3,.facts h3{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--muted)}
+.shot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.facts{margin-top:28px}
+.fact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:0}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.fact dt{font-family:var(--cond);font-weight:700;font-size:26px;line-height:1.1;color:var(--ink)}
+.fact dt small{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--sea);margin-left:4px}
+.fact dd{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.55}
+.chapcard .no small{font-size:.45em;color:rgba(255,255,255,.75);margin-left:4px;font-weight:600}
+
+.masthead .backlink{grid-column:2;font-size:13px;color:var(--sea);text-decoration:none;font-weight:500}
+.masthead .backlink:hover{text-decoration:underline}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 40 40"><path d="M20 17 L21.4 37 H18.6 Z" fill="#e3ecee"/><rect x="17.2" y="33" width="5.6" height="4" fill="#f2c230"/><g fill="#e3ecee"><path d="M20 15.5 L20.9 2 L19.4 2.2 Z"/><path d="M20 15.5 L31.8 22.3 L32.3 20.9 Z" /><path d="M20 15.5 L8.2 22.3 L8.9 23.6 Z"/></g><circle cx="20" cy="15.8" r="2.2" fill="#f2c230"/></svg>
+    </div>
+    <h1><span id="mNo"></span> <span id="mT"></span></h1>
+    <p id="mLede"></p>
+    <div class="langsw" role="group" data-i18n-aria="langGroup" aria-label="介面語言"><button type="button" data-lang="zh" lang="zh-Hant" aria-pressed="true">中文</button><button type="button" data-lang="en" lang="en" aria-pressed="false">EN</button></div>
+    <p class="series" id="mSeries"></p>
+    <a class="backlink" href="../" data-i18n="back">← 課程目錄</a>
+  </header>
+  <section aria-label="動畫" data-i18n-aria="secAnim">
+    <div class="stage" id="stage">
+      <canvas id="cv" role="img" aria-label="06 Artifacts 與可分享成果｜入門基礎"></canvas>
+      <div class="chapcard" id="chapcard"><span class="no" id="ccNo">01</span><div class="tt"><b id="ccT"></b><i id="ccE"></i></div></div>
+      <div class="caption" id="caption" aria-live="polite"></div>
+      <div class="scale-note" data-i18n="scaleNote">示意圖：比例經過調整</div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="bPrev" data-i18n-aria="prev" aria-label="上一個分鏡"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button class="btn play" id="bPlay" aria-label="暫停"><svg viewBox="0 0 24 24" fill="currentColor" id="playIcon"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+      <button class="btn" id="bNext" data-i18n-aria="next" aria-label="下一個分鏡"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <div class="timeline" id="timeline" tabindex="0" role="slider" data-i18n-aria="progress" aria-label="播放進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="tl-track" id="tlTrack"><div class="tl-fill" id="tlFill"></div></div>
+        <div class="tl-head" id="tlHead"></div>
+      </div>
+      <span class="time" id="time">0:00 / 0:00</span>
+      <div class="seg" role="group" data-i18n-aria="speed" aria-label="播放速度">
+        <button data-speed="0.5" aria-pressed="false">0.5×</button>
+        <button data-speed="1" aria-pressed="true">1×</button>
+        <button data-speed="2" aria-pressed="false">2×</button>
+      </div>
+      <button class="btn toggle" id="bLabels" aria-pressed="true" data-i18n-title="labelsTip" data-i18n="labels" title="顯示／隱藏標註">標註</button>
+      <button class="btn" id="bFull" data-i18n-aria="full" aria-label="全螢幕"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      <button class="btn rec" id="bRec" type="button" aria-haspopup="dialog"><span class="rdot" aria-hidden="true"></span><span data-i18n="rec">匯出影片</span></button>
+    </div>
+  </section>
+  <section class="info" aria-live="polite">
+    <div>
+      <h2><span class="n" id="iNo">1</span><span id="iT"></span></h2>
+      <p class="en" id="iE"></p>
+      <p class="desc" id="iD"></p>
+    </div>
+    <ol class="steps" id="iS"></ol>
+  </section>
+  <nav class="shots" data-i18n-aria="chapNav" aria-label="分鏡">
+    <h3 data-i18n="chapHead">本集分鏡</h3>
+    <div class="shot-grid" id="shotGrid"></div>
+  </nav>
+  <section class="facts" data-i18n-aria="factsAria" aria-label="重點數字">
+    <h3 data-i18n="factsHead">本集重點數字</h3>
+    <dl class="fact-grid" id="facts"></dl>
+  </section>
+  <p class="foot" id="foot"></p>
+</div>
+<dialog class="recdlg" id="recDlg" aria-labelledby="recTitle">
+  <div class="rec-head">
+    <h2 id="recTitle" data-i18n="recTitle">錄製 MP4 影片</h2>
+    <button class="btn" id="recX" type="button" data-i18n-aria="close" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <p class="rec-intro" data-i18n="recIntro"></p>
+  <div class="rec-opts">
+    <span id="oSpeed" data-i18n="optSpeed">影片速度</span>
+    <div class="seg" role="group" aria-labelledby="oSpeed" data-opt="speed"><button type="button" data-v="1" aria-pressed="true">1×</button><button type="button" data-v="2" aria-pressed="false">2×</button></div>
+    <span id="oRange" data-i18n="optRange">範圍</span>
+    <div class="seg" role="group" aria-labelledby="oRange" data-opt="range"><button type="button" class="tx" data-v="all" aria-pressed="true" data-i18n="rangeAll">全片</button><button type="button" class="tx" data-v="chap" aria-pressed="false" data-i18n="rangeChap">目前分鏡</button></div>
+    <span id="oRes" data-i18n="optRes">解析度</span>
+    <div class="seg" role="group" aria-labelledby="oRes" data-opt="res"><button type="button" data-v="720" aria-pressed="false">720p</button><button type="button" data-v="1080" aria-pressed="true">1080p</button></div>
+    <span id="oFps" data-i18n="optFps">影格率</span>
+    <div class="seg" role="group" aria-labelledby="oFps" data-opt="fps"><button type="button" data-v="30" aria-pressed="true">30 fps</button><button type="button" data-v="60" aria-pressed="false">60 fps</button></div>
+  </div>
+  <p class="rec-sum" id="recSum"></p>
+  <div class="rec-prog" id="recProg" hidden>
+    <canvas id="recPrev" width="640" height="360" aria-hidden="true"></canvas>
+    <div class="rec-bar"><i id="recBar"></i></div>
+    <p class="rec-stat" id="recStat" aria-live="polite"></p>
+    <p class="rec-note" id="recNote" data-i18n="keepTab"></p>
+  </div>
+  <div class="rec-act">
+    <button class="btn" id="recCancel" type="button" hidden data-i18n="cancel">取消</button>
+    <a class="btn primary" id="recDl" hidden data-i18n="download">下載 MP4</a>
+    <button class="btn primary" id="recGo" type="button" data-i18n="start">開始錄製</button>
+  </div>
+</dialog>
+<script>
+/*! mp4-muxer v5.2.2 | MIT License | (c) 2023 Vanilagy | https://github.com/Vanilagy/mp4-muxer */
+"use strict";var Mp4Muxer=(()=>{var e=Object.defineProperty,t=Object.getOwnPropertyDescriptor,i=Object.getOwnPropertyNames,s=Object.prototype.hasOwnProperty,a=(e,t,i)=>{if(!t.has(e))throw TypeError("Cannot "+i)},r=(e,t,i)=>(a(e,t,"read from private field"),i?i.call(e):t.get(e)),n=(e,t,i)=>{if(t.has(e))throw TypeError("Cannot add the same private member more than once");t instanceof WeakSet?t.add(e):t.set(e,i)},o=(e,t,i,s)=>(a(e,t,"write to private field"),s?s.call(e,i):t.set(e,i),i),h=(e,t,i)=>(a(e,t,"access private method"),i),l={};((t,i)=>{for(var s in i)e(t,s,{get:i[s],enumerable:!0})})(l,{ArrayBufferTarget:()=>Me,FileSystemWritableFileStreamTarget:()=>Oe,Muxer:()=>Rt,StreamTarget:()=>We});var d,f,u,m,p,c,w,g,b=new Uint8Array(8),y=new DataView(b.buffer),k=e=>[(e%256+256)%256],T=e=>(y.setUint16(0,e,!1),[b[0],b[1]]),C=e=>(y.setUint32(0,e,!1),[b[1],b[2],b[3]]),v=e=>(y.setUint32(0,e,!1),[b[0],b[1],b[2],b[3]]),S=e=>(y.setUint32(0,Math.floor(e/2**32),!1),y.setUint32(4,e,!1),[b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7]]),x=e=>(y.setInt16(0,256*e,!1),[b[0],b[1]]),z=e=>(y.setInt32(0,65536*e,!1),[b[0],b[1],b[2],b[3]]),E=e=>(y.setInt32(0,2**30*e,!1),[b[0],b[1],b[2],b[3]]),A=(e,t=!1)=>{let i=Array(e.length).fill(null).map((t,i)=>e.charCodeAt(i));return t&&i.push(0),i},M=e=>e&&e[e.length-1],W=e=>{let t;for(let i of e)(!t||i.presentationTimestamp>t.presentationTimestamp)&&(t=i);return t},O=(e,t,i=!0)=>{let s=e*t;return i?Math.round(s):s},B=e=>{let t=e*(Math.PI/180),i=Math.cos(t),s=Math.sin(t);return[i,s,0,-s,i,0,0,0,1]},U=B(0),D=e=>[z(e[0]),z(e[1]),E(e[2]),z(e[3]),z(e[4]),E(e[5]),z(e[6]),z(e[7]),E(e[8])],j=e=>e?"object"!=typeof e?e:Array.isArray(e)?e.map(j):Object.fromEntries(Object.entries(e).map(([e,t])=>[e,j(t)])):e,R=e=>e>=0&&e<2**32,I=(e,t,i)=>({type:e,contents:t&&new Uint8Array(t.flat(10)),children:i}),N=(e,t,i,s,a)=>I(e,[k(t),C(i),s??[]],a),V=e=>({type:"mdat",largeSize:e}),F=(e,t,i=!1)=>I("moov",null,[L(t,e),...e.map(e=>$(e,t)),i?me(e):null]),L=(e,t)=>{let i=O(Math.max(0,...t.filter(e=>e.samples.length>0).map(e=>{const t=W(e.samples);return t.presentationTimestamp+t.duration})),Bt),s=Math.max(...t.map(e=>e.id))+1,a=!R(e)||!R(i),r=a?S:v;return N("mvhd",+a,0,[r(e),r(e),v(Bt),r(i),z(1),x(1),Array(10).fill(0),D(U),Array(24).fill(0),v(s)])},$=(e,t)=>I("trak",null,[P(e,t),H(e,t)]),P=(e,t)=>{let i,s=W(e.samples),a=O(s?s.presentationTimestamp+s.duration:0,Bt),r=!R(t)||!R(a),n=r?S:v;return i="video"===e.info.type?"number"==typeof e.info.rotation?B(e.info.rotation):e.info.rotation:U,N("tkhd",+r,3,[n(t),n(t),v(e.id),v(0),n(a),Array(8).fill(0),T(0),T(0),x("audio"===e.info.type?1:0),T(0),D(i),z("video"===e.info.type?e.info.width:0),z("video"===e.info.type?e.info.height:0)])},H=(e,t)=>I("mdia",null,[_(e,t),q("video"===e.info.type?"vide":"soun"),G(e)]),_=(e,t)=>{let i=W(e.samples),s=O(i?i.presentationTimestamp+i.duration:0,e.timescale),a=!R(t)||!R(s),r=a?S:v;return N("mdhd",+a,0,[r(t),r(t),v(e.timescale),r(s),T(21956),T(0)])},q=e=>N("hdlr",0,0,[A("mhlr"),A(e),v(0),v(0),v(0),A("mp4-muxer-hdlr",!0)]),G=e=>I("minf",null,["video"===e.info.type?J():K(),Q(),Z(e)]),J=()=>N("vmhd",0,1,[T(0),T(0),T(0),T(0)]),K=()=>N("smhd",0,0,[T(0),T(0)]),Q=()=>I("dinf",null,[X()]),X=()=>N("dref",0,0,[v(1)],[Y()]),Y=()=>N("url ",0,1),Z=e=>{const t=e.compositionTimeOffsetTable.length>1||e.compositionTimeOffsetTable.some(e=>0!==e.sampleCompositionTimeOffset);return I("stbl",null,[ee(e),oe(e),he(e),le(e),de(e),fe(e),t?ue(e):null])},ee=e=>N("stsd",0,0,[v(1)],["video"===e.info.type?te(Se[e.info.codec],e):ne(ze[e.info.codec],e)]),te=(e,t)=>{return I(e,[Array(6).fill(0),T(1),T(0),T(0),Array(12).fill(0),T(t.info.width),T(t.info.height),v(4718592),v(4718592),v(0),T(1),Array(32).fill(0),T(24),(i=65535,y.setInt16(0,i,!1),[b[0],b[1]])],[xe[t.info.codec](t),t.info.decoderConfig.colorSpace?re(t):null]);var i},ie={bt709:1,bt470bg:5,smpte170m:6},se={bt709:1,smpte170m:6,"iec61966-2-1":13},ae={rgb:0,bt709:1,bt470bg:5,smpte170m:6},re=e=>I("colr",[A("nclx"),T(ie[e.info.decoderConfig.colorSpace.primaries]),T(se[e.info.decoderConfig.colorSpace.transfer]),T(ae[e.info.decoderConfig.colorSpace.matrix]),k((e.info.decoderConfig.colorSpace.fullRange?1:0)<<7)]),ne=(e,t)=>I(e,[Array(6).fill(0),T(1),T(0),T(0),v(0),T(t.info.numberOfChannels),T(16),T(0),T(0),z(t.info.sampleRate)],[Ee[t.info.codec](t)]),oe=e=>N("stts",0,0,[v(e.timeToSampleTable.length),e.timeToSampleTable.map(e=>[v(e.sampleCount),v(e.sampleDelta)])]),he=e=>{if(e.samples.every(e=>"key"===e.type))return null;let t=[...e.samples.entries()].filter(([,e])=>"key"===e.type);return N("stss",0,0,[v(t.length),t.map(([e])=>v(e+1))])},le=e=>N("stsc",0,0,[v(e.compactlyCodedChunkTable.length),e.compactlyCodedChunkTable.map(e=>[v(e.firstChunk),v(e.samplesPerChunk),v(1)])]),de=e=>N("stsz",0,0,[v(0),v(e.samples.length),e.samples.map(e=>v(e.size))]),fe=e=>e.finalizedChunks.length>0&&M(e.finalizedChunks).offset>=2**32?N("co64",0,0,[v(e.finalizedChunks.length),e.finalizedChunks.map(e=>S(e.offset))]):N("stco",0,0,[v(e.finalizedChunks.length),e.finalizedChunks.map(e=>v(e.offset))]),ue=e=>N("ctts",0,0,[v(e.compositionTimeOffsetTable.length),e.compositionTimeOffsetTable.map(e=>[v(e.sampleCount),v(e.sampleCompositionTimeOffset)])]),me=e=>I("mvex",null,e.map(pe)),pe=e=>N("trex",0,0,[v(e.id),v(1),v(0),v(0),v(0)]),ce=(e,t)=>I("moof",null,[we(e),...t.map(be)]),we=e=>N("mfhd",0,0,[v(e)]),ge=e=>{let t=0,i=0,s="delta"===e.type;return i|=+s,t|=s?1:2,t<<24|i<<16},be=e=>I("traf",null,[ye(e),ke(e),Te(e)]),ye=e=>{let t=0;t|=8,t|=16,t|=32,t|=131072;let i=e.currentChunk.samples[1]??e.currentChunk.samples[0],s={duration:i.timescaleUnitsToNextSample,size:i.size,flags:ge(i)};return N("tfhd",0,131128,[v(e.id),v(s.duration),v(s.size),v(s.flags)])},ke=e=>N("tfdt",1,0,[S(O(e.currentChunk.startTimestamp,e.timescale))]),Te=e=>{let t=e.currentChunk.samples.map(e=>e.timescaleUnitsToNextSample),i=e.currentChunk.samples.map(e=>e.size),s=e.currentChunk.samples.map(ge),a=e.currentChunk.samples.map(t=>O(t.presentationTimestamp-t.decodeTimestamp,e.timescale)),r=new Set(t),n=new Set(i),o=new Set(s),h=new Set(a),l=2===o.size&&s[0]!==s[1],d=r.size>1,f=n.size>1,u=!l&&o.size>1,m=h.size>1||[...h].some(e=>0!==e),p=0;return p|=1,p|=4*+l,p|=256*+d,p|=512*+f,p|=1024*+u,p|=2048*+m,N("trun",1,p,[v(e.currentChunk.samples.length),v(e.currentChunk.offset-e.currentChunk.moofOffset||0),l?v(s[0]):[],e.currentChunk.samples.map((e,r)=>{return[d?v(t[r]):[],f?v(i[r]):[],u?v(s[r]):[],m?(n=a[r],y.setInt32(0,n,!1),[b[0],b[1],b[2],b[3]]):[]];var n})])},Ce=(e,t)=>N("tfra",1,0,[v(e.id),v(63),v(e.finalizedChunks.length),e.finalizedChunks.map(i=>[S(O(i.startTimestamp,e.timescale)),S(i.moofOffset),v(t+1),v(1),v(1)])]),ve=()=>N("mfro",0,0,[v(0)]),Se={avc:"avc1",hevc:"hvc1",vp9:"vp09",av1:"av01"},xe={avc:e=>e.info.decoderConfig&&I("avcC",[...new Uint8Array(e.info.decoderConfig.description)]),hevc:e=>e.info.decoderConfig&&I("hvcC",[...new Uint8Array(e.info.decoderConfig.description)]),vp9:e=>{if(!e.info.decoderConfig)return null;let t=e.info.decoderConfig;if(!t.colorSpace)throw new Error("'colorSpace' is required in the decoder config for VP9.");let i=t.codec.split("."),s=Number(i[1]),a=Number(i[2]),r=0+(Number(i[3])<<4)+Number(t.colorSpace.fullRange);return N("vpcC",1,0,[k(s),k(a),k(r),k(2),k(2),k(2),T(0)])},av1:()=>I("av1C",[129,0,0,0])},ze={aac:"mp4a",opus:"Opus"},Ee={aac:e=>{let t=new Uint8Array(e.info.decoderConfig.description);return N("esds",0,0,[v(58753152),k(32+t.byteLength),T(1),k(0),v(75530368),k(18+t.byteLength),k(64),k(21),C(0),v(130071),v(130071),v(92307584),k(t.byteLength),...t,v(109084800),k(1),k(2)])},opus:e=>{let t=3840,i=0;const s=e.info.decoderConfig?.description;if(s){if(s.byteLength<18)throw new TypeError("Invalid decoder description provided for Opus; must be at least 18 bytes long.");const e=ArrayBuffer.isView(s)?new DataView(s.buffer,s.byteOffset,s.byteLength):new DataView(s);t=e.getUint16(10,!0),i=e.getInt16(14,!0)}return I("dOps",[k(0),k(e.info.numberOfChannels),T(t),v(e.info.sampleRate),x(i),k(0)])}},Ae=(Symbol("isTarget"),class{}),Me=class extends Ae{constructor(){super(...arguments),this.buffer=null}},We=class extends Ae{constructor(e){if(super(),this.options=e,"object"!=typeof e)throw new TypeError("StreamTarget requires an options object to be passed to its constructor.");if(e.onData){if("function"!=typeof e.onData)throw new TypeError("options.onData, when provided, must be a function.");if(e.onData.length<2)throw new TypeError("options.onData, when provided, must be a function that takes in at least two arguments (data and position). Ignoring the position argument, which specifies the byte offset at which the data is to be written, can lead to broken outputs.")}if(void 0!==e.chunked&&"boolean"!=typeof e.chunked)throw new TypeError("options.chunked, when provided, must be a boolean.");if(void 0!==e.chunkSize&&(!Number.isInteger(e.chunkSize)||e.chunkSize<1024))throw new TypeError("options.chunkSize, when provided, must be an integer and not smaller than 1024.")}},Oe=class extends Ae{constructor(e,t){if(super(),this.stream=e,this.options=t,!(e instanceof FileSystemWritableFileStream))throw new TypeError("FileSystemWritableFileStreamTarget requires a FileSystemWritableFileStream instance.");if(void 0!==t&&"object"!=typeof t)throw new TypeError("FileSystemWritableFileStreamTarget's options, when provided, must be an object.");if(t&&void 0!==t.chunkSize&&(!Number.isInteger(t.chunkSize)||t.chunkSize<=0))throw new TypeError("options.chunkSize, when provided, must be a positive integer")}},Be=class{constructor(){this.pos=0,n(this,d,new Uint8Array(8)),n(this,f,new DataView(r(this,d).buffer)),this.offsets=new WeakMap}seek(e){this.pos=e}writeU32(e){r(this,f).setUint32(0,e,!1),this.write(r(this,d).subarray(0,4))}writeU64(e){r(this,f).setUint32(0,Math.floor(e/2**32),!1),r(this,f).setUint32(4,e,!1),this.write(r(this,d).subarray(0,8))}writeAscii(e){for(let t=0;t<e.length;t++)r(this,f).setUint8(t%8,e.charCodeAt(t)),t%8==7&&this.write(r(this,d));e.length%8!=0&&this.write(r(this,d).subarray(0,e.length%8))}writeBox(e){if(this.offsets.set(e,this.pos),e.contents&&!e.children)this.writeBoxHeader(e,e.size??e.contents.byteLength+8),this.write(e.contents);else{let t=this.pos;if(this.writeBoxHeader(e,0),e.contents&&this.write(e.contents),e.children)for(let t of e.children)t&&this.writeBox(t);let i=this.pos,s=e.size??i-t;this.seek(t),this.writeBoxHeader(e,s),this.seek(i)}}writeBoxHeader(e,t){this.writeU32(e.largeSize?1:t),this.writeAscii(e.type),e.largeSize&&this.writeU64(t)}measureBoxHeader(e){return 8+(e.largeSize?8:0)}patchBox(e){let t=this.pos;this.seek(this.offsets.get(e)),this.writeBox(e),this.seek(t)}measureBox(e){if(e.contents&&!e.children){return this.measureBoxHeader(e)+e.contents.byteLength}{let t=this.measureBoxHeader(e);if(e.contents&&(t+=e.contents.byteLength),e.children)for(let i of e.children)i&&(t+=this.measureBox(i));return t}}};d=new WeakMap,f=new WeakMap;var Ue=class extends Be{constructor(e){super(),n(this,w),n(this,u,void 0),n(this,m,new ArrayBuffer(65536)),n(this,p,new Uint8Array(r(this,m))),n(this,c,0),o(this,u,e)}write(e){h(this,w,g).call(this,this.pos+e.byteLength),r(this,p).set(e,this.pos),this.pos+=e.byteLength,o(this,c,Math.max(r(this,c),this.pos))}finalize(){h(this,w,g).call(this,this.pos),r(this,u).buffer=r(this,m).slice(0,Math.max(r(this,c),this.pos))}};u=new WeakMap,m=new WeakMap,p=new WeakMap,c=new WeakMap,w=new WeakSet,g=function(e){let t=r(this,m).byteLength;for(;t<e;)t*=2;if(t===r(this,m).byteLength)return;let i=new ArrayBuffer(t),s=new Uint8Array(i);s.set(r(this,p),0),o(this,m,i),o(this,p,s)};var De,je,Re,Ie,Ne,Ve,Fe,Le,$e,Pe,He,_e,qe,Ge=class extends Be{constructor(e){super(),n(this,Ve),n(this,Le),n(this,Pe),n(this,_e),n(this,De,void 0),n(this,je,[]),n(this,Re,void 0),n(this,Ie,void 0),n(this,Ne,[]),o(this,De,e),o(this,Re,e.options?.chunked??!1),o(this,Ie,e.options?.chunkSize??16777216)}write(e){r(this,je).push({data:e.slice(),start:this.pos}),this.pos+=e.byteLength}flush(){if(0===r(this,je).length)return;let e=[],t=[...r(this,je)].sort((e,t)=>e.start-t.start);e.push({start:t[0].start,size:t[0].data.byteLength});for(let i=1;i<t.length;i++){let s=e[e.length-1],a=t[i];a.start<=s.start+s.size?s.size=Math.max(s.size,a.start+a.data.byteLength-s.start):e.push({start:a.start,size:a.data.byteLength})}for(let t of e){t.data=new Uint8Array(t.size);for(let e of r(this,je))t.start<=e.start&&e.start<t.start+t.size&&t.data.set(e.data,e.start-t.start);r(this,Re)?(h(this,Ve,Fe).call(this,t.data,t.start),h(this,_e,qe).call(this)):r(this,De).options.onData?.(t.data,t.start)}r(this,je).length=0}finalize(){r(this,Re)&&h(this,_e,qe).call(this,!0)}};De=new WeakMap,je=new WeakMap,Re=new WeakMap,Ie=new WeakMap,Ne=new WeakMap,Ve=new WeakSet,Fe=function(e,t){let i=r(this,Ne).findIndex(e=>e.start<=t&&t<e.start+r(this,Ie));-1===i&&(i=h(this,Pe,He).call(this,t));let s=r(this,Ne)[i],a=t-s.start,n=e.subarray(0,Math.min(r(this,Ie)-a,e.byteLength));s.data.set(n,a);let o={start:a,end:a+n.byteLength};if(h(this,Le,$e).call(this,s,o),0===s.written[0].start&&s.written[0].end===r(this,Ie)&&(s.shouldFlush=!0),r(this,Ne).length>2){for(let e=0;e<r(this,Ne).length-1;e++)r(this,Ne)[e].shouldFlush=!0;h(this,_e,qe).call(this)}n.byteLength<e.byteLength&&h(this,Ve,Fe).call(this,e.subarray(n.byteLength),t+n.byteLength)},Le=new WeakSet,$e=function(e,t){let i=0,s=e.written.length-1,a=-1;for(;i<=s;){let r=Math.floor(i+(s-i+1)/2);e.written[r].start<=t.start?(i=r+1,a=r):s=r-1}for(e.written.splice(a+1,0,t),(-1===a||e.written[a].end<t.start)&&a++;a<e.written.length-1&&e.written[a].end>=e.written[a+1].start;)e.written[a].end=Math.max(e.written[a].end,e.written[a+1].end),e.written.splice(a+1,1)},Pe=new WeakSet,He=function(e){let t={start:Math.floor(e/r(this,Ie))*r(this,Ie),data:new Uint8Array(r(this,Ie)),written:[],shouldFlush:!1};return r(this,Ne).push(t),r(this,Ne).sort((e,t)=>e.start-t.start),r(this,Ne).indexOf(t)},_e=new WeakSet,qe=function(e=!1){for(let t=0;t<r(this,Ne).length;t++){let i=r(this,Ne)[t];if(i.shouldFlush||e){for(let e of i.written)r(this,De).options.onData?.(i.data.subarray(e.start,e.end),i.start+e.start);r(this,Ne).splice(t--,1)}}};var Je,Ke,Qe,Xe,Ye,Ze,et,tt,it,st,at,rt,nt,ot,ht,lt,dt,ft,ut,mt,pt,ct,wt,gt,bt,yt,kt,Tt,Ct,vt,St,xt,zt,Et,At,Mt,Wt,Ot=class extends Ge{constructor(e){super(new We({onData:(t,i)=>e.stream.write({type:"write",data:t,position:i}),chunked:!0,chunkSize:e.options?.chunkSize}))}},Bt=1e3,Ut=["avc","hevc","vp9","av1"],Dt=["aac","opus"],jt=["strict","offset","cross-track-offset"],Rt=class{constructor(e){if(n(this,nt),n(this,ht),n(this,dt),n(this,ut),n(this,pt),n(this,wt),n(this,bt),n(this,kt),n(this,Ct),n(this,St),n(this,zt),n(this,At),n(this,Je,void 0),n(this,Ke,void 0),n(this,Qe,void 0),n(this,Xe,void 0),n(this,Ye,null),n(this,Ze,null),n(this,et,Math.floor(Date.now()/1e3)+2082844800),n(this,tt,[]),n(this,it,1),n(this,st,[]),n(this,at,[]),n(this,rt,!1),h(this,nt,ot).call(this,e),e.video=j(e.video),e.audio=j(e.audio),e.fastStart=j(e.fastStart),this.target=e.target,o(this,Je,{firstTimestampBehavior:"strict",...e}),e.target instanceof Me)o(this,Ke,new Ue(e.target));else if(e.target instanceof We)o(this,Ke,new Ge(e.target));else{if(!(e.target instanceof Oe))throw new Error(`Invalid target: ${e.target}`);o(this,Ke,new Ot(e.target))}h(this,ut,mt).call(this),h(this,ht,lt).call(this)}addVideoChunk(e,t,i,s){if(!(e instanceof EncodedVideoChunk))throw new TypeError("addVideoChunk's first argument (sample) must be of type EncodedVideoChunk.");if(t&&"object"!=typeof t)throw new TypeError("addVideoChunk's second argument (meta), when provided, must be an object.");if(void 0!==i&&(!Number.isFinite(i)||i<0))throw new TypeError("addVideoChunk's third argument (timestamp), when provided, must be a non-negative real number.");if(void 0!==s&&!Number.isFinite(s))throw new TypeError("addVideoChunk's fourth argument (compositionTimeOffset), when provided, must be a real number.");let a=new Uint8Array(e.byteLength);e.copyTo(a),this.addVideoChunkRaw(a,e.type,i??e.timestamp,e.duration,t,s)}addVideoChunkRaw(e,t,i,s,a,n){if(!(e instanceof Uint8Array))throw new TypeError("addVideoChunkRaw's first argument (data) must be an instance of Uint8Array.");if("key"!==t&&"delta"!==t)throw new TypeError("addVideoChunkRaw's second argument (type) must be either 'key' or 'delta'.");if(!Number.isFinite(i)||i<0)throw new TypeError("addVideoChunkRaw's third argument (timestamp) must be a non-negative real number.");if(!Number.isFinite(s)||s<0)throw new TypeError("addVideoChunkRaw's fourth argument (duration) must be a non-negative real number.");if(a&&"object"!=typeof a)throw new TypeError("addVideoChunkRaw's fifth argument (meta), when provided, must be an object.");if(void 0!==n&&!Number.isFinite(n))throw new TypeError("addVideoChunkRaw's sixth argument (compositionTimeOffset), when provided, must be a real number.");if(h(this,At,Mt).call(this),!r(this,Je).video)throw new Error("No video track declared.");if("object"==typeof r(this,Je).fastStart&&r(this,Ye).samples.length===r(this,Je).fastStart.expectedVideoChunks)throw new Error(`Cannot add more video chunks than specified in 'fastStart' (${r(this,Je).fastStart.expectedVideoChunks}).`);let o=h(this,wt,gt).call(this,r(this,Ye),e,t,i,s,a,n);if("fragmented"===r(this,Je).fastStart&&r(this,Ze)){for(;r(this,at).length>0&&r(this,at)[0].decodeTimestamp<=o.decodeTimestamp;){let e=r(this,at).shift();h(this,bt,yt).call(this,r(this,Ze),e)}o.decodeTimestamp<=r(this,Ze).lastDecodeTimestamp?h(this,bt,yt).call(this,r(this,Ye),o):r(this,st).push(o)}else h(this,bt,yt).call(this,r(this,Ye),o)}addAudioChunk(e,t,i){if(!(e instanceof EncodedAudioChunk))throw new TypeError("addAudioChunk's first argument (sample) must be of type EncodedAudioChunk.");if(t&&"object"!=typeof t)throw new TypeError("addAudioChunk's second argument (meta), when provided, must be an object.");if(void 0!==i&&(!Number.isFinite(i)||i<0))throw new TypeError("addAudioChunk's third argument (timestamp), when provided, must be a non-negative real number.");let s=new Uint8Array(e.byteLength);e.copyTo(s),this.addAudioChunkRaw(s,e.type,i??e.timestamp,e.duration,t)}addAudioChunkRaw(e,t,i,s,a){if(!(e instanceof Uint8Array))throw new TypeError("addAudioChunkRaw's first argument (data) must be an instance of Uint8Array.");if("key"!==t&&"delta"!==t)throw new TypeError("addAudioChunkRaw's second argument (type) must be either 'key' or 'delta'.");if(!Number.isFinite(i)||i<0)throw new TypeError("addAudioChunkRaw's third argument (timestamp) must be a non-negative real number.");if(!Number.isFinite(s)||s<0)throw new TypeError("addAudioChunkRaw's fourth argument (duration) must be a non-negative real number.");if(a&&"object"!=typeof a)throw new TypeError("addAudioChunkRaw's fifth argument (meta), when provided, must be an object.");if(h(this,At,Mt).call(this),!r(this,Je).audio)throw new Error("No audio track declared.");if("object"==typeof r(this,Je).fastStart&&r(this,Ze).samples.length===r(this,Je).fastStart.expectedAudioChunks)throw new Error(`Cannot add more audio chunks than specified in 'fastStart' (${r(this,Je).fastStart.expectedAudioChunks}).`);let n=h(this,wt,gt).call(this,r(this,Ze),e,t,i,s,a);if("fragmented"===r(this,Je).fastStart&&r(this,Ye)){for(;r(this,st).length>0&&r(this,st)[0].decodeTimestamp<=n.decodeTimestamp;){let e=r(this,st).shift();h(this,bt,yt).call(this,r(this,Ye),e)}n.decodeTimestamp<=r(this,Ye).lastDecodeTimestamp?h(this,bt,yt).call(this,r(this,Ze),n):r(this,at).push(n)}else h(this,bt,yt).call(this,r(this,Ze),n)}finalize(){if(r(this,rt))throw new Error("Cannot finalize a muxer more than once.");if("fragmented"===r(this,Je).fastStart){for(let e of r(this,st))h(this,bt,yt).call(this,r(this,Ye),e);for(let e of r(this,at))h(this,bt,yt).call(this,r(this,Ze),e);h(this,St,xt).call(this,!1)}else r(this,Ye)&&h(this,Ct,vt).call(this,r(this,Ye)),r(this,Ze)&&h(this,Ct,vt).call(this,r(this,Ze));let e=[r(this,Ye),r(this,Ze)].filter(Boolean);if("in-memory"===r(this,Je).fastStart){let t;for(let i=0;i<2;i++){let i=F(e,r(this,et)),s=r(this,Ke).measureBox(i);t=r(this,Ke).measureBox(r(this,Xe));let a=r(this,Ke).pos+s+t;for(let e of r(this,tt)){e.offset=a;for(let{data:i}of e.samples)a+=i.byteLength,t+=i.byteLength}if(a<2**32)break;t>=2**32&&(r(this,Xe).largeSize=!0)}let i=F(e,r(this,et));r(this,Ke).writeBox(i),r(this,Xe).size=t,r(this,Ke).writeBox(r(this,Xe));for(let e of r(this,tt))for(let t of e.samples)r(this,Ke).write(t.data),t.data=null}else if("fragmented"===r(this,Je).fastStart){let t=r(this,Ke).pos,i=(e=>I("mfra",null,[...e.map(Ce),ve()]))(e);r(this,Ke).writeBox(i);let s=r(this,Ke).pos-t;r(this,Ke).seek(r(this,Ke).pos-4),r(this,Ke).writeU32(s)}else{let t=r(this,Ke).offsets.get(r(this,Xe)),i=r(this,Ke).pos-t;r(this,Xe).size=i,r(this,Xe).largeSize=i>=2**32,r(this,Ke).patchBox(r(this,Xe));let s=F(e,r(this,et));if("object"==typeof r(this,Je).fastStart){r(this,Ke).seek(r(this,Qe)),r(this,Ke).writeBox(s);let e=t-r(this,Ke).pos;r(this,Ke).writeBox({type:"free",size:e})}else r(this,Ke).writeBox(s)}h(this,zt,Et).call(this),r(this,Ke).finalize(),o(this,rt,!0)}};return Je=new WeakMap,Ke=new WeakMap,Qe=new WeakMap,Xe=new WeakMap,Ye=new WeakMap,Ze=new WeakMap,et=new WeakMap,tt=new WeakMap,it=new WeakMap,st=new WeakMap,at=new WeakMap,rt=new WeakMap,nt=new WeakSet,ot=function(e){if("object"!=typeof e)throw new TypeError("The muxer requires an options object to be passed to its constructor.");if(!(e.target instanceof Ae))throw new TypeError("The target must be provided and an instance of Target.");if(e.video){if(!Ut.includes(e.video.codec))throw new TypeError(`Unsupported video codec: ${e.video.codec}`);if(!Number.isInteger(e.video.width)||e.video.width<=0)throw new TypeError(`Invalid video width: ${e.video.width}. Must be a positive integer.`);if(!Number.isInteger(e.video.height)||e.video.height<=0)throw new TypeError(`Invalid video height: ${e.video.height}. Must be a positive integer.`);const t=e.video.rotation;if("number"==typeof t&&![0,90,180,270].includes(t))throw new TypeError(`Invalid video rotation: ${t}. Has to be 0, 90, 180 or 270.`);if(Array.isArray(t)&&(9!==t.length||t.some(e=>"number"!=typeof e)))throw new TypeError(`Invalid video transformation matrix: ${t.join()}`);if(void 0!==e.video.frameRate&&(!Number.isInteger(e.video.frameRate)||e.video.frameRate<=0))throw new TypeError(`Invalid video frame rate: ${e.video.frameRate}. Must be a positive integer.`)}if(e.audio){if(!Dt.includes(e.audio.codec))throw new TypeError(`Unsupported audio codec: ${e.audio.codec}`);if(!Number.isInteger(e.audio.numberOfChannels)||e.audio.numberOfChannels<=0)throw new TypeError(`Invalid number of audio channels: ${e.audio.numberOfChannels}. Must be a positive integer.`);if(!Number.isInteger(e.audio.sampleRate)||e.audio.sampleRate<=0)throw new TypeError(`Invalid audio sample rate: ${e.audio.sampleRate}. Must be a positive integer.`)}if(e.firstTimestampBehavior&&!jt.includes(e.firstTimestampBehavior))throw new TypeError(`Invalid first timestamp behavior: ${e.firstTimestampBehavior}`);if("object"==typeof e.fastStart){if(e.video){if(void 0===e.fastStart.expectedVideoChunks)throw new TypeError("'fastStart' is an object but is missing property 'expectedVideoChunks'.");if(!Number.isInteger(e.fastStart.expectedVideoChunks)||e.fastStart.expectedVideoChunks<0)throw new TypeError("'expectedVideoChunks' must be a non-negative integer.")}if(e.audio){if(void 0===e.fastStart.expectedAudioChunks)throw new TypeError("'fastStart' is an object but is missing property 'expectedAudioChunks'.");if(!Number.isInteger(e.fastStart.expectedAudioChunks)||e.fastStart.expectedAudioChunks<0)throw new TypeError("'expectedAudioChunks' must be a non-negative integer.")}}else if(![!1,"in-memory","fragmented"].includes(e.fastStart))throw new TypeError("'fastStart' option must be false, 'in-memory', 'fragmented' or an object.");if(void 0!==e.minFragmentDuration&&(!Number.isFinite(e.minFragmentDuration)||e.minFragmentDuration<0))throw new TypeError("'minFragmentDuration' must be a non-negative number.")},ht=new WeakSet,lt=function(){var e;if(r(this,Ke).writeBox((e={holdsAvc:"avc"===r(this,Je).video?.codec,fragmented:"fragmented"===r(this,Je).fastStart}).fragmented?I("ftyp",[A("iso5"),v(512),A("iso5"),A("iso6"),A("mp41")]):I("ftyp",[A("isom"),v(512),A("isom"),e.holdsAvc?A("avc1"):[],A("mp41")])),o(this,Qe,r(this,Ke).pos),"in-memory"===r(this,Je).fastStart)o(this,Xe,V(!1));else if("fragmented"===r(this,Je).fastStart);else{if("object"==typeof r(this,Je).fastStart){let e=h(this,dt,ft).call(this);r(this,Ke).seek(r(this,Ke).pos+e)}o(this,Xe,V(!0)),r(this,Ke).writeBox(r(this,Xe))}h(this,zt,Et).call(this)},dt=new WeakSet,ft=function(){if("object"!=typeof r(this,Je).fastStart)return;let e=0,t=[r(this,Je).fastStart.expectedVideoChunks,r(this,Je).fastStart.expectedAudioChunks];for(let i of t)i&&(e+=8*Math.ceil(2/3*i),e+=4*i,e+=12*Math.ceil(2/3*i),e+=4*i,e+=8*i);return e+=4096,e},ut=new WeakSet,mt=function(){if(r(this,Je).video&&o(this,Ye,{id:1,info:{type:"video",codec:r(this,Je).video.codec,width:r(this,Je).video.width,height:r(this,Je).video.height,rotation:r(this,Je).video.rotation??0,decoderConfig:null},timescale:r(this,Je).video.frameRate??57600,samples:[],finalizedChunks:[],currentChunk:null,firstDecodeTimestamp:void 0,lastDecodeTimestamp:-1,timeToSampleTable:[],compositionTimeOffsetTable:[],lastTimescaleUnits:null,lastSample:null,compactlyCodedChunkTable:[]}),r(this,Je).audio&&(o(this,Ze,{id:r(this,Je).video?2:1,info:{type:"audio",codec:r(this,Je).audio.codec,numberOfChannels:r(this,Je).audio.numberOfChannels,sampleRate:r(this,Je).audio.sampleRate,decoderConfig:null},timescale:r(this,Je).audio.sampleRate,samples:[],finalizedChunks:[],currentChunk:null,firstDecodeTimestamp:void 0,lastDecodeTimestamp:-1,timeToSampleTable:[],compositionTimeOffsetTable:[],lastTimescaleUnits:null,lastSample:null,compactlyCodedChunkTable:[]}),"aac"===r(this,Je).audio.codec)){let e=h(this,pt,ct).call(this,2,r(this,Je).audio.sampleRate,r(this,Je).audio.numberOfChannels);r(this,Ze).info.decoderConfig={codec:r(this,Je).audio.codec,description:e,numberOfChannels:r(this,Je).audio.numberOfChannels,sampleRate:r(this,Je).audio.sampleRate}}},pt=new WeakSet,ct=function(e,t,i){let s=[96e3,88200,64e3,48e3,44100,32e3,24e3,22050,16e3,12e3,11025,8e3,7350].indexOf(t),a=i,r="";r+=e.toString(2).padStart(5,"0"),r+=s.toString(2).padStart(4,"0"),15===s&&(r+=t.toString(2).padStart(24,"0")),r+=a.toString(2).padStart(4,"0");let n=8*Math.ceil(r.length/8);r=r.padEnd(n,"0");let o=new Uint8Array(r.length/8);for(let e=0;e<r.length;e+=8)o[e/8]=parseInt(r.slice(e,e+8),2);return o},wt=new WeakSet,gt=function(e,t,i,s,a,r,n){let o=s/1e6,l=(s-(n??0))/1e6,d=a/1e6,f=h(this,kt,Tt).call(this,o,l,e);return o=f.presentationTimestamp,l=f.decodeTimestamp,r?.decoderConfig&&(null===e.info.decoderConfig?e.info.decoderConfig=r.decoderConfig:Object.assign(e.info.decoderConfig,r.decoderConfig)),{presentationTimestamp:o,decodeTimestamp:l,duration:d,data:t,size:t.byteLength,type:i,timescaleUnitsToNextSample:O(d,e.timescale)}},bt=new WeakSet,yt=function(e,t){"fragmented"!==r(this,Je).fastStart&&e.samples.push(t);const i=O(t.presentationTimestamp-t.decodeTimestamp,e.timescale);if(null!==e.lastTimescaleUnits){let s=O(t.decodeTimestamp,e.timescale,!1),a=Math.round(s-e.lastTimescaleUnits);if(e.lastTimescaleUnits+=a,e.lastSample.timescaleUnitsToNextSample=a,"fragmented"!==r(this,Je).fastStart){let t=M(e.timeToSampleTable);1===t.sampleCount?(t.sampleDelta=a,t.sampleCount++):t.sampleDelta===a?t.sampleCount++:(t.sampleCount--,e.timeToSampleTable.push({sampleCount:2,sampleDelta:a}));const s=M(e.compositionTimeOffsetTable);s.sampleCompositionTimeOffset===i?s.sampleCount++:e.compositionTimeOffsetTable.push({sampleCount:1,sampleCompositionTimeOffset:i})}}else e.lastTimescaleUnits=0,"fragmented"!==r(this,Je).fastStart&&(e.timeToSampleTable.push({sampleCount:1,sampleDelta:O(t.duration,e.timescale)}),e.compositionTimeOffsetTable.push({sampleCount:1,sampleCompositionTimeOffset:i}));e.lastSample=t;let s=!1;if(e.currentChunk){let i=t.presentationTimestamp-e.currentChunk.startTimestamp;if("fragmented"===r(this,Je).fastStart){let a=r(this,Ye)??r(this,Ze);const n=r(this,Je).minFragmentDuration??1;e===a&&"key"===t.type&&i>=n&&(s=!0,h(this,St,xt).call(this))}else s=i>=.5}else s=!0;s&&(e.currentChunk&&h(this,Ct,vt).call(this,e),e.currentChunk={startTimestamp:t.presentationTimestamp,samples:[]}),e.currentChunk.samples.push(t)},kt=new WeakSet,Tt=function(e,t,i){const s="strict"===r(this,Je).firstTimestampBehavior,a=-1===i.lastDecodeTimestamp;if(s&&a&&0!==t)throw new Error(`The first chunk for your media track must have a timestamp of 0 (received DTS=${t}).Non-zero first timestamps are often caused by directly piping frames or audio data from a MediaStreamTrack into the encoder. Their timestamps are typically relative to the age of thedocument, which is probably what you want.\n\nIf you want to offset all timestamps of a track such that the first one is zero, set firstTimestampBehavior: 'offset' in the options.\n`);if("offset"===r(this,Je).firstTimestampBehavior||"cross-track-offset"===r(this,Je).firstTimestampBehavior){let s;void 0===i.firstDecodeTimestamp&&(i.firstDecodeTimestamp=t),s="offset"===r(this,Je).firstTimestampBehavior?i.firstDecodeTimestamp:Math.min(r(this,Ye)?.firstDecodeTimestamp??1/0,r(this,Ze)?.firstDecodeTimestamp??1/0),t-=s,e-=s}if(t<i.lastDecodeTimestamp)throw new Error(`Timestamps must be monotonically increasing (DTS went from ${1e6*i.lastDecodeTimestamp} to ${1e6*t}).`);return i.lastDecodeTimestamp=t,{presentationTimestamp:e,decodeTimestamp:t}},Ct=new WeakSet,vt=function(e){if("fragmented"===r(this,Je).fastStart)throw new Error("Can't finalize individual chunks if 'fastStart' is set to 'fragmented'.");if(e.currentChunk)if(e.finalizedChunks.push(e.currentChunk),r(this,tt).push(e.currentChunk),0!==e.compactlyCodedChunkTable.length&&M(e.compactlyCodedChunkTable).samplesPerChunk===e.currentChunk.samples.length||e.compactlyCodedChunkTable.push({firstChunk:e.finalizedChunks.length,samplesPerChunk:e.currentChunk.samples.length}),"in-memory"!==r(this,Je).fastStart){e.currentChunk.offset=r(this,Ke).pos;for(let t of e.currentChunk.samples)r(this,Ke).write(t.data),t.data=null;h(this,zt,Et).call(this)}else e.currentChunk.offset=0},St=new WeakSet,xt=function(e=!0){if("fragmented"!==r(this,Je).fastStart)throw new Error("Can't finalize a fragment unless 'fastStart' is set to 'fragmented'.");let t=[r(this,Ye),r(this,Ze)].filter(e=>e&&e.currentChunk);if(0===t.length)return;let i=(s=this,a=it,{set _(e){o(s,a,e,n)},get _(){return r(s,a,l)}})._++;var s,a,n,l;if(1===i){let e=F(t,r(this,et),!0);r(this,Ke).writeBox(e)}let d=r(this,Ke).pos,f=ce(i,t);r(this,Ke).writeBox(f);{let e=V(!1),i=0;for(let e of t)for(let t of e.currentChunk.samples)i+=t.size;let s=r(this,Ke).measureBox(e)+i;s>=2**32&&(e.largeSize=!0,s=r(this,Ke).measureBox(e)+i),e.size=s,r(this,Ke).writeBox(e)}for(let e of t){e.currentChunk.offset=r(this,Ke).pos,e.currentChunk.moofOffset=d;for(let t of e.currentChunk.samples)r(this,Ke).write(t.data),t.data=null}let u=r(this,Ke).pos;r(this,Ke).seek(r(this,Ke).offsets.get(f));let m=ce(i,t);r(this,Ke).writeBox(m),r(this,Ke).seek(u);for(let e of t)e.finalizedChunks.push(e.currentChunk),r(this,tt).push(e.currentChunk),e.currentChunk=null;e&&h(this,zt,Et).call(this)},zt=new WeakSet,Et=function(){r(this,Ke)instanceof Ge&&r(this,Ke).flush()},At=new WeakSet,Mt=function(){if(r(this,rt))throw new Error("Cannot add new video or audio chunks after the file has been finalized.")},Wt=l,((a,r,n,o)=>{if(r&&"object"==typeof r||"function"==typeof r)for(let h of i(r))s.call(a,h)||h===n||e(a,h,{get:()=>r[h],enumerable:!(o=t(r,h))||o.enumerable});return a})(e({},"__esModule",{value:!0}),Wt)})();"object"==typeof module&&"object"==typeof module.exports&&Object.assign(module.exports,Mp4Muxer);
+</script>
+<script>
+/* ================= utilities ================= */
+const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v;
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>{t=clamp(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;};
+const easeOut=t=>{t=clamp(t);return 1-Math.pow(1-t,3);};
+const easeIn=t=>{t=clamp(t);return t*t*t;};
+const seg=(u,a,b)=>clamp((u-a)/(b-a));
+const lerpPt=(a,b,t)=>({x:lerp(a.x,b.x,t),y:lerp(a.y,b.y,t)});
+function kf(u,pts){
+  if(u<=pts[0][0]) return {x:pts[0][1],y:pts[0][2]};
+  for(let i=1;i<pts.length;i++){
+    if(u<=pts[i][0]){const a=pts[i-1],b=pts[i];const t=ease((u-a[0])/(b[0]-a[0]||1));return {x:lerp(a[1],b[1],t),y:lerp(a[2],b[2],t)};}
+  }
+  const l=pts[pts.length-1];return {x:l[1],y:l[2]};
+}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const nz=x=>Math.sin(x*1.7)*.5+Math.sin(x*3.1+1.3)*.3+Math.sin(x*7.3+.7)*.2;
+
+const W=1600,H=900;
+/* ================= canvas, camera, labels ================= */
+const cv=document.getElementById('cv');let ctx=cv.getContext('2d');
+let dpr=1,cssW=960,cssH=540,fit=.6;
+let cam={x:800,y:450,s:1},VX0=0,VX1=W,VY0=0,VY1=H;
+let T=0,TT=0,CUR=0,U=0,SHOWLAB=true;
+let FONT='"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif';
+let COND='"Barlow Condensed","Arial Narrow","Noto Sans TC","Noto Sans CJK TC",sans-serif';
+const TAU=Math.PI*2;
+
+function applyCam(c){
+  cam=c;const k=fit*c.s;
+  ctx.setTransform(dpr*k,0,0,dpr*k,dpr*(cssW/2-c.x*k),dpr*(cssH/2-c.y*k));
+  VX0=c.x-cssW/2/k-6;VX1=c.x+cssW/2/k+6;VY0=c.y-cssH/2/k-6;VY1=c.y+cssH/2/k+6;
+}
+function toScreen(x,y){const k=fit*cam.s;return {x:cssW/2+(x-cam.x)*k,y:cssH/2+(y-cam.y)*k};}
+function screenSpace(){ctx.setTransform(dpr,0,0,dpr,0,0);}
+
+const LQ=[];
+function lab(x,y,text,o){
+  o=o||{};if(!SHOWLAB)return;const a=o.a===undefined?1:o.a;if(a<=.01)return;
+  LQ.push({x,y,text:tr(text),dx:o.dx===undefined?0:o.dx,dy:o.dy===undefined?-40:o.dy,a,st:o.st||'n',minor:!!o.minor});
+}
+function drawLabels(){
+  screenSpace();
+  const f=clamp(cssW/100,10,13.5),sc=clamp(cssW/1100,.6,1.15);
+  ctx.font=`500 ${f}px ${FONT}`;ctx.textBaseline='middle';ctx.textAlign='left';
+  for(const L of LQ){
+    if(L.minor&&cssW<760)continue;
+    const p=toScreen(L.x,L.y),qx=p.x+L.dx*sc,qy=p.y+L.dy*sc;
+    if(p.x<-8||p.x>cssW+8||p.y<-8||p.y>cssH+8)continue;
+    ctx.globalAlpha=L.a;
+    const tw=ctx.measureText(L.text).width,ph=f*1.8,pw=tw+f*1.2;
+    let bx,by;
+    if(L.dy===0){bx=L.dx>=0?qx:qx-pw;by=qy-ph/2;}
+    else{bx=qx-pw/2;by=L.dy<0?qy-ph:qy;}
+    bx=clamp(bx,4,cssW-pw-4);by=clamp(by,4,cssH-ph-4);
+    if(L.dx||L.dy){
+      const ex=clamp(qx,bx,bx+pw),ey=clamp(qy,by,by+ph);
+      ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.3;
+      ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(ex,ey);ctx.stroke();
+      ctx.beginPath();ctx.arc(p.x,p.y,2.6,0,TAU);ctx.fillStyle='#fff';ctx.fill();
+      ctx.lineWidth=1;ctx.strokeStyle='rgba(8,32,45,.8)';ctx.stroke();
+    }
+    let bg='rgba(9,31,44,.88)',fg='#fff';
+    if(L.st==='w'){bg='#e8572a';}
+    else if(L.st==='s'){bg='#f2c230';fg='#13232e';}
+    else if(L.st==='l'){bg='rgba(255,255,255,.93)';fg='#13232e';}
+    else if(L.st==='g'){bg='#1f7f5c';}
+    rrp(bx,by,pw,ph,ph/2);ctx.fillStyle=bg;ctx.fill();
+    ctx.fillStyle=fg;ctx.fillText(L.text,bx+f*.6,by+ph/2+.5);
+  }
+  ctx.globalAlpha=1;LQ.length=0;
+}
+
+/* ================= small helpers ================= */
+function rrp(x,y,w,h,r){r=Math.max(0,Math.min(r,w/2,h/2));ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function box(x,y,w,h,f,s,lw){ctx.fillStyle=f;ctx.fillRect(x,y,w,h);if(s){ctx.strokeStyle=s;ctx.lineWidth=lw||1;ctx.strokeRect(x,y,w,h);}}
+function ln(p,s,lw){ctx.beginPath();ctx.moveTo(p[0],p[1]);for(let i=2;i<p.length;i+=2)ctx.lineTo(p[i],p[i+1]);ctx.strokeStyle=s;ctx.lineWidth=lw||1;ctx.stroke();}
+function poly(p,f,s,lw){ctx.beginPath();ctx.moveTo(p[0],p[1]);for(let i=2;i<p.length;i+=2)ctx.lineTo(p[i],p[i+1]);ctx.closePath();if(f){ctx.fillStyle=f;ctx.fill();}if(s){ctx.strokeStyle=s;ctx.lineWidth=lw||1;ctx.stroke();}}
+function circ(x,y,r,f,s,lw){ctx.beginPath();ctx.arc(x,y,Math.max(.1,r),0,TAU);if(f){ctx.fillStyle=f;ctx.fill();}if(s){ctx.strokeStyle=s;ctx.lineWidth=lw||1;ctx.stroke();}}
+function wins(x,y,n,dx,w,h,col){ctx.fillStyle=col||'#1c3444';for(let i=0;i<n;i++)ctx.fillRect(x+i*dx,y,w,h);}
+function rail(x0,x1,y,h,col){ctx.strokeStyle=col||'rgba(40,50,60,.8)';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x0,y-h);ctx.lineTo(x1,y-h);for(let x=x0;x<=x1+.1;x+=6){ctx.moveTo(x,y);ctx.lineTo(x,y-h);}ctx.stroke();}
+function person(x,y,col,s){s=s||1;ctx.fillStyle=col||'#e8572a';ctx.fillRect(x-1.6*s,y-7*s,3.2*s,5*s);ctx.fillStyle='#223';ctx.fillRect(x-1.4*s,y-2*s,1.1*s,2*s);ctx.fillRect(x+.3*s,y-2*s,1.1*s,2*s);circ(x,y-8.6*s,1.6*s,'#f0c9a0');ctx.fillStyle='#fff';ctx.fillRect(x-1.8*s,y-10.6*s,3.6*s,1.2*s);}
+function alphaDo(a,fn){if(a<=.001)return;const g=ctx.globalAlpha;ctx.globalAlpha=g*clamp(a);fn();ctx.globalAlpha=g;}
+function bez(p0,p1,p2,p3,t){const m=1-t;return {x:m*m*m*p0.x+3*m*m*t*p1.x+3*m*t*t*p2.x+t*t*t*p3.x,y:m*m*m*p0.y+3*m*m*t*p1.y+3*m*t*t*p2.y+t*t*t*p3.y};}
+
+/* ================= crane ================= */
+function crane(px,py,L,hx,hy,o){
+  o=o||{};const col=o.col||'#e9b21f';
+  let dx=hx-px;const m=L*.985;dx=clamp(dx,-m,m);
+  const tx=px+dx,ty=py-Math.sqrt(L*L-dx*dx);hy=Math.max(hy,ty+14);
+  const w=o.w||Math.max(4,L*.028),ang=Math.atan2(ty-py,tx-px),nx=-Math.sin(ang)*w/2,ny=Math.cos(ang)*w/2;
+  const back=dx>=0?-1:1,ax=px+back*w*2,ay=py-w*3.4;
+  ln([px,py,ax,ay],'#3d4750',2);ln([ax,ay,tx,ty],'rgba(30,35,40,.75)',.9);ln([ax,ay,tx+nx*.3,ty+ny*.3],'rgba(30,35,40,.5)',.7);
+  if(o.solid){poly([px+nx,py+ny,tx+nx*.4,ty+ny*.4,tx-nx*.4,ty-ny*.4,px-nx,py-ny],col,'rgba(0,0,0,.35)',1);}
+  else{
+    const len=Math.hypot(tx-px,ty-py),n=Math.max(3,Math.floor(len/(w*1.3)));
+    ctx.strokeStyle=col;ctx.lineWidth=Math.max(1.4,w*.3);ctx.beginPath();
+    ctx.moveTo(px+nx,py+ny);ctx.lineTo(tx+nx*.35,ty+ny*.35);ctx.moveTo(px-nx,py-ny);ctx.lineTo(tx-nx*.35,ty-ny*.35);ctx.stroke();
+    ctx.lineWidth=.8;ctx.beginPath();
+    for(let i=0;i<n;i++){const k0=i/n,k1=(i+1)/n,s0=lerp(1,.35,k0),s1=lerp(1,.35,k1);
+      const a={x:lerp(px,tx,k0)+nx*s0*(i%2?1:-1),y:lerp(py,ty,k0)+ny*s0*(i%2?1:-1)},b={x:lerp(px,tx,k1)+nx*s1*(i%2?-1:1),y:lerp(py,ty,k1)+ny*s1*(i%2?-1:1)};
+      ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);}
+    ctx.stroke();
+  }
+  circ(tx,ty,w*.45,'#3d4750');
+  ln([tx,ty,tx,hy-8],'rgba(25,28,32,.9)',1.1);
+  box(tx-4.5,hy-11,9,7,'#2b3137');ctx.strokeStyle='#2b3137';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(tx,hy-4);ctx.lineTo(tx,hy-1);ctx.arc(tx-2,hy-1,2,0,Math.PI);ctx.stroke();
+  return {x:tx,y:ty,hy};
+}
+function slings(hx,hy,pts){ctx.strokeStyle='rgba(30,30,30,.8)';ctx.lineWidth=.8;ctx.beginPath();for(let i=0;i<pts.length;i+=2){ctx.moveTo(hx,hy);ctx.lineTo(pts[i],pts[i+1]);}ctx.stroke();}
+
+/* ================= scene helpers ================= */
+let SC=0,SU=0;
+const uc=i=>SC>i?1:SC<i?0:SU;
+const band=(u,a,b,f)=>{f=f||.03;return seg(u,a,a+f)*(1-seg(u,b-f,b));};
+const TQ=[];
+function tick(x,y,t,al){TQ.push({x,y,t,al:al||'left'});}
+function drawTicks(){
+  screenSpace();const f=clamp(cssW/105,9,13);ctx.font=`600 ${f}px ${COND}`;ctx.textBaseline='middle';
+  for(const q of TQ){const p=toScreen(q.x,q.y),t=tr(q.t);ctx.textAlign=q.al;ctx.fillStyle='rgba(8,32,45,.7)';ctx.fillText(t,p.x+1,p.y+1);ctx.fillStyle='#fff';ctx.fillText(t,p.x,p.y);}
+  TQ.length=0;ctx.textAlign='left';
+}
+function arrowR(x,y,L,col){ln([x,y,x+L,y],col,2);poly([x+L+6,y,x+L-1,y-4,x+L-1,y+4],col);}
+function partial(P,f){
+  if(f>=1)return P.slice();if(f<=0)return [P[0]];
+  let tot=0;const d=[];for(let i=1;i<P.length;i++){const l=Math.hypot(P[i].x-P[i-1].x,P[i].y-P[i-1].y);d.push(l);tot+=l;}
+  let want=tot*f;const out=[P[0]];
+  for(let i=1;i<P.length;i++){if(want>=d[i-1]){out.push(P[i]);want-=d[i-1];}else{const t=want/d[i-1];out.push({x:lerp(P[i-1].x,P[i].x,t),y:lerp(P[i-1].y,P[i].y,t)});break;}}
+  return out;
+}
+function pathLine(P,col,lw,dash){if(!P||P.length<2)return;ctx.beginPath();ctx.moveTo(P[0].x,P[0].y);for(let i=1;i<P.length;i++)ctx.lineTo(P[i].x,P[i].y);if(dash)ctx.setLineDash(dash);ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.lineJoin='round';ctx.stroke();ctx.setLineDash([]);}
+function drawCable(P){if(!P||P.length<2)return;pathLine(P,'#121416',3.6);pathLine(P,'#e8a33a',.9,[6,8]);}
+function ring(x,y,r,col,lw){ctx.beginPath();ctx.arc(x,y,Math.max(.1,r),0,TAU);ctx.strokeStyle=col;ctx.lineWidth=lw||1.5;ctx.stroke();}
+
+/* ================= HUD ================= */
+const HK=()=>clamp(cssW/1200,.62,1.15);
+let HUDW=0;
+function hudPanel(w,h,title,a,fn){
+  if(cssW<600||a<=.01||!SHOWLAB)return;
+  const k=HK(),x=cssW-(w+14)*k,y=34*k;
+  screenSpace();ctx.save();ctx.globalAlpha=clamp(a);ctx.translate(x,y);ctx.scale(k,k);
+  rrp(0,0,w,h,10);ctx.fillStyle='rgba(7,27,39,.86)';ctx.fill();ctx.strokeStyle='rgba(255,255,255,.14)';ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle='#f2c230';ctx.font=`700 13px ${FONT}`;ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.fillText(tr(title),14,23,w-28);
+  HUDW=w;try{fn(w,h);}finally{HUDW=0;}ctx.restore();
+}
+function hrow(y,label,val,w,col){label=tr(label);val=tr(val);ctx.textBaseline='alphabetic';ctx.font=`700 17px ${COND}`;const vw=ctx.measureText(val).width;ctx.textAlign='left';ctx.font=`500 12px ${FONT}`;ctx.fillStyle='rgba(227,236,238,.78)';ctx.fillText(label,14,y,Math.max(24,w-36-vw));ctx.textAlign='right';ctx.font=`700 17px ${COND}`;ctx.fillStyle=col||'#fff';ctx.fillText(val,w-14,y);ctx.textAlign='left';}
+function hbar(x,y,w,f,col){rrp(x,y,w,6,3);ctx.fillStyle='rgba(255,255,255,.14)';ctx.fill();if(f>0){rrp(x,y,Math.max(6,w*clamp(f)),6,3);ctx.fillStyle=col||'#f2c230';ctx.fill();}}
+function htext(x,y,t,size,col,weight,font,align){t=tr(t);const al=align||'left';ctx.textBaseline='alphabetic';ctx.textAlign=al;ctx.font=`${weight||500} ${size}px ${font||FONT}`;ctx.fillStyle=col||'#fff';
+  if(HUDW){const mw=al==='left'?HUDW-x-10:al==='right'?x-10:Math.min(x,HUDW-x)*2-10;if(mw>8){ctx.fillText(t,x,y,mw);ctx.textAlign='left';return;}}
+  ctx.fillText(t,x,y);ctx.textAlign='left';}
+
+/* ================= i18n =================
+   Every visible string is written in Traditional Chinese in the episode code and translated at draw time.
+   DICT maps the Chinese string to [English, Japanese]; kits and episode files add entries with
+   Object.assign(DICT,{...}). trf() handles strings with changing numbers: trf('第 {n} 天',{n:3}).
+   UI holds interface strings as [zh, en, ja]. */
+const LANGS=['zh','en'];  // dofLab-courses：本課程只提供中文／English 兩種語言
+let LANG='zh',LI=-1;
+const DICT={};
+const UI={"secAnim": ["動畫", "Animation", "アニメーション"], "scaleNote": ["示意圖：比例經過調整", "Schematic: not to scale", "模式図：縮尺は調整しています"], "prev": ["上一個分鏡", "Previous shot", "前のシーン"], "next": ["下一個分鏡", "Next shot", "次のシーン"], "play": ["播放", "Play", "再生"], "pause": ["暫停", "Pause", "一時停止"], "replay": ["重新播放", "Replay", "もう一度再生"], "progress": ["播放進度", "Playback position", "再生位置"], "speed": ["播放速度", "Playback speed", "再生速度"], "labels": ["標註", "Labels", "ラベル"], "labelsTip": ["顯示／隱藏標註", "Show or hide labels", "ラベルの表示／非表示"], "full": ["全螢幕", "Full screen", "全画面"], "chapNav": ["分鏡", "Shots", "シーン"], "chapHead": ["本集分鏡", "Shots in this episode", "このエピソードのシーン"], "langGroup": ["介面語言", "Interface language", "表示言語"], "sep": ["，", ", ", "、"], "rec": ["匯出影片", "Export video", "動画を書き出す"], "recTitle": ["錄製 MP4 影片", "Record an MP4 video", "MP4 動画を書き出す"], "recIntro": ["逐格離線算繪，不會掉格，也不必等動畫即時播完。語言與標註設定沿用目前畫面。", "Frames are rendered offline one at a time, so nothing drops and you don't wait for real-time playback. Language and label settings follow the current view.", "フレームを1枚ずつオフラインで描画するため、コマ落ちがなく、リアルタイム再生を待つ必要もありません。言語とラベルの設定は現在の表示に従います。"], "optSpeed": ["影片速度", "Video speed", "再生速度"], "optRange": ["範圍", "Range", "範囲"], "rangeAll": ["全片", "Whole animation", "全編"], "rangeChap": ["目前分鏡", "Current shot", "現在のシーン"], "optRes": ["解析度", "Resolution", "解像度"], "optFps": ["影格率", "Frame rate", "フレームレート"], "sum": ["影片長度 {d}，共 {f} 格，檔案最多約 {m} MB", "Length {d}, {f} frames, up to about {m} MB", "長さ {d}、{f} フレーム、最大約 {m} MB"], "sumChap": ["（{c}）", " ({c})", "（{c}）"], "start": ["開始錄製", "Start recording", "書き出し開始"], "again": ["再錄一次", "Record again", "もう一度書き出す"], "cancel": ["取消", "Cancel", "キャンセル"], "close": ["關閉", "Close", "閉じる"], "download": ["下載 MP4", "Download MP4", "MP4 をダウンロード"], "stPrep": ["準備編碼器…", "Preparing the encoder…", "エンコーダーを準備中…"], "stRun": ["算繪中 {p}%，剩餘約 {e}", "Rendering {p}%, about {e} left", "描画中 {p}%、残り約 {e}"], "stFin": ["封裝 MP4…", "Writing the MP4…", "MP4 を生成中…"], "stDone": ["完成：{s} MB，已開始下載。", "Done: {s} MB. The download has started.", "完了：{s} MB。ダウンロードを開始しました。"], "stCancel": ["已取消錄製。", "Recording cancelled.", "書き出しをキャンセルしました。"], "stNoSup": ["這個瀏覽器不支援 WebCodecs 影片編碼，請改用最新版的 Chrome、Edge 或 Safari。", "This browser does not support WebCodecs video encoding. Please use a recent Chrome, Edge or Safari.", "このブラウザーは WebCodecs による動画エンコードに対応していません。最新版の Chrome、Edge、Safari をご利用ください。"], "stNoCodec": ["找不到可用的影片編碼設定，請試試較低的解析度或影格率，或改用最新版 Chrome、Edge、Safari。", "No usable video encoder setting was found. Try a lower resolution or frame rate, or a recent Chrome, Edge or Safari.", "使用できる動画エンコード設定が見つかりません。解像度やフレームレートを下げるか、最新版の Chrome、Edge、Safari をお試しください。"], "stAlt": ["（此瀏覽器沒有 H.264 編碼器，改以 {c} 編碼；Chrome、Firefox、VLC 可播放，QuickTime 可能無法播放。）", "(This browser has no H.264 encoder, so the video uses {c}. It plays in Chrome, Firefox and VLC, but possibly not in QuickTime.)", "（このブラウザーには H.264 エンコーダーがないため {c} で書き出しました。Chrome、Firefox、VLC では再生できますが、QuickTime では再生できない場合があります。）"], "stErr": ["錄製失敗：", "Recording failed: ", "書き出しに失敗しました："], "keepTab": ["錄製期間請保持此分頁開啟。", "Keep this tab open while recording.", "書き出し中はこのタブを開いたままにしてください。"], "factsAria": ["重點數字", "Key figures", "主な数字"], "factsHead": ["本集重點數字", "Key figures", "このエピソードの主な数字"], "series": ["{s} 第 {n} 集（共 {t} 集）", "{s}, episode {n} of {t}", "{s} 第 {n} 話（全 {t} 話）"], "seriesOne": ["{s} 第 {n} 集", "{s}, episode {n}", "{s} 第 {n} 話"], "back": ["← 課程目錄", "← Course index", "← コース一覧"], "shotOf": ["{i}／{n}", "{i}/{n}", "{i}／{n}"]};
+const CJK_RE=/[\u3000-\u9fff\uff00-\uffef]/;
+const TPAT=[
+  [/^量測第 (\d+) 天$/,m=>[`Day ${m[1]}`,`計測 ${m[1]} 日目`]],
+  [/^第 (\d+) 段塔架$/,m=>[`Tower section ${m[1]}`,`タワー第 ${m[1]} 段`]],
+  [/^第 (\d+) 支葉片$/,m=>[`Blade ${m[1]}`,`ブレード ${m[1]} 枚目`]]
+];
+function tr(s){
+  if(LI<0||typeof s!=='string'||!CJK_RE.test(s))return s;
+  const d=DICT[s];if(d)return d[LI];
+  for(const [re,f] of TPAT){const m=s.match(re);if(m)return f(m)[LI];}
+  if(s.indexOf('\u3000')>=0)return s.split('\u3000').map(tr).join('   ');
+  return s;
+}
+function trf(k,v){let s=tr(k);for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s;}
+function ui(k,vars){const a=UI[k];let s=a?a[LI+1]:k;if(vars)for(const v in vars)s=s.split('{'+v+'}').join(vars[v]);return s;}
+const FONT_TC='"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif';
+const FONT_JP='"Noto Sans JP","Noto Sans CJK JP","Hiragino Sans","Yu Gothic","Meiryo","Noto Sans TC",system-ui,sans-serif';
+const LANG_KEY='rea-lang';
+/* strings intentionally shown in Chinese in other languages (e.g. bilingual subtitles); qa.py ignores them */
+const QA_KEEP=[];
+
+/* kit-claude.js — Claude AI 應用動畫館 專用繪圖函式庫
+   建立日期：2026-09-28
+   沿用 energy-animation-studio 引擎（core.js + engine.js）
+   世界座標 1600×900；所有函式都是 draw 內部呼叫的純函式。
+   ────────────────────────────────────────────────── */
+
+// ─── Claude 品牌色（示意，非官方） ──────────────────────────────
+const KC={
+  bg:      '#0e2133',   // 深藍背景（對話底色）
+  winBg:   '#131f2e',   // 視窗背景
+  winBar:  '#1a2d42',   // 標題列
+  userBub: '#2a5c8c',   // 使用者泡泡
+  aiBub:   '#1e3a55',   // Claude 泡泡
+  border:  '#2e4a66',   // 框線
+  accent:  '#f2c230',   // 強調黃（引擎色）
+  green:   '#7dffc4',   // 薄荷綠（引擎色）
+  orange:  '#e8572a',   // 警示橘（引擎色）
+  text:    '#e3ecee',   // 主要文字
+  sub:     '#7a9bb0',   // 次要文字
+  cursor:  '#f2c230',   // 閃爍游標
+  toolBg:  '#0f2438',   // 工具面板底色
+  nodeBg:  '#1a3048',   // 代理節點底色
+  nodeAct: '#f2c230',   // 代理節點啟動色
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   1. 對話視窗：claudeWin(x, y, w, h, opts)
+      opts.msgs = [{role:'user'|'ai', text:'...'}, ...]
+      opts.u    = 進度 0–1（控制訊息出現）
+      opts.typing = true 顯示打字游標
+   ═══════════════════════════════════════════════════════════════ */
+function claudeWin(x, y, w, h, opts={}){
+  const {msgs=[], u=1, typing=false, title='Claude'} = opts;
+  ctx.save();
+  // 視窗外框
+  rrp(x, y, w, h, 10); ctx.fillStyle=KC.winBg; ctx.fill();
+  rrp(x, y, w, h, 10); ctx.strokeStyle=KC.border; ctx.lineWidth=1.5; ctx.stroke();
+  // 標題列
+  rrp(x, y, w, 40, 10);
+  const gBar=ctx.createLinearGradient(x,y,x,y+40);
+  gBar.addColorStop(0,KC.winBar); gBar.addColorStop(1,KC.winBg);
+  ctx.fillStyle=gBar; ctx.fill();
+  // 標題列分隔線
+  ln([x,y+40,x+w,y+40], KC.border, 1);
+  // 模型名稱
+  ctx.font=`600 16px 'Noto Sans TC',sans-serif`;
+  ctx.fillStyle=KC.text; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(tr(title), x+w/2, y+20);
+  // 訊號燈
+  [KC.orange, KC.accent, KC.green].forEach((c,i)=>{
+    circ(x+16+i*18, y+20, 5, c, 'none', 0);
+  });
+  // 訊息區域：clip
+  ctx.save();
+  ctx.beginPath(); ctx.rect(x+2, y+41, w-4, h-42); ctx.clip();
+  const pad=16, bh=56, gap=12;
+  const shown=Math.ceil(msgs.length * clamp(u*1.2,0,1));
+  msgs.slice(0,shown).forEach((m,i)=>{
+    const isUser=m.role==='user';
+    const by=y+56+i*(bh+gap);
+    const bx=isUser? x+w-pad-260: x+pad;
+    const bw=Math.min(260, w*0.6);
+    // 泡泡
+    rrp(bx,by,bw,bh-4,8);
+    ctx.fillStyle=isUser? KC.userBub: KC.aiBub; ctx.fill();
+    // 角色標籤
+    ctx.font=`600 11px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=isUser? '#7dc8dc': KC.accent;
+    ctx.textAlign=isUser? 'right': 'left';
+    ctx.textBaseline='top';
+    ctx.fillText(tr(isUser? '你': 'Claude'), bx+(isUser?bw-8:8), by+7);
+    // 訊息文字（截斷顯示）
+    ctx.font=`14px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=KC.text; ctx.textBaseline='top';
+    const txt=tr(m.text); const maxC=Math.floor((bw-16)/8);
+    ctx.fillText(txt.length>maxC? txt.slice(0,maxC)+'…': txt, bx+(isUser?8:8), by+24);
+  });
+  ctx.restore();
+  // 打字游標
+  if(typing && u<1){
+    const ty=y+56+shown*(bh+gap)+12;
+    claudeTypingDot(x+pad+24, ty);
+  }
+  ctx.restore();
+}
+
+/* 打字指示器（三個跳動圓點） */
+function claudeTypingDot(x, y){
+  [0,1,2].forEach(i=>{
+    const dy=-4*Math.sin(TT*4+i*1.2);
+    circ(x+i*14, y+dy, 4, KC.sub, 'none', 0);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. 單一訊息泡泡：bubble(x, y, w, text, role, opts)
+      role='user'|'ai'  opts.u=0–1（淡入）
+   ═══════════════════════════════════════════════════════════════ */
+function bubble(x, y, w, text, role='ai', opts={}){
+  const {u=1, lines=1} = opts;
+  const h=28+lines*22;
+  alphaDo(ease(clamp(u,0,1)), ()=>{
+    rrp(x,y,w,h,8);
+    ctx.fillStyle=role==='user'? KC.userBub: KC.aiBub; ctx.fill();
+    ctx.strokeStyle=KC.border; ctx.lineWidth=1; ctx.stroke();
+    ctx.font=`14px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=KC.text; ctx.textAlign='left'; ctx.textBaseline='middle';
+    const t=tr(text);
+    ctx.fillText(t.length>Math.floor(w/9)? t.slice(0,Math.floor(w/9))+'…': t, x+12, y+h/2);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. 閃爍游標（模擬 Claude 打字中）
+      typeCursor(x, y, u) — u 控制閃爍相位
+   ═══════════════════════════════════════════════════════════════ */
+function typeCursor(x, y, scale=1){
+  const a=0.5+0.5*Math.sin(TT*4);
+  alphaDo(a, ()=>{
+    box(x, y-16*scale, 2.5*scale, 20*scale, KC.cursor, 'none', 0);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. 檔案卡：fileCard(x, y, w, label, ext, opts)
+      ext='PDF'|'CSV'|'DOCX'|'PNG'|'JS'…
+      opts.u=淡入進度  opts.preview='...' 預覽小字
+   ═══════════════════════════════════════════════════════════════ */
+function fileCard(x, y, w, label, ext='FILE', opts={}){
+  const {u=1, preview=''} = opts;
+  const h=72, iw=48;
+  alphaDo(ease(clamp(u,0,1)), ()=>{
+    // 卡片底
+    rrp(x,y,w,h,6); ctx.fillStyle='rgba(30,58,85,.9)'; ctx.fill();
+    ctx.strokeStyle=KC.border; ctx.lineWidth=1.2; ctx.stroke();
+    // 檔案圖示（摺角矩形）
+    const ix=x+10, iy=y+10;
+    ctx.fillStyle=_extColor(ext);
+    ctx.beginPath();
+    ctx.moveTo(ix,iy); ctx.lineTo(ix+iw-12,iy); ctx.lineTo(ix+iw,iy+12);
+    ctx.lineTo(ix+iw,iy+38); ctx.lineTo(ix,iy+38); ctx.closePath();
+    ctx.fill();
+    // 摺角
+    ctx.fillStyle='rgba(0,0,0,.25)';
+    ctx.beginPath(); ctx.moveTo(ix+iw-12,iy); ctx.lineTo(ix+iw-12,iy+12); ctx.lineTo(ix+iw,iy+12); ctx.closePath(); ctx.fill();
+    // 副檔名文字
+    ctx.font=`700 11px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(ext, ix+iw/2, iy+27);
+    // 檔名
+    ctx.font=`600 14px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=KC.text; ctx.textAlign='left'; ctx.textBaseline='top';
+    const lbl=tr(label);
+    ctx.fillText(lbl.length>18? lbl.slice(0,17)+'…': lbl, x+iw+18, y+14);
+    if(preview){
+      ctx.font=`12px 'Noto Sans TC',sans-serif`;
+      ctx.fillStyle=KC.sub;
+      ctx.fillText(tr(preview).slice(0,22), x+iw+18, y+36);
+    }
+  });
+}
+function _extColor(ext){
+  const m={'PDF':'#e8572a','CSV':'#7dffc4','DOCX':'#2a5c8c','PNG':'#b37cff',
+           'JS':'#f2c230','PY':'#58b8d0','MD':'#7dc8dc','TXT':KC.sub};
+  return m[ext]||KC.sub;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. 終端機視窗：terminal(x, y, w, h, opts)
+      opts.lines=[ 命令字串... ]  opts.u=進度
+      opts.prompt='$ '
+   ═══════════════════════════════════════════════════════════════ */
+function terminal(x, y, w, h, opts={}){
+  const {lines=[], u=1, prompt='$ ', title='Terminal'} = opts;
+  ctx.save();
+  // 外框
+  rrp(x,y,w,h,8); ctx.fillStyle='#0a1520'; ctx.fill();
+  ctx.strokeStyle=KC.border; ctx.lineWidth=1.5; ctx.stroke();
+  // 標題列
+  box(x+1,y+1,w-2,30,'#1a2d42','none',0);
+  circ(x+14,y+15,5,'#e8572a','none',0);
+  circ(x+30,y+15,5,KC.accent,'none',0);
+  circ(x+46,y+15,5,KC.green,'none',0);
+  ctx.font=`13px 'Barlow Condensed',monospace`;
+  ctx.fillStyle=KC.sub; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(title, x+w/2, y+15);
+  ln([x,y+30,x+w,y+30],KC.border,1);
+  // 文字內容
+  ctx.save(); ctx.beginPath(); ctx.rect(x+2,y+31,w-4,h-32); ctx.clip();
+  const shown=Math.floor(lines.length*clamp(u*1.5,0,1));
+  ctx.font=`14px 'Barlow Condensed',monospace`;
+  ctx.textAlign='left'; ctx.textBaseline='top';
+  lines.slice(0,shown).forEach((ln_,i)=>{
+    const ty=y+38+i*20;
+    const isCmd=ln_.startsWith(prompt)||ln_.startsWith('#');
+    ctx.fillStyle=isCmd? KC.green: KC.text;
+    ctx.fillText(tr(ln_), x+12, ty);
+  });
+  // 游標（最後一行末）
+  if(shown<lines.length||u<0.9){
+    const cy=y+38+shown*20;
+    typeCursor(x+12+8*(prompt.length), cy);
+  }
+  ctx.restore();
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. 瀏覽器視窗：browserWin(x, y, w, h, opts)
+      opts.url='claude.ai/...'  opts.u=0–1（頁面淡入）
+      opts.drawContent=fn(innerX,innerY,innerW,innerH)
+   ═══════════════════════════════════════════════════════════════ */
+function browserWin(x, y, w, h, opts={}){
+  const {url='claude.ai', u=1, drawContent=null} = opts;
+  ctx.save();
+  // 外框
+  rrp(x,y,w,h,8); ctx.fillStyle='#12202f'; ctx.fill();
+  ctx.strokeStyle=KC.border; ctx.lineWidth=1.5; ctx.stroke();
+  // 工具列
+  box(x+1,y+1,w-2,38,'#1d3040','none',0);
+  // 返回 / 前進
+  ctx.font=`16px 'Barlow Condensed',sans-serif`;
+  ctx.fillStyle=KC.sub; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('‹', x+16, y+20); ctx.fillText('›', x+34, y+20);
+  // 重新整理
+  ctx.fillStyle=KC.sub; ctx.font=`14px sans-serif`;
+  ctx.fillText('↻', x+50, y+20);
+  // 網址列
+  rrp(x+62,y+8,w-80,24,4);
+  ctx.fillStyle='rgba(255,255,255,.06)'; ctx.fill();
+  ctx.strokeStyle=KC.border; ctx.lineWidth=1; ctx.stroke();
+  ctx.font=`13px 'Noto Sans TC',sans-serif`;
+  ctx.fillStyle=KC.sub; ctx.textAlign='left'; ctx.textBaseline='middle';
+  ctx.fillText(url.length>38? url.slice(0,37)+'…': url, x+70, y+20);
+  // 鎖頭
+  ctx.fillStyle=KC.green; ctx.font=`12px sans-serif`;
+  ctx.fillText('⚿', x+66, y+20);
+  ln([x,y+38,x+w,y+38],KC.border,1);
+  // 頁面內容
+  if(drawContent){
+    ctx.save(); ctx.beginPath(); ctx.rect(x+2,y+39,w-4,h-40); ctx.clip();
+    alphaDo(ease(u), ()=>drawContent(x+2,y+39,w-4,h-40));
+    ctx.restore();
+  } else {
+    alphaDo(ease(u)*0.3, ()=>{ ctx.fillStyle='#fff'; ctx.fillRect(x+2,y+39,w-4,h-40); });
+  }
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. 代理迴圈節點：agentNode(x, y, r, label, opts)
+      opts.u=淡入  opts.active=0–1（啟動強度）  opts.icon='◎'
+   ═══════════════════════════════════════════════════════════════ */
+function agentNode(x, y, r, label, opts={}){
+  const {u=1, active=0, icon=''} = opts;
+  alphaDo(ease(clamp(u,0,1)), ()=>{
+    if(active>0.01){
+      const glowR=r+12+8*active;
+      const g=ctx.createRadialGradient(x,y,r,x,y,glowR+6);
+      g.addColorStop(0,`rgba(242,194,48,${0.35*active})`);
+      g.addColorStop(1,'rgba(242,194,48,0)');
+      circ(x,y,glowR+6,g,'none',0);
+    }
+    circ(x,y,r,KC.nodeBg, lerp(KC.border,KC.nodeAct,active), lerp(1.5,3,active));
+    if(icon){
+      ctx.font=`${r*0.9}px sans-serif`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle=lerp('#7a9bb0','#f2c230',active);
+      ctx.fillText(icon, x, y);
+    }
+    ctx.font=`600 14px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=active>0.5? KC.accent: KC.text;
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    ctx.fillText(tr(label), x, y+r+8);
+  });
+}
+
+function agentArrow(x0,y0,x1,y1,opts={}){
+  const {u=1, active=0, col=KC.border} = opts;
+  if(u<=0) return;
+  alphaDo(0.5+0.3*active, ()=>arrow(x0,y0,x1,y1,col,1.5));
+  if(active>0.1){
+    const n=3;
+    for(let i=0;i<n;i++){
+      const t=((TT*0.5+i/n)%1);
+      circ(lerp(x0,x1,t), lerp(y0,y1,t), 3, KC.accent, 'none', 0);
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. 工具圖示：toolIcon(x, y, name, opts)
+   ═══════════════════════════════════════════════════════════════ */
+const TOOL_ICONS={
+  '搜尋':{sym:'◎',col:'#58b8d0'},'計算':{sym:'∑',col:'#f2c230'},
+  '程式':{sym:'</>',col:'#7dffc4'},'檔案':{sym:'☰',col:'#b37cff'},
+  '瀏覽':{sym:'⬡',col:'#7dc8dc'},'日曆':{sym:'▦',col:'#e8572a'},
+  'search':{sym:'◎',col:'#58b8d0'},'code':{sym:'</>',col:'#7dffc4'},
+  'file':{sym:'☰',col:'#b37cff'},'web':{sym:'⬡',col:'#7dc8dc'},
+};
+function toolIcon(x, y, name, opts={}){
+  const {u=1, active=0, size=40} = opts;
+  const info=TOOL_ICONS[name]||{sym:'✦',col:KC.sub};
+  alphaDo(ease(clamp(u,0,1)), ()=>{
+    const r=size/2;
+    rrp(x-r,y-r,size,size,6);
+    ctx.fillStyle=active>0.5? info.col+'33': KC.toolBg; ctx.fill();
+    ctx.strokeStyle=active>0.5? info.col: KC.border;
+    ctx.lineWidth=active>0.5?2:1; ctx.stroke();
+    ctx.font=`700 ${Math.floor(size*0.45)}px 'Barlow Condensed',monospace`;
+    ctx.fillStyle=active>0.5? info.col: KC.sub;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(info.sym, x, y);
+    if(name){
+      ctx.font=`11px 'Noto Sans TC',sans-serif`;
+      ctx.fillStyle=KC.sub; ctx.textBaseline='top';
+      ctx.fillText(tr(name), x, y+r+4);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. 連線動畫：connLine(x0,y0,x1,y1,opts)
+   ═══════════════════════════════════════════════════════════════ */
+function connLine(x0,y0,x1,y1,opts={}){
+  const {u=1, flow=false, col=KC.border, lw=2, dash=false} = opts;
+  if(u<=0) return;
+  ctx.save();
+  ctx.strokeStyle=col; ctx.lineWidth=lw;
+  if(dash) ctx.setLineDash([8,6]);
+  ctx.globalAlpha=0.7;
+  ctx.beginPath();
+  ctx.moveTo(x0,y0); ctx.lineTo(lerp(x0,x1,u), lerp(y0,y1,u));
+  ctx.stroke(); ctx.setLineDash([]);
+  if(flow && u>=1){
+    const n=4;
+    for(let i=0;i<n;i++){
+      const t=((TT*0.6+i/n)%1);
+      circ(lerp(x0,x1,t), lerp(y0,y1,t), 3, col, 'none', 0);
+    }
+  }
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. 上下文視窗圖解：contextDesk(x, y, w, h, opts)
+   ═══════════════════════════════════════════════════════════════ */
+function contextDesk(x, y, w, h, opts={}){
+  const {tokens=0, maxTokens=200000, items=[], u=1} = opts;
+  alphaDo(ease(clamp(u,0,1)), ()=>{
+    rrp(x,y,w,h,8); ctx.fillStyle='rgba(15,36,56,.85)'; ctx.fill();
+    ctx.strokeStyle=KC.border; ctx.lineWidth=1.2; ctx.stroke();
+    const bx=x+16,by=y+h-30,bw=w-32,bh=12;
+    box(bx,by,bw,bh,'rgba(255,255,255,.08)',KC.border,1);
+    const ratio=Math.min(tokens/maxTokens,1);
+    const barCol=ratio>0.8?KC.orange:ratio>0.5?KC.accent:KC.green;
+    const drawn=bw*ratio*clamp(u*2,0,1);
+    if(drawn>0) box(bx,by,drawn,bh,barCol,'none',0);
+    ctx.font=`600 12px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle=KC.sub; ctx.textAlign='right'; ctx.textBaseline='bottom';
+    ctx.fillText(`${Math.round(tokens/1000)}K / ${Math.round(maxTokens/1000)}K tokens`, bx+bw, by-4);
+    items.forEach((item,i)=>{
+      const ix=x+16+i%(Math.floor((w-32)/90))*90;
+      const iy=y+20+Math.floor(i/Math.floor((w-32)/90))*60;
+      const a=seg(u, i/Math.max(items.length,1), (i+1)/Math.max(items.length,1));
+      alphaDo(ease(a), ()=>{
+        rrp(ix,iy,78,46,4); ctx.fillStyle='rgba(42,92,140,.6)'; ctx.fill();
+        ctx.strokeStyle=KC.border; ctx.lineWidth=1; ctx.stroke();
+        ctx.font=`12px 'Noto Sans TC',sans-serif`;
+        ctx.fillStyle=KC.text; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(tr(item).slice(0,6), ix+39, iy+23);
+      });
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. 模型比較卡：modelCard(x, y, w, name, speed, quality, opts)
+   ═══════════════════════════════════════════════════════════════ */
+function modelCard(x, y, w, name, speed, quality, opts={}){
+  const {u=1, highlight=false} = opts;
+  const h=100;
+  alphaDo(ease(clamp(u,0,1)), ()=>{
+    rrp(x,y,w,h,8);
+    ctx.fillStyle=highlight?'rgba(242,194,48,.12)':'rgba(30,58,85,.8)'; ctx.fill();
+    ctx.strokeStyle=highlight? KC.accent: KC.border;
+    ctx.lineWidth=highlight?2:1; ctx.stroke();
+    ctx.font=`700 18px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=highlight? KC.accent: KC.text;
+    ctx.textAlign='left'; ctx.textBaseline='top';
+    ctx.fillText(tr(name), x+12, y+12);
+    ctx.font=`12px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=KC.sub; ctx.textBaseline='top';
+    ctx.fillText(tr('速度'), x+12, y+40);
+    const sw=Math.floor((w-24)*0.6*speed);
+    box(x+12,y+55,Math.floor((w-24)*0.6),8,'rgba(255,255,255,.08)',KC.border,1);
+    if(sw>0) box(x+12,y+55,sw,8,KC.green,'none',0);
+    ctx.fillStyle=KC.sub; ctx.textAlign='right';
+    ctx.fillText(tr('推理'), x+w-12, y+40);
+    const qw=Math.floor((w-24)*0.35*quality);
+    const qx=x+w-12-Math.floor((w-24)*0.35);
+    box(qx,y+55,Math.floor((w-24)*0.35),8,'rgba(255,255,255,.08)',KC.border,1);
+    if(qw>0) box(qx,y+55,qw,8,KC.accent,'none',0);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   12. 步驟流程圖：flowSteps(steps, startX, y, stepW, u, col)
+   ═══════════════════════════════════════════════════════════════ */
+function flowSteps(steps, startX, y, stepW, u=1, col=KC.accent){
+  const n=steps.length;
+  steps.forEach((s,i)=>{
+    const x=startX+i*stepW;
+    const a=seg(u, i/n, (i+0.5)/n);
+    if(i<n-1){
+      const la=seg(u,(i+0.4)/n,(i+0.6)/n);
+      alphaDo(la, ()=>ln([x+28,y,x+stepW-28,y],col,2));
+    }
+    const active=a>0.5;
+    alphaDo(ease(a), ()=>{
+      circ(x,y,24, active?col:'rgba(30,58,85,.8)', active?col:KC.border, active?0:1.5);
+      ctx.font=`700 16px 'Barlow Condensed',sans-serif`;
+      ctx.fillStyle=active?'#0e2133':KC.sub;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(s.icon||String(i+1), x, y);
+      ctx.font=`600 13px 'Noto Sans TC',sans-serif`;
+      ctx.fillStyle=active? col: KC.sub; ctx.textBaseline='top';
+      ctx.fillText(tr(s.label), x, y+30);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   13. 整集背景 claudeBase() 與浮動粒子 floatParticles()
+   ═══════════════════════════════════════════════════════════════ */
+function claudeBase(){
+  const g=ctx.createLinearGradient(0,0,0,900);
+  g.addColorStop(0,'#0d1c2a'); g.addColorStop(1,'#07111a');
+  ctx.fillStyle=g; ctx.fillRect(0,0,1600,900);
+  ctx.strokeStyle='rgba(46,74,102,.18)'; ctx.lineWidth=1;
+  for(let gx=0;gx<=1600;gx+=80){ln([gx,0,gx,900],'rgba(46,74,102,.1)',0.5);}
+  for(let gy=0;gy<=900;gy+=80){ln([0,gy,1600,gy],'rgba(46,74,102,.1)',0.5);}
+}
+function floatParticles(n=18, seed=42){
+  const r=rng(seed);
+  for(let i=0;i<n;i++){
+    const px=r()*1600, py=(r()*900+(TT*12*(0.3+r()*0.5)))%900;
+    circ(px,py,1.5,'rgba(125,200,220,'+(0.04+r()*0.08)+')','none',0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   i18n 詞彙（英文 / 日文）
+   ═══════════════════════════════════════════════════════════════ */
+Object.assign(DICT,{
+  'Claude':['Claude','Claude'],
+  '你':['You','あなた'],
+  '速度':['Speed','速度'],
+  '推理':['Reasoning','推論'],
+  '搜尋':['Search','検索'],
+  '計算':['Calculate','計算'],
+  '程式':['Code','コード'],
+  '檔案':['Files','ファイル'],
+  '瀏覽':['Browse','ブラウズ'],
+  '日曆':['Calendar','カレンダー'],
+  '終端機':['Terminal','ターミナル'],
+  '瀏覽器':['Browser','ブラウザー'],
+  '代理迴圈':['Agent Loop','エージェントループ'],
+  '感知':['Perceive','知覚'],
+  '規劃':['Plan','計画'],
+  '行動':['Act','行動'],
+  '觀察':['Observe','観察'],
+  '工具':['Tool','ツール'],
+  '連線':['Connect','接続'],
+  '上下文視窗':['Context Window','コンテキストウィンドウ'],
+  '打字中…':['Typing…','入力中…'],
+  '資訊截至':['Info as of','情報の更新日'],
+});
+
+// KITS: claude
+/* 007-claude-basics-ep06 — Artifacts 與可分享成果
+   Claude AI 應用動畫館｜入門基礎 第 6 集
+   介面皆為重新繪製的示意圖，不是官方畫面。 */
+const CY='#f2c230',CO='#e8572a',CG='#7dffc4',CB='#58b8d0',CP='#b37cff',CT='rgba(227,236,238,.8)';
+const PUNC='，。、：；）」』！？・ー…,.:;)';
+function wrapLines(t,size,maxW,weight){
+  t=tr(t);const out=[];let cur='';
+  if(LANG==='en'){
+    for(const w of t.split(' ')){const n=cur?cur+' '+w:w;if(cur&&wtw(n,size,weight)>maxW){out.push(cur);cur=w;}else cur=n;}
+  }else{
+    for(const ch of (t.match(/[A-Za-z0-9.$,'’\-]+|[\s\S]/gu)||[])){const n=cur+ch;if(cur&&wtw(n,size,weight)>maxW&&PUNC.indexOf(ch)<0){out.push(cur);cur=ch;}else cur=n;}
+  }
+  if(cur)out.push(cur);return out;
+}
+function wrapL(x,y,t,size,col,maxW,lh,weight,align){
+  const L=wrapLines(t,size,maxW,weight);L.forEach((l,i)=>wt(x,y+i*lh,l,size,col,weight,align));return L.length;
+}
+function winFrame(x,y,w,h,title,o){
+  o=o||{};rrp(x,y,w,h,12);ctx.fillStyle=KC.winBg;ctx.fill();ctx.strokeStyle=o.st||KC.border;ctx.lineWidth=o.lw||1.6;ctx.stroke();
+  ctx.save();rrp(x,y,w,44,12);ctx.clip();box(x,y,w,44,KC.winBar);ctx.restore();
+  ln([x,y+44,x+w,y+44],KC.border,1);
+  [CO,CY,CG].forEach((c,i)=>circ(x+20+i*18,y+22,5,c));
+  if(title)wt(x+w/2,y+29,title,17,KC.text,700,'center');
+}
+function bub(x,y,w,t,role,a){
+  if(a<=.001)return 0;const L=wrapLines(t,17,w-28,500),h=20+L.length*26;
+  alphaDo(a,()=>{rrp(x,y,w,h,10);ctx.fillStyle=role==='user'?KC.userBub:KC.aiBub;ctx.fill();
+    L.forEach((l,i)=>wt(x+14,y+30+i*26,l,17,KC.text,500));});
+  return h;
+}
+function check(x,y,t,a,col,w){
+  alphaDo(a,()=>{circ(x+13,y-7,13,col||CG);ln([x+6,y-7,x+11,y-1,x+20,y-13],'#0e2a3b',3);wrapL(x+38,y,t,19,'#fff',w||600,26,600);});
+}
+function pointer(x,y,a){
+  alphaDo(a,()=>{poly([x,y,x,y+26,x+7,y+20,x+12,y+31,x+17,y+29,x+12,y+18,x+21,y+18],'#fff','#0e2a3b',1.5);});
+}
+function lockIcon(x,y,col){
+  ctx.beginPath();ctx.arc(x,y-8,8,Math.PI,0);ctx.strokeStyle=col;ctx.lineWidth=3;ctx.stroke();
+  rrp(x-12,y-8,24,19,4);ctx.fillStyle=col;ctx.fill();
+}
+const CATS=[['房租',12000,CB],['餐飲',8000,CY],['交通',3000,CG],['娛樂',2000,CP]];
+function nt(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function miniTool(x,y,w,h,ver,a){
+  alphaDo(a,()=>{
+    box(x,y,w,h,'rgba(255,255,255,.04)');
+    const vals=[12000,8000,3000,2000],tot=25000;
+    vals.forEach((v,i)=>{const yy=y+30+i*38,bw=(w-130)*v/12000;
+      wt(x+14,yy+6,CATS[i][0],14,CT,500);
+      box(x+100,yy-8,bw,18,ver>=2?CATS[i][2]:'#5b7489');});
+    if(ver>=2)wt(x+w-14,y+h-16,trf('總計 NT$ {n}',{n:nt(tot)}),16,CY,700,'right');
+    if(ver>=3){rrp(x+14,y+h-36,120,28,6);ctx.fillStyle=CG;ctx.fill();wt(x+74,y+h-16,'匯出 CSV',14,'#0e2a3b',700,'center');}
+  });
+}
+
+const EP={no:6,t:'Artifacts 與可分享成果',en:'Artifacts & Sharing',
+seriesName:'入門基礎',total:7,
+lede:'當回答不只是一段文字，而是一個網頁、小工具、文件或簡報時，Claude 會把它放進 Artifact：在對話旁邊打開、可以反覆修改，完成後再決定要不要分享。',
+facts:[
+ ['15','行','內容較大且獨立（通常超過 15 行）、可能會再編輯或重用時，Claude 會建立 Artifact'],
+ ['3','種範本','文件、簡報、設計；Pro、Max、Team、Enterprise 方案可用'],
+ ['20','MB','每個 Artifact 的資料儲存上限，只接受文字'],
+ ['0','把 API 金鑰','AI 驅動的 Artifact 直接呼叫 Claude，用量計入使用者自己的方案'],
+ ['4','個步驟','分享：按「分享」→選擇對象→選擇版本→複製連結'],
+],
+note:'說明：本集為教育用途示意動畫，畫面中的介面為重新繪製的示意圖，並非官方截圖。功能、方案與限制依 support.claude.com〈What are artifacts and how do I use them?〉〈Share artifacts〉與 Claude Academy〈Creating with artifacts〉查證，資訊截至 2026-09；介面名稱與各方案可用功能可能調整，請以官方說明為準。',
+shots:[
+/* 1 ─ 回答變成網頁或工具（圖解） */
+{t:'回答變成網頁或工具',en:'When an answer becomes a page',dur:14,
+ d:'Artifact 是 Claude 為你做出、可以拿給別人看的成品：一份文件、一個單頁網站、一張流程圖、一個儀表板或互動小工具。當內容夠大而且獨立（官方說明通常超過 15 行），又是你可能會再編輯、反覆修改或拿到對話外使用的東西，Claude 就會把它放進對話旁的 Artifact 視窗，而不是塞在一長串回答裡。',
+ s:[[0,'你請 Claude 做一個番茄鐘計時器'],[.3,'回答越寫越長，已經不只是幾句話'],[.5,'內容獨立又夠大，就在旁邊打開成 Artifact'],[.75,'可以直接預覽、操作，也能切換看程式碼']],
+ draw(u){
+  diagBG();
+  card(60,160,680,620,{bg:'rgba(7,27,39,.75)'});wt(90,202,'在對話中',20,CY,700);
+  bub(330,226,380,'幫我做一個番茄鐘計時器','user',band(u,.02,1.2));
+  const n=Math.floor(lerp(0,38,easeOut(seg(u,.1,.55))));
+  alphaDo(seg(u,.08,.14),()=>{
+   wt(90,318,'Claude',15,CY,700);
+   const r=rng(7),rows=[];for(let i=0;i<38;i++)rows.push([r()*3|0,40+r()*300,r()*80]);
+   const vis=Math.min(n,15),st=Math.max(0,n-15);
+   for(let i=0;i<vis;i++){const q=rows[st+i],yy=338+i*22;box(90+q[2]*.5+20,yy,q[1],10,[CB,CG,'#9fb6c4'][q[0]]);wt(96,yy+10,String(st+i+1),11,'#5b7489',500,'left',COND);}
+  });
+  // 行數量尺
+  const sx=90,sw=600,sy=720,X=v=>sx+sw*v/40;
+  box(sx,sy,sw,14,'rgba(255,255,255,.08)');box(sx,sy,X(n)-sx,14,n>15?CG:CB);
+  ln([X(15),sy-12,X(15),sy+26],CO,2.5);wt(X(15),sy+46,'15 行',16,CO,700,'center');
+  wt(sx+sw,sy-12,trf('{n} 行',{n}),22,n>15?CG:'#fff',700,'right',COND);
+  // Artifact 面板
+  const k=easeOut(seg(u,.42,.6));
+  if(k>0){
+   const px=lerp(1600,800,k);
+   alphaDo(k,()=>{arrow(746,470,792,470,CY,3);});
+   winFrame(px,160,740,620,'Artifact',{st:CY,lw:2});
+   const tw=tag(px+24,228,'預覽',{size:16});tag(px+36+tw,228,'程式碼',{size:16,bg:'rgba(255,255,255,.12)',fg:'#fff'});
+   const cx=px+370,cy=390,ang=((TT*.15)%1)*TAU;
+   circ(cx,cy,100,null,'rgba(255,255,255,.12)',14);
+   ctx.beginPath();ctx.arc(cx,cy,100,-Math.PI/2,-Math.PI/2+ang);ctx.strokeStyle=CY;ctx.lineWidth=14;ctx.stroke();
+   const sec=1500-Math.floor((TT*.15%1)*1500);
+   wt(cx,cy+18,String(sec/60|0).padStart(2,'0')+':'+String(sec%60).padStart(2,'0'),52,'#fff',700,'center',COND);
+   tag(cx-12,540,'開始',{size:18,align:'right',bg:CG});tag(cx+12,540,'重設',{size:18,bg:'rgba(255,255,255,.14)',fg:'#fff'});
+   check(px+40,630,'內容夠大：通常超過 15 行',seg(u,.6,.66),CG,640);
+   check(px+40,690,'獨立完整，可能會再修改或重用',seg(u,.7,.76),CG,640);
+  }
+ }},
+/* 2 ─ 互動小工具示範（場景） */
+{t:'互動小工具示範',en:'An interactive tool',dur:15,
+ d:'Artifact 不只能看，也能操作。這裡請 Claude 做一個輸入每月支出、看分類占比的小工具：它寫好程式後，右側立刻出現可以輸入數字的表單與長條圖。改動任何一格，占比與總計都會跟著重新計算。想換顏色、加欄位或改版面，不必自己寫程式，在對話中說出需求就好。',
+ s:[[0,'用一句話描述想要的小工具'],[.2,'Claude 寫好程式，右側出現可操作的畫面'],[.45,'逐格輸入支出，長條圖跟著長出來'],[.78,'把餐飲改成 6,000，占比立刻重算']],
+ draw(u){
+  claudeBase();floatParticles(16,6);
+  winFrame(60,160,560,620,'Claude');
+  let y=190+34;
+  y+=bub(200,y,390,'做一個小工具：輸入每月支出，看各分類占比','user',seg(u,.02,.08))+18;
+  y+=bub(84,y,440,'已建立「支出分析」小工具，右側可以直接操作。','ai',seg(u,.16,.22))+18;
+  bub(84,y,440,'想調整顏色或欄位，直接在對話裡告訴我。','ai',seg(u,.6,.66));
+  const k=easeOut(seg(u,.14,.26));
+  if(k<=0)return;
+  alphaDo(k,()=>{
+   winFrame(660,160,880,620,'支出分析',{st:CY,lw:2});
+   tag(1520,228,'Artifact',{size:14,align:'right',bg:'rgba(242,194,48,.18)',fg:CY});
+   wt(690,262,'每月支出',19,CY,700);wt(1110,262,'各分類占比',19,CY,700);
+   const vals=CATS.map((c,i)=>{let v=c[1]*easeOut(seg(u,.3+i*.1,.38+i*.1));if(i===1)v=lerp(v,6000,ease(seg(u,.8,.88)));return Math.round(v/100)*100;});
+   const tot=vals.reduce((a,b)=>a+b,0);
+   CATS.forEach((c,i)=>{const yy=320+i*86;
+    wt(690,yy+8,c[0],19,'#fff',600);
+    const act=(u>.3+i*.1&&u<.4+i*.1)||(i===1&&u>.78&&u<.9);
+    rrp(790,yy-22,250,44,8);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.strokeStyle=act?CY:KC.border;ctx.lineWidth=act?2:1;ctx.stroke();
+    wt(1024,yy+9,nt(vals[i]),22,'#fff',600,'right',COND);
+    const sh=tot?vals[i]/tot:0;
+    box(1110,yy-14,300*sh,28,c[2]);
+    wt(1110+300*sh+10,yy+8,Math.round(sh*100)+'%',20,'#fff',700,'left',COND);
+   });
+   ln([690,672,1510,672],KC.border,1);
+   wt(690,716,'總計',20,CT,600);wt(1510,718,'NT$ '+nt(tot),30,CY,700,'right',COND);
+   // 游標
+   let px=1060,py=360;
+   for(let i=0;i<4;i++){if(u>.28+i*.1){px=1000;py=320+i*86;}}
+   if(u>.76){px=1000;py=406;}
+   pointer(px,py,band(u,.28,.95));
+  });
+  lab(915,600,'直接輸入數字',{dx:0,dy:50,a:band(u,.32,.6)});
+  lab(1300,406,'即時重算',{dx:60,dy:-60,st:'g',a:band(u,.82,1)});
+ }},
+/* 3 ─ 文件、簡報、設計類型（圖解） */
+{t:'文件、簡報、設計類型',en:'Docs, Slides and Design',dur:13,
+ d:'除了網頁與小工具，Artifact 也有三種範本：文件、簡報與設計。範本類型可以直接在畫面上編輯：在文件裡打字、選取段落請 Claude 局部修改；逐張調整投影片；在設計畫布上拖曳與縮放元素。完成後可匯出成常用格式，例如文件轉 Word、PDF 或 Markdown，簡報轉 PowerPoint 或 PDF。範本類型需 Pro 以上方案。',
+ s:[[0,'三種範本：文件、簡報、設計'],[.3,'都能直接在畫面上動手修改'],[.6,'完成後匯出成熟悉的檔案格式'],[.82,'其他成果：網頁、SVG 圖、流程圖、儀表板']],
+ draw(u){
+  diagBG();
+  const C=[
+   ['文件','Docs',CB,'直接輸入文字；選取段落，用「Edit with Claude」局部修改',['Word','PDF','Markdown']],
+   ['簡報','Slides',CY,'直接編輯任一張投影片，或留言請 Claude 修改',['PowerPoint','PDF']],
+   ['設計','Design',CP,'在畫布上拖曳、縮放元素，調整版面',['.zip','HTML']]];
+  C.forEach((c,i)=>{
+   const x=60+i*503,a=easeOut(seg(u,.02+i*.08,.12+i*.08));
+   alphaDo(a,()=>{
+    card(x,160,474,500,{bg:'rgba(7,27,39,.75)',st:c[2]});
+    // 圖示
+    const ix=x+32,iy=190;
+    if(i===0){rrp(ix,iy,78,100,6);ctx.fillStyle='#e3ecee';ctx.fill();for(let k=0;k<5;k++)box(ix+12,iy+18+k*15,k===2?36:54,6,k===2?CY:'#8aa1b1');
+      box(ix+12,iy+44,54,10,'rgba(242,194,48,.35)');}
+    if(i===1){rrp(ix,iy+14,120,70,6);ctx.fillStyle='#e3ecee';ctx.fill();box(ix+12,iy+26,60,10,CO);box(ix+12,iy+46,90,6,'#8aa1b1');box(ix+12,iy+58,70,6,'#8aa1b1');
+      [0,1,2].forEach(k=>{rrp(ix+132,iy+10+k*28,40,22,3);ctx.fillStyle=k===0?CY:'#5b7489';ctx.fill();});}
+    if(i===2){rrp(ix,iy,150,100,6);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();ctx.strokeStyle='#5b7489';ctx.lineWidth=1;ctx.stroke();
+      const dx=18*Math.sin(TT*1.4);circ(ix+50+dx,iy+50,22,CP);box(ix+90,iy+24,40,50,CB);
+      ctx.setLineDash([4,3]);ctx.strokeStyle=CY;ctx.lineWidth=1.5;ctx.strokeRect(ix+26+dx,iy+26,48,48);ctx.setLineDash([]);}
+    wt(x+474-32,232,c[0],30,c[2],800,'right');if(LANG!=='en')wt(x+474-32,262,c[1],18,CT,600,'right',COND);
+    alphaDo(seg(u,.28+i*.06,.36+i*.06),()=>{
+     wt(x+32,338,'怎麼改',17,CT,700);
+     wrapL(x+32,374,c[3],19,'#fff',410,28,500);
+    });
+    alphaDo(seg(u,.55+i*.06,.63+i*.06),()=>{
+     wt(x+32,528,'匯出成',17,CT,700);
+     let tx=x+32;c[4].forEach(f=>{tx+=tag(tx,570,f,{size:17,bg:c[2]})+10;});
+    });
+   });
+  });
+  alphaDo(seg(u,.78,.86),()=>{
+   card(60,684,1480,104,{bg:'rgba(255,255,255,.05)'});
+   tag(84,736,'範本需 Pro 以上方案',{size:17,bg:'rgba(242,194,48,.2)',fg:CY});
+   wrapL(430,745,'其他 Artifact：單頁網站、SVG 圖、流程圖、儀表板、程式碼與互動工具',20,'#fff',1080,28,500);
+  });
+ }},
+/* 4 ─ AI 驅動與資料儲存（圖解） */
+{t:'會思考、會記住的 Artifact',en:'AI-powered and stateful',dur:14,
+ d:'Artifact 裡的程式也可以直接呼叫 Claude，做出會回答問題、會產生內容的小應用，而且不需要自己申請 API 金鑰。別人使用你分享的 AI 小工具時，用量計入他自己的方案額度，不會算在你身上。付費方案的 Artifact 還能在不同工作階段之間保存資料，分成只有自己看得到的個人資料與所有人共用的共享資料，每個 Artifact 上限 20 MB，只能存文字。',
+ s:[[0,'Artifact 裡的程式可以直接呼叫 Claude'],[.28,'不需要 API 金鑰，用量計入使用者自己的方案'],[.55,'資料可以保存下來，下次打開還在'],[.78,'個人資料與共享資料，上限 20 MB']],
+ draw(u){
+  diagBG();
+  // Artifact
+  alphaDo(seg(u,0,.08),()=>{
+   winFrame(80,190,420,300,'你的 Artifact',{st:CY});
+   rrp(104,262,372,44,8);ctx.fillStyle='rgba(255,255,255,.06)';ctx.fill();wt(120,291,'幫我把這段話翻成英文',17,CT,500);
+   rrp(104,322,372,120,8);ctx.fillStyle=KC.aiBub;ctx.fill();
+   const r=rng(3);for(let k=0;k<3;k++)box(122,344+k*26,(200+r()*140)*easeOut(seg(u,.22+k*.04,.3+k*.04)),10,CG);
+  });
+  // Claude 節點
+  const cx=800,cy=340;
+  alphaDo(seg(u,.06,.14),()=>{
+   circ(cx,cy,74,KC.nodeBg,CY,3);wt(cx,cy+10,'Claude',28,CY,700,'center');
+   connLine(500,318,726,318,{u:1,flow:true,col:CY,lw:3});
+   connLine(726,362,500,362,{u:1,flow:u>.2,col:CG,lw:3});
+   wt(613,300,'請求',16,CY,600,'center');wt(613,392,'回應',16,CG,600,'center');
+  });
+  alphaDo(seg(u,.26,.32),()=>{tag(cx,450,'不需 API 金鑰',{size:18,align:'center'});});
+  // 使用者與用量
+  alphaDo(seg(u,.3,.38),()=>{
+   card(1000,190,540,300,{bg:'rgba(7,27,39,.75)'});
+   wt(1030,232,'誰在用，就計入誰的方案',19,CY,700);
+   [['你',.35,CB],['同事',.6,CG]].forEach((p,i)=>{const yy=300+i*90;
+    person(1060,yy+34,p[2],1.1);wt(1100,yy,p[0],19,'#fff',600);
+    box(1100,yy+16,380,16,'rgba(255,255,255,.08)');box(1100,yy+16,380*p[1]*easeOut(seg(u,.34+i*.05,.5+i*.05)),16,p[2]);
+    wt(1480,yy,'用量',15,CT,500,'right');});
+  });
+  // 儲存
+  alphaDo(seg(u,.52,.6),()=>{
+   card(80,530,1460,250,{bg:'rgba(255,255,255,.04)'});
+   wt(110,572,'跨工作階段保存資料（付費方案）',20,CY,700);
+   [['個人資料','只有自己看得到',CB,260],['共享資料','所有檢視者共用',CG,700]].forEach((s,i)=>{
+    const x=s[3],y=630,a=seg(u,.58+i*.08,.66+i*.08);
+    alphaDo(a,()=>{
+     ctx.beginPath();ctx.ellipse(x,y,70,16,0,0,TAU);ctx.fillStyle=s[2];ctx.fill();
+     box(x-70,y,140,80,s[2]);ctx.beginPath();ctx.ellipse(x,y+80,70,16,0,0,TAU);ctx.fill();
+     ctx.beginPath();ctx.ellipse(x,y,70,16,0,0,TAU);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fill();
+     wt(x+92,y+30,s[0],21,'#fff',700);wt(x+92,y+62,s[1],17,CT,500);
+    });
+   });
+   alphaDo(seg(u,.78,.86),()=>{
+    wt(1500,660,'20 MB',52,CY,700,'right',COND);wt(1500,700,'每個 Artifact 上限，只存文字',18,CT,500,'right');
+   });
+  });
+ }},
+/* 5 ─ 發佈與分享連結（圖解） */
+{t:'發佈與分享連結',en:'Publishing and share links',dur:15,
+ d:'每個 Artifact 一開始都只有你看得到。要給別人看時，按「分享」，選擇對象與要分享的版本，再複製連結。Pro 與 Max 方案可以選「只有你」或「知道連結的任何人」，Team 與 Enterprise 還能限定在組織內；檢視者需要有 Claude 帳號。Free、Pro、Max 的聊天 Artifact 另可「發佈」，沒有帳號的人也能看，還能取得嵌入碼；一旦取消發佈，連結立刻失效，也無法再重新發佈同一個 Artifact。',
+ s:[[0,'每個 Artifact 預設只有你看得到'],[.2,'分享四步驟：分享、選對象、選版本、複製連結'],[.5,'依方案決定可以分享給誰'],[.75,'發佈後不需帳號也能看，取消發佈無法復原']],
+ draw(u){
+  diagBG();
+  alphaDo(seg(u,0,.06),()=>{lockIcon(640,196,CG);wt(664,203,'預設：只有你看得到',20,CG,700);});
+  const ST=['按「分享」','選擇對象','選擇版本','複製連結'];
+  ST.forEach((s,i)=>{const x=260+i*360,a=seg(u,.18+i*.07,.24+i*.07),on=a>.5;
+   if(i<3)alphaDo(seg(u,.22+i*.07,.27+i*.07),()=>arrow(x+36,262,x+324,262,CY,2.5));
+   alphaDo(Math.max(.25,a),()=>{circ(x,262,30,on?CY:'rgba(30,58,85,.9)',on?null:KC.border,1.5);
+    wt(x,272,String(i+1),26,on?'#0e2a3b':CT,700,'center',COND);wt(x,324,s,19,on?CY:CT,700,'center');});
+  });
+  // 分享範圍
+  alphaDo(seg(u,.45,.52),()=>{
+   card(60,370,720,410,{bg:'rgba(7,27,39,.75)'});
+   wt(90,412,'可以分享給誰',20,CY,700);
+   wt(90,462,'Pro／Max',19,'#fff',700,'left',COND);
+   let tx=260;['只有你','知道連結的任何人'].forEach(t=>{tx+=tag(tx,456,t,{size:16,bg:'rgba(88,184,208,.25)',fg:'#fff'})+10;});
+   wt(90,532,'Team／Enterprise',19,'#fff',700,'left',COND);
+   tx=90;['有權限的人','整個組織','知道連結的任何人'].forEach(t=>{tx+=tag(tx,574,t,{size:16,bg:'rgba(125,255,196,.2)',fg:'#fff'})+10;});
+   wrapL(90,628,'對組織外分享需由管理員在組織設定中開啟',16,CT,660,24,500);
+   ln([90,664,750,664],'rgba(255,255,255,.12)',1);
+   wrapL(90,700,'檢視者都需要 Claude 帳號；權限可設為檢視、編輯，簡報與設計另可留言',18,'#fff',660,28,500);
+  });
+  // 發佈
+  alphaDo(seg(u,.68,.75),()=>{
+   card(820,370,720,410,{bg:'rgba(7,27,39,.75)',st:CY});
+   wt(850,412,'發佈（Free／Pro／Max 的聊天 Artifact）',20,CY,700);
+   check(850,480,'沒有 Claude 帳號也能檢視',seg(u,.7,.76),CG,640);
+   check(850,560,'取得嵌入碼：需先設定允許的網域',seg(u,.76,.82),CB,640);
+   alphaDo(seg(u,.84,.9),()=>{circ(863,633,13,CO);wt(863,640,'!',20,'#0e2a3b',800,'center');
+    wrapL(888,640,'取消發佈：連結立即失效，而且無法重新發佈同一個 Artifact',19,'#fff',620,28,600);});
+  });
+ }},
+/* 6 ─ 反覆修改到完成（場景） */
+{t:'反覆修改到完成',en:'Iterate until it is done',dur:14,
+ d:'好的成品通常不是一次完成。每提出一次修改，Artifact 就更新一版，先前的版本仍保留下來，可以比較或回頭使用。修改的方式有三種：在對話中說明要改什麼、在範本類型的畫面上直接編輯，或在文件中選取段落，用「Edit with Claude」只改那一段。分享時可以選擇分享最新版，或指定某一個版本。',
+ s:[[0,'第一版：先把功能做出來'],[.3,'說一句話，第二版加上顏色與總計'],[.58,'再加一個匯出 CSV 按鈕，成為第三版'],[.8,'分享時選擇最新版或特定版本']],
+ draw(u){
+  claudeBase();floatParticles(14,11);
+  const M=['在對話中提出修改','直接在畫面上編輯','選取段落，用 Edit with Claude'];
+  alphaDo(seg(u,0,.06),()=>{wt(800,196,'三種修改方式',18,CT,700,'center');
+   const ws=M.map(m=>wtw(m,17,700)+20),totW=ws.reduce((a,b)=>a+b,0)+40;let tx=800-totW/2;
+   M.forEach((m,i)=>{tag(tx,236,m,{size:17,bg:['rgba(88,184,208,.3)','rgba(125,255,196,.25)','rgba(179,124,255,.3)'][i],fg:'#fff'});tx+=ws[i]+20;});});
+  const V=[[120,.04,1],[610,.3,2],[1100,.58,3]];
+  const R=['圖表加上顏色與總計','加一個匯出 CSV 按鈕'];
+  V.forEach((v,i)=>{const x=v[0],a=easeOut(seg(u,v[1],v[1]+.1));
+   if(i>0){alphaDo(seg(u,v[1]-.08,v[1]),()=>{arrow(x-100,480,x-12,480,CY,3);
+     bub(x-230,310,210,R[i-1],'user',1);});}
+   alphaDo(a,()=>{
+    const latest=(i===2&&u>.68)||(i===1&&u>.4&&u<.58)||(i===0&&u<.3);
+    winFrame(x,380,380,300,trf('第 {n} 版',{n:v[2]}),{st:latest?CY:KC.border,lw:latest?2.5:1.4});
+    miniTool(x+16,440,348,224,v[2],1);
+   });
+  });
+  alphaDo(seg(u,.8,.86),()=>{
+   rrp(520,720,560,64,12);ctx.fillStyle='rgba(7,27,39,.85)';ctx.fill();ctx.strokeStyle=CY;ctx.lineWidth=1.5;ctx.stroke();
+   wt(548,760,'分享版本：',19,CT,600);
+   let tx=548+wtw('分享版本：',19,600)+12;
+   tx+=tag(tx,752,'最新版',{size:17})+10;tag(tx,752,'第 2 版',{size:17,bg:'rgba(255,255,255,.14)',fg:'#fff'});
+  });
+  lab(1290,380,'最新版',{dx:90,dy:-50,st:'s',a:band(u,.7,.8)});
+ }}
+]};
+
+Object.assign(DICT,{
+ "入門基礎":["Claude Basics","入門基礎"],
+ "Artifacts 與可分享成果":["Artifacts & Sharing","Artifacts と共有できる成果物"],
+ "當回答不只是一段文字，而是一個網頁、小工具、文件或簡報時，Claude 會把它放進 Artifact：在對話旁邊打開、可以反覆修改，完成後再決定要不要分享。":["When an answer is more than a few lines of text, such as a web page, a small tool, a document or a deck, Claude puts it in an artifact: it opens beside the chat, you can keep refining it, and you decide later whether to share it.","答えが短い文章ではなく、Web ページ、小さなツール、文書、スライドになるとき、Claude はそれを Artifact にまとめます。会話の横に開き、何度でも手直しでき、完成してから共有するかどうかを決められます。"],
+ "行":["lines","行"],
+ "內容較大且獨立（通常超過 15 行）、可能會再編輯或重用時，Claude 會建立 Artifact":["Claude creates an artifact when content is substantial and self-contained (usually over 15 lines) and likely to be edited or reused","内容が大きく独立していて（通常 15 行超）、編集や再利用が見込まれるとき、Claude は Artifact を作成します"],
+ "種範本":["templates","種類のテンプレート"],
+ "文件、簡報、設計；Pro、Max、Team、Enterprise 方案可用":["Docs, Slides and Design; on Pro, Max, Team and Enterprise plans","ドキュメント、スライド、デザイン。Pro・Max・Team・Enterprise プランで利用可能"],
+ "每個 Artifact 的資料儲存上限，只接受文字":["Data storage limit per artifact, text only","Artifact ごとのデータ保存上限。テキストのみ"],
+ "把 API 金鑰":["API keys","個の API キー"],
+ "AI 驅動的 Artifact 直接呼叫 Claude，用量計入使用者自己的方案":["AI-powered artifacts call Claude directly; usage counts against each user's own plan","AI 搭載の Artifact は Claude を直接呼び出し、利用量は使う人自身のプランに計上されます"],
+ "個步驟":["steps","ステップ"],
+ "分享：按「分享」→選擇對象→選擇版本→複製連結":["To share: click Share → choose who → choose a version → copy the link","共有：「共有」を押す → 相手を選ぶ → バージョンを選ぶ → リンクをコピー"],
+ "說明：本集為教育用途示意動畫，畫面中的介面為重新繪製的示意圖，並非官方截圖。功能、方案與限制依 support.claude.com〈What are artifacts and how do I use them?〉〈Share artifacts〉與 Claude Academy〈Creating with artifacts〉查證，資訊截至 2026-09；介面名稱與各方案可用功能可能調整，請以官方說明為準。":["Note: this is an educational explainer. The interfaces shown are redrawn schematics, not official screenshots. Features, plans and limits were checked against support.claude.com (What are artifacts and how do I use them?, Share artifacts) and Claude Academy (Creating with artifacts); information as of 2026-09. Interface names and plan features may change, so please refer to the official documentation.","注：本エピソードは教育用の解説アニメーションです。画面の UI は描き直した模式図で、公式のスクリーンショットではありません。機能・プラン・制限は support.claude.com（What are artifacts and how do I use them?、Share artifacts）と Claude Academy（Creating with artifacts）で確認しました。情報は 2026-09 時点のものです。UI の名称や各プランの機能は変わる可能性があるため、公式の説明をご確認ください。"],
+
+ "回答變成網頁或工具":["When an answer becomes a page","答えが Web ページやツールになる"],
+ "Artifact 是 Claude 為你做出、可以拿給別人看的成品：一份文件、一個單頁網站、一張流程圖、一個儀表板或互動小工具。當內容夠大而且獨立（官方說明通常超過 15 行），又是你可能會再編輯、反覆修改或拿到對話外使用的東西，Claude 就會把它放進對話旁的 Artifact 視窗，而不是塞在一長串回答裡。":["An artifact is something Claude makes for you that you could put in front of someone: a document, a single-page website, a flowchart, a dashboard or a small interactive tool. When content is substantial and self-contained (the help center says usually over 15 lines) and is something you are likely to edit, iterate on or reuse outside the chat, Claude opens it in an artifact window beside the conversation instead of burying it in a long reply.","Artifact とは、Claude が作る「人に見せられる成果物」です。文書、1 ページの Web サイト、フローチャート、ダッシュボード、小さなインタラクティブツールなどがあります。内容が大きく独立していて（公式ヘルプでは通常 15 行超）、あとで編集・改良したり会話の外で再利用したりしそうなものであれば、Claude は長い返答に埋め込まず、会話の横の Artifact ウィンドウに開きます。"],
+ "你請 Claude 做一個番茄鐘計時器":["You ask Claude for a Pomodoro timer","Claude にポモドーロタイマーを頼む"],
+ "回答越寫越長，已經不只是幾句話":["The reply keeps growing beyond a few sentences","返答が長くなり、数行では収まらない"],
+ "內容獨立又夠大，就在旁邊打開成 Artifact":["Big and self-contained, it opens as an artifact","独立した大きな内容は横に Artifact として開く"],
+ "可以直接預覽、操作，也能切換看程式碼":["Preview and use it, or switch to the code","そのまま操作でき、コード表示にも切り替えられる"],
+ "在對話中":["In the chat","会話の中"],
+ "幫我做一個番茄鐘計時器":["Make me a Pomodoro timer","ポモドーロタイマーを作って"],
+ "15 行":["15 lines","15 行"],
+ "{n} 行":["{n} lines","コード {n} 行"],
+ "預覽":["Preview","プレビュー"],
+ "程式碼":["Code","コード"],
+ "開始":["Start","開始"],
+ "重設":["Reset","リセット"],
+ "內容夠大：通常超過 15 行":["Substantial: usually over 15 lines","十分な分量：通常 15 行超"],
+ "獨立完整，可能會再修改或重用":["Self-contained, likely to be edited or reused","独立していて、編集や再利用が見込まれる"],
+
+ "互動小工具示範":["An interactive tool","インタラクティブツールの例"],
+ "Artifact 不只能看，也能操作。這裡請 Claude 做一個輸入每月支出、看分類占比的小工具：它寫好程式後，右側立刻出現可以輸入數字的表單與長條圖。改動任何一格，占比與總計都會跟著重新計算。想換顏色、加欄位或改版面，不必自己寫程式，在對話中說出需求就好。":["Artifacts are not just for reading; you can use them. Here Claude is asked for a tool that takes monthly expenses and shows each category's share. Once the code is written, a form and a bar chart appear on the right. Change any field and the shares and total are recalculated. To change colors, add fields or rework the layout, you do not need to write code; just say what you want in the chat.","Artifact は見るだけでなく操作もできます。ここでは、毎月の支出を入力してカテゴリ別の割合を見るツールを Claude に頼みます。コードが書き上がると、右側に数値を入力できるフォームと棒グラフが現れます。どの欄を変えても、割合と合計がすぐに再計算されます。色を変えたい、欄を増やしたい、レイアウトを変えたいときも、自分でコードを書く必要はなく、会話で伝えるだけです。"],
+ "用一句話描述想要的小工具":["Describe the tool in one sentence","ほしいツールを一文で説明する"],
+ "Claude 寫好程式，右側出現可操作的畫面":["Claude writes the code; a working view appears","Claude がコードを書き、右に操作画面が出る"],
+ "逐格輸入支出，長條圖跟著長出來":["Enter each expense and the bars grow","支出を入力すると棒グラフが伸びる"],
+ "把餐飲改成 6,000，占比立刻重算":["Change food to 6,000 and shares update","食費を 6,000 にすると割合が即再計算"],
+ "做一個小工具：輸入每月支出，看各分類占比":["Make a tool: enter monthly expenses, see each category's share","ツールを作って：毎月の支出を入れてカテゴリ別の割合を見たい"],
+ "已建立「支出分析」小工具，右側可以直接操作。":["I built an Expense Breakdown tool. You can use it on the right.","「支出分析」ツールを作りました。右側でそのまま操作できます。"],
+ "想調整顏色或欄位，直接在對話裡告訴我。":["To change colors or fields, just tell me here.","色や項目を変えたいときは、この会話で伝えてください。"],
+ "支出分析":["Expense Breakdown","支出分析"],
+ "每月支出":["Monthly expenses","毎月の支出"],
+ "各分類占比":["Share by category","カテゴリ別の割合"],
+ "房租":["Rent","家賃"],
+ "餐飲":["Food","食費"],
+ "交通":["Transport","交通費"],
+ "娛樂":["Leisure","娯楽"],
+ "總計":["Total","合計"],
+ "直接輸入數字":["Type a number","数値を直接入力"],
+ "即時重算":["Live update","即時に再計算"],
+
+ "文件、簡報、設計類型":["Docs, Slides and Design","ドキュメント、スライド、デザイン"],
+ "除了網頁與小工具，Artifact 也有三種範本：文件、簡報與設計。範本類型可以直接在畫面上編輯：在文件裡打字、選取段落請 Claude 局部修改；逐張調整投影片；在設計畫布上拖曳與縮放元素。完成後可匯出成常用格式，例如文件轉 Word、PDF 或 Markdown，簡報轉 PowerPoint 或 PDF。範本類型需 Pro 以上方案。":["Besides pages and tools, artifacts come in three templates: Docs, Slides and Design. Template artifacts can be edited in place: type into a doc or select a passage and have Claude revise just that part; adjust any slide; drag and resize elements on a design canvas. When you are done, export to familiar formats, such as a doc to Word, PDF or Markdown, or slides to PowerPoint or PDF. Templates require a Pro plan or higher.","Web ページやツールのほかに、Artifact には 3 種類のテンプレートがあります。ドキュメント、スライド、デザインです。テンプレート型は画面上で直接編集できます。ドキュメントに入力したり、段落を選んで Claude にその部分だけ直してもらったり、スライドを 1 枚ずつ調整したり、デザインのキャンバス上で要素をドラッグ・拡大縮小したりできます。完成後は、ドキュメントなら Word・PDF・Markdown、スライドなら PowerPoint・PDF など、なじみのある形式で書き出せます。テンプレートは Pro 以上のプランが必要です。"],
+ "三種範本：文件、簡報、設計":["Three templates: Docs, Slides, Design","3 つのテンプレート：ドキュメント、スライド、デザイン"],
+ "都能直接在畫面上動手修改":["Each can be edited right on the canvas","どれも画面上で直接手直しできる"],
+ "完成後匯出成熟悉的檔案格式":["Export to familiar file formats when done","完成したらなじみのある形式で書き出す"],
+ "其他成果：網頁、SVG 圖、流程圖、儀表板":["Also: web pages, SVGs, flowcharts, dashboards","ほかにも：Web ページ、SVG、フローチャート、ダッシュボード"],
+ "文件":["Docs","ドキュメント"],
+ "簡報":["Slides","スライド"],
+ "設計":["Design","デザイン"],
+ "直接輸入文字；選取段落，用「Edit with Claude」局部修改":["Type directly, or select a passage and use Edit with Claude","直接入力するか、段落を選んで「Edit with Claude」で部分修正"],
+ "直接編輯任一張投影片，或留言請 Claude 修改":["Edit any slide, or leave a comment for Claude","どのスライドも直接編集、またはコメントで Claude に依頼"],
+ "在畫布上拖曳、縮放元素，調整版面":["Drag and resize elements on the canvas","キャンバス上で要素をドラッグ・拡大縮小して配置"],
+ "怎麼改":["How to edit","編集方法"],
+ "匯出成":["Export to","書き出し形式"],
+ "範本需 Pro 以上方案":["Templates: Pro and up","テンプレートは Pro 以上"],
+ "其他 Artifact：單頁網站、SVG 圖、流程圖、儀表板、程式碼與互動工具":["Other artifacts: single-page sites, SVG graphics, flowcharts, dashboards, code and interactive tools","その他の Artifact：1 ページの Web サイト、SVG 図、フローチャート、ダッシュボード、コード、インタラクティブツール"],
+
+ "會思考、會記住的 Artifact":["AI-powered and stateful","考えて、覚える Artifact"],
+ "Artifact 裡的程式也可以直接呼叫 Claude，做出會回答問題、會產生內容的小應用，而且不需要自己申請 API 金鑰。別人使用你分享的 AI 小工具時，用量計入他自己的方案額度，不會算在你身上。付費方案的 Artifact 還能在不同工作階段之間保存資料，分成只有自己看得到的個人資料與所有人共用的共享資料，每個 Artifact 上限 20 MB，只能存文字。":["Code inside an artifact can call Claude directly, so you can build small apps that answer questions or generate content, with no API key of your own. When someone uses an AI tool you shared, the usage counts against their own plan, not yours. On paid plans, artifacts can also keep data between sessions, either personal data only you can see or shared data every viewer uses, up to 20 MB per artifact and text only.","Artifact の中のプログラムは Claude を直接呼び出せるので、質問に答えたり内容を生成したりする小さなアプリを、自分で API キーを取得せずに作れます。共有した AI ツールを他の人が使うときは、その人自身のプランの利用量に計上され、あなたの分にはなりません。有料プランの Artifact はセッションをまたいでデータを保存でき、自分だけが見られる個人データと、閲覧者全員で使う共有データがあります。上限は Artifact ごとに 20 MB で、テキストのみです。"],
+ "Artifact 裡的程式可以直接呼叫 Claude":["Code in an artifact can call Claude directly","Artifact のプログラムは Claude を直接呼べる"],
+ "不需要 API 金鑰，用量計入使用者自己的方案":["No API key; usage counts on the user's own plan","API キー不要、利用量は使う人のプランに計上"],
+ "資料可以保存下來，下次打開還在":["Data can be saved and is there next time","データを保存でき、次に開いても残っている"],
+ "個人資料與共享資料，上限 20 MB":["Personal and shared data, up to 20 MB","個人データと共有データ、上限 20 MB"],
+ "你的 Artifact":["Your artifact","あなたの Artifact"],
+ "幫我把這段話翻成英文":["Translate this into English","この文を英語に訳して"],
+ "請求":["Request","リクエスト"],
+ "回應":["Response","レスポンス"],
+ "不需 API 金鑰":["No API key needed","API キー不要"],
+ "誰在用，就計入誰的方案":["Usage counts on the user's plan","使う人のプランに計上"],
+ "同事":["Colleague","同僚"],
+ "用量":["Usage","利用量"],
+ "跨工作階段保存資料（付費方案）":["Data kept between sessions (paid plans)","セッションをまたいでデータを保存（有料プラン）"],
+ "個人資料":["Personal data","個人データ"],
+ "只有自己看得到":["Visible only to you","自分だけが見られる"],
+ "共享資料":["Shared data","共有データ"],
+ "所有檢視者共用":["Used by every viewer","閲覧者全員で共有"],
+ "每個 Artifact 上限，只存文字":["Limit per artifact, text only","Artifact ごとの上限、テキストのみ"],
+
+ "發佈與分享連結":["Publishing and share links","公開と共有リンク"],
+ "每個 Artifact 一開始都只有你看得到。要給別人看時，按「分享」，選擇對象與要分享的版本，再複製連結。Pro 與 Max 方案可以選「只有你」或「知道連結的任何人」，Team 與 Enterprise 還能限定在組織內；檢視者需要有 Claude 帳號。Free、Pro、Max 的聊天 Artifact 另可「發佈」，沒有帳號的人也能看，還能取得嵌入碼；一旦取消發佈，連結立刻失效，也無法再重新發佈同一個 Artifact。":["Every artifact starts out private to you. To show it to others, click Share, choose who can see it and which version, then copy the link. Pro and Max offer Only you or Anyone with the link; Team and Enterprise can also limit access to the organization. Viewers need a Claude account. On Free, Pro and Max, chat artifacts can also be published, so people without an account can view them, and you can get embed code. Once you unpublish, the link stops working at once, and the same artifact cannot be published again.","Artifact は最初、あなただけが見られる状態です。人に見せるときは「共有」を押し、相手と共有するバージョンを選んでリンクをコピーします。Pro と Max では「自分のみ」か「リンクを知っている全員」を選べ、Team と Enterprise では組織内に限定することもできます。閲覧者には Claude アカウントが必要です。Free・Pro・Max のチャットの Artifact は「公開」もでき、アカウントがなくても閲覧でき、埋め込みコードも取得できます。公開を取り消すとリンクはすぐに無効になり、同じ Artifact を再公開することはできません。"],
+ "每個 Artifact 預設只有你看得到":["Every artifact starts private to you","Artifact は最初、自分だけが見られる"],
+ "分享四步驟：分享、選對象、選版本、複製連結":["Four steps: Share, audience, version, copy link","共有は 4 ステップ：共有、相手、版、リンク"],
+ "依方案決定可以分享給誰":["Your plan decides who you can share with","プランによって共有できる相手が決まる"],
+ "發佈後不需帳號也能看，取消發佈無法復原":["Published: no account needed; unpublish is final","公開すればアカウント不要、取り消しは元に戻せない"],
+ "預設：只有你看得到":["Default: only you can see it","初期設定：自分だけが見られる"],
+ "按「分享」":["Click Share","「共有」を押す"],
+ "選擇對象":["Choose who","相手を選ぶ"],
+ "選擇版本":["Pick a version","バージョンを選ぶ"],
+ "複製連結":["Copy the link","リンクをコピー"],
+ "可以分享給誰":["Who can see it","共有できる相手"],
+ "只有你":["Only you","自分のみ"],
+ "知道連結的任何人":["Anyone with the link","リンクを知っている全員"],
+ "有權限的人":["People with access","アクセス権のある人"],
+ "整個組織":["Whole organization","組織全体"],
+ "對組織外分享需由管理員在組織設定中開啟":["Sharing outside the organization must be enabled by an admin in organization settings","組織外への共有は、管理者が組織設定で有効にする必要があります"],
+ "檢視者都需要 Claude 帳號；權限可設為檢視、編輯，簡報與設計另可留言":["Viewers need a Claude account; access can be view or edit, and Slides and Design also allow comments","閲覧者には Claude アカウントが必要。権限は閲覧・編集で、スライドとデザインはコメントも可能"],
+ "發佈（Free／Pro／Max 的聊天 Artifact）":["Publish (chat artifacts on Free/Pro/Max)","公開（Free／Pro／Max のチャット Artifact）"],
+ "沒有 Claude 帳號也能檢視":["Viewable without a Claude account","Claude アカウントがなくても閲覧可"],
+ "取得嵌入碼：需先設定允許的網域":["Embed code: set allowed domains first","埋め込みコード：許可するドメインを先に設定"],
+ "取消發佈：連結立即失效，而且無法重新發佈同一個 Artifact":["Unpublish: the link stops working at once, and the artifact cannot be republished","公開取り消し：リンクはすぐ無効になり、同じ Artifact は再公開できない"],
+
+ "反覆修改到完成":["Iterate until it is done","完成するまで手直しする"],
+ "好的成品通常不是一次完成。每提出一次修改，Artifact 就更新一版，先前的版本仍保留下來，可以比較或回頭使用。修改的方式有三種：在對話中說明要改什麼、在範本類型的畫面上直接編輯，或在文件中選取段落，用「Edit with Claude」只改那一段。分享時可以選擇分享最新版，或指定某一個版本。":["Good results rarely come in one pass. Each change you ask for produces a new version of the artifact, and earlier versions are kept so you can compare them or go back. There are three ways to revise: say what to change in the chat, edit directly on a template artifact, or select a passage in a doc and use Edit with Claude to change only that part. When you share, you can share the latest version or pick a specific one.","よい成果物は一度ではできあがりません。修正を頼むたびに Artifact の新しいバージョンができ、以前のバージョンも残るので、比べたり戻ったりできます。修正の方法は 3 つです。会話で直したい点を伝える、テンプレート型の画面で直接編集する、ドキュメントで段落を選んで「Edit with Claude」でその部分だけ直す、です。共有するときは、最新版か特定のバージョンを選べます。"],
+ "第一版：先把功能做出來":["Version 1: get it working first","第 1 版：まず機能を形にする"],
+ "說一句話，第二版加上顏色與總計":["One request adds colors and a total in v2","一言で第 2 版に色と合計が加わる"],
+ "再加一個匯出 CSV 按鈕，成為第三版":["An Export CSV button makes version 3","CSV 書き出しボタンを足して第 3 版に"],
+ "分享時選擇最新版或特定版本":["Share the latest or a specific version","共有時は最新版か特定の版を選ぶ"],
+ "三種修改方式":["Three ways to revise","3 つの修正方法"],
+ "在對話中提出修改":["Ask in the chat","会話で修正を依頼"],
+ "直接在畫面上編輯":["Edit on the canvas","画面上で直接編集"],
+ "選取段落，用 Edit with Claude":["Select text, Edit with Claude","段落を選んで Edit with Claude"],
+ "圖表加上顏色與總計":["Add colors and a total to the chart","グラフに色と合計を追加して"],
+ "加一個匯出 CSV 按鈕":["Add an Export CSV button","CSV 書き出しボタンを追加して"],
+ "第 {n} 版":["Version {n}","バージョン {n}"],
+ "第 2 版":["Version 2","バージョン 2"],
+ "匯出 CSV":["Export CSV","CSV 出力"],
+ "總計 NT$ {n}":["Total NT$ {n}","合計 NT$ {n}"],
+ "分享版本：":["Share version:","共有する版："],
+ "最新版":["Latest","最新版"],
+ "Pro／Max":["Pro/Max","Pro／Max"],
+ "Team／Enterprise":["Team/Enterprise","Team／Enterprise"]
+});
+
+/* ================= episode engine ================= */
+const hn=(i,j)=>{const s=Math.sin(i*127.1+j*311.7)*43758.5453;return s-Math.floor(s);};
+const SH=EP.shots,SS=[];let TOTAL=0;SH.forEach((s,i)=>{SS[i]=TOTAL;TOTAL+=s.dur;});
+let SI=0;
+const P2=n=>String(n).padStart(2,'0');
+
+/* world-space text with a minimum on-screen size */
+function wt(x,y,t,size,col,weight,align,font,base){
+  t=tr(t);const k=fit*cam.s,sz=Math.max(size,9.5/k);
+  ctx.font=`${weight||500} ${sz}px ${font||FONT}`;ctx.textAlign=align||'left';ctx.textBaseline=base||'alphabetic';
+  ctx.fillStyle=col||'#fff';ctx.fillText(t,x,y);ctx.textAlign='left';ctx.textBaseline='alphabetic';
+}
+function wtw(t,size,weight,font){t=tr(t);const k=fit*cam.s,sz=Math.max(size,9.5/k);ctx.font=`${weight||500} ${sz}px ${font||FONT}`;return ctx.measureText(t).width;}
+function arrow(x0,y0,x1,y1,col,lw,hs){
+  lw=lw||2;hs=hs||lw*4+2;const a=Math.atan2(y1-y0,x1-x0);
+  ln([x0,y0,x1-Math.cos(a)*hs*.6,y1-Math.sin(a)*hs*.6],col,lw);
+  poly([x1,y1,x1-Math.cos(a-.42)*hs,y1-Math.sin(a-.42)*hs,x1-Math.cos(a+.42)*hs,y1-Math.sin(a+.42)*hs],col);
+}
+function tag(x,y,t,o){ // filled pill in world coords
+  o=o||{};const size=o.size||20,pad=size*.55,w=wtw(t,size,o.weight||700)+pad*2,h=size*1.75;
+  let bx=o.align==='center'?x-w/2:o.align==='right'?x-w:x;
+  rrp(bx,y-h/2,w,h,o.r===undefined?h/2:o.r);ctx.fillStyle=o.bg||'#f2c230';ctx.fill();
+  wt(bx+pad,y+1,t,size,o.fg||'#13232e',o.weight||700,'left',FONT,'middle');return w;
+}
+function card(x,y,w,h,o){o=o||{};rrp(x,y,w,h,o.r||14);ctx.fillStyle=o.bg||'rgba(255,255,255,.06)';ctx.fill();if(o.st!==false){ctx.strokeStyle=o.st||'rgba(255,255,255,.16)';ctx.lineWidth=o.lw||1.4;ctx.stroke();}}
+function diagBG(){
+  applyCam({x:800,y:450,s:1});
+  ctx.fillStyle='#0e2a3b';ctx.fillRect(VX0,VY0,VX1-VX0,VY1-VY0);
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;ctx.beginPath();
+  for(let x=0;x<=W;x+=50){ctx.moveTo(x,VY0);ctx.lineTo(x,VY1);}for(let y=0;y<=H;y+=50){ctx.moveTo(VX0,y);ctx.lineTo(VX1,y);}ctx.stroke();
+}
+function camMix(a,b,k){return {x:lerp(a.x,b.x,k),y:lerp(a.y,b.y,k),s:lerp(a.s,b.s,k)};}
+/* chart helper in world coords: axes box, returns mapper */
+function chartBox(x,y,w,h,o){
+  o=o||{};card(x,y,w,h,{bg:'rgba(7,27,39,.75)',r:12});
+  const px=x+(o.pl||64),py=y+(o.pt||46),pw=w-(o.pl||64)-(o.pr||24),ph=h-(o.pt||46)-(o.pb||46);
+  if(o.title)wt(x+18,y+32,o.title,20,'#f2c230',700);
+  ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;ctx.beginPath();
+  const gx=o.gx||5,gy=o.gy||4;for(let i=0;i<=gx;i++){ctx.moveTo(px+pw*i/gx,py);ctx.lineTo(px+pw*i/gx,py+ph);}for(let i=0;i<=gy;i++){ctx.moveTo(px,py+ph*i/gy);ctx.lineTo(px+pw,py+ph*i/gy);}ctx.stroke();
+  ln([px,py,px,py+ph,px+pw,py+ph],'rgba(255,255,255,.5)',1.4);
+  const X=v=>px+pw*(v-o.x0)/(o.x1-o.x0),Y=v=>py+ph-ph*(v-o.y0)/(o.y1-o.y0);
+  if(o.xl)wt(px+pw,py+ph+36,o.xl,16,'rgba(227,236,238,.7)',500,'right');
+  if(o.yl)wt(px,py-12,o.yl,16,'rgba(227,236,238,.7)',500,'left');
+  if(o.xt)o.xt.forEach(v=>wt(X(v),py+ph+20,String(v),16,'rgba(227,236,238,.75)',600,'center',COND));
+  if(o.yt)o.yt.forEach(v=>wt(px-10,Y(v)+5,String(v),16,'rgba(227,236,238,.75)',600,'right',COND));
+  return {X,Y,px,py,pw,ph};
+}
+
+/* ================= localisation of episode data ================= */
+function epT(){return LANG==='en'?(EP.en||EP.t):tr(EP.t);}
+function epSub(){return LANG==='en'?EP.t:(EP.en||'');}
+function loc(i){const s=SH[i];
+  if(LANG==='zh')return {t:s.t,sub:s.en||'',d:s.d,s:s.s};
+  return {t:LANG==='en'?(s.en||tr(s.t)):tr(s.t),sub:LANG==='en'?s.t:(s.en||''),d:tr(s.d),s:s.s.map(x=>[x[0],tr(x[1])])};}
+function seriesLine(){if(!EP.seriesName)return '';return ui(EP.total?'series':'seriesOne',{s:tr(EP.seriesName),n:EP.no,t:EP.total||''});}
+function docTitle(){return EP.seriesName?`${P2(EP.no)} ${epT()}｜${tr(EP.seriesName)}`:epT();}
+
+/* ================= frame ================= */
+function renderFrame(){
+  SI=0;while(SI<SH.length-1&&T>=SS[SI+1])SI++;
+  const sh=SH[SI],u=clamp((T-SS[SI])/sh.dur);U=u;TT=T;
+  screenSpace();ctx.clearRect(0,0,cssW,cssH);
+  if(sh.side){applyCam(sh.cam?sh.cam(u):{x:800,y:450,s:1});(sh.base||EP.base||(typeof sideBase==='function'?sideBase:()=>{}))(u);if(sh.draw)sh.draw(u);(sh.end||EP.end||(typeof sideEnd==='function'?sideEnd:()=>{}))(u);if(sh.fx)sh.fx(u);}
+  else{if(sh.cam)applyCam(sh.cam(u));else applyCam({x:800,y:450,s:1});sh.draw(u);}
+  drawTicks();drawLabels();if(sh.hud)sh.hud(u);
+  const tin=T-SS[SI],tout=SS[SI]+sh.dur-T;let fa=0;
+  if(SI>0)fa=Math.max(fa,1-tin/.45);if(SI<SH.length-1)fa=Math.max(fa,1-tout/.45);
+  if(fa>0){screenSpace();ctx.fillStyle=`rgba(4,14,22,${clamp(fa)*.92})`;ctx.fillRect(0,0,cssW,cssH);}
+  if(T<3.2){ // opening title
+    const a=T<2.3?1:1-(T-2.3)/.9;screenSpace();ctx.fillStyle=`rgba(5,22,32,${.82*a})`;ctx.fillRect(0,0,cssW,cssH);
+    ctx.globalAlpha=a;const fs=clamp(cssW/20,22,64),mw=cssW*.9;ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ctx.font=`700 ${fs*1.3}px ${COND}`;ctx.fillStyle='#f2c230';ctx.fillText(P2(EP.no),cssW/2,cssH*.43);
+    const tt=epT(),tfs=LANG==='en'&&tt.length>26?fs*.8:fs;
+    ctx.font=`900 ${tfs}px ${FONT}`;ctx.fillStyle='#fff';ctx.fillText(tt,cssW/2,cssH*.43+fs*1.2,mw);
+    ctx.font=`500 ${fs*.42}px ${LANG==='en'?FONT:COND}`;ctx.fillStyle='rgba(255,255,255,.8)';ctx.fillText(epSub(),cssW/2,cssH*.43+fs*1.85,mw);
+    ctx.globalAlpha=1;ctx.textAlign='left';
+  }
+}
+function langText(){
+  let s='0123456789 MWkVm/s%°→';
+  for(const k in DICT)s+=LI<0?k:DICT[k][LI];
+  SH.forEach((c,i)=>{const l=loc(i);s+=l.t+l.sub+l.d+l.s.map(x=>x[1]).join('');});
+  EP.facts.forEach(f=>{s+=tr(f[0])+tr(f[1])+tr(f[2]);});s+=epT()+tr(EP.lede)+tr(EP.note)+seriesLine();
+  for(const k in UI)s+=UI[k][LI+1];return s;
+}
+function ensureFonts(){
+  if(!document.fonts||!document.fonts.load)return Promise.resolve();
+  const fam=LANG==='ja'?'"Noto Sans JP"':'"Noto Sans TC"',txt=langText(),jobs=[];
+  for(const w of [400,500,700,900])jobs.push(document.fonts.load(`${w} 16px ${fam}`,txt));
+  if(LANG==='ja')for(const w of [500,700])jobs.push(document.fonts.load(`${w} 16px "Noto Sans TC"`,txt));
+  for(const w of [500,600,700])jobs.push(document.fonts.load(`${w} 16px "Barlow Condensed"`,'0123456789 MWkV'));
+  return Promise.all(jobs).then(()=>document.fonts.ready).catch(()=>{});
+}
+
+/* ================= UI controller ================= */
+(function(){
+  const $=id=>document.getElementById(id);
+  const stage=$('stage'),tl=$('timeline'),track=$('tlTrack'),fill=$('tlFill'),head=$('tlHead'),timeEl=$('time');
+  const bPlay=$('bPlay'),playIcon=$('playIcon'),cap=$('caption'),cardEl=$('chapcard');
+  const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let playing=!reduce,speed=1,last=0,dirty=true,ended=false,prevC=-1,prevStep=-2,dragging=false,wasPlaying=false;
+  const fmt=t=>{t=Math.max(0,Math.floor(t));return Math.floor(t/60)+':'+P2(t%60);};
+  $('mNo').textContent=P2(EP.no);
+  SH.forEach(c=>{const d=document.createElement('div');d.className='tl-seg';d.style.flex=c.dur+' 0 0';track.insertBefore(d,fill);});
+  const grid=$('shotGrid');
+  SH.forEach((c,i)=>{const b=document.createElement('button');b.className='chap';b.type='button';b.innerHTML=`<span class="n">${i+1}</span><span class="t"></span>`;b.addEventListener('click',()=>jump(SS[i]+.001));grid.appendChild(b);});
+  const btns=[...grid.children];
+  function fillStatic(){
+    $('mT').textContent=epT();$('mLede').textContent=tr(EP.lede);$('mSeries').textContent=seriesLine();
+    $('facts').innerHTML='';EP.facts.forEach(f=>{const d=document.createElement('div');d.className='fact';const dt=document.createElement('dt');dt.textContent=tr(f[0]);const sm=document.createElement('small');sm.textContent=tr(f[1]);dt.appendChild(sm);const dd=document.createElement('dd');dd.textContent=tr(f[2]);d.append(dt,dd);$('facts').appendChild(d);});
+    $('foot').textContent=tr(EP.note);$('cv').setAttribute('aria-label',docTitle());
+    btns.forEach((b,i)=>{b.querySelector('.t').textContent=loc(i).t;});
+  }
+  function resize(){const r=cv.getBoundingClientRect();if(r.width<2)return;cssW=r.width;cssH=r.height;dpr=Math.min(window.devicePixelRatio||1,2);cv.width=Math.round(cssW*dpr);cv.height=Math.round(cssH*dpr);fit=cssW/W;dirty=true;}
+  if(window.ResizeObserver)new ResizeObserver(resize).observe(cv);else window.addEventListener('resize',resize);
+  resize();
+  function setPlayIcon(){
+    playIcon.innerHTML=playing?'<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>':(ended?'<path d="M12 5a7 7 0 1 1-6.6 4.7l1.9.7A5 5 0 1 0 12 7v3L7.5 6 12 2z"/>':'<path d="M7 4.5v15l12-7.5z"/>');
+    bPlay.setAttribute('aria-label',playing?ui('pause'):(ended?ui('replay'):ui('play')));
+  }
+  function jump(t){T=clamp(t,0,TOTAL-.001);ended=false;dirty=true;setPlayIcon();}
+  function togglePlay(){if(ended){T=0;ended=false;playing=true;}else playing=!playing;setPlayIcon();dirty=true;}
+  bPlay.addEventListener('click',togglePlay);
+  const idx=()=>{let c=0;while(c<SH.length-1&&T>=SS[c+1])c++;return c;};
+  $('bPrev').addEventListener('click',()=>{const c=idx();jump(T-SS[c]>1.5?SS[c]+.001:SS[Math.max(0,c-1)]+.001);});
+  $('bNext').addEventListener('click',()=>{const c=idx();if(c<SH.length-1)jump(SS[c+1]+.001);else jump(TOTAL-.01);});
+  document.querySelectorAll('[data-speed]').forEach(b=>b.addEventListener('click',()=>{speed=+b.dataset.speed;document.querySelectorAll('[data-speed]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
+  const bLab=$('bLabels');bLab.addEventListener('click',()=>{SHOWLAB=!SHOWLAB;bLab.setAttribute('aria-pressed',SHOWLAB?'true':'false');dirty=true;});
+  $('bFull').addEventListener('click',()=>{const d=document;if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}else{const f=stage.requestFullscreen||stage.webkitRequestFullscreen;if(f)f.call(stage);}});
+  document.addEventListener('fullscreenchange',()=>setTimeout(resize,60));
+  function tlFrac(e){const r=track.getBoundingClientRect();return clamp((e.clientX-r.left)/r.width);}
+  tl.addEventListener('pointerdown',e=>{dragging=true;wasPlaying=playing;playing=false;tl.setPointerCapture(e.pointerId);jump(tlFrac(e)*TOTAL);});
+  tl.addEventListener('pointermove',e=>{if(dragging)jump(tlFrac(e)*TOTAL);});
+  const endDrag=()=>{if(!dragging)return;dragging=false;playing=wasPlaying;setPlayIcon();};
+  tl.addEventListener('pointerup',endDrag);tl.addEventListener('pointercancel',endDrag);
+  tl.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){jump(T-5);e.preventDefault();e.stopPropagation();}
+    else if(e.key==='ArrowRight'){jump(T+5);e.preventDefault();e.stopPropagation();}
+    else if(e.key==='Home'){jump(0);e.preventDefault();}else if(e.key==='End'){jump(TOTAL-.01);e.preventDefault();}
+  });
+  document.addEventListener('keydown',e=>{
+    const tag=(e.target.tagName||'').toLowerCase();if($('recDlg').open)return;if(tag==='input'||tag==='textarea')return;
+    if(e.key===' '||e.code==='Space'){if(tag==='button')return;e.preventDefault();togglePlay();}
+    else if(e.key==='ArrowLeft'&&e.target!==tl){$('bPrev').click();}else if(e.key==='ArrowRight'&&e.target!==tl){$('bNext').click();}
+  });
+  function updateUI(){
+    const c=SI,L=loc(c),f=T/TOTAL*100;
+    fill.style.width=f+'%';head.style.left=f+'%';
+    tl.setAttribute('aria-valuenow',Math.round(f));tl.setAttribute('aria-valuetext',`${c+1} ${L.t}${ui('sep')}${fmt(T)}`);
+    timeEl.textContent=fmt(T)+' / '+fmt(TOTAL);
+    if(c!==prevC){
+      prevC=c;prevStep=-2;cardEl.classList.remove('show');
+      setTimeout(()=>{$('ccNo').innerHTML=`${P2(EP.no)}<small>${ui('shotOf',{i:c+1,n:SH.length})}</small>`;$('ccT').textContent=L.t;$('ccE').textContent=L.sub;cardEl.classList.add('show');},reduce?0:180);
+      $('iNo').textContent=c+1;$('iT').textContent=L.t;$('iE').textContent=L.sub;$('iD').textContent=L.d;
+      $('iS').innerHTML='';L.s.forEach(s=>{const li=document.createElement('li');li.textContent=s[1];$('iS').appendChild(li);});
+      btns.forEach((b,i)=>{b.classList.toggle('active',i===c);b.classList.toggle('past',i<c);if(i===c)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
+    }
+    let si=0;L.s.forEach((s,i)=>{if(U>=s[0])si=i;});
+    if(si!==prevStep){prevStep=si;cap.innerHTML='<span class="dot"></span>';cap.appendChild(document.createTextNode(L.s[si][1]));[...$('iS').children].forEach((li,i)=>{li.className=i<si?'done':i===si?'now':'';});}
+  }
+
+  /* ---------- language ---------- */
+  function setLang(l,save){
+    LANG=LANGS.includes(l)?l:'zh';LI=LANG==='zh'?-1:LANG==='en'?0:1;
+    document.documentElement.lang=LANG==='zh'?'zh-Hant-TW':LANG;
+    FONT=LANG==='ja'?FONT_JP:FONT_TC;
+    COND='"Barlow Condensed","Arial Narrow",'+(LANG==='ja'?'"Noto Sans JP",':'')+'"Noto Sans TC","Noto Sans CJK TC",sans-serif';
+    document.title=docTitle();
+    document.querySelectorAll('[data-i18n]').forEach(e=>{e.textContent=ui(e.dataset.i18n);});
+    document.querySelectorAll('[data-i18n-aria]').forEach(e=>e.setAttribute('aria-label',ui(e.dataset.i18nAria)));
+    document.querySelectorAll('[data-i18n-title]').forEach(e=>{e.title=ui(e.dataset.i18nTitle);});
+    document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===LANG?'true':'false'));
+    fillStatic();prevC=-1;prevStep=-2;setPlayIcon();dirty=true;
+    if(recDlg.open)recSummary();
+    if(save){try{localStorage.setItem(LANG_KEY,LANG);}catch(e){}}
+    document.dispatchEvent(new CustomEvent('langchange',{detail:LANG}));
+    ensureFonts().then(()=>{dirty=true;});
+  }
+  document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{if(!recBusy)setLang(b.dataset.lang,true);}));
+
+  /* ---------- MP4 export (offline, frame-accurate: WebCodecs + mp4-muxer) ---------- */
+  const recDlg=$('recDlg'),recGo=$('recGo'),recCancel=$('recCancel'),recDl=$('recDl'),recSum=$('recSum'),recProg=$('recProg'),recBar=$('recBar'),recStat=$('recStat'),recPrev=$('recPrev'),recNote=$('recNote');
+  const REC={speed:1,range:'all',res:1080,fps:30};
+  let recBusy=false,recAbort=false,recUrl=null,recChap=0;
+  const LW=1280,LH=720;
+  recDlg.querySelectorAll('[data-opt]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(recBusy)return;const k=g.dataset.opt;REC[k]=k==='range'?b.dataset.v:+b.dataset.v;
+    g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));recSummary();})));
+  function recSpan(){return REC.range==='chap'?[SS[recChap],SS[recChap]+SH[recChap].dur]:[0,TOTAL];}
+  function recBitrate(){return (REC.res>=1080?8e6:5e6)*(REC.fps>30?1.5:1);}
+  function recSummary(){
+    const [t0,t1]=recSpan(),d=(t1-t0)/REC.speed,f=Math.ceil(d*REC.fps),m=Math.ceil(recBitrate()*d/8/1e6);
+    let s=ui('sum',{d:fmt(d),f:f.toLocaleString('en-US'),m:m});
+    if(REC.range==='chap')s+=ui('sumChap',{c:(recChap+1)+' '+loc(recChap).t});
+    recSum.textContent=s;
+  }
+  function recStatus(msg,err){recStat.textContent=msg;recStat.classList.toggle('err',!!err);}
+  $('bRec').addEventListener('click',()=>{
+    recChap=idx();playing=false;setPlayIcon();
+    if(!recBusy){recProg.hidden=true;recDl.hidden=true;recStatus('');recGo.textContent=ui('start');}
+    recSummary();if(recDlg.showModal)recDlg.showModal();else recDlg.setAttribute('open','');
+  });
+  $('recX').addEventListener('click',()=>{if(recBusy)recAbort=true;recDlg.close();});
+  recDlg.addEventListener('cancel',e=>{if(recBusy)e.preventDefault();});
+  recCancel.addEventListener('click',()=>{recAbort=true;});
+  recGo.addEventListener('click',()=>{if(!recBusy)recordVideo();});
+  const mch=new MessageChannel(),mq=[];mch.port1.onmessage=()=>{const f=mq.shift();if(f)f();};
+  const yieldNow=()=>new Promise(r=>{mq.push(r);mch.port2.postMessage(0);});
+  const breathe=()=>document.hidden?yieldNow():new Promise(r=>setTimeout(r,0));
+  function wrapLines(text,maxW){
+    const toks=text.match(/[A-Za-z0-9À-ÿ().,:;'’"%°–\-\/+&]+\s*|\s+|\S/g)||[];
+    const out=[];let cur='';
+    for(const t of toks){const next=cur+t;if(cur.trim()&&ctx.measureText(next.trimEnd()).width>maxW){out.push(cur.trimEnd());cur=t.trimStart();}else cur=next;}
+    if(cur.trim())out.push(cur.trimEnd());return out.length?out:[''];
+  }
+  /* the chapter card, caption and scale note live in HTML on the page, so the video draws them onto the canvas */
+  function drawOverlays(spd){
+    screenSpace();const c=SI,L=loc(c);
+    const vt=(T-SS[c])/spd,a=clamp((vt-.18)/.5);
+    if(a>0&&T>=3.2){
+      ctx.save();ctx.globalAlpha=a;ctx.translate(0,-6*(1-a));
+      const x0=clamp(cssW*.02,10,22),y0=clamp(cssW*.02,10,20),nS=clamp(cssW*.046,30,58),tS=clamp(cssW*.021,15,26),eS=clamp(cssW*.0135,12,17);
+      const inner=tS*1.2+eS*1.6,bh=Math.max(nS*.9,inner),no=P2(EP.no),sub=ui('shotOf',{i:c+1,n:SH.length});
+      ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.font=`700 ${nS}px ${COND}`;const nw=ctx.measureText(no).width;
+      ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=12;ctx.shadowOffsetY=2;ctx.fillStyle='#f2c230';ctx.fillText(no,x0,y0+nS*.78);
+      ctx.font=`600 ${nS*.42}px ${COND}`;ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText(sub,x0+nw+4,y0+nS*.78);const sw=ctx.measureText(sub).width;
+      const bx=x0+nw+sw+14;ctx.shadowColor='transparent';ctx.fillStyle='#f2c230';ctx.fillRect(bx,y0,3,bh);
+      const tx=bx+15,ty=y0+(bh-inner)/2;
+      ctx.shadowColor='rgba(0,0,0,.45)';ctx.shadowBlur=10;ctx.font=`900 ${tS}px ${FONT}`;ctx.fillStyle='#fff';ctx.fillText(L.t,tx,ty+tS*.98,cssW*.6);
+      ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=6;ctx.shadowOffsetY=1;ctx.font=`500 ${eS}px ${COND}`;ctx.fillStyle='rgba(255,255,255,.82)';ctx.fillText(L.sub,tx,ty+tS*1.2+eS*1.12,cssW*.6);
+      ctx.restore();
+    }
+    if(cssW>=820){ctx.font=`400 11px ${FONT}`;ctx.textAlign='right';ctx.textBaseline='top';ctx.fillStyle='rgba(255,255,255,.62)';ctx.fillText(ui('scaleNote'),cssW-12,10);ctx.textAlign='left';}
+    if(T<3.2)return;
+    let si=0;L.s.forEach((s,i)=>{if(U>=s[0])si=i;});
+    const fs=clamp(cssW*.015,12,17),lh=fs*1.6,px=16,py=7,dotW=16,maxBox=Math.min(cssW*.88,760);
+    ctx.font=`500 ${fs}px ${FONT}`;
+    const lines=wrapLines(L.s[si][1],maxBox-px*2-dotW);
+    const tw=Math.max(...lines.map((l,i)=>ctx.measureText(l).width+(i?0:dotW)));
+    const bw=Math.min(maxBox,tw+px*2),bh=lines.length*lh+py*2,bx=(cssW-bw)/2,by=cssH-clamp(cssW*.018,8,20)-bh;
+    rrp(bx,by,bw,bh,10);ctx.fillStyle='rgba(7,26,37,.78)';ctx.fill();
+    ctx.textBaseline='middle';ctx.textAlign='left';
+    lines.forEach((l,i)=>{const w=ctx.measureText(l).width+(i?0:dotW),lx=(cssW-w)/2,ly=by+py+lh*(i+.5);
+      if(!i){circ(lx+4,ly,4,'#f2c230');}ctx.fillStyle='#f2f6f7';ctx.fillText(l,lx+(i?0:dotW),ly+.5);});
+  }
+  function renderExportFrame(ectx,t,spd,d){
+    const sv={ctx,cssW,cssH,dpr,fit,T};
+    ctx=ectx;cssW=LW;cssH=LH;dpr=d;fit=cssW/W;T=t;
+    try{renderFrame();drawOverlays(spd);}
+    finally{ctx=sv.ctx;cssW=sv.cssW;cssH=sv.cssH;dpr=sv.dpr;fit=sv.fit;T=sv.T;}
+  }
+  async function pickConfig(w,h,fps,br){
+    const list=[['avc','avc1.640033'],['avc','avc1.64002A'],['avc','avc1.640028'],['avc','avc1.4D4033'],['avc','avc1.4D402A'],['avc','avc1.4D4028'],['avc','avc1.42E033'],['avc','avc1.42E02A'],['avc','avc1.42E028'],['avc','avc1.42001F'],
+      ['vp9','vp09.00.40.08'],['vp9','vp09.00.31.08'],['av1','av01.0.08M.08'],['av1','av01.0.05M.08']];
+    for(const [mux,codec] of list){const cfg={codec,width:w,height:h,bitrate:br,framerate:fps};if(mux==='avc')cfg.avc={format:'avc'};
+      try{const r=await VideoEncoder.isConfigSupported(cfg);if(r&&r.supported)return {mux,cfg};}catch(e){}}
+    return null;
+  }
+  async function recordVideo(){
+    recProg.hidden=false;recDl.hidden=true;recBar.style.width='0%';
+    if(typeof VideoEncoder==='undefined'||typeof VideoFrame==='undefined'||typeof Mp4Muxer==='undefined'){recNote.hidden=true;recStatus(ui('stNoSup'),true);return;}
+    recBusy=true;recAbort=false;recNote.hidden=false;recGo.disabled=true;recCancel.hidden=false;recDlg.classList.add('busy');
+    if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null;}
+    recStatus(ui('stPrep'));
+    const d=REC.res/720,VW=Math.round(LW*d/2)*2,VH=Math.round(LH*d/2)*2,fps=REC.fps,spd=REC.speed,[t0,t1]=recSpan();
+    const n=Math.ceil((t1-t0)/spd*fps),us=1e6/fps,keyEvery=fps*2;
+    let enc=null,encErr=null;
+    try{
+      await ensureFonts();
+      const pick=await pickConfig(VW,VH,fps,recBitrate());
+      if(!pick)throw new Error('__nocodec');const cfg=pick.cfg;
+      const muxer=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:pick.mux,width:VW,height:VH,frameRate:fps},fastStart:'in-memory',firstTimestampBehavior:'offset'});
+      enc=new VideoEncoder({output:(chunk,meta)=>muxer.addVideoChunk(chunk,meta),error:e=>{encErr=e;}});
+      enc.configure(cfg);
+      const ec=document.createElement('canvas');ec.width=VW;ec.height=VH;
+      const ectx=ec.getContext('2d',{alpha:false}),pctx=recPrev.getContext('2d');
+      const t0ms=performance.now();let lastUI=0;
+      for(let i=0;i<n;i++){
+        if(recAbort||encErr)break;
+        const t=Math.min(t0+i/fps*spd,t1-.001);
+        renderExportFrame(ectx,t,spd,d);
+        const fr=new VideoFrame(ec,{timestamp:Math.round(i*us),duration:Math.round(us)});
+        enc.encode(fr,{keyFrame:i%keyEvery===0});fr.close();
+        while(enc.encodeQueueSize>6&&!encErr&&!recAbort)await yieldNow();
+        const now=performance.now();
+        if(now-lastUI>150||i===n-1){lastUI=now;const p=(i+1)/n,el=(now-t0ms)/1000;recBar.style.width=(p*100).toFixed(1)+'%';recStatus(ui('stRun',{p:Math.floor(p*100),e:fmt(el/p-el)}));pctx.drawImage(ec,0,0,recPrev.width,recPrev.height);await breathe();}
+      }
+      if(encErr)throw encErr;
+      if(recAbort){try{enc.close();}catch(e){}recBar.style.width='0%';recStatus(ui('stCancel'));return;}
+      recStatus(ui('stFin'));await breathe();
+      await enc.flush();if(encErr)throw encErr;enc.close();
+      muxer.finalize();
+      const blob=new Blob([muxer.target.buffer],{type:'video/mp4'});
+      recUrl=URL.createObjectURL(blob);recDl.href=recUrl;
+      recDl.download=`${EP.slug||'episode'}-${P2(EP.no)}_${LANG}_${REC.range==='chap'?'shot'+P2(recChap+1)+'_':''}${spd}x_${REC.res}p${fps}.mp4`;
+      recDl.hidden=false;recDl.click();
+      recStatus(ui('stDone',{s:(blob.size/1048576).toFixed(1)})+(pick.mux==='avc'?'':' '+ui('stAlt',{c:pick.mux.toUpperCase()})));recGo.textContent=ui('again');
+    }catch(e){
+      const msg=e&&e.message;recStatus(msg==='__nocodec'?ui('stNoCodec'):ui('stErr')+(msg||String(e)),true);
+      try{if(enc&&enc.state!=='closed')enc.close();}catch(_){}
+    }finally{
+      recBusy=false;recGo.disabled=false;recCancel.hidden=true;recNote.hidden=true;recDlg.classList.remove('busy');dirty=true;
+    }
+  }
+
+  function loop(ts){
+    const dt=last?Math.min(.1,(ts-last)/1000):0;last=ts;
+    if(playing&&!ended){T+=dt*speed;if(T>=TOTAL){T=TOTAL-.001;ended=true;playing=false;setPlayIcon();}dirty=true;}
+    if(dirty&&cssW>2){renderFrame();updateUI();dirty=false;}
+    requestAnimationFrame(loop);
+  }
+  let initLang='zh';
+  try{const q=(new URLSearchParams(location.search).get('lang')||'').slice(0,2).toLowerCase(),sv=localStorage.getItem(LANG_KEY)||localStorage.getItem('owf-lang'),nv=(navigator.language||'').toLowerCase();
+    initLang=LANGS.includes(q)?q:LANGS.includes(sv)?sv:nv.startsWith('ja')?'ja':nv.startsWith('zh')?'zh':nv.startsWith('en')?'en':'zh';}catch(e){}
+  setLang(initLang,false);
+  setPlayIcon();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{dirty=true;});
+  window.__ow={seek:t=>{T=t;dirty=true;},pause:()=>{playing=false;setPlayIcon();},shot:i=>{T=SS[i]+.5;dirty=true;},setLang:l=>setLang(l,false),keep:()=>[EP.t,...SH.map(s=>s.t),...QA_KEEP],get T(){return T;},SS,TOTAL};
+  requestAnimationFrame(loop);
+})();
+
+</script>
+</body>
+</html>

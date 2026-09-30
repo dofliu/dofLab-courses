@@ -40,6 +40,16 @@
         <ul class="latest" id="em-latest" aria-label="最新單元"></ul>
         <a class="btn" href="courses/engineering-math/">進入課程 →</a>
       </article>
+      <article class="course">
+        <div class="chips"><span class="chip">AI 使用教學</span><span class="chip">中文 / EN</span><span class="chip">動畫課程</span></div>
+        <h3><a href="courses/ai-tutorials/">AI 使用教學</a></h3>
+        <p class="desc">用動畫學會使用 AI 工具。第一門課「Claude AI 應用動畫課程」：入門、個人工作、專案開發、課程教學、生活應用與 AI 代理人，案例涵蓋智慧自動化與風能運維。</p>
+        <div class="prog">
+          <div class="prog-top"><span>Claude AI 已上線</span><b id="ai-count">–</b></div>
+          <div class="prog-track"><i id="ai-bar"></i></div>
+        </div>
+        <a class="btn" href="courses/ai-tutorials/">進入主題 →</a>
+      </article>
       <article class="course placeholder">
         <h3>下一門課程籌備中</h3>
         <p class="desc">研究室的其他課程完成後會陸續放在這裡。</p>
@@ -78,6 +88,10 @@
     li.appendChild(a); list.appendChild(li);
   });
 })();
+</script>
+<script src="courses/ai-tutorials/claude/course.js"></script>
+<script>
+(function(){ var D=window.CLAUDE_COURSE; if(!D) return; document.getElementById('ai-count').textContent=D.live+' / '+D.total; document.getElementById('ai-bar').style.width=(D.live/D.total*100)+'%'; })();
 </script>
 </body>
 </html>

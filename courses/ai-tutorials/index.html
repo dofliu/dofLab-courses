@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI 使用教學</title>
+<meta name="description" content="劉瑞弘研究室 AI 使用教學：用動畫與互動範例學會使用 AI 工具。中文／English。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>.hero .lang{margin-left:auto}.hero .seg{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}.hero .seg button{color:#c5cbf0}.hero .seg button[aria-pressed="true"]{background:#4dd0c0;color:#0d1026}</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="../../"><i></i>dofLab courses</a>
+      <span class="org" data-zh="國立勤益科技大學 · 智慧自動化工程系" data-en="NCUT · Dept. of Intelligent Automation Engineering">國立勤益科技大學 · 智慧自動化工程系</span>
+      <div class="seg lang" role="group" aria-label="語言 Language"><button data-lang="zh" aria-pressed="true">中文</button><button data-lang="en" aria-pressed="false">EN</button></div>
+    </div>
+    <div class="hero-body">
+      <nav class="crumb"><a href="../../" data-zh="← 所有課程" data-en="← All courses">← 所有課程</a></nav>
+      <div class="eyebrow">AI TUTORIALS · 中文 / ENGLISH</div>
+      <h1 data-zh="AI 使用教學" data-en="AI Tutorials">AI 使用教學</h1>
+      <p class="lead" data-zh="用動畫與實際案例學會使用 AI 工具：日常生活、課堂教學、智慧自動化與風能運維都用得上。" data-en="Learn to use AI tools through animations and real-world examples, from daily life and teaching to smart automation and wind-farm O&amp;M.">用動畫與實際案例學會使用 AI 工具：日常生活、課堂教學、智慧自動化與風能運維都用得上。</p>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section class="sec">
+    <h2 data-zh="課程" data-en="Courses">課程</h2>
+    <div class="courses">
+      <article class="course">
+        <div class="chips"><span class="chip" data-zh="動畫課程" data-en="Animated">動畫課程</span><span class="chip">中文 / EN</span><span class="chip" data-zh="6 個主題" data-en="6 series">6 個主題</span></div>
+        <h3><a href="claude/" data-zh="Claude AI 應用動畫課程" data-en="Claude AI in Animation">Claude AI 應用動畫課程</a></h3>
+        <p class="desc" data-zh="入門基礎、個人工作、專案開發、課程教學、生活應用、AI 代理人。" data-en="Basics, personal work, project development, teaching, daily life and AI agents.">入門基礎、個人工作、專案開發、課程教學、生活應用、AI 代理人。</p>
+        <div class="prog"><div class="prog-top"><span data-zh="已上線" data-en="Published">已上線</span><b id="c-count">–</b></div><div class="prog-track"><i id="c-bar"></i></div></div>
+        <ul class="latest" id="c-latest"></ul>
+        <a class="btn" href="claude/" data-zh="進入課程 →" data-en="Open course →">進入課程 →</a>
+      </article>
+      <article class="course placeholder">
+        <h3 data-zh="更多 AI 工具教學籌備中" data-en="More AI tutorials coming">更多 AI 工具教學籌備中</h3>
+        <p class="desc" data-zh="其他 AI 工具與應用的教學完成後會放在這裡。" data-en="Tutorials for other AI tools will appear here.">其他 AI 工具與應用的教學完成後會放在這裡。</p>
+      </article>
+    </div>
+  </section>
+</main>
+<footer data-zh="© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室" data-en="© Dr. Jui-Hung Liu Lab, Dept. of Intelligent Automation Engineering, NCUT">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script src="claude/course.js"></script>
+<script>
+(function(){
+  var D = window.CLAUDE_COURSE, LANG='zh';
+  try{ var q=new URLSearchParams(location.search).get('lang'); var sv=localStorage.getItem('rea-lang');
+    LANG=(q==='en'||q==='zh')?q:(sv==='en'||sv==='zh')?sv:((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'); }catch(e){}
+  function render(){
+    document.documentElement.lang = LANG==='zh'?'zh-Hant':'en';
+    document.querySelectorAll('[data-zh]').forEach(function(el){ el.textContent = el.dataset[LANG]; });
+    document.querySelectorAll('[data-lang]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.lang===LANG); });
+    document.title = LANG==='zh'?'AI 使用教學':'AI Tutorials';
+    if(!D) return;
+    document.getElementById('c-count').textContent = D.live+' / '+D.total;
+    document.getElementById('c-bar').style.width = (D.live/D.total*100)+'%';
+    var eps=[]; D.catalog.series.forEach(function(s){ (s.episodes||[]).forEach(function(e){ eps.push(e); }); if(s.overview) eps.push(s.overview); });
+    eps.sort(function(a,b){ return b.id < a.id ? -1 : 1; });
+    var ul=document.getElementById('c-latest'); ul.innerHTML='';
+    eps.slice(0,3).forEach(function(e){ var li=document.createElement('li'); li.innerHTML='<span class="n">'+e.id.slice(0,3)+'</span>'; var a=document.createElement('a'); a.href='claude/'+e.path+(LANG==='en'?'?lang=en':''); a.textContent=e.title[LANG]||e.title.zh; li.appendChild(a); ul.appendChild(li); });
+  }
+  document.querySelectorAll('[data-lang]').forEach(function(b){ b.onclick=function(){ LANG=b.dataset.lang; try{localStorage.setItem('rea-lang',LANG);}catch(e){} render(); }; });
+  render();
+})();
+</script>
+</body>
+</html>

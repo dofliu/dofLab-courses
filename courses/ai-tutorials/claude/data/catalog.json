@@ -1,0 +1,270 @@
+{
+  "project": "Claude AI 應用動畫館",
+  "project_en": "Claude AI Animation Library",
+  "version": "1.0.0",
+  "created": "2026-09-28",
+  "baseUrl": "./",
+  "description": {
+    "zh": "用動畫解說 Claude AI 的功能與應用，從入門到代理人，三語版本，可直接在瀏覽器觀看。",
+    "en": "Animated explainers for Claude AI — from basics to AI agents, available in three languages."
+  },
+  "series": [
+    {
+      "slug": "claude-basics",
+      "title": {
+        "zh": "入門基礎",
+        "en": "Claude Basics"
+      },
+      "description": {
+        "zh": "從零開始認識 Claude：對話、提示詞、記憶、檔案、搜尋到 Artifacts。",
+        "en": "Start from scratch: conversation, prompts, memory, files, search, and Artifacts."
+      },
+      "icon": "💬",
+      "color": "#2a5c8c",
+      "episodes": [
+        {
+          "id": "002-claude-basics-ep01",
+          "no": 1,
+          "file": "ep01.html",
+          "path": "claude-basics/ep01.html",
+          "title": {
+            "zh": "Claude 是什麼",
+            "en": "What Is Claude"
+          },
+          "sub": {
+            "zh": "預測下一個字、四個入口、模型家族、方案與用量、第一段對話",
+            "en": "Next-token prediction, four surfaces, the model family, plans and usage, a first conversation"
+          },
+          "shots": 6,
+          "dur": 85,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-09"
+        },
+        {
+          "id": "003-claude-basics-ep02",
+          "no": 2,
+          "file": "ep02.html",
+          "path": "claude-basics/ep02.html",
+          "title": {
+            "zh": "好提示詞的五個要素",
+            "en": "Five Elements of a Good Prompt"
+          },
+          "sub": {
+            "zh": "模糊與清楚的對照、五塊積木、角色與目標、脈絡與限制、格式與範例、迭代修正",
+            "en": "Vague vs clear, five building blocks, role and goal, context and constraints, format and examples, iteration"
+          },
+          "shots": 6,
+          "dur": 84,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-09"
+        },
+        {
+          "id": "004-claude-basics-ep03",
+          "no": 3,
+          "file": "ep03.html",
+          "path": "claude-basics/ep03.html",
+          "title": {
+            "zh": "上下文與記憶",
+            "en": "Context & Memory"
+          },
+          "sub": {
+            "zh": "工作桌比喻、長對話的取捨、專案知識與指示、記憶與隱私控制、何時開新對話",
+            "en": "The desk metaphor, long-chat trade-offs, project knowledge and instructions, memory and privacy controls, when to start fresh"
+          },
+          "shots": 6,
+          "dur": 82,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-09"
+        },
+        {
+          "id": "005-claude-basics-ep04",
+          "no": 4,
+          "file": "ep04.html",
+          "path": "claude-basics/ep04.html",
+          "title": {
+            "zh": "檔案與圖片",
+            "en": "Files & Images"
+          },
+          "sub": {
+            "zh": "上傳 PDF 並摘要、PDF 的文字與影像兩條路、拍照看圖、試算表分析、多份文件比較、標註出處頁碼",
+            "en": "Upload and summarize a PDF, how PDFs are read, photos, spreadsheet analysis, comparing documents, page citations"
+          },
+          "shots": 6,
+          "dur": 84,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-09"
+        },
+        {
+          "id": "006-claude-basics-ep05",
+          "no": 5,
+          "file": "ep05.html",
+          "path": "claude-basics/ep05.html",
+          "title": {
+            "zh": "搜尋與深度研究",
+            "en": "Search & Research"
+          },
+          "sub": {
+            "zh": "知識截止、開啟網頁搜尋、搜尋→閱讀→引用、研究的多步驟、查證來源的三個問題、研究摘要",
+            "en": "The knowledge cutoff, turning on web search, search → read → cite, multi-step Research, three questions for sources, research summaries"
+          },
+          "shots": 6,
+          "dur": 84,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-09"
+        },
+        {
+          "id": "007-claude-basics-ep06",
+          "no": 6,
+          "file": "ep06.html",
+          "path": "claude-basics/ep06.html",
+          "title": {
+            "zh": "Artifacts 與可分享成果",
+            "en": "Artifacts & Sharing"
+          },
+          "sub": {
+            "zh": "回答變成網頁或工具、互動小工具、文件／簡報／設計範本、AI 驅動與資料儲存、分享與發佈、反覆修改",
+            "en": "When answers become pages or tools, an interactive tool, Docs/Slides/Design templates, AI-powered and stateful artifacts, sharing and publishing, iterating"
+          },
+          "shots": 6,
+          "dur": 85,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-09"
+        },
+        {
+          "id": "008-claude-basics-ep07",
+          "no": 7,
+          "file": "ep07.html",
+          "path": "claude-basics/ep07.html",
+          "title": {
+            "zh": "限制、查證與隱私",
+            "en": "Limits, Verification & Privacy"
+          },
+          "sub": {
+            "zh": "幻覺的機率原理、知識截止、敏感資料與模型改善設定、資料保存期限、人類保有最終判斷、查證檢核清單",
+            "en": "Why hallucinations happen, the knowledge cutoff, sensitive data and model improvement settings, data retention, humans make the final call, a verification checklist"
+          },
+          "shots": 6,
+          "dur": 84,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-09"
+        }
+      ],
+      "overview": {
+        "id": "001-claude-basics-overview",
+        "file": "overview.html",
+        "path": "claude-basics/overview.html",
+        "title": {
+          "zh": "一分鐘認識 Claude",
+          "en": "Claude in one minute"
+        },
+        "sub": {
+          "zh": "七個畫面帶你看完入門基礎的七個主題",
+          "en": "Seven shots covering the seven Claude Basics topics"
+        },
+        "shots": 7,
+        "dur": 88,
+        "langs": [
+          "zh",
+          "en"
+        ],
+        "asof": "2026-09"
+      }
+    },
+    {
+      "slug": "personal-work",
+      "title": {
+        "zh": "個人工作",
+        "en": "Personal Work"
+      },
+      "description": {
+        "zh": "郵件、會議、文件、試算表、簡報、連接器、排程、Skills，Claude 全程相伴。",
+        "en": "Email, meetings, documents, spreadsheets, decks, connectors, scheduled tasks, Skills."
+      },
+      "icon": "📋",
+      "color": "#1e7a5c",
+      "episodes": []
+    },
+    {
+      "slug": "project-dev",
+      "title": {
+        "zh": "專案開發",
+        "en": "Project Development"
+      },
+      "description": {
+        "zh": "從想法到上線：Claude Code 輔助從規格、實作、測試、審查到部署的完整流程。",
+        "en": "Idea to launch: Claude Code guides spec, implementation, testing, review, and deployment."
+      },
+      "icon": "⚙️",
+      "color": "#5c3a7a",
+      "episodes": []
+    },
+    {
+      "slug": "teaching",
+      "title": {
+        "zh": "課程教學",
+        "en": "Teaching"
+      },
+      "description": {
+        "zh": "備課、教材、測驗、差異化教學、AI 家教、學術誠信與學習分析。",
+        "en": "Lesson planning, materials, quizzes, differentiated instruction, AI tutoring, integrity."
+      },
+      "icon": "🎓",
+      "color": "#7a3a1e",
+      "episodes": []
+    },
+    {
+      "slug": "daily-life",
+      "title": {
+        "zh": "生活應用",
+        "en": "Daily Life"
+      },
+      "description": {
+        "zh": "旅遊規劃、料理、個人理財、健康資訊、語言學習、家務文件、手機使用。",
+        "en": "Travel, cooking, personal finance, health info, language learning, household paperwork, mobile."
+      },
+      "icon": "🏡",
+      "color": "#2a6b4a",
+      "episodes": []
+    },
+    {
+      "slug": "agents",
+      "title": {
+        "zh": "代理人",
+        "en": "AI Agents"
+      },
+      "description": {
+        "zh": "從聊天到自動行動：工具使用、MCP、瀏覽器代理、Cowork、多代理協作與安全。",
+        "en": "Chat to action: tool use, MCP, browser agents, Cowork, multi-agent collaboration, safety."
+      },
+      "icon": "🤖",
+      "color": "#1a4a6e",
+      "episodes": []
+    }
+  ],
+  "updated": "2026-09-30",
+  "languages": [
+    "zh",
+    "en"
+  ]
+}
