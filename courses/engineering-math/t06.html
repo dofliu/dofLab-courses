@@ -1,0 +1,543 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>工程數學 | 二階非齊次微分方程(II)：參數變分法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=IBM+Plex+Mono:wght@500&display=swap">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b;
+  --bg:#f3f5fb; --surface:#ffffff; --surface2:#e9edf8;
+  --ink:#141a3a; --muted:#56608a; --line:#d3d9ec;
+  --accent:#1a237e; --accent2:#00897b; --accent2-soft:#dff3f0;
+  --good:#1b7f4b; --good-soft:#e2f5ea; --bad:#b3261e; --bad-soft:#fbe7e5;
+  --plot-grid:#dde2f0; --c-yh:#7b86c2;
+  --serif:"Noto Serif TC","Songti TC",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0c1030; --surface:#151a45; --surface2:#1d2357;
+    --ink:#e7eaff; --muted:#a3abd8; --line:#2d3470;
+    --accent:#9fa8ff; --accent2:#4dd0c0; --accent2-soft:#113b44;
+    --good:#6fdc9f; --good-soft:#123a2a; --bad:#ff8a80; --bad-soft:#4a1d1d;
+    --plot-grid:#262d66; --c-yh:#8f98d8;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0c1030; --surface:#151a45; --surface2:#1d2357;
+  --ink:#e7eaff; --muted:#a3abd8; --line:#2d3470;
+  --accent:#9fa8ff; --accent2:#4dd0c0; --accent2-soft:#113b44;
+  --good:#6fdc9f; --good-soft:#123a2a; --bad:#ff8a80; --bad-soft:#4a1d1d;
+  --plot-grid:#262d66; --c-yh:#8f98d8;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;margin:0}
+math{font-size:1.08em}
+math[display="block"]{overflow-x:auto;overflow-y:hidden;padding-block:4px}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+header.top{background:var(--navy);color:#fff;padding-block:20px 16px}
+header.top .wrap{padding-block:0}
+.course{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9ee8de}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(1.5rem,4.6vw,2.25rem);line-height:1.3;margin:.2em 0 .6em;text-wrap:balance}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{appearance:none;border:0;background:rgba(255,255,255,.08);color:#c9cff5;border-radius:6px;padding:8px 6px;font:500 13px/1.3 var(--sans);cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px}
+.step .bar{height:4px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden}
+.step .bar i{display:block;height:100%;width:0;background:#26c6b3;transition:width .4s}
+.step.done .bar i,.step.active .bar i{width:100%}
+.step.active{background:rgba(255,255,255,.18);color:#fff}
+.step[disabled]{cursor:not-allowed;opacity:.55}
+.step:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+main .wrap{padding-block:24px 8px}
+section.stage{display:flex;flex-direction:column;gap:20px}
+h2{font-family:var(--serif);font-weight:900;font-size:1.5rem;margin:0;color:var(--accent);text-wrap:balance}
+h3{font-size:1.1rem;margin:0;text-wrap:balance}
+p{margin:0}
+.lead{color:var(--muted);max-width:65ch}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+.def{border:1.5px solid var(--accent2);background:var(--accent2-soft);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.def .tag{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2)}
+.formula{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.formula .tag{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px}
+ol.flow{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px}
+.plot svg{width:100%;height:auto;display:block}
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+.sliders label{display:flex;flex-direction:column;gap:2px;font-size:14px;color:var(--muted)}
+.sliders output{font-family:var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;background:var(--c)}
+.legend .dash::before{background:repeating-linear-gradient(90deg,var(--c) 0 5px,transparent 5px 9px)}
+.btn{appearance:none;border:0;border-radius:8px;padding:11px 18px;font:700 15px/1.2 var(--sans);cursor:pointer;background:var(--teal);color:#fff;align-self:flex-start}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--line)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.note{font-size:14px;color:var(--muted)}
+details.sol{border-top:1px solid var(--line);padding-top:10px}
+details.sol summary{cursor:pointer;font-weight:700;color:var(--accent2);list-style:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"▸ ";}
+details.sol[open] summary::before{content:"▾ ";}
+.sol ol{margin:10px 0 0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px}
+.badge-lv{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted)}
+.q{display:flex;flex-direction:column;gap:10px}
+.opts{display:grid;gap:8px}
+.opt{appearance:none;text-align:left;background:var(--surface2);color:var(--ink);border:1.5px solid transparent;border-radius:8px;padding:10px 14px;font:inherit;cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--accent2)}
+.opt[disabled]{cursor:default}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.fb{border-radius:8px;padding:10px 14px;font-size:15px}
+.fb.ok{background:var(--good-soft)}
+.fb.no{background:var(--bad-soft)}
+.fb b{margin-right:6px}
+.score{font-family:var(--mono);font-size:15px}
+.hint{background:var(--surface2);border-radius:8px;padding:12px 14px}
+.hint .tag{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--accent2)}
+.win{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;padding:28px 18px;border:2px solid var(--accent2)}
+.medal{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 0deg,#26c6b3,#1a237e,#26c6b3,#1a237e,#26c6b3);animation:spin 6s linear infinite, pop .7s cubic-bezier(.2,1.6,.4,1) both;box-shadow:0 0 0 6px var(--accent2-soft)}
+.medal>div{width:104px;height:104px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:44px;animation:spin 6s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{from{transform:scale(.2);opacity:0}}
+.win h3{font-family:var(--serif);font-size:1.35rem;color:var(--accent)}
+@media (prefers-reduced-motion: reduce){.medal,.medal>div{animation:none}}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center;padding-block:20px}
+@media (max-width:560px){
+  .sliders{grid-template-columns:1fr}
+  .step{font-size:12px}
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="course">工程數學互動學習 · Engineering Mathematics</div>
+    <h1>二階非齊次微分方程(II)：參數變分法</h1>
+    <nav class="steps" aria-label="關卡進度">
+      <button class="step active" data-go="0"><span>📚 關卡 1 學習</span><span class="bar"><i></i></span></button>
+      <button class="step" data-go="1" disabled><span>🔍 關卡 2 理解</span><span class="bar"><i></i></span></button>
+      <button class="step" data-go="2" disabled><span>✏️ 關卡 3 測驗</span><span class="bar"><i></i></span></button>
+      <button class="step" data-go="3" disabled><span>🏆 關卡 4 挑戰</span><span class="bar"><i></i></span></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<!-- ========== 關卡 1 ========== -->
+<section class="stage" id="s0">
+  <h2>📚 學習：讓常數「動起來」</h2>
+  <div class="prose">
+    <p>未定係數法只能處理 \(e^{ax}\)、多項式、\(\sin\)、\(\cos\) 及其乘積這類「微分後形式有限」的外力。遇到 \(\sec x\)、\(\tan x\)、\(\ln x\)、\(\dfrac{e^{x}}{x}\) 這類函數就會失效。</p>
+    <p><b>參數變分法（Variation of Parameters）</b>由 Lagrange 提出：先解出齊次解 \(y_h=c_1y_1+c_2y_2\)，再把常數 \(c_1, c_2\) 換成待求的函數 \(u_1(x), u_2(x)\)。只要 \(y_1, y_2\) 已知，任何連續的 \(g(x)\) 都能處理。</p>
+  </div>
+
+  <div class="def">
+    <span class="tag">定義 · 標準形式</span>
+    <p>方程式必須先化成首項係數為 1 的標準形式：</p>
+    <p>$$y''+p(x)\,y'+q(x)\,y=g(x)$$</p>
+    <p>若原式為 \(a(x)y''+b(x)y'+c(x)y=f(x)\)，先全式除以 \(a(x)\)，此時 \(g(x)=f(x)/a(x)\)。<b>這一步最常被忘記。</b></p>
+  </div>
+
+  <div class="card">
+    <h3>推導概念</h3>
+    <p>假設特解為 \(y_p=u_1y_1+u_2y_2\)。兩個未知函數需要兩個條件，我們自行加上一個輔助條件來簡化微分：</p>
+    <p>$$\begin{cases} u_1'y_1+u_2'y_2=0 & \text{(輔助條件)}\\[2pt] u_1'y_1'+u_2'y_2'=g(x) & \text{(代回方程式得到)}\end{cases}$$</p>
+    <p>用 Cramer 法則解這個 \(2\times2\) 聯立方程式，分母就是 <b>Wronskian</b>：</p>
+    <p>$$W=\begin{vmatrix} y_1 & y_2\\ y_1' & y_2'\end{vmatrix}=y_1y_2'-y_1'y_2\neq 0$$</p>
+  </div>
+
+  <div class="formula">
+    <span class="tag">核心公式</span>
+    <p>$$u_1=-\int\frac{y_2\,g(x)}{W}\,dx,\qquad u_2=\int\frac{y_1\,g(x)}{W}\,dx$$</p>
+    <p>$$y_p=u_1y_1+u_2y_2,\qquad y=c_1y_1+c_2y_2+y_p$$</p>
+    <p class="note">積分時不必加常數：多出來的常數只會產生 \(y_1, y_2\) 的倍數，已被齊次解吸收。</p>
+  </div>
+
+  <div class="card">
+    <h3>解題流程</h3>
+    <ol class="flow">
+      <li>化成標準形式，讀出 \(g(x)\)。</li>
+      <li>解特徵方程式，得到齊次解 \(y_1, y_2\)。</li>
+      <li>計算 Wronskian \(W\)。</li>
+      <li>代公式求 \(u_1', u_2'\)，積分得 \(u_1, u_2\)。</li>
+      <li>組合 \(y_p=u_1y_1+u_2y_2\)，寫出通解。</li>
+    </ol>
+  </div>
+
+  <div class="card plot">
+    <h3>互動圖：\(y''+y=\sec x\) 的通解</h3>
+    <p class="note">特解 \(y_p=x\sin x+\cos x\ln(\cos x)\) 固定不變；拖動 \(c_1, c_2\) 觀察齊次解如何疊加，得到整個解族。定義域 \(-\tfrac{\pi}{2}<x<\tfrac{\pi}{2}\)（\(\sec x\) 在 \(\pm\tfrac{\pi}{2}\) 發散）。</p>
+    <svg id="plot" viewBox="0 0 600 320" role="img" aria-label="通解函數圖"></svg>
+    <div class="legend">
+      <span style="--c:var(--accent2)">通解 \(y=y_h+y_p\)</span>
+      <span class="dash" style="--c:var(--c-yh)">齊次解 \(y_h\)</span>
+      <span style="--c:#e8912d">特解 \(y_p\)</span>
+    </div>
+    <div class="sliders">
+      <label for="c1">\(c_1\)（乘 \(\cos x\)）<input type="range" id="c1" min="-2" max="2" step="0.1" value="1"><output id="c1v">1.0</output></label>
+      <label for="c2">\(c_2\)（乘 \(\sin x\)）<input type="range" id="c2" min="-2" max="2" step="0.1" value="0"><output id="c2v">0.0</output></label>
+    </div>
+  </div>
+
+  <button class="btn" id="toS1">我已了解 → 前往例題</button>
+</section>
+
+<!-- ========== 關卡 2 ========== -->
+<section class="stage" id="s1" hidden>
+  <h2>🔍 理解：兩道例題</h2>
+  <p class="lead">先自己試著算，再展開步驟對照。至少展開一題才能前往測驗。</p>
+
+  <article class="card">
+    <span class="badge-lv">例題 1 · 基礎</span>
+    <h3>求 \(y''+y=\sec x\) 的通解（\(-\tfrac{\pi}{2}<x<\tfrac{\pi}{2}\)）。</h3>
+    <details class="sol">
+      <summary>顯示解題步驟</summary>
+      <ol>
+        <li><b>齊次解：</b>\(r^2+1=0\Rightarrow r=\pm i\)，取 \(y_1=\cos x,\ y_2=\sin x\)。已是標準形式，\(g=\sec x\)。</li>
+        <li><b>Wronskian：</b>$$W=\cos x\cdot\cos x-(-\sin x)\sin x=1$$</li>
+        <li><b>求 \(u_1\)：</b>$$u_1'=-\frac{\sin x\sec x}{1}=-\tan x\ \Rightarrow\ u_1=\ln|\cos x|$$</li>
+        <li><b>求 \(u_2\)：</b>$$u_2'=\frac{\cos x\sec x}{1}=1\ \Rightarrow\ u_2=x$$</li>
+        <li><b>組合：</b>$$y_p=\cos x\ln|\cos x|+x\sin x$$ $$y=c_1\cos x+c_2\sin x+\cos x\ln|\cos x|+x\sin x$$</li>
+      </ol>
+    </details>
+  </article>
+
+  <article class="card">
+    <span class="badge-lv">例題 2 · 進階（重根）</span>
+    <h3>求 \(y''-2y'+y=\dfrac{e^{x}}{x}\) 的通解（\(x>0\)）。</h3>
+    <details class="sol">
+      <summary>顯示解題步驟</summary>
+      <ol>
+        <li><b>齊次解：</b>\(r^2-2r+1=(r-1)^2=0\)，重根 \(r=1\)，取 \(y_1=e^{x},\ y_2=xe^{x}\)。</li>
+        <li><b>Wronskian：</b>$$W=e^{x}(e^{x}+xe^{x})-e^{x}\cdot xe^{x}=e^{2x}$$</li>
+        <li><b>求 \(u_1\)：</b>$$u_1'=-\frac{xe^{x}\cdot e^{x}/x}{e^{2x}}=-1\ \Rightarrow\ u_1=-x$$</li>
+        <li><b>求 \(u_2\)：</b>$$u_2'=\frac{e^{x}\cdot e^{x}/x}{e^{2x}}=\frac1x\ \Rightarrow\ u_2=\ln x$$</li>
+        <li><b>組合：</b>$$y_p=-xe^{x}+xe^{x}\ln x$$ 其中 \(-xe^{x}\) 是 \(y_2\) 的倍數，可併入齊次解，因此 $$y=c_1e^{x}+c_2xe^{x}+xe^{x}\ln x$$</li>
+      </ol>
+    </details>
+  </article>
+
+  <div class="row">
+    <button class="btn" id="toS2" disabled>前往測驗</button>
+    <span class="note" id="s1note">請先展開至少 1 個例題。</span>
+  </div>
+</section>
+
+<!-- ========== 關卡 3 ========== -->
+<section class="stage" id="s2" hidden>
+  <h2>✏️ 測驗：5 道選擇題</h2>
+  <p class="lead">每題只能作答一次，選完立即顯示解析。答對 4 題以上解鎖挑戰關。</p>
+
+  <div class="card q" data-ans="1">
+    <h3>Q1. \(y_1=e^{x},\ y_2=e^{-x}\) 的 Wronskian \(W\) 為？</h3>
+    <div class="opts">
+      <button class="opt">\(2\)</button>
+      <button class="opt">\(-2\)</button>
+      <button class="opt">\(0\)</button>
+      <button class="opt">\(e^{2x}\)</button>
+    </div>
+    <div class="fb" hidden>\(W=e^{x}(-e^{-x})-e^{x}\cdot e^{-x}=-1-1=-2\)。注意順序是 \(y_1y_2'-y_1'y_2\)。</div>
+  </div>
+
+  <div class="card q" data-ans="2">
+    <h3>Q2. 設 \(y_p=u_1y_1+u_2y_2\)，參數變分法額外加入的輔助條件是？</h3>
+    <div class="opts">
+      <button class="opt">\(u_1y_1+u_2y_2=0\)</button>
+      <button class="opt">\(u_1'y_1'+u_2'y_2'=0\)</button>
+      <button class="opt">\(u_1'y_1+u_2'y_2=0\)</button>
+      <button class="opt">\(u_1'+u_2'=g(x)\)</button>
+    </div>
+    <div class="fb" hidden>令 \(u_1'y_1+u_2'y_2=0\)，則 \(y_p'\) 不含 \(u'\) 項，再微分代回原式才只剩一階導數 \(u_1', u_2'\)，得到第二式 \(u_1'y_1'+u_2'y_2'=g\)。</div>
+  </div>
+
+  <div class="card q" data-ans="0">
+    <h3>Q3. 對 \(2y''+8y=4\csc 2x\) 使用公式時，\(g(x)\) 應取？</h3>
+    <div class="opts">
+      <button class="opt">\(2\csc 2x\)</button>
+      <button class="opt">\(4\csc 2x\)</button>
+      <button class="opt">\(8\csc 2x\)</button>
+      <button class="opt">\(\csc 2x\)</button>
+    </div>
+    <div class="fb" hidden>公式要求首項係數為 1。全式除以 2 得 \(y''+4y=2\csc 2x\)，所以 \(g(x)=2\csc 2x\)。</div>
+  </div>
+
+  <div class="card q" data-ans="3">
+    <h3>Q4. 對 \(y''+4y=\tan 2x\)，取 \(y_1=\cos 2x,\ y_2=\sin 2x\)，則 \(u_2'\) 為？</h3>
+    <div class="opts">
+      <button class="opt">\(\sin 2x\)</button>
+      <button class="opt">\(-\tfrac12\sin 2x\)</button>
+      <button class="opt">\(\tfrac12\tan 2x\)</button>
+      <button class="opt">\(\tfrac12\sin 2x\)</button>
+    </div>
+    <div class="fb" hidden>\(W=\cos 2x\cdot 2\cos 2x-(-2\sin 2x)\sin 2x=2\)。\(u_2'=\dfrac{y_1g}{W}=\dfrac{\cos 2x\tan 2x}{2}=\tfrac12\sin 2x\)。</div>
+  </div>
+
+  <div class="card q" data-ans="1">
+    <h3>Q5. \(y''+y=\csc x\)（\(0<x<\pi\)）的一個特解為？</h3>
+    <div class="opts">
+      <button class="opt">\(x\cos x+\sin x\ln(\sin x)\)</button>
+      <button class="opt">\(-x\cos x+\sin x\ln(\sin x)\)</button>
+      <button class="opt">\(x\sin x+\cos x\ln(\sin x)\)</button>
+      <button class="opt">\(-x\sin x-\cos x\ln(\sin x)\)</button>
+    </div>
+    <div class="fb" hidden>\(W=1\)。\(u_1'=-\sin x\csc x=-1\Rightarrow u_1=-x\)；\(u_2'=\cos x\csc x=\cot x\Rightarrow u_2=\ln(\sin x)\)。故 \(y_p=-x\cos x+\sin x\ln(\sin x)\)。</div>
+  </div>
+
+  <div class="card" id="quizResult" hidden>
+    <p class="score" id="scoreText"></p>
+    <div class="row">
+      <button class="btn" id="toS3" hidden>前往挑戰關</button>
+      <button class="btn ghost" id="retry" hidden>再試一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 關卡 4 ========== -->
+<section class="stage" id="s3" hidden>
+  <h2>🏆 挑戰關：臨界阻尼 RLC 電路</h2>
+  <div class="card">
+    <p>串聯 RLC 電路中 \(L=1\ \text{H}\)、\(R=2\ \Omega\)、\(C=1\ \text{F}\)。電容電荷 \(q(t)\)（庫侖）滿足</p>
+    <p>$$L\,q''+R\,q'+\frac{1}{C}\,q=E(t)$$</p>
+    <p>外加一個逐漸衰減的電壓源 \(E(t)=\dfrac{e^{-t}}{1+t^{2}}\ \text{V}\)，初始條件 \(q(0)=0,\ q'(0)=i(0)=0\)。求 \(q(t)\)，\(t\ge 0\)。</p>
+    <p class="note">\(R^2=4=4L/C\)，這是臨界阻尼。外力含 \(\dfrac{1}{1+t^2}\)，未定係數法無法處理。</p>
+  </div>
+
+  <div id="hints" class="prose"></div>
+  <div class="row">
+    <button class="btn ghost" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn ghost" id="fullBtn">查看完整解答</button>
+  </div>
+
+  <div class="card q" id="chq">
+    <h3>選出你的答案 \(q(t)\)：</h3>
+    <div class="opts">
+      <button class="opt">\(e^{-t}\left[t\arctan t+\tfrac12\ln(1+t^2)\right]\)</button>
+      <button class="opt">\(e^{-t}\left[t\arctan t-\tfrac12\ln(1+t^2)\right]\)</button>
+      <button class="opt">\(e^{-t}\left[\arctan t-\tfrac12 t\ln(1+t^2)\right]\)</button>
+      <button class="opt">\(te^{-t}\arctan t\)</button>
+    </div>
+    <div class="fb" hidden></div>
+  </div>
+
+  <div class="card" id="fullSol" hidden>
+    <h3>完整解答</h3>
+    <ol class="flow">
+      <li>代入參數：\(q''+2q'+q=\dfrac{e^{-t}}{1+t^2}\)，已是標準形式。</li>
+      <li>特徵方程式 \((r+1)^2=0\)，取 \(y_1=e^{-t},\ y_2=te^{-t}\)。</li>
+      <li>$$W=e^{-t}(e^{-t}-te^{-t})-(-e^{-t})te^{-t}=e^{-2t}$$</li>
+      <li>$$u_1'=-\frac{te^{-t}\cdot\frac{e^{-t}}{1+t^2}}{e^{-2t}}=-\frac{t}{1+t^2}\ \Rightarrow\ u_1=-\tfrac12\ln(1+t^2)$$</li>
+      <li>$$u_2'=\frac{e^{-t}\cdot\frac{e^{-t}}{1+t^2}}{e^{-2t}}=\frac{1}{1+t^2}\ \Rightarrow\ u_2=\arctan t$$</li>
+      <li>$$q_p=e^{-t}\Big[t\arctan t-\tfrac12\ln(1+t^2)\Big]$$</li>
+      <li>通解 \(q=c_1e^{-t}+c_2te^{-t}+q_p\)。令 \(B(t)=t\arctan t-\tfrac12\ln(1+t^2)\)，則 \(B(0)=0\)，且 \(B'(t)=\arctan t\)，\(B'(0)=0\)。所以 \(q_p(0)=0\)，\(q_p'(0)=B'(0)-B(0)=0\)。代入初始條件得 \(c_1=0,\ c_2=0\)。</li>
+      <li>$$\boxed{q(t)=e^{-t}\Big[t\arctan t-\tfrac12\ln(1+t^2)\Big]}$$</li>
+    </ol>
+    <div class="plot">
+      <p class="note">\(q(t)\) 圖形（0–10 s）：電荷先上升、在約 \(t\approx 1.6\) s 達到峰值（約 0.199 C），之後因電阻耗能而衰減。</p>
+      <svg id="qplot" viewBox="0 0 600 240" role="img" aria-label="q(t) 圖形"></svg>
+    </div>
+  </div>
+
+  <div class="card win" id="win" hidden>
+    <div class="medal"><div>🎓</div></div>
+    <h3>🎉 恭喜！你已掌握【二階非齊次微分方程(II)：參數變分法】！</h3>
+    <p class="score" id="hintUsed"></p>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer><div class="wrap" style="padding-block:0">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</div></footer>
+
+<script>
+(function(){
+  var stages=[0,1,2,3].map(function(i){return document.getElementById('s'+i)});
+  var stepBtns=[].slice.call(document.querySelectorAll('.step'));
+  var unlocked=0;
+  function go(i){
+    if(i>unlocked) unlocked=i;
+    stages.forEach(function(s,k){s.hidden=k!==i});
+    stepBtns.forEach(function(b,k){
+      b.disabled=k>unlocked;
+      b.classList.toggle('active',k===i);
+      b.classList.toggle('done',k<unlocked||(k<i));
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  stepBtns.forEach(function(b){b.addEventListener('click',function(){go(+b.dataset.go)})});
+  document.getElementById('toS1').onclick=function(){go(1)};
+
+  // Stage 2
+  var toS2=document.getElementById('toS2');
+  document.querySelectorAll('#s1 details').forEach(function(d){
+    d.addEventListener('toggle',function(){ if(d.open){toS2.disabled=false;document.getElementById('s1note').textContent='很好！可以前往測驗了。';}});
+  });
+  toS2.onclick=function(){go(2)};
+
+  // Stage 3 quiz
+  var qs=[].slice.call(document.querySelectorAll('#s2 .q'));
+  var answered=0,correct=0;
+  function setupQ(q,onDone){
+    var ans=+q.dataset.ans, opts=[].slice.call(q.querySelectorAll('.opt')), fb=q.querySelector('.fb');
+    opts.forEach(function(o,k){
+      o.onclick=function(){
+        opts.forEach(function(x){x.disabled=true});
+        opts[ans].classList.add('right');
+        var ok=k===ans;
+        if(!ok) o.classList.add('wrong');
+        fb.hidden=false; fb.className='fb '+(ok?'ok':'no');
+        var t=fb.querySelector('b'); if(!t){t=document.createElement('b');fb.insertBefore(t,fb.firstChild);}
+        t.textContent=ok?'✓ 答對了！':'✗ 答錯了。';
+        onDone(ok);
+      };
+    });
+  }
+  function resetQ(q){
+    q.querySelectorAll('.opt').forEach(function(o){o.disabled=false;o.classList.remove('right','wrong')});
+    q.querySelector('.fb').hidden=true;
+  }
+  qs.forEach(function(q){setupQ(q,function(ok){
+    answered++; if(ok)correct++;
+    if(answered===qs.length){
+      var r=document.getElementById('quizResult'); r.hidden=false;
+      var pass=correct>=4;
+      document.getElementById('scoreText').textContent='得分：'+correct+' / 5　'+(pass?'通過！挑戰關已解鎖。':'需答對 4 題以上才能解鎖挑戰關。');
+      document.getElementById('toS3').hidden=!pass;
+      document.getElementById('retry').hidden=pass;
+      r.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  })});
+  document.getElementById('retry').onclick=function(){
+    answered=0;correct=0;qs.forEach(resetQ);
+    document.getElementById('quizResult').hidden=true;
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+  document.getElementById('toS3').onclick=function(){go(3)};
+
+  // Stage 4
+  var hintsHTML=[
+    '先把電路參數代入：\\(q\'\'+2q\'+q=\\dfrac{e^{-t}}{1+t^2}\\)。特徵方程式有重根，齊次解取 \\(y_1=e^{-t},\\ y_2=te^{-t}\\)。',
+    '計算 Wronskian：\\(W=e^{-2t}\\)。代入後 \\(e^{-t}\\) 全部消掉：\\(u_1\'=-\\dfrac{t}{1+t^2}\\)，\\(u_2\'=\\dfrac{1}{1+t^2}\\)。',
+    '積分得 \\(u_1=-\\tfrac12\\ln(1+t^2)\\)、\\(u_2=\\arctan t\\)。組合出 \\(q_p\\) 後，檢查 \\(q_p(0)\\) 與 \\(q_p\'(0)\\)，你會發現 \\(c_1=c_2=0\\)。'
+  ];
+  var used=0, finished=false;
+  var hintBtn=document.getElementById('hintBtn'), hintsBox=document.getElementById('hints');
+  function render(el){ if(window.renderMathInElement) renderMathInElement(el,mathOpts); }
+  hintBtn.onclick=function(){
+    if(used>=3) return;
+    var d=document.createElement('div'); d.className='hint';
+    d.innerHTML='<span class="tag">提示 '+(used+1)+' / 3</span><p>'+hintsHTML[used]+'</p>';
+    hintsBox.appendChild(d); render(d);
+    used++;
+    hintBtn.textContent=used<3?'取得提示（剩 '+(3-used)+' 個）':'提示已用完';
+    hintBtn.disabled=used>=3;
+  };
+  function finish(){
+    if(finished) return; finished=true;
+    var w=document.getElementById('win'); w.hidden=false;
+    document.getElementById('hintUsed').textContent='本次使用提示數：'+used+' / 3';
+    stepBtns[3].classList.add('done');
+    setTimeout(function(){w.scrollIntoView({behavior:'smooth',block:'center'})},50);
+  }
+  document.getElementById('fullBtn').onclick=function(){
+    document.getElementById('fullSol').hidden=false; drawQ(); finish();
+  };
+  var chq=document.getElementById('chq');
+  var chOpts=[].slice.call(chq.querySelectorAll('.opt')), chFb=chq.querySelector('.fb');
+  chOpts.forEach(function(o,k){
+    o.onclick=function(){
+      chOpts.forEach(function(x){x.classList.remove('wrong')});
+      if(k===1){
+        chOpts.forEach(function(x){x.disabled=true}); o.classList.add('right');
+        chFb.hidden=false; chFb.className='fb ok'; chFb.textContent='✓ 正確！打開完整解答可以看到 q(t) 的圖形。';
+        finish();
+      } else {
+        o.classList.add('wrong');
+        chFb.hidden=false; chFb.className='fb no';
+        chFb.textContent='✗ 不對。檢查 u₁ 的正負號，並驗證初始條件 q(0)=0、q′(0)=0。可再選一次。';
+      }
+    };
+  });
+
+  // Plots
+  var NS='http://www.w3.org/2000/svg';
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+  var svg=document.getElementById('plot');
+  var W=600,H=320,ml=40,mr=14,mt=12,mb=30;
+  var xmin=-1.5,xmax=1.5,ymin=-4,ymax=4;
+  function X(x){return ml+(x-xmin)/(xmax-xmin)*(W-ml-mr)}
+  function Y(y){return mt+(ymax-y)/(ymax-ymin)*(H-mt-mb)}
+  var gAxes=el('g',{},svg);
+  [-4,-2,0,2,4].forEach(function(v){
+    el('line',{x1:ml,x2:W-mr,y1:Y(v),y2:Y(v),stroke:v===0?'var(--muted)':'var(--plot-grid)','stroke-width':1},gAxes);
+    var t=el('text',{x:ml-8,y:Y(v)+4,'text-anchor':'end','font-size':12,fill:'var(--muted)','font-family':'IBM Plex Mono, monospace'},gAxes);t.textContent=v;
+  });
+  [[-Math.PI/2,'−π/2'],[-Math.PI/4,'−π/4'],[0,'0'],[Math.PI/4,'π/4'],[Math.PI/2,'π/2']].forEach(function(p){
+    if(p[0]<xmin||p[0]>xmax){ // draw asymptote label at edge
+    }
+    var xx=Math.max(xmin,Math.min(xmax,p[0]));
+    el('line',{x1:X(xx),x2:X(xx),y1:mt,y2:H-mb,stroke:p[0]===0?'var(--muted)':'var(--plot-grid)','stroke-width':1},gAxes);
+    var t=el('text',{x:X(xx),y:H-10,'text-anchor':'middle','font-size':12,fill:'var(--muted)','font-family':'IBM Plex Mono, monospace'},gAxes);t.textContent=p[1];
+  });
+  var clip=el('clipPath',{id:'clipA'},el('defs',{},svg));
+  el('rect',{x:ml,y:mt,width:W-ml-mr,height:H-mt-mb},clip);
+  var g=el('g',{'clip-path':'url(#clipA)'},svg);
+  var pH=el('path',{fill:'none',stroke:'var(--c-yh)','stroke-width':2,'stroke-dasharray':'6 5'},g);
+  var pP=el('path',{fill:'none',stroke:'#e8912d','stroke-width':2},g);
+  var pY=el('path',{fill:'none',stroke:'var(--accent2)','stroke-width':3},g);
+  function yp(x){return x*Math.sin(x)+Math.cos(x)*Math.log(Math.cos(x))}
+  function path(f){
+    var d='',n=300,a=-1.49,b=1.49;
+    for(var i=0;i<=n;i++){var x=a+(b-a)*i/n,y=f(x);if(!isFinite(y))continue;y=Math.max(-50,Math.min(50,y));d+=(d?'L':'M')+X(x).toFixed(1)+','+Y(y).toFixed(1);}
+    return d;
+  }
+  var c1=document.getElementById('c1'),c2=document.getElementById('c2');
+  function upd(){
+    var a=+c1.value,b=+c2.value;
+    document.getElementById('c1v').textContent=a.toFixed(1);
+    document.getElementById('c2v').textContent=b.toFixed(1);
+    pH.setAttribute('d',path(function(x){return a*Math.cos(x)+b*Math.sin(x)}));
+    pP.setAttribute('d',path(yp));
+    pY.setAttribute('d',path(function(x){return a*Math.cos(x)+b*Math.sin(x)+yp(x)}));
+  }
+  c1.oninput=upd;c2.oninput=upd;upd();
+
+  var drawn=false;
+  function drawQ(){
+    if(drawn) return; drawn=true;
+    var s=document.getElementById('qplot'),W2=600,H2=240,l=52,r=14,t=12,b=30;
+    function q(t){return Math.exp(-t)*(t*Math.atan(t)-0.5*Math.log(1+t*t))}
+    var ymax2=0.25;
+    function X2(x){return l+x/10*(W2-l-r)}
+    function Y2(y){return t+(ymax2-y)/ymax2*(H2-t-b)}
+    [0,0.05,0.1,0.15,0.2,0.25].forEach(function(v){
+      el('line',{x1:l,x2:W2-r,y1:Y2(v),y2:Y2(v),stroke:v===0?'var(--muted)':'var(--plot-grid)'},s);
+      var tx=el('text',{x:l-8,y:Y2(v)+4,'text-anchor':'end','font-size':12,fill:'var(--muted)','font-family':'IBM Plex Mono, monospace'},s);tx.textContent=v.toFixed(2);
+    });
+    [0,2,4,6,8,10].forEach(function(v){
+      var tx=el('text',{x:X2(v),y:H2-10,'text-anchor':'middle','font-size':12,fill:'var(--muted)','font-family':'IBM Plex Mono, monospace'},s);tx.textContent=v+' s';
+    });
+    var d='',best=0,bt=0;
+    for(var i=0;i<=300;i++){var x=10*i/300,y=q(x);if(y>best){best=y;bt=x;}d+=(i?'L':'M')+X2(x).toFixed(1)+','+Y2(y).toFixed(1);}
+    el('path',{d:d+'L'+X2(10)+','+Y2(0)+'L'+X2(0)+','+Y2(0)+'Z',fill:'var(--accent2-soft)',stroke:'none'},s);
+    el('path',{d:d,fill:'none',stroke:'var(--accent2)','stroke-width':3},s);
+    el('circle',{cx:X2(bt),cy:Y2(best),r:5,fill:'var(--accent)'},s);
+    var lb=el('text',{x:X2(bt)+10,y:Y2(best)-6,'font-size':12,fill:'var(--ink)','font-family':'IBM Plex Mono, monospace'},s);
+    lb.textContent='峰值 ≈ '+best.toFixed(3)+' C @ t≈'+bt.toFixed(1)+' s';
+  }
+
+  // KaTeX (MathML output: no external stylesheet needed)
+  var mathOpts={delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],output:'mathml',throwOnError:false};
+  window.addEventListener('load',function(){ if(window.renderMathInElement) renderMathInElement(document.body,mathOpts); });
+})();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

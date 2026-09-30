@@ -1,0 +1,438 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>工程數學 | 高階線性微分方程：降階法與Cauchy-Euler方程</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b; --teal-soft:#e0f2ef; --navy-soft:#e8eaf6;
+  --bg:#f5f6fb; --surface:#ffffff; --ink:#1b1f3b; --muted:#5a6080; --line:#d9dcec;
+  --ok:#2e7d32; --ok-bg:#e8f5e9; --bad:#c62828; --bad-bg:#fdecea; --warn-bg:#fff8e1; --warn:#8d6e00;
+  --plot-grid:#e3e6f2; --curve:#00897b; --accent-ink:#1a237e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f1226; --surface:#181c38; --ink:#e6e8f5; --muted:#a3a8c8; --line:#2d3260;
+    --teal-soft:#10302d; --navy-soft:#222863; --ok:#81c784; --ok-bg:#16301a; --bad:#ef9a9a; --bad-bg:#3a1a1a;
+    --warn-bg:#332b10; --warn:#ffd54f; --plot-grid:#262b52; --curve:#4db6ac; --accent-ink:#9fa8ff;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f1226; --surface:#181c38; --ink:#e6e8f5; --muted:#a3a8c8; --line:#2d3260;
+  --teal-soft:#10302d; --navy-soft:#222863; --ok:#81c784; --ok-bg:#16301a; --bad:#ef9a9a; --bad-bg:#3a1a1a;
+  --warn-bg:#332b10; --warn:#ffd54f; --plot-grid:#262b52; --curve:#4db6ac; --accent-ink:#9fa8ff;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;font-size:16px;line-height:1.75;margin:0}
+math{font-size:1.08em}
+.md{overflow-x:auto;padding:.4rem 0;text-align:center}
+.md math{font-size:1.15em}
+header.top{background:var(--navy);color:#fff;padding:1.25rem 16px 1rem;position:sticky;top:env(safe-area-inset-top,0px);z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.top-inner,.wrap,footer .inner{max-width:880px;margin:0 auto}
+.course{font-size:.8rem;letter-spacing:.14em;opacity:.8}
+h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.25rem,3.6vw,1.75rem);line-height:1.35;margin:.15rem 0 .8rem;text-wrap:balance}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{background:rgba(255,255,255,.12);border:0;color:#fff;font:inherit;font-size:.82rem;padding:.4rem .3rem;border-radius:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;overflow:hidden}
+.step .bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:#4db6ac;transition:width .4s}
+.step.done .bar,.step.active .bar{width:100%}
+.step.active{background:rgba(255,255,255,.25);font-weight:700}
+.step:disabled{opacity:.45;cursor:not-allowed}
+.step:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #ffca28;outline-offset:2px}
+.wrap{padding-block:1.5rem 2.5rem;padding-inline:16px}
+section.stage{display:flex;flex-direction:column;gap:1.25rem}
+h2{font-family:"Noto Serif TC",serif;font-size:1.4rem;margin:0;color:var(--accent-ink)}
+h3{font-size:1.08rem;margin:0 0 .4rem;color:var(--accent-ink)}
+p{margin:0}
+.prose{display:flex;flex-direction:column;gap:.8rem;max-width:68ch}
+.def{background:var(--teal-soft);border-left:4px solid var(--teal);padding:1rem 1.1rem;border-radius:0 8px 8px 0}
+.def .tag{font-size:.75rem;letter-spacing:.12em;color:var(--teal);font-weight:700}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem}
+table.cases{width:100%;border-collapse:collapse;font-size:.95rem}
+table.cases th,table.cases td{border-bottom:1px solid var(--line);padding:.55rem .5rem;text-align:left;vertical-align:middle}
+table.cases th{color:var(--muted);font-weight:500;font-size:.82rem;letter-spacing:.06em}
+.tbl{overflow-x:auto}
+.plotbox svg{width:100%;height:auto;display:block}
+.ctrls{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.2rem;margin-top:.8rem}
+.ctrls label{display:flex;flex-direction:column;font-size:.9rem;color:var(--muted)}
+.ctrls input[type=range]{accent-color:var(--teal);width:100%}
+.num{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;color:var(--ink)}
+.readout{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-top:.6rem;font-size:.95rem}
+.chip{display:inline-block;padding:.1rem .6rem;border-radius:99px;font-size:.8rem;font-weight:700;background:var(--navy-soft);color:var(--accent-ink)}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:8px;padding:.7rem 1.3rem;font:inherit;font-weight:700;cursor:pointer;align-self:flex-start}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.note{font-size:.88rem;color:var(--muted)}
+details.acc{border:1px solid var(--line);border-radius:8px;background:var(--bg);margin-top:.6rem}
+details.acc summary{cursor:pointer;padding:.6rem .9rem;font-weight:700;color:var(--teal);list-style:none}
+details.acc summary::before{content:"▸ ";}
+details.acc[open] summary::before{content:"▾ ";}
+.stepslist{padding:.2rem 1rem 1rem;display:flex;flex-direction:column;gap:.7rem}
+.stepslist .s{display:grid;grid-template-columns:2rem 1fr;gap:.5rem}
+.stepslist .k{width:1.7rem;height:1.7rem;border-radius:50%;background:var(--navy);color:#fff;font-size:.8rem;display:grid;place-items:center;font-weight:700}
+.q{display:flex;flex-direction:column;gap:.6rem}
+.opts{display:grid;gap:.5rem}
+.opt{text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:.55rem .8rem;font:inherit;color:var(--ink);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.fb{padding:.6rem .8rem;border-radius:8px;font-size:.93rem}
+.fb.ok{background:var(--ok-bg);color:var(--ink);border-left:4px solid var(--ok)}
+.fb.no{background:var(--bad-bg);color:var(--ink);border-left:4px solid var(--bad)}
+.score{font-size:1.05rem;font-weight:700}
+.hint{background:var(--warn-bg);border-left:4px solid var(--warn);padding:.7rem .9rem;border-radius:0 8px 8px 0}
+.hint b{color:var(--warn)}
+.ansrow input{font:inherit;padding:.55rem .7rem;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:9rem}
+.win{text-align:center;padding:2rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.8rem}
+.badge{width:140px;height:140px;border-radius:50%;background:conic-gradient(from 0deg,var(--navy),var(--teal),#4db6ac,var(--navy));display:grid;place-items:center;animation:pop .9s cubic-bezier(.2,1.6,.4,1) both, spin 8s linear 1s infinite;box-shadow:0 0 0 6px var(--surface),0 0 0 9px var(--teal)}
+.badge span{width:108px;height:108px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-family:"Noto Serif TC",serif;font-weight:900;color:var(--accent-ink);font-size:1rem;line-height:1.3;animation:spin 8s linear 1s infinite reverse}
+@keyframes pop{from{transform:scale(0) rotate(-90deg);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.badge,.badge span{animation:none}}
+.win h3{font-size:1.3rem}
+footer{border-top:1px solid var(--line);padding:1.2rem 16px;color:var(--muted);font-size:.85rem;text-align:center;background:var(--surface)}
+@media (max-width:560px){header.top{position:static}.ctrls{grid-template-columns:1fr}.step{font-size:.72rem}.panel{padding:.9rem}}
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="course">工程數學互動學習 · 第 7 單元</div>
+    <h1>高階線性微分方程：降階法與 Cauchy-Euler 方程</h1>
+    <nav class="steps" aria-label="關卡進度">
+      <button class="step active" data-go="0"><span>📚</span>學習<i class="bar"></i></button>
+      <button class="step" data-go="1" disabled><span>🔍</span>理解<i class="bar"></i></button>
+      <button class="step" data-go="2" disabled><span>✏️</span>測驗<i class="bar"></i></button>
+      <button class="step" data-go="3" disabled><span>🏆</span>挑戰<i class="bar"></i></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ===== 關卡 1 ===== -->
+<section class="stage" id="s0">
+  <h2>關卡 1 · 學習</h2>
+  <div class="prose">
+    <p><span class="m">n</span> 階線性齊次微分方程有 <span class="m">n</span> 個線性獨立解，通解是它們的線性組合。若係數為常數，可用特徵方程求解；但當係數是 <span class="m">x</span> 的函數時，通常沒有萬用公式。本單元介紹兩個關鍵工具：已知一解求另一解的<b>降階法</b>，以及係數為 <span class="m">x</span> 的冪次、可以完整求解的 <b>Cauchy-Euler 方程</b>。</p>
+  </div>
+
+  <div class="def">
+    <div class="tag">定義 · 降階法 (Reduction of Order)</div>
+    <p>若 <span class="m">y_1(x)</span> 是標準形式 <span class="m">y''+p(x)y'+q(x)y=0</span> 的一個非零解，令 <span class="m">y_2=u(x)\,y_1(x)</span>，代入後 <span class="m">y</span> 項抵消，只剩關於 <span class="m">u'</span> 的一階方程，可得第二個線性獨立解：</p>
+    <div class="md" data-tex="y_2(x)=y_1(x)\int\frac{e^{-\int p(x)\,dx}}{y_1^2(x)}\,dx"></div>
+    <p class="note">注意：必須先把方程除以 <span class="m">y''</span> 的係數，化為標準形式後才能讀出 <span class="m">p(x)</span>。</p>
+  </div>
+
+  <div class="def">
+    <div class="tag">定義 · Cauchy-Euler 方程（等維方程）</div>
+    <p>形如以下的方程，每一項中 <span class="m">x</span> 的次方恰等於導數的階數：</p>
+    <div class="md" data-tex="x^2y''+a\,x\,y'+b\,y=0,\qquad x>0"></div>
+    <p>試解 <span class="m">y=x^m</span>，得 <span class="m">y'=mx^{m-1}</span>、<span class="m">y''=m(m-1)x^{m-2}</span>，代入後得到<b>輔助方程（指標方程）</b>：</p>
+    <div class="md" data-tex="m(m-1)+a\,m+b=0\;\Longleftrightarrow\; m^2+(a-1)m+b=0"></div>
+  </div>
+
+  <div class="panel">
+    <h3>三種根的情形</h3>
+    <div class="tbl">
+    <table class="cases">
+      <tr><th>根的型態</th><th>通解 (x &gt; 0)</th></tr>
+      <tr><td>相異實根 <span class="m">m_1\ne m_2</span></td><td><span class="m">y=c_1x^{m_1}+c_2x^{m_2}</span></td></tr>
+      <tr><td>重根 <span class="m">m_1=m_2=m</span></td><td><span class="m">y=(c_1+c_2\ln x)\,x^{m}</span></td></tr>
+      <tr><td>共軛複根 <span class="m">\alpha\pm\beta i</span></td><td><span class="m">y=x^{\alpha}\left[c_1\cos(\beta\ln x)+c_2\sin(\beta\ln x)\right]</span></td></tr>
+    </table>
+    </div>
+    <p class="note" style="margin-top:.6rem">重根時的 <span class="m">\ln x</span> 正是用降階法求出來的（見例題 1）。另一種觀點：令 <span class="m">x=e^t</span>，則 <span class="m">xy'=\dot y</span>、<span class="m">x^2y''=\ddot y-\dot y</span>，方程變成常係數方程 <span class="m">\ddot y+(a-1)\dot y+by=0</span>，所以 <span class="m">e^{mt}=x^m</span>、<span class="m">te^{mt}=x^m\ln x</span>。</p>
+    <p class="note" style="margin-top:.4rem">高階推廣：<span class="m">x^3y'''</span> 代入 <span class="m">x^m</span> 得 <span class="m">m(m-1)(m-2)x^m</span>，依此類推，<span class="m">n</span> 階 Cauchy-Euler 方程的輔助方程是 <span class="m">m</span> 的 <span class="m">n</span> 次多項式。</p>
+  </div>
+
+  <div class="panel plotbox">
+    <h3>互動圖：調整 a、b 看解的形狀</h3>
+    <p class="note">畫出 <span class="m">x^2y''+axy'+by=0</span> 滿足 <span class="m">y(1)=1,\ y'(1)=0</span> 的解，<span class="m">x\in(0,6]</span>。</p>
+    <svg id="plot" viewBox="0 0 600 320" role="img" aria-label="Cauchy-Euler 方程解的圖形"></svg>
+    <div class="ctrls">
+      <label for="ra">係數 a = <span class="num" id="va">1.0</span><input type="range" id="ra" min="-4" max="6" step="0.5" value="1"></label>
+      <label for="rb">係數 b = <span class="num" id="vb">4.0</span><input type="range" id="rb" min="-4" max="10" step="0.5" value="4"></label>
+    </div>
+    <div class="readout"><span class="chip" id="kind">共軛複根</span><span id="aux"></span></div>
+    <div class="readout" id="sol"></div>
+  </div>
+
+  <button class="btn" id="toEx">我已了解 → 前往例題</button>
+</section>
+
+<!-- ===== 關卡 2 ===== -->
+<section class="stage" id="s1" hidden>
+  <h2>關卡 2 · 理解</h2>
+
+  <div class="panel">
+    <h3>例題 1（基礎）：用降階法求第二解</h3>
+    <p>已知 <span class="m">y_1=x^2</span> 是 <span class="m">x^2y''-3xy'+4y=0\ (x>0)</span> 的一解，求第二個線性獨立解與通解。</p>
+    <details class="acc ex">
+      <summary>顯示解題步驟</summary>
+      <div class="stepslist">
+        <div class="s"><span class="k">1</span><div>化為標準形式（同除 <span class="m">x^2</span>）：<div class="md" data-tex="y''-\frac{3}{x}y'+\frac{4}{x^2}y=0\;\Rightarrow\;p(x)=-\frac{3}{x}"></div></div></div>
+        <div class="s"><span class="k">2</span><div>計算 <span class="m">e^{-\int p\,dx}=e^{3\ln x}=x^3</span>，而 <span class="m">y_1^2=x^4</span>。</div></div>
+        <div class="s"><span class="k">3</span><div>代入公式：<div class="md" data-tex="y_2=x^2\int\frac{x^3}{x^4}\,dx=x^2\int\frac{1}{x}\,dx=x^2\ln x"></div></div></div>
+        <div class="s"><span class="k">4</span><div>通解：<span class="m">y=c_1x^2+c_2x^2\ln x</span>。驗證：輔助方程 <span class="m">m^2-4m+4=0</span> 的重根 <span class="m">m=2</span>，與表格中重根的公式一致。</div></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="panel">
+    <h3>例題 2（進階）：Cauchy-Euler 初值問題</h3>
+    <p>解 <span class="m">x^2y''+3xy'+5y=0</span>，<span class="m">y(1)=2,\ y'(1)=0</span>。</p>
+    <details class="acc ex">
+      <summary>顯示解題步驟</summary>
+      <div class="stepslist">
+        <div class="s"><span class="k">1</span><div>輔助方程：<span class="m">m(m-1)+3m+5=m^2+2m+5=0</span>，得 <span class="m">m=-1\pm 2i</span>，即 <span class="m">\alpha=-1,\ \beta=2</span>。</div></div>
+        <div class="s"><span class="k">2</span><div>通解：<div class="md" data-tex="y=x^{-1}\left[c_1\cos(2\ln x)+c_2\sin(2\ln x)\right]"></div></div></div>
+        <div class="s"><span class="k">3</span><div><span class="m">x=1</span> 時 <span class="m">\ln 1=0</span>，故 <span class="m">y(1)=c_1=2</span>。</div></div>
+        <div class="s"><span class="k">4</span><div>求導（連鎖律 <span class="m">\tfrac{d}{dx}\ln x=\tfrac1x</span>）：<div class="md" data-tex="y'=-x^{-2}[c_1\cos(2\ln x)+c_2\sin(2\ln x)]+x^{-2}[-2c_1\sin(2\ln x)+2c_2\cos(2\ln x)]"></div><span class="m">y'(1)=-c_1+2c_2=0\Rightarrow c_2=1</span>。</div></div>
+        <div class="s"><span class="k">5</span><div>答案：<div class="md" data-tex="y=\frac{2\cos(2\ln x)+\sin(2\ln x)}{x}"></div>振幅隨 <span class="m">1/x</span> 衰減，並以 <span class="m">\ln x</span> 為「時間」振盪。可到關卡 1 將 a=3、b=5 對照圖形。</div></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="toQuiz" disabled>前往測驗</button>
+    <span class="note" id="exNote">請至少展開一個例題的解題步驟</span>
+  </div>
+</section>
+
+<!-- ===== 關卡 3 ===== -->
+<section class="stage" id="s2" hidden>
+  <h2>關卡 3 · 測驗</h2>
+  <p class="note">共 5 題，答對 4 題以上即可解鎖挑戰關。每題只能作答一次。</p>
+  <div id="quiz" style="display:flex;flex-direction:column;gap:1rem"></div>
+  <div class="panel" id="result" hidden>
+    <p class="score" id="scoreTxt"></p>
+    <div class="row" style="margin-top:.7rem">
+      <button class="btn" id="toCh" hidden>前往挑戰關</button>
+      <button class="btn ghost" id="retry" hidden>再試一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 關卡 4 ===== -->
+<section class="stage" id="s3" hidden>
+  <h2>關卡 4 · 挑戰關</h2>
+  <div class="panel">
+    <h3>厚壁圓管的徑向位移（Lamé 問題）</h3>
+    <div class="prose">
+      <p>在熱套（shrink fit）組裝中，一段軸對稱厚壁圓管的內半徑 <span class="m">r=1</span> cm、外半徑 <span class="m">r=2</span> cm。在平面應變、無體力的假設下，徑向位移 <span class="m">u(r)</span>（單位 μm）滿足：</p>
+      <div class="md" data-tex="r^2u''+r\,u'-u=0,\qquad 1\le r\le 2"></div>
+      <p>量測得內壁位移 <span class="m">u(1)=20</span> μm、外壁位移 <span class="m">u(2)=25</span> μm。</p>
+      <p>(a) 已知 <span class="m">u_1=r</span> 為一解，以<b>降階法</b>求第二解，並用 Cauchy-Euler 輔助方程驗證。<br>(b) 求滿足邊界條件的 <span class="m">u(r)</span>。<br>(c) 計算管壁中央 <span class="m">r=1.5</span> cm 處的位移 <span class="m">u(1.5)</span>。</p>
+    </div>
+    <div class="row ansrow" style="margin-top:1rem">
+      <label for="ans">u(1.5) =</label>
+      <input id="ans" type="text" inputmode="decimal" placeholder="例如 12.34">
+      <span>μm</span>
+      <button class="btn" id="check">送出答案</button>
+    </div>
+    <div id="ansFb" style="margin-top:.6rem"></div>
+  </div>
+
+  <div id="hints" style="display:flex;flex-direction:column;gap:.6rem"></div>
+  <div class="row">
+    <button class="btn ghost" id="hintBtn">顯示提示 (0/3)</button>
+    <button class="btn ghost" id="solBtn">查看完整解答</button>
+  </div>
+
+  <div class="panel" id="fullSol" hidden>
+    <h3>完整解答</h3>
+    <div class="stepslist" style="padding:0">
+      <div class="s"><span class="k">1</span><div>標準形式：<span class="m">u''+\tfrac1r u'-\tfrac1{r^2}u=0</span>，故 <span class="m">p(r)=\tfrac1r</span>，<span class="m">e^{-\int p\,dr}=e^{-\ln r}=\tfrac1r</span>。</div></div>
+      <div class="s"><span class="k">2</span><div>降階法：<div class="md" data-tex="u_2=r\int\frac{1/r}{r^2}\,dr=r\int r^{-3}\,dr=r\cdot\left(-\frac{1}{2r^2}\right)=-\frac{1}{2r}"></div>常數倍不影響線性獨立性，取 <span class="m">u_2=\tfrac1r</span>。驗證：輔助方程 <span class="m">m(m-1)+m-1=m^2-1=0</span>，<span class="m">m=\pm1</span>，得 <span class="m">r</span> 與 <span class="m">r^{-1}</span>，一致。</div></div>
+      <div class="s"><span class="k">3</span><div>通解 <span class="m">u=C_1r+\dfrac{C_2}{r}</span>。代入邊界條件：<div class="md" data-tex="\begin{cases}C_1+C_2=20\\[2pt] 2C_1+\tfrac12C_2=25\end{cases}\;\Rightarrow\;\tfrac32C_1=15\;\Rightarrow\;C_1=10,\ C_2=10"></div></div></div>
+      <div class="s"><span class="k">4</span><div><span class="m">u(r)=10\left(r+\dfrac1r\right)</span> μm，因此 <div class="md" data-tex="u(1.5)=10\left(1.5+\tfrac{1}{1.5}\right)=10\times 2.1\overline{6}\approx 21.67\ \mu\text{m}"></div></div></div>
+      <div class="s"><span class="k">5</span><div>工程解讀：<span class="m">u'(r)=10(1-1/r^2)\ge0</span>，位移在內壁最小、向外單調增加；對應的環向應變 <span class="m">\varepsilon_\theta=u/r=10(1+1/r^2)</span>（μm/cm）則在內壁最大，這正是厚壁圓管內壁最容易先降伏的原因。</div></div>
+    </div>
+    <button class="btn" id="finishBtn" style="margin-top:1rem">我已理解解答，完成挑戰</button>
+  </div>
+
+  <div class="panel win" id="win" hidden>
+    <div class="badge"><span>降階法<br>Cauchy<br>-Euler</span></div>
+    <h3>🎉 恭喜！你已掌握【高階線性微分方程：降階法與Cauchy-Euler方程】！</h3>
+    <p id="winStat" class="note"></p>
+  </div>
+</section>
+</main>
+
+<footer><div class="inner">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</div></footer>
+
+<script>
+(function(){
+const K = (tex, el, disp) => { try { katex.render(tex, el, {displayMode:!!disp, output:'mathml', throwOnError:false}); } catch(e){ el.textContent = tex; } };
+function renderAll(root){
+  root.querySelectorAll('.m').forEach(el=>{ if(!el.dataset.done){ K(el.textContent, el, false); el.dataset.done=1; }});
+  root.querySelectorAll('.md').forEach(el=>{ if(!el.dataset.done){ K(el.dataset.tex, el, true); el.dataset.done=1; }});
+}
+
+/* ---------- stage navigation ---------- */
+const stages=[...document.querySelectorAll('.stage')];
+const stepBtns=[...document.querySelectorAll('.step')];
+let unlocked=0, current=0;
+function go(i){
+  current=i;
+  stages.forEach((s,k)=>s.hidden=k!==i);
+  stepBtns.forEach((b,k)=>{b.classList.toggle('active',k===i);b.classList.toggle('done',k<unlocked||k<i);b.disabled=k>unlocked;});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function unlock(i){ unlocked=Math.max(unlocked,i); go(i); }
+stepBtns.forEach(b=>b.addEventListener('click',()=>go(+b.dataset.go)));
+document.getElementById('toEx').onclick=()=>unlock(1);
+
+/* ---------- plot ---------- */
+const svg=document.getElementById('plot');
+const X0=50,X1=585,Y0=15,Y1=290, xmax=6, ymin=-3, ymax=3;
+const sx=x=>X0+(x/xmax)*(X1-X0), sy=y=>Y0+(ymax-y)/(ymax-ymin)*(Y1-Y0);
+function axes(){
+  let g='';
+  for(let x=1;x<=6;x++) g+=`<line x1="${sx(x)}" y1="${Y0}" x2="${sx(x)}" y2="${Y1}" stroke="var(--plot-grid)"/><text x="${sx(x)}" y="${Y1+20}" fill="var(--muted)" font-size="13" text-anchor="middle">${x}</text>`;
+  for(let y=-3;y<=3;y++) g+=`<line x1="${X0}" y1="${sy(y)}" x2="${X1}" y2="${sy(y)}" stroke="var(--plot-grid)"/><text x="${X0-8}" y="${sy(y)+4}" fill="var(--muted)" font-size="13" text-anchor="end">${y}</text>`;
+  g+=`<line x1="${X0}" y1="${sy(0)}" x2="${X1}" y2="${sy(0)}" stroke="var(--muted)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y1}" stroke="var(--muted)"/>`;
+  g+=`<text x="${X1}" y="${sy(0)-6}" fill="var(--muted)" font-size="13" text-anchor="end">x</text>`;
+  g+=`<circle cx="${sx(1)}" cy="${sy(1)}" r="4" fill="var(--accent-ink)"/><text x="${sx(1)+8}" y="${sy(1)-8}" fill="var(--accent-ink)" font-size="12">(1, 1)</text>`;
+  return g;
+}
+const fmt=v=>{const r=Math.round(v*1000)/1000; return (Object.is(r,-0)?0:r).toString();};
+function draw(){
+  const a=+ra.value,b=+rb.value;
+  va.textContent=a.toFixed(1); vb.textContent=b.toFixed(1);
+  const B=a-1, D=B*B-4*b; let f, kind, soltex;
+  const term=(c,v)=>c===0?'':(c>0?'+':'-')+(Math.abs(c)===1&&v?'':fmt(Math.abs(c)))+v;
+  const aux=`m^2${term(B,'m')}${term(b,'')}=0`;
+  if(D>1e-9){
+    const m1=(-B+Math.sqrt(D))/2, m2=(-B-Math.sqrt(D))/2;
+    const c1=m2/(m2-m1), c2=-m1/(m2-m1);
+    f=x=>c1*Math.pow(x,m1)+c2*Math.pow(x,m2); kind='相異實根';
+    soltex=`m_1=${fmt(m1)},\\ m_2=${fmt(m2)}\\quad y=${fmt(c1)}\\,x^{${fmt(m1)}}${c2>=0?'+':''}${fmt(c2)}\\,x^{${fmt(m2)}}`;
+  } else if(D>=-1e-9){
+    const m=-B/2; f=x=>Math.pow(x,m)*(1-m*Math.log(x)); kind='重根';
+    soltex=`m=${fmt(m)}\\ (\\text{重根})\\quad y=x^{${fmt(m)}}\\left(1${-m>=0?'+':''}${fmt(-m)}\\ln x\\right)`;
+  } else {
+    const al=-B/2, be=Math.sqrt(-D)/2, c2=-al/be;
+    f=x=>Math.pow(x,al)*(Math.cos(be*Math.log(x))+c2*Math.sin(be*Math.log(x))); kind='共軛複根';
+    soltex=`m=${al===0?'':fmt(al)}\\pm ${fmt(be)}i\\quad y=${al===0?'':'x^{'+fmt(al)+'}'}\\left[\\cos(${fmt(be)}\\ln x)${c2===0?'':(c2>0?'+':'')+fmt(c2)+'\\sin('+fmt(be)+'\\ln x)'}\\right]`;
+  }
+  let d='', pen=false;
+  for(let i=0;i<=600;i++){
+    const x=0.02+i*(xmax-0.02)/600, y=f(x);
+    if(!isFinite(y)||y>ymax+0.5||y<ymin-0.5){pen=false;continue;}
+    d+=(pen?'L':'M')+sx(x).toFixed(1)+' '+sy(Math.max(ymin-0.5,Math.min(ymax+0.5,y))).toFixed(1); pen=true;
+  }
+  svg.innerHTML=`<defs><clipPath id="cp"><rect x="${X0}" y="${Y0}" width="${X1-X0}" height="${Y1-Y0}"/></clipPath></defs>`+axes()+`<path d="${d}" fill="none" stroke="var(--curve)" stroke-width="3" clip-path="url(#cp)"/>`;
+  document.getElementById('kind').textContent=kind;
+  K('\\text{輔助方程：}'+aux, document.getElementById('aux'));
+  K(soltex, document.getElementById('sol'));
+}
+const ra=document.getElementById('ra'), rb=document.getElementById('rb'), va=document.getElementById('va'), vb=document.getElementById('vb');
+ra.oninput=rb.oninput=draw;
+
+/* ---------- examples ---------- */
+document.querySelectorAll('details.ex').forEach(d=>d.addEventListener('toggle',()=>{
+  if(d.open){ const b=document.getElementById('toQuiz'); b.disabled=false; document.getElementById('exNote').textContent='很好！可以前往測驗了'; }
+}));
+document.getElementById('toQuiz').onclick=()=>unlock(2);
+
+/* ---------- quiz ---------- */
+const Q=[
+ {q:String.raw`方程 $x^2y''-2y=0\ (x>0)$ 的通解為何？`,
+  o:[String.raw`$c_1x^2+c_2x^{-1}$`,String.raw`$c_1x^{-2}+c_2x$`,String.raw`$c_1e^{2x}+c_2e^{-x}$`,String.raw`$(c_1+c_2\ln x)x^{2}$`],a:0,
+  e:String.raw`輔助方程 $m(m-1)-2=m^2-m-2=(m-2)(m+1)=0$，$m=2,-1$，故 $y=c_1x^2+c_2x^{-1}$。`},
+ {q:String.raw`方程 $x^2y''-xy'+y=0$ 的通解為何？`,
+  o:[String.raw`$c_1x+c_2x^{-1}$`,String.raw`$c_1x+c_2x\ln x$`,String.raw`$c_1e^{x}+c_2xe^{x}$`,String.raw`$c_1\cos(\ln x)+c_2\sin(\ln x)$`],a:1,
+  e:String.raw`$m(m-1)-m+1=m^2-2m+1=(m-1)^2=0$，重根 $m=1$，故 $y=(c_1+c_2\ln x)x$。`},
+ {q:String.raw`已知 $y_1=e^{2x}$ 是 $y''-4y'+4y=0$ 的一解，用降階法求得的第二解 $y_2$ 為？`,
+  o:[String.raw`$e^{-2x}$`,String.raw`$x^2e^{2x}$`,String.raw`$xe^{2x}$`,String.raw`$e^{2x}\ln x$`],a:2,
+  e:String.raw`$p=-4$，$e^{-\int p\,dx}=e^{4x}$，$y_1^2=e^{4x}$，所以 $y_2=e^{2x}\int 1\,dx=xe^{2x}$。`},
+ {q:String.raw`方程 $x^2y''+xy'+9y=0$ 的通解為何？`,
+  o:[String.raw`$c_1\cos3x+c_2\sin3x$`,String.raw`$c_1x^3+c_2x^{-3}$`,String.raw`$x\left[c_1\cos(3\ln x)+c_2\sin(3\ln x)\right]$`,String.raw`$c_1\cos(3\ln x)+c_2\sin(3\ln x)$`],a:3,
+  e:String.raw`$m(m-1)+m+9=m^2+9=0$，$m=\pm3i$（$\alpha=0,\beta=3$），故 $y=c_1\cos(3\ln x)+c_2\sin(3\ln x)$。`},
+ {q:String.raw`令 $x=e^t$，方程 $x^2y''+5xy'+3y=0$ 會變成下列哪個常係數方程？`,
+  o:[String.raw`$\ddot y+5\dot y+3y=0$`,String.raw`$\ddot y+4\dot y+3y=0$`,String.raw`$\ddot y+6\dot y+3y=0$`,String.raw`$\ddot y-4\dot y+3y=0$`],a:1,
+  e:String.raw`$x^2y''=\ddot y-\dot y$、$xy'=\dot y$，代入得 $\ddot y-\dot y+5\dot y+3y=\ddot y+4\dot y+3y=0$，其根 $-1,-3$ 對應 $x^{-1},x^{-3}$。`}
+];
+function texify(s){ return s.replace(/\$([^$]+)\$/g,(m,t)=>`<span class="m">${t.replace(/</g,'\\lt ')}</span>`); }
+let answered=0, correct=0;
+function buildQuiz(){
+  answered=0; correct=0;
+  const box=document.getElementById('quiz'); box.innerHTML='';
+  document.getElementById('result').hidden=true;
+  Q.forEach((it,qi)=>{
+    const p=document.createElement('div'); p.className='panel q';
+    p.innerHTML=`<p><b>第 ${qi+1} 題</b>　${texify(it.q)}</p><div class="opts">${it.o.map((o,oi)=>`<button class="opt" data-i="${oi}">(${'ABCD'[oi]}) ${texify(o)}</button>`).join('')}</div><div class="fbw"></div>`;
+    p.querySelectorAll('.opt').forEach(btn=>btn.onclick=()=>{
+      const pick=+btn.dataset.i, ok=pick===it.a;
+      p.querySelectorAll('.opt').forEach(b=>{b.disabled=true; if(+b.dataset.i===it.a) b.classList.add('right');});
+      if(!ok) btn.classList.add('wrong');
+      const fb=p.querySelector('.fbw'); fb.innerHTML=`<div class="fb ${ok?'ok':'no'}"><b>${ok?'✔ 答對了！':'✘ 答錯了。'}</b> ${texify(it.e)}</div>`;
+      renderAll(fb);
+      answered++; if(ok) correct++;
+      if(answered===Q.length) finishQuiz();
+    });
+    box.appendChild(p);
+  });
+  renderAll(box);
+}
+function finishQuiz(){
+  const r=document.getElementById('result'); r.hidden=false;
+  const pass=correct>=4;
+  document.getElementById('scoreTxt').textContent=`你答對 ${correct} / 5 題。`+(pass?'挑戰關已解鎖！':'需要答對 4 題以上才能解鎖挑戰關。');
+  document.getElementById('toCh').hidden=!pass;
+  document.getElementById('retry').hidden=pass;
+  if(pass) unlocked=Math.max(unlocked,3), stepBtns[3].disabled=false;
+  r.scrollIntoView({behavior:'smooth',block:'center'});
+}
+document.getElementById('retry').onclick=()=>{buildQuiz(); window.scrollTo({top:0,behavior:'smooth'});};
+document.getElementById('toCh').onclick=()=>unlock(3);
+
+/* ---------- challenge ---------- */
+const H=[
+  String.raw`先把方程同除 $r^2$ 化為標準形式 $u''+p(r)u'+q(r)u=0$，找出 $p(r)$，再計算 $e^{-\int p\,dr}$。`,
+  String.raw`降階法積分為 $u_2=r\int \dfrac{1/r}{r^2}\,dr=r\int r^{-3}dr$，結果與 $1/r$ 成正比，所以通解是 $u=C_1r+C_2/r$。`,
+  String.raw`代入 $u(1)=20$、$u(2)=25$ 得聯立方程 $C_1+C_2=20$、$2C_1+C_2/2=25$，解出 $C_1,C_2$ 後代入 $r=1.5$。`
+];
+let hintsUsed=0, done=false;
+const hintBtn=document.getElementById('hintBtn');
+hintBtn.onclick=()=>{
+  if(hintsUsed>=3) return;
+  const d=document.createElement('div'); d.className='hint';
+  d.innerHTML=`<b>提示 ${hintsUsed+1}：</b>${texify(H[hintsUsed])}`;
+  document.getElementById('hints').appendChild(d); renderAll(d);
+  hintsUsed++; hintBtn.textContent=`顯示提示 (${hintsUsed}/3)`; if(hintsUsed>=3) hintBtn.disabled=true;
+};
+document.getElementById('solBtn').onclick=()=>{ const s=document.getElementById('fullSol'); s.hidden=false; s.scrollIntoView({behavior:'smooth'}); };
+let viewedSol=false;
+document.getElementById('solBtn').addEventListener('click',()=>viewedSol=true);
+function complete(){
+  if(done) return; done=true;
+  const w=document.getElementById('win'); w.hidden=false;
+  document.getElementById('winStat').textContent=`本次使用提示數：${hintsUsed} / 3`+(viewedSol?'　·　已查看完整解答':'　·　獨立完成');
+  w.scrollIntoView({behavior:'smooth',block:'center'});
+  stepBtns[3].classList.add('done');
+}
+document.getElementById('check').onclick=()=>{
+  const v=parseFloat(document.getElementById('ans').value);
+  const fb=document.getElementById('ansFb');
+  if(isNaN(v)){ fb.innerHTML='<div class="fb no">請輸入數值，例如 21.5。</div>'; return; }
+  if(Math.abs(v-65/3)<0.06){ fb.innerHTML='<div class="fb ok"><b>✔ 正確！</b> u(1.5) = 65/3 ≈ 21.67 μm。</div>'; complete(); }
+  else fb.innerHTML='<div class="fb no"><b>✘ 還不對。</b> 檢查 C₁、C₂ 的聯立方程，或使用提示。</div>';
+};
+document.getElementById('finishBtn').onclick=complete;
+
+/* ---------- init ---------- */
+function init(){ renderAll(document); draw(); buildQuiz(); }
+if(window.katex) init(); else window.addEventListener('load',init);
+})();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

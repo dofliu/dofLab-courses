@@ -1,0 +1,412 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>工程數學 | 拉普拉斯轉換(II)：第一位移定理</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky stage header with 4-step progress rail; one stage visible at a time in a 820px reading column */
+:root{
+  --navy:#1a237e; --teal:#00897b; --bg:#f5f6fb; --surface:#ffffff; --fg:#161a33; --muted:#5a5f7d;
+  --line:#dcdfee; --soft:#e8eaf6; --tealsoft:#e0f2f1; --good:#2e7d32; --goodsoft:#e8f5e9; --bad:#c62828; --badsoft:#fdecea;
+  --grid:#e3e5f0; --warn:#b26a00;
+  --f-display:"Noto Serif TC","Songti TC",serif; --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --navy:#9fa8ff; --teal:#4dd0b8; --bg:#0e1024; --surface:#171a36; --fg:#e6e8f5; --muted:#9ea3c4;
+  --line:#2b2f55; --soft:#20244a; --tealsoft:#0f2e2c; --good:#81c784; --goodsoft:#16301b; --bad:#ef9a9a; --badsoft:#3a1a1c;
+  --grid:#262a4d; --warn:#ffb74d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#9fa8ff; --teal:#4dd0b8; --bg:#0e1024; --surface:#171a36; --fg:#e6e8f5; --muted:#9ea3c4;
+  --line:#2b2f55; --soft:#20244a; --tealsoft:#0f2e2c; --good:#81c784; --goodsoft:#16301b; --bad:#ef9a9a; --badsoft:#3a1a1c;
+  --grid:#262a4d; --warn:#ffb74d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.75;margin:0}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--surface);border-bottom:1px solid var(--line)}
+.wrap{max-width:820px;margin:0 auto;padding-inline:16px}
+.top .wrap{padding-block:12px 10px;display:grid;gap:8px}
+.course{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;color:var(--teal);text-transform:uppercase}
+h1{font-family:var(--f-display);font-weight:900;font-size:clamp(20px,4.4vw,28px);line-height:1.3;margin:0;color:var(--navy);text-wrap:balance}
+.rail{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{border:0;background:none;padding:0;text-align:left;font:inherit;color:var(--muted);cursor:pointer;display:grid;gap:4px;min-width:0}
+.step:disabled{cursor:not-allowed;opacity:.5}
+.step .bar{height:5px;border-radius:3px;background:var(--line)}
+.step.done .bar{background:var(--teal)}
+.step.active .bar{background:var(--navy)}
+.step span{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step.active span{color:var(--fg);font-weight:700}
+.step:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+main.wrap{padding-block:24px 40px}
+section.stage{display:grid;gap:20px}
+h2{font-family:var(--f-display);font-weight:900;font-size:24px;margin:0;color:var(--navy)}
+h3{font-size:18px;margin:0;color:var(--fg)}
+p{margin:0}
+.lead{color:var(--muted)}
+.def{background:var(--soft);border-left:4px solid var(--navy);padding:14px 18px;border-radius:0 8px 8px 0;display:grid;gap:6px}
+.def.teal{background:var(--tealsoft);border-left-color:var(--teal)}
+.def .tag{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;color:var(--teal);font-weight:600}
+.formula{overflow-x:auto;padding-block:6px;font-size:1.12em;text-align:center}
+math{font-size:1.08em}
+.formula math{font-size:1.25em}
+table{border-collapse:collapse;width:100%;font-size:15px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+th,td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:13px;color:var(--muted);font-weight:500;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:12px}
+.plots{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+@media (max-width:640px){.plots{grid-template-columns:1fr}}
+.plots>div{min-width:0}
+.plots svg{width:100%;height:auto;display:block}
+.cap{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.ctrls{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:480px){.ctrls{grid-template-columns:1fr}}
+.ctrls label{display:grid;gap:2px;font-size:14px}
+.ctrls output{font-family:var(--f-mono);color:var(--teal);font-weight:600}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.readout{font-size:15px;background:var(--soft);padding:10px 14px;border-radius:8px;overflow-x:auto}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:12px 20px;background:var(--navy);color:var(--surface);cursor:pointer;justify-self:start}
+.btn.alt{background:var(--teal)}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.note{font-size:14px;color:var(--muted)}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ex .q{padding:16px 18px;display:grid;gap:10px}
+.ex .lvl{font-family:var(--f-mono);font-size:12px;color:var(--teal);letter-spacing:.08em}
+.acc{border-top:1px solid var(--line)}
+.acc>button{width:100%;text-align:left;font:inherit;font-weight:700;color:var(--navy);background:var(--soft);border:0;padding:12px 18px;cursor:pointer}
+.acc>button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+.steps{padding:6px 18px 16px;display:grid;gap:12px;counter-reset:st}
+.steps>div{display:grid;grid-template-columns:28px 1fr;gap:10px;min-width:0}
+.steps>div::before{counter-increment:st;content:counter(st);font-family:var(--f-mono);font-size:13px;width:24px;height:24px;border-radius:50%;background:var(--teal);color:var(--surface);display:grid;place-items:center;margin-top:3px}
+.steps>div>div{min-width:0;overflow-x:auto}
+.quiz{display:grid;gap:14px}
+.qq{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px}
+.qq .num{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:520px){.opts{grid-template-columns:1fr}}
+.opt{font:inherit;text-align:left;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;min-width:0;overflow-x:auto}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--good);background:var(--goodsoft)}
+.opt.wrong{border-color:var(--bad);background:var(--badsoft)}
+.fb{font-size:14px;padding:10px 12px;border-radius:8px;overflow-x:auto}
+.fb.ok{background:var(--goodsoft);color:var(--fg)}
+.fb.no{background:var(--badsoft);color:var(--fg)}
+.fb b{color:var(--good)} .fb.no b{color:var(--bad)}
+.score{font-weight:700;font-size:18px}
+.score.pass{color:var(--good)} .score.fail{color:var(--bad)}
+.hint{background:var(--tealsoft);border-radius:8px;padding:12px 16px;display:grid;gap:6px}
+.hint .tag{font-family:var(--f-mono);font-size:12px;color:var(--teal);font-weight:600}
+.done-card{text-align:center;display:grid;gap:14px;justify-items:center;padding:28px 16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.badge{width:140px;height:140px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--teal),var(--navy),var(--teal));animation:pop .8s cubic-bezier(.2,1.6,.4,1) both, spin 6s linear .8s infinite;position:relative}
+.badge::after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--surface)}
+.badge span{position:relative;z-index:1;font-family:var(--f-display);font-weight:900;color:var(--navy);font-size:15px;line-height:1.35;animation:counter 6s linear .8s infinite}
+.badge big{display:block;font-size:34px}
+@keyframes pop{from{transform:scale(0) rotate(-90deg)}to{transform:scale(1) rotate(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes counter{to{transform:rotate(-360deg)}}
+@media (prefers-reduced-motion:reduce){.badge,.badge span{animation:none}}
+.congrats{font-family:var(--f-display);font-size:22px;font-weight:900;color:var(--teal);text-wrap:balance}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center;padding-block:20px}
+.hl{color:var(--teal);font-weight:700}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="course">工程數學互動學習 · Laplace Transform · Unit 2</div>
+    <h1>拉普拉斯轉換(II)：第一位移定理</h1>
+    <nav class="rail" aria-label="關卡進度">
+      <button class="step active" data-go="0"><div class="bar"></div><span>📚 學習</span></button>
+      <button class="step" data-go="1" disabled><div class="bar"></div><span>🔍 理解</span></button>
+      <button class="step" data-go="2" disabled><div class="bar"></div><span>✏️ 測驗</span></button>
+      <button class="step" data-go="3" disabled><div class="bar"></div><span>🏆 挑戰</span></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<!-- ============ STAGE 1 ============ -->
+<section class="stage" id="s0">
+  <h2>關卡 1 · 學習</h2>
+  <p class="lead">上一單元我們學會了 $\mathcal{L}\{f(t)\}=F(s)$ 的定義與基本公式。本單元要處理一個工程上極常見的情況：訊號乘上指數 $e^{at}$，例如阻尼振盪 $e^{-2t}\cos 4t$。第一位移定理告訴我們：在時域乘上 $e^{at}$，等於在 s 域把 $s$ 平移成 $s-a$。</p>
+
+  <div class="def">
+    <div class="tag">THEOREM · 第一位移定理（s 軸平移）</div>
+    <p>若 $\mathcal{L}\{f(t)\}=F(s)$ 在 $s>\alpha$ 時存在，則對任意實數 $a$：</p>
+    <div class="formula">$$\mathcal{L}\{e^{at}f(t)\}=F(s-a),\qquad s>\alpha+a$$</div>
+    <p>反過來寫就是逆轉換形式：$\mathcal{L}^{-1}\{F(s-a)\}=e^{at}f(t)$。</p>
+  </div>
+
+  <div class="def teal">
+    <div class="tag">PROOF · 一行證明</div>
+    <div class="formula">$$\mathcal{L}\{e^{at}f(t)\}=\int_0^\infty e^{-st}e^{at}f(t)\,dt=\int_0^\infty e^{-(s-a)t}f(t)\,dt=F(s-a)$$</div>
+    <p>也就是說，把原本公式裡的每一個 $s$ 都換成 $(s-a)$ 即可。</p>
+  </div>
+
+  <h3>常用位移公式表</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>$f(t)$</th><th>$F(s)$</th><th>$e^{at}f(t)$</th><th>$F(s-a)$</th></tr></thead>
+    <tbody>
+      <tr><td>$t^n$</td><td>$\dfrac{n!}{s^{n+1}}$</td><td>$e^{at}t^n$</td><td>$\dfrac{n!}{(s-a)^{n+1}}$</td></tr>
+      <tr><td>$\cos\omega t$</td><td>$\dfrac{s}{s^2+\omega^2}$</td><td>$e^{at}\cos\omega t$</td><td>$\dfrac{s-a}{(s-a)^2+\omega^2}$</td></tr>
+      <tr><td>$\sin\omega t$</td><td>$\dfrac{\omega}{s^2+\omega^2}$</td><td>$e^{at}\sin\omega t$</td><td>$\dfrac{\omega}{(s-a)^2+\omega^2}$</td></tr>
+      <tr><td>$\cosh bt$</td><td>$\dfrac{s}{s^2-b^2}$</td><td>$e^{at}\cosh bt$</td><td>$\dfrac{s-a}{(s-a)^2-b^2}$</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="def">
+    <div class="tag">TECHNIQUE · 逆轉換的關鍵：配方</div>
+    <p>分母若是無法因式分解的二次式 $s^2+ps+q$，先配方成 $(s-a)^2+\omega^2$，再把分子改寫成 $(s-a)$ 與常數的組合：</p>
+    <div class="formula">$$s^2+4s+13=(s+2)^2+9\;\Rightarrow\; a=-2,\ \omega=3$$</div>
+  </div>
+
+  <div class="panel">
+    <h3>互動圖：$e^{at}\cos\omega t$ 與它在 s 平面的極點</h3>
+    <p class="note">拖動滑桿。左圖是時域訊號（虛線為包絡 $\pm e^{at}$），右圖是 $F(s-a)=\dfrac{s-a}{(s-a)^2+\omega^2}$ 的極點 $s=a\pm j\omega$。灰色空心點是 $a=0$ 時的原始極點，可以看到乘上 $e^{at}$ 讓極點水平移動 $a$。</p>
+    <div class="ctrls">
+      <label for="sa">指數係數 $a$ = <output id="oa">-0.50</output><input type="range" id="sa" min="-1.5" max="0.3" step="0.05" value="-0.5"></label>
+      <label for="sw">角頻率 $\omega$ (rad/s) = <output id="ow">3.0</output><input type="range" id="sw" min="1" max="5" step="0.5" value="3"></label>
+    </div>
+    <div class="plots">
+      <div><svg id="tplot" viewBox="0 0 360 220" role="img" aria-label="時域訊號圖"></svg><div class="cap">時域 f(t)，t ∈ [0, 6] s</div></div>
+      <div><svg id="splot" viewBox="0 0 220 220" role="img" aria-label="s 平面極點圖"></svg><div class="cap">s 平面：σ 橫軸、jω 縱軸</div></div>
+    </div>
+    <div class="readout" id="rd"></div>
+  </div>
+
+  <button class="btn" id="toEx">我已了解 → 前往例題</button>
+</section>
+
+<!-- ============ STAGE 2 ============ -->
+<section class="stage" id="s1" hidden>
+  <h2>關卡 2 · 理解</h2>
+  <p class="lead">兩個例題分別練習「正向轉換」與「逆轉換＋配方」。至少展開一個例題的解題步驟後，才能前往測驗。</p>
+
+  <div class="ex">
+    <div class="q">
+      <div class="lvl">例題 1 · 基礎</div>
+      <p>求 $\mathcal{L}\{e^{-2t}\cos 3t\}$。</p>
+    </div>
+    <div class="acc">
+      <button aria-expanded="false" data-acc="a1">▸ 顯示解題步驟</button>
+      <div class="steps" id="a1" hidden>
+        <div><div>先寫出不含指數的部分：$f(t)=\cos 3t$，$F(s)=\dfrac{s}{s^2+9}$。</div></div>
+        <div><div>辨識位移量：$e^{-2t}=e^{at}$，所以 $a=-2$，$s-a=s+2$。</div></div>
+        <div><div>把 $F(s)$ 中的 $s$ 全部換成 $s+2$：$$\mathcal{L}\{e^{-2t}\cos 3t\}=\frac{s+2}{(s+2)^2+9}=\frac{s+2}{s^2+4s+13},\quad s>-2$$</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ex">
+    <div class="q">
+      <div class="lvl">例題 2 · 進階</div>
+      <p>求 $\mathcal{L}^{-1}\left\{\dfrac{2s+3}{s^2+4s+13}\right\}$。</p>
+    </div>
+    <div class="acc">
+      <button aria-expanded="false" data-acc="a2">▸ 顯示解題步驟</button>
+      <div class="steps" id="a2" hidden>
+        <div><div>判別式 $16-52<0$，分母無實根，所以配方：$s^2+4s+13=(s+2)^2+9$，得 $a=-2,\ \omega=3$。</div></div>
+        <div><div>把分子寫成 $(s+2)$ 與常數的組合：$2s+3=2(s+2)-1$。</div></div>
+        <div><div>拆開並湊出 $\omega=3$：$$\frac{2s+3}{(s+2)^2+9}=2\cdot\frac{s+2}{(s+2)^2+9}-\frac13\cdot\frac{3}{(s+2)^2+9}$$</div></div>
+        <div><div>套用第一位移定理逆轉換：$$\mathcal{L}^{-1}\{\cdots\}=e^{-2t}\left(2\cos 3t-\tfrac13\sin 3t\right)$$</div></div>
+        <div><div>驗算：$t=0$ 時值為 $2$，而初值定理 $\lim_{s\to\infty}sF(s)=2$，相符。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row"><button class="btn" id="toQuiz" disabled>前往測驗</button><span class="note" id="exNote">請先展開至少 1 個例題。</span></div>
+</section>
+
+<!-- ============ STAGE 3 ============ -->
+<section class="stage" id="s2" hidden>
+  <h2>關卡 3 · 測驗</h2>
+  <p class="lead">5 道選擇題，選完立即顯示解析。答對 4 題以上即可解鎖挑戰關。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="panel" id="result" hidden>
+    <div class="score" id="score"></div>
+    <div class="row">
+      <button class="btn alt" id="toCh" hidden>前往挑戰關</button>
+      <button class="btn ghost" id="retry" hidden>再試一次</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAGE 4 ============ -->
+<section class="stage" id="s3" hidden>
+  <h2>關卡 4 · 挑戰關</h2>
+  <div class="ex"><div class="q">
+    <div class="lvl">工程情境 · 彈簧–質量–阻尼系統</div>
+    <p>一個質量 $m=1\ \text{kg}$ 的物體接在彈簧常數 $k=20\ \text{N/m}$ 的彈簧上，阻尼係數 $c=4\ \text{N·s/m}$。物體從平衡位置被拉開 $x(0)=1\ \text{cm}$ 後靜止釋放（$x'(0)=0$），運動方程為</p>
+    <div class="formula">$$x''+4x'+20x=0$$</div>
+    <p>(a) 用拉普拉斯轉換求 $x(t)$。(b) 指出此系統的衰減率與阻尼振盪角頻率。</p>
+  </div></div>
+
+  <div id="hints" class="quiz"></div>
+  <div class="row">
+    <button class="btn ghost" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn alt" id="solBtn">查看完整解答</button>
+  </div>
+
+  <div class="ex" id="sol" hidden><div class="steps">
+    <div><div>對方程兩邊取拉普拉斯轉換，令 $X(s)=\mathcal{L}\{x\}$：$$[s^2X-s\,x(0)-x'(0)]+4[sX-x(0)]+20X=0$$</div></div>
+    <div><div>代入 $x(0)=1,\ x'(0)=0$：$(s^2+4s+20)X=s+4$，所以 $$X(s)=\frac{s+4}{s^2+4s+20}$$</div></div>
+    <div><div>配方：$s^2+4s+20=(s+2)^2+16$，得 $a=-2,\ \omega=4$。</div></div>
+    <div><div>分子改寫：$s+4=(s+2)+2$，並湊出 $\omega=4$：$$X(s)=\frac{s+2}{(s+2)^2+16}+\frac12\cdot\frac{4}{(s+2)^2+16}$$</div></div>
+    <div><div>由第一位移定理：$$x(t)=e^{-2t}\left(\cos 4t+\tfrac12\sin 4t\right)\ \text{cm}$$ 驗算 $x(0)=1$，$x'(0)=-2+4\cdot\tfrac12=0$ ✓</div></div>
+    <div><div>(b) 極點 $s=-2\pm 4j$：衰減率 $\sigma=2\ \text{s}^{-1}$（包絡 $e^{-2t}$），阻尼振盪角頻率 $\omega_d=4\ \text{rad/s}$。對照公式 $\omega_n=\sqrt{20}\approx4.47$、$\zeta=\dfrac{c}{2\sqrt{mk}}=\dfrac{4}{2\sqrt{20}}\approx0.447$，$\omega_d=\omega_n\sqrt{1-\zeta^2}=4$，一致。</div></div>
+  </div></div>
+
+  <div class="done-card" id="done" hidden>
+    <div class="badge" aria-hidden="true"><span><big>🏅</big>位移大師</span></div>
+    <div class="congrats">🎉 恭喜！你已掌握【拉普拉斯轉換(II)：第一位移定理】！</div>
+    <p class="note" id="hintUsed"></p>
+    <button class="btn ghost" id="restart">從頭複習</button>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+function tex(el){ if(window.renderMathInElement){ try{ renderMathInElement(el,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],output:"mathml",throwOnError:false}); }catch(e){} } }
+function k(s){ try{ return window.katex?katex.renderToString(s,{output:"mathml",throwOnError:false}):s; }catch(e){ return s; } }
+
+/* ---------- stage navigation ---------- */
+let unlocked=0, cur=0;
+const steps=[...document.querySelectorAll('.step')];
+function go(i){
+  cur=i; unlocked=Math.max(unlocked,i);
+  for(let j=0;j<4;j++){ $('#s'+j).hidden=j!==i; }
+  steps.forEach((b,j)=>{ b.disabled=j>unlocked; b.classList.toggle('active',j===i); b.classList.toggle('done',j<unlocked||(j<i)); });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+steps.forEach(b=>b.addEventListener('click',()=>go(+b.dataset.go)));
+$('#toEx').onclick=()=>go(1);
+
+/* ---------- interactive plot ---------- */
+const NS='http://www.w3.org/2000/svg';
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;}
+function draw(){
+  const a=+$('#sa').value, w=+$('#sw').value;
+  $('#oa').textContent=a.toFixed(2); $('#ow').textContent=w.toFixed(1);
+  // time plot
+  const T=$('#tplot'); T.innerHTML='';
+  const L=34,R=350,Tp=12,B=196, ym=3;
+  const X=t=>L+(R-L)*t/6, Y=y=>Tp+(B-Tp)*(ym-y)/(2*ym);
+  const defs=el('defs',{},T); const cp=el('clipPath',{id:'cp'},defs); el('rect',{x:L,y:Tp,width:R-L,height:B-Tp},cp);
+  for(let y=-3;y<=3;y++){ el('line',{x1:L,x2:R,y1:Y(y),y2:Y(y),stroke:'var(--grid)','stroke-width':1},T); const tx=el('text',{x:L-6,y:Y(y)+4,'text-anchor':'end','font-size':10,fill:'var(--muted)','font-family':'JetBrains Mono,monospace'},T); tx.textContent=y; }
+  for(let t=0;t<=6;t++){ const tx=el('text',{x:X(t),y:B+16,'text-anchor':'middle','font-size':10,fill:'var(--muted)','font-family':'JetBrains Mono,monospace'},T); tx.textContent=t; }
+  el('line',{x1:L,x2:R,y1:Y(0),y2:Y(0),stroke:'var(--muted)','stroke-width':1},T);
+  let pe='',ne='',sg='';
+  for(let i=0;i<=300;i++){ const t=6*i/300, e=Math.exp(a*t);
+    pe+=(i?'L':'M')+X(t).toFixed(1)+' '+Y(Math.min(e,4)).toFixed(1);
+    ne+=(i?'L':'M')+X(t).toFixed(1)+' '+Y(Math.max(-e,-4)).toFixed(1);
+    const v=Math.max(-4,Math.min(4,e*Math.cos(w*t))); sg+=(i?'L':'M')+X(t).toFixed(1)+' '+Y(v).toFixed(1); }
+  const g=el('g',{'clip-path':'url(#cp)'},T);
+  el('path',{d:pe,fill:'none',stroke:'var(--teal)','stroke-width':1.3,'stroke-dasharray':'4 3'},g);
+  el('path',{d:ne,fill:'none',stroke:'var(--teal)','stroke-width':1.3,'stroke-dasharray':'4 3'},g);
+  el('path',{d:sg,fill:'none',stroke:'var(--navy)','stroke-width':2.2},g);
+  // s-plane
+  const S=$('#splot'); S.innerHTML='';
+  const sx=s=>20+180*(s+2)/3, sy=v=>110-v*16;  // sigma in [-2,1], jw in [-6,6]
+  for(let s=-2;s<=1;s++){ el('line',{x1:sx(s),x2:sx(s),y1:12,y2:206,stroke:'var(--grid)'},S); const tx=el('text',{x:sx(s),y:218,'text-anchor':'middle','font-size':10,fill:'var(--muted)','font-family':'JetBrains Mono,monospace'},S); tx.textContent=s; }
+  for(let v=-6;v<=6;v+=2){ el('line',{x1:20,x2:200,y1:sy(v),y2:sy(v),stroke:'var(--grid)'},S); }
+  el('line',{x1:20,x2:200,y1:sy(0),y2:sy(0),stroke:'var(--muted)'},S);
+  el('line',{x1:sx(0),x2:sx(0),y1:12,y2:206,stroke:'var(--muted)'},S);
+  const lb=el('text',{x:sx(0)+4,y:22,'font-size':10,fill:'var(--muted)','font-family':'JetBrains Mono,monospace'},S); lb.textContent='jω';
+  el('rect',{x:sx(0),y:12,width:200-sx(0),height:194,fill:'var(--bad)','fill-opacity':.07},S);
+  [w,-w].forEach(v=>{
+    el('circle',{cx:sx(0),cy:sy(v),r:5,fill:'none',stroke:'var(--muted)','stroke-width':1.5},S);
+    if(Math.abs(a)>0.04) el('line',{x1:sx(0),x2:sx(a),y1:sy(v),y2:sy(v),stroke:'var(--teal)','stroke-width':1.5,'stroke-dasharray':'3 2'},S);
+    const c=sx(a), y=sy(v), r=5;
+    el('path',{d:`M${c-r} ${y-r}L${c+r} ${y+r}M${c+r} ${y-r}L${c-r} ${y+r}`,stroke:'var(--navy)','stroke-width':2.6,fill:'none'},S);
+  });
+  const st=a<0?'衰減振盪（穩定）':a>0?'發散振盪（不穩定，極點在右半平面）':'等幅振盪（臨界）';
+  const num=a===0?'s':'s'+(a<0?'+':'-')+Math.abs(a).toFixed(2);
+  $('#rd').innerHTML=k(`\\mathcal{L}\\{e^{${a.toFixed(2)}t}\\cos ${w}t\\}=\\dfrac{${num}}{(${num})^2+${(w*w).toFixed(2).replace(/\.00$/,'')}}`)+`<br>極點 ${k(`s=${a.toFixed(2)}\\pm ${w}j`)}：<span class="hl">${st}</span>`;
+}
+$('#sa').addEventListener('input',draw); $('#sw').addEventListener('input',draw);
+
+/* ---------- examples ---------- */
+let opened=false;
+document.querySelectorAll('[data-acc]').forEach(b=>b.addEventListener('click',()=>{
+  const p=document.getElementById(b.dataset.acc), show=p.hidden; p.hidden=!show;
+  b.setAttribute('aria-expanded',show); b.textContent=(show?'▾ 隱藏':'▸ 顯示')+'解題步驟';
+  if(show&&!opened){ opened=true; $('#toQuiz').disabled=false; $('#exNote').textContent='很好！可以前往測驗了。'; }
+}));
+$('#toQuiz').onclick=()=>go(2);
+
+/* ---------- quiz ---------- */
+const Q=[
+ {q:'\\mathcal{L}\\{e^{3t}t^2\\}=\\,?', o:['\\dfrac{2}{(s-3)^3}','\\dfrac{2}{(s+3)^3}','\\dfrac{1}{(s-3)^3}','\\dfrac{2}{s^3}-3'], a:0,
+  e:'$\\mathcal{L}\\{t^2\\}=\\dfrac{2!}{s^3}$，乘 $e^{3t}$ 表示 $s\\to s-3$，得 $\\dfrac{2}{(s-3)^3}$。'},
+ {q:'\\mathcal{L}\\{e^{-t}\\sin 2t\\}=\\,?', o:['\\dfrac{2}{(s-1)^2+4}','\\dfrac{s+1}{(s+1)^2+4}','\\dfrac{2}{(s+1)^2+4}','\\dfrac{2}{s^2+4}\\cdot\\dfrac{1}{s+1}'], a:2,
+  e:'$\\mathcal{L}\\{\\sin 2t\\}=\\dfrac{2}{s^2+4}$，$a=-1$ 表示 $s\\to s+1$。注意分子仍是 $\\omega=2$，不是 $s+1$；位移定理也不是把兩個轉換相乘。'},
+ {q:'\\mathcal{L}^{-1}\\left\\{\\dfrac{1}{(s+4)^2}\\right\\}=\\,?', o:['te^{4t}','te^{-4t}','e^{-4t}','\\tfrac12 t^2e^{-4t}'], a:1,
+  e:'$\\dfrac{1}{s^2}\\leftrightarrow t$，而 $(s+4)=s-(-4)$，所以 $a=-4$，得 $te^{-4t}$。'},
+ {q:'\\mathcal{L}^{-1}\\left\\{\\dfrac{s-1}{s^2-2s+5}\\right\\}=\\,?', o:['e^{-t}\\cos 2t','e^{t}\\sin 2t','e^{t}\\cos 2t','e^{t}\\cos\\sqrt5\\,t'], a:2,
+  e:'配方 $s^2-2s+5=(s-1)^2+4$，分子剛好是 $s-1$，所以 $a=1,\\ \\omega=2$，得 $e^{t}\\cos 2t$。'},
+ {q:'\\mathcal{L}^{-1}\\left\\{\\dfrac{1}{s^2+6s+10}\\right\\}=\\,?', o:['e^{3t}\\sin t','e^{-3t}\\cos t','\\tfrac{1}{\\sqrt{10}}e^{-3t}\\sin\\sqrt{10}\\,t','e^{-3t}\\sin t'], a:3,
+  e:'$s^2+6s+10=(s+3)^2+1$，$\\omega=1$，分子為常數 $1=\\omega$，所以是 $e^{-3t}\\sin t$。'}
+];
+let answered=0, correct=0;
+function buildQuiz(){
+  answered=0; correct=0; $('#result').hidden=true;
+  const box=$('#quiz'); box.innerHTML='';
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div'); d.className='qq';
+    d.innerHTML=`<div class="num">第 ${i+1} 題 / 5</div><div>${k(it.q)}</div><div class="opts"></div><div class="fb" hidden></div>`;
+    const op=d.querySelector('.opts'), fb=d.querySelector('.fb');
+    it.o.forEach((o,j)=>{ const b=document.createElement('button'); b.className='opt'; b.innerHTML=String.fromCharCode(65+j)+'. '+k(o);
+      b.onclick=()=>{ op.querySelectorAll('button').forEach(x=>x.disabled=true);
+        const ok=j===it.a; op.children[it.a].classList.add('right'); if(!ok) b.classList.add('wrong');
+        if(ok) correct++; answered++;
+        fb.hidden=false; fb.className='fb '+(ok?'ok':'no'); fb.innerHTML=`<b>${ok?'✔ 答對了':'✘ 答錯了'}</b>　${it.e}`; tex(fb);
+        if(answered===Q.length) finish(); };
+      op.appendChild(b); });
+    box.appendChild(d);
+  });
+}
+function finish(){
+  $('#result').hidden=false; const pass=correct>=4;
+  $('#score').textContent=`你答對了 ${correct} / 5 題。`+(pass?'挑戰關已解鎖！':'需要至少 4 題才能解鎖挑戰關。');
+  $('#score').className='score '+(pass?'pass':'fail');
+  $('#toCh').hidden=!pass; $('#retry').hidden=pass;
+  if(pass) unlocked=Math.max(unlocked,3), steps[3].disabled=false;
+}
+$('#retry').onclick=()=>{ buildQuiz(); window.scrollTo({top:0,behavior:'smooth'}); };
+$('#toCh').onclick=()=>go(3);
+
+/* ---------- challenge ---------- */
+const H=[
+ '對每一項使用微分的轉換公式：$\\mathcal{L}\\{x\'\\}=sX-x(0)$，$\\mathcal{L}\\{x\'\'\\}=s^2X-sx(0)-x\'(0)$，然後解出 $X(s)$。',
+ '你應該得到 $X(s)=\\dfrac{s+4}{s^2+4s+20}$。分母判別式為負，請配方成 $(s-a)^2+\\omega^2$ 的形式。',
+ '$(s+2)^2+16$ 告訴你 $a=-2,\\ \\omega=4$。把分子寫成 $s+4=(s+2)+2$，再把第二項湊成 $\\dfrac{4}{(s+2)^2+16}$ 的倍數，最後套用第一位移定理。'
+];
+let used=0, solved=false;
+$('#hintBtn').onclick=()=>{
+  if(used>=3) return;
+  const d=document.createElement('div'); d.className='hint'; d.innerHTML=`<div class="tag">提示 ${used+1}</div><div>${H[used]}</div>`; tex(d);
+  $('#hints').appendChild(d); used++;
+  $('#hintBtn').textContent=used<3?`取得提示（剩 ${3-used} 個）`:'提示已用完'; $('#hintBtn').disabled=used>=3;
+};
+$('#solBtn').onclick=()=>{
+  $('#sol').hidden=false; $('#done').hidden=false; solved=true;
+  $('#hintUsed').textContent=`本次使用提示數：${used} / 3`+(used===0?'　（零提示完成，太厲害了！）':'');
+  steps[3].classList.add('done'); $('#solBtn').disabled=true;
+  $('#done').scrollIntoView({behavior:'smooth',block:'center'});
+};
+$('#restart').onclick=()=>go(0);
+
+function init(){ tex(document.body); draw(); buildQuiz(); }
+if(document.readyState==='complete') init(); else window.addEventListener('load',init);
+})();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

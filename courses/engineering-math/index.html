@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>工程數學互動學習</title>
+<meta name="description" content="工程數學互動學習：30 個互動單元目錄 — 國立勤益科技大學 劉瑞弘研究室">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="../../"><i></i>dofLab courses</a>
+      <span class="org">國立勤益科技大學 · 智慧自動化工程系</span>
+    </div>
+    <div class="hero-body">
+      <nav class="crumb" aria-label="路徑"><a href="../../">← 所有課程</a></nav>
+      <div class="eyebrow">ENGINEERING MATHEMATICS · 30 UNITS</div>
+      <h1>工程數學互動學習</h1>
+      <p class="lead">從一階微分方程到留數定理，共 30 個單元。每天台灣時間 12:00 與 00:00 各新增一個單元，全部完成後會以新的例題與題目開始下一輪。</p>
+      <div class="meter">
+        <div class="meter-top"><span>已上線</span><b id="count">– / 30</b></div>
+        <div class="meter-track"><i id="bar"></i></div>
+      </div>
+      <p class="next" id="next"></p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="sec" aria-labelledby="h-units">
+    <div class="tools">
+      <h2 id="h-units">單元目錄</h2>
+      <div class="seg" role="group" aria-label="篩選">
+        <button id="f-all" aria-pressed="true">全部</button>
+        <button id="f-live" aria-pressed="false">只看已上線</button>
+      </div>
+    </div>
+    <input class="search" id="q" type="search" placeholder="搜尋單元，例如：拉普拉斯" aria-label="搜尋單元">
+    <div id="chapters" style="display:grid;gap:28px"></div>
+    <p class="empty" id="empty" hidden>沒有符合條件的單元。</p>
+  </section>
+</main>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+
+<script src="manifest.js"></script>
+<script>
+(function(){
+  var TOPICS = window.EM_TOPICS || [];
+  var M = window.EM_MANIFEST || {entries:[]};
+  var BASE = new Date(window.EM_BASE || '2026-09-25T12:00:00+08:00').getTime();
+  var H12 = 12*3600*1000;
+  var CHAPTERS = [
+    ['第一章','一階常微分方程',[0,1,2]],
+    ['第二章','二階與高階常微分方程',[3,4,5,6,7]],
+    ['第三章','拉普拉斯轉換',[8,9,10,11,12]],
+    ['第四章','傅立葉級數與傅立葉轉換',[13,14,15,16]],
+    ['第五章','矩陣與特徵值',[17,18,19,20]],
+    ['第六章','向量分析',[21,22,23]],
+    ['第七章','偏微分方程',[24,25]],
+    ['第八章','Z 轉換',[26,27]],
+    ['第九章','複變函數',[28,29]]
+  ];
+  function fmt(t){
+    var d = new Date(t + 8*3600*1000); // 台灣時間
+    var p = function(n){ return String(n).padStart(2,'0'); };
+    return (d.getUTCMonth()+1) + '/' + d.getUTCDate() + ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes());
+  }
+  var byIndex = {}, maxSlot = -1;
+  M.entries.forEach(function(e){ (byIndex[e.index] = byIndex[e.index] || []).push(e); if(e.slot>maxSlot) maxSlot=e.slot; });
+  Object.keys(byIndex).forEach(function(k){ byIndex[k].sort(function(a,b){ return a.round-b.round; }); });
+  var liveCount = Object.keys(byIndex).length;
+  document.getElementById('count').textContent = liveCount + ' / 30';
+  document.getElementById('bar').style.width = (liveCount/30*100) + '%';
+  var nextSlot = maxSlot + 1;
+  document.getElementById('next').innerHTML = '下一個單元：<b>' + String(nextSlot%30).padStart(2,'0') + ' ' + (TOPICS[nextSlot%30]||'') + '</b>，預計 ' + fmt(BASE + nextSlot*H12) + ' 上線';
+
+  var box = document.getElementById('chapters');
+  CHAPTERS.forEach(function(ch){
+    var sec = document.createElement('section'); sec.className = 'chapter';
+    sec.innerHTML = '<h3><span class="cn">' + ch[0] + '</span>' + ch[1] + '</h3>';
+    var ul = document.createElement('ul'); ul.className = 'units';
+    ch[2].forEach(function(i){
+      var vs = byIndex[i], li = document.createElement('li');
+      li.dataset.title = TOPICS[i]; li.dataset.live = vs ? '1' : '0';
+      var no = '<span class="no">' + String(i).padStart(2,'0') + '</span>';
+      if(vs){
+        var first = vs[vs.length-1]; // 最新一輪
+        var isNew = first.slot === maxSlot;
+        var extra = vs.length > 1 ? '<span class="extra">' + vs.map(function(v){ return '<a href="' + v.file + '">第 ' + v.round + ' 輪</a>'; }).join('') + '</span>' : '';
+        li.className = 'unit';
+        li.innerHTML = no + '<div class="t"><a href="' + first.file + '">' + TOPICS[i] + '</a>' + extra + '</div>' +
+          '<span class="state ' + (isNew?'new':'live') + '">' + (isNew?'最新 · ':'') + fmt(new Date(first.published).getTime()) + '</span>';
+      } else {
+        li.className = 'unit soon';
+        li.innerHTML = no + '<div class="t"><span class="name">' + TOPICS[i] + '</span></div><span class="state soon">預計 ' + fmt(BASE + i*H12) + '</span>';
+      }
+      ul.appendChild(li);
+    });
+    sec.appendChild(ul); box.appendChild(sec);
+  });
+
+  var onlyLive = false, q = document.getElementById('q');
+  function apply(){
+    var term = q.value.trim().toLowerCase(), any = false;
+    box.querySelectorAll('.chapter').forEach(function(sec){
+      var shown = 0;
+      sec.querySelectorAll('li').forEach(function(li){
+        var ok = (!onlyLive || li.dataset.live === '1') && (!term || li.dataset.title.toLowerCase().indexOf(term) >= 0);
+        li.hidden = !ok; if(ok) shown++;
+      });
+      sec.hidden = shown === 0; if(shown) any = true;
+    });
+    document.getElementById('empty').hidden = any;
+  }
+  function setF(v){ onlyLive = v; document.getElementById('f-all').setAttribute('aria-pressed', !v); document.getElementById('f-live').setAttribute('aria-pressed', v); apply(); }
+  document.getElementById('f-all').onclick = function(){ setF(false); };
+  document.getElementById('f-live').onclick = function(){ setF(true); };
+  q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>工程數學 | 一階線性微分方程(II)：可分離變數法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b;
+  --bg:#f3f5fb; --surface:#ffffff; --surface2:#e9edf8;
+  --ink:#141a3a; --muted:#5a6285; --line:#d3d9ec;
+  --accent:#1a237e; --accent2:#00897b; --on-accent:#ffffff;
+  --ok:#2e7d32; --ok-bg:#e6f4e7; --bad:#c62828; --bad-bg:#fdecec;
+  --key-bg:#e3f3f1; --key-line:#00897b;
+  --grid:#e2e6f2; --field:#9aa3c7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0e1124; --surface:#171b36; --surface2:#20264a;
+    --ink:#e7eaf8; --muted:#a3aad0; --line:#2f365f;
+    --accent:#8c9eff; --accent2:#4dd0c0; --on-accent:#0e1124;
+    --ok:#81c784; --ok-bg:#16301c; --bad:#ef9a9a; --bad-bg:#3a1a1e;
+    --key-bg:#10302d; --key-line:#4dd0c0;
+    --grid:#262c52; --field:#5a6396;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1124; --surface:#171b36; --surface2:#20264a;
+  --ink:#e7eaf8; --muted:#a3aad0; --line:#2f365f;
+  --accent:#8c9eff; --accent2:#4dd0c0; --on-accent:#0e1124;
+  --ok:#81c784; --ok-bg:#16301c; --bad:#ef9a9a; --bad-bg:#3a1a1e;
+  --key-bg:#10302d; --key-line:#4dd0c0;
+  --grid:#262c52; --field:#5a6396;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;font-size:16px;line-height:1.75;padding-inline:16px}
+.wrap{max-width:860px;margin:0 auto;padding-block:0 32px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px 12px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.course{font-size:12px;letter-spacing:.16em;color:var(--accent2);font-weight:700}
+h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(20px,4.2vw,30px);line-height:1.3;margin:2px 0 12px;text-wrap:balance;color:var(--accent)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{border:0;background:none;padding:0;text-align:left;font:inherit;color:var(--muted);cursor:pointer}
+.step:disabled{cursor:not-allowed;opacity:.55}
+.step .bar{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-bottom:4px}
+.step .bar i{display:block;height:100%;width:0;background:var(--accent2);transition:width .4s}
+.step.done .bar i,.step.cur .bar i{width:100%}
+.step.cur .bar i{background:var(--accent)}
+.step span{font-size:13px;white-space:nowrap}
+.step.cur span{color:var(--ink);font-weight:700}
+.step:focus-visible,button:focus-visible,input:focus-visible,label:focus-within{outline:2px solid var(--accent2);outline-offset:2px}
+section.stage{display:flex;flex-direction:column;gap:20px}
+h2{font-family:"Noto Serif TC",serif;font-size:24px;margin:0;color:var(--ink)}
+h3{font-size:18px;margin:0 0 6px}
+p{margin:0;max-width:68ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.key{background:var(--key-bg);border-left:4px solid var(--key-line);border-radius:4px 10px 10px 4px;padding:14px 18px}
+.key b.lab{display:block;font-size:12px;letter-spacing:.14em;color:var(--accent2)}
+.eq{overflow-x:auto;padding-block:4px}
+.eq math{font-size:1.15em}
+ol.flow{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 18px;background:var(--accent);color:var(--on-accent);cursor:pointer;align-self:flex-start}
+.btn.alt{background:var(--accent2)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.note{font-size:14px;color:var(--muted)}
+/* viz */
+.viz{display:grid;grid-template-columns:1fr;gap:12px}
+.viz svg{width:100%;height:auto;display:block}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 18px}
+.ctrls label{display:flex;flex-direction:column;font-size:14px;color:var(--muted)}
+.ctrls output{font-family:"JetBrains Mono",monospace;color:var(--ink);font-weight:600}
+input[type=range]{accent-color:var(--accent2);width:100%}
+.readout{font-family:"JetBrains Mono",monospace;font-size:14px;overflow-x:auto}
+/* accordion */
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface2)}
+summary{cursor:pointer;padding:10px 14px;font-weight:700;color:var(--accent)}
+details .body{padding:0 16px 14px;display:flex;flex-direction:column;gap:10px}
+.sn{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:.06em}
+/* quiz */
+.q{display:flex;flex-direction:column;gap:10px}
+.q .opts{display:grid;gap:8px}
+.opt{font:inherit;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;overflow-x:auto}
+.opt:hover:not(:disabled){border-color:var(--accent2)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.fb{font-size:15px;padding:8px 12px;border-radius:6px}
+.fb.ok{background:var(--ok-bg);color:var(--ok)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb span{color:var(--ink)}
+.score{font-family:"JetBrains Mono",monospace;font-size:15px}
+/* challenge */
+.hint{background:var(--surface2);border-radius:8px;padding:10px 14px}
+.hint b{color:var(--accent2)}
+.check input{font:inherit;font-family:"JetBrains Mono",monospace;width:9em;padding:6px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.done-box{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;padding:26px 16px}
+.badge{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent2),var(--navy),var(--accent2));animation:pop .9s cubic-bezier(.2,1.6,.4,1) both, spin 6s linear .9s infinite;position:relative}
+.badge::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+.badge span{position:relative;z-index:1;font-family:"Noto Serif TC",serif;font-weight:900;font-size:20px;color:var(--accent);line-height:1.2;animation:spin 6s linear .9s infinite reverse}
+@keyframes pop{from{transform:scale(0) rotate(-90deg)}to{transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.done-box h3{font-size:20px;text-wrap:balance}
+@media (prefers-reduced-motion:reduce){.badge,.badge span{animation:none}.step .bar i{transition:none}}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);text-align:center}
+@media (max-width:520px){.card{padding:14px}.step span{font-size:11px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="course">工程數學互動學習</div>
+  <h1>一階線性微分方程(II)：可分離變數法</h1>
+  <nav class="steps" id="steps" aria-label="關卡進度">
+    <button class="step cur" data-s="0"><div class="bar"><i></i></div><span>📚 學習</span></button>
+    <button class="step" data-s="1" disabled><div class="bar"><i></i></div><span>🔍 理解</span></button>
+    <button class="step" data-s="2" disabled><div class="bar"><i></i></div><span>✏️ 測驗</span></button>
+    <button class="step" data-s="3" disabled><div class="bar"><i></i></div><span>🏆 挑戰</span></button>
+  </nav>
+</header>
+
+<!-- STAGE 1 -->
+<section class="stage" id="s0">
+  <h2>關卡 1 · 學習</h2>
+  <p>很多工程問題的變化率只跟「自變數的某個函數」乘上「應變數的某個函數」有關，例如放射性衰變、牛頓冷卻、RC 電路充放電。這類方程可以把含 \(y\) 的項與含 \(x\) 的項分到等號兩邊，各自積分，這就是<b>可分離變數法</b>。</p>
+
+  <div class="key">
+    <b class="lab">定義 · 可分離方程</b>
+    <p>若一階微分方程可寫成</p>
+    <div class="eq">\[\frac{dy}{dx}=g(x)\,h(y)\]</div>
+    <p>則稱為可分離變數方程（separable equation）。</p>
+  </div>
+
+  <div class="card">
+    <h3>核心步驟</h3>
+    <ol class="flow">
+      <li><b>分離：</b>當 \(h(y)\neq0\)，兩邊同除 \(h(y)\) 並乘 \(dx\)：\(\dfrac{dy}{h(y)}=g(x)\,dx\)</li>
+      <li><b>積分：</b>\(\displaystyle\int\frac{dy}{h(y)}=\int g(x)\,dx + C\)</li>
+      <li><b>整理：</b>盡量解出 \(y\)（顯式解）；解不出來時保留隱式解 \(H(y)=G(x)+C\)。</li>
+      <li><b>代初值：</b>若有 \(y(x_0)=y_0\)，代入求 \(C\)。</li>
+      <li><b>檢查奇異解：</b>使 \(h(y_0)=0\) 的常數 \(y=y_0\) 也是解（平衡解），除以 \(h(y)\) 時可能被漏掉。</li>
+    </ol>
+  </div>
+
+  <div class="key">
+    <b class="lab">常用結果 · 指數型</b>
+    <div class="eq">\[\frac{dy}{dt}=ky\;\Rightarrow\;\int\frac{dy}{y}=\int k\,dt\;\Rightarrow\;\ln|y|=kt+C\;\Rightarrow\;y=y_0e^{kt}\]</div>
+    <p class="note">\(k>0\) 為成長、\(k<0\) 為衰減。注意 \(e^{C}\) 與正負號合併成任意常數 \(y_0\)，且 \(y_0=0\) 剛好補回平衡解 \(y=0\)。</p>
+  </div>
+
+  <div class="card viz">
+    <h3>互動圖：牛頓冷卻定律</h3>
+    <p>物體溫度 \(T\) 在室溫 \(T_a\) 中冷卻：\(\dfrac{dT}{dt}=-k(T-T_a)\)。分離後 \(\dfrac{dT}{T-T_a}=-k\,dt\)，積分得 \(T(t)=T_a+(T_0-T_a)e^{-kt}\)。灰色短線是<b>方向場</b>（每點的斜率），綠線是解曲線，它處處順著方向場走。</p>
+    <div style="overflow-x:auto"><svg id="plot" viewBox="0 0 560 330" role="img" aria-label="牛頓冷卻方向場與解曲線"></svg></div>
+    <div class="ctrls">
+      <label for="k">冷卻常數 k (1/min) <output id="ko">0.30</output><input id="k" type="range" min="0.05" max="1" step="0.05" value="0.3"></label>
+      <label for="T0">初溫 T₀ (°C) <output id="T0o">90</output><input id="T0" type="range" min="0" max="100" step="1" value="90"></label>
+      <label for="Ta">室溫 Tₐ (°C) <output id="Tao">25</output><input id="Ta" type="range" min="0" max="100" step="1" value="25"></label>
+    </div>
+    <div class="readout" id="readout"></div>
+  </div>
+
+  <button class="btn" id="go1">我已了解 → 前往例題</button>
+</section>
+
+<!-- STAGE 2 -->
+<section class="stage" id="s1" hidden>
+  <h2>關卡 2 · 理解</h2>
+
+  <div class="card">
+    <h3>例題 1（基礎）</h3>
+    <p>解初值問題 \(\dfrac{dy}{dx}=2xy,\quad y(0)=3\)。</p>
+    <details class="ex"><summary>顯示解題步驟</summary><div class="body">
+      <div><span class="sn">STEP 1 · 辨識</span><p>右式 \(=g(x)h(y)\)，其中 \(g(x)=2x,\ h(y)=y\)，可分離。</p></div>
+      <div><span class="sn">STEP 2 · 分離</span><div class="eq">\[\frac{dy}{y}=2x\,dx\quad(y\neq0)\]</div></div>
+      <div><span class="sn">STEP 3 · 積分</span><div class="eq">\[\ln|y|=x^2+C_1\;\Rightarrow\;y=Ce^{x^2}\quad(C=\pm e^{C_1}，\;C=0\text{ 對應 }y=0)\]</div></div>
+      <div><span class="sn">STEP 4 · 代初值</span><div class="eq">\[y(0)=C=3\;\Rightarrow\;\boxed{y=3e^{x^2}}\]</div></div>
+      <div><span class="sn">驗算</span><p>\(y'=3e^{x^2}\cdot2x=2x\,y\) ✓，且 \(y(0)=3\) ✓。</p></div>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>例題 2（進階）</h3>
+    <p>解初值問題 \(\dfrac{dy}{dx}=\dfrac{1+y^2}{1+x^2},\quad y(0)=1\)，並寫出顯式解。</p>
+    <details class="ex"><summary>顯示解題步驟</summary><div class="body">
+      <div><span class="sn">STEP 1 · 分離</span><p>\(1+y^2>0\) 恆不為零，沒有奇異解：</p><div class="eq">\[\frac{dy}{1+y^2}=\frac{dx}{1+x^2}\]</div></div>
+      <div><span class="sn">STEP 2 · 積分</span><div class="eq">\[\tan^{-1}y=\tan^{-1}x+C\]</div></div>
+      <div><span class="sn">STEP 3 · 代初值</span><div class="eq">\[\tan^{-1}1=0+C\;\Rightarrow\;C=\frac{\pi}{4}\]</div></div>
+      <div><span class="sn">STEP 4 · 化為顯式</span><p>兩邊取正切，用和角公式 \(\tan(\alpha+\beta)=\dfrac{\tan\alpha+\tan\beta}{1-\tan\alpha\tan\beta}\)：</p><div class="eq">\[y=\tan\!\left(\tan^{-1}x+\frac{\pi}{4}\right)=\frac{x+1}{1-x}\;\Rightarrow\;\boxed{y=\frac{1+x}{1-x}},\quad x<1\]</div></div>
+      <div><span class="sn">驗算</span><div class="eq">\[y'=\frac{2}{(1-x)^2},\qquad \frac{1+y^2}{1+x^2}=\frac{\frac{(1-x)^2+(1+x)^2}{(1-x)^2}}{1+x^2}=\frac{2}{(1-x)^2}\ ✓\]</div><p class="note">解在 \(x=1\) 發散，所以定義區間是包含 \(x_0=0\) 的 \(x<1\)。</p></div>
+    </div></details>
+  </div>
+
+  <div class="row"><button class="btn" id="go2" disabled>前往測驗</button><span class="note" id="go2note">請先展開至少 1 個例題的解題步驟</span></div>
+</section>
+
+<!-- STAGE 3 -->
+<section class="stage" id="s2" hidden>
+  <h2>關卡 3 · 測驗</h2>
+  <p>共 5 題，答對 4 題以上即可進入挑戰關。每題選一次即判定。</p>
+  <div id="quiz" style="display:flex;flex-direction:column;gap:16px"></div>
+  <div class="card row" id="quizEnd" hidden>
+    <span class="score" id="score"></span>
+    <button class="btn alt" id="go3" hidden>前往挑戰關</button>
+    <button class="btn ghost" id="retry" hidden>再試一次</button>
+  </div>
+</section>
+
+<!-- STAGE 4 -->
+<section class="stage" id="s3" hidden>
+  <h2>關卡 4 · 挑戰關</h2>
+  <div class="card">
+    <h3>RC 電路充電</h3>
+    <p>電阻 \(R=10\,\text{k}\Omega\)、電容 \(C=100\,\mu\text{F}\) 串聯後接到 \(V_s=12\,\text{V}\) 直流電源，電容初始電壓 \(v(0)=0\)。由 KVL 得</p>
+    <div class="eq">\[RC\frac{dv}{dt}+v=V_s\]</div>
+    <p>(a) 用可分離變數法求 \(v(t)\)。<br>(b) 電容電壓到達 \(9\,\text{V}\) 需要多少秒？（取到小數點後兩位）</p>
+  </div>
+
+  <div class="row check">
+    <label for="ans">(b) 你的答案 t =</label><input id="ans" inputmode="decimal" placeholder="秒"><button class="btn" id="checkBtn">檢查</button>
+  </div>
+  <div id="checkFb"></div>
+
+  <div id="hints" style="display:flex;flex-direction:column;gap:10px"></div>
+  <div class="row">
+    <button class="btn ghost" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn ghost" id="solBtn">查看完整解答</button>
+  </div>
+
+  <div class="card" id="sol" hidden>
+    <h3>完整解答</h3>
+    <div><span class="sn">STEP 1 · 分離</span><div class="eq">\[\frac{dv}{dt}=\frac{V_s-v}{RC}\;\Rightarrow\;\frac{dv}{V_s-v}=\frac{dt}{RC}\]</div></div>
+    <div><span class="sn">STEP 2 · 積分</span><div class="eq">\[-\ln|V_s-v|=\frac{t}{RC}+C_1\;\Rightarrow\;V_s-v=Ae^{-t/RC}\]</div></div>
+    <div><span class="sn">STEP 3 · 代初值</span><div class="eq">\[v(0)=0\Rightarrow A=V_s\;\Rightarrow\;\boxed{v(t)=V_s\left(1-e^{-t/RC}\right)=12\left(1-e^{-t}\right)\ \text{V}}\]</div><p>時間常數 \(\tau=RC=(10^4\,\Omega)(10^{-4}\,\text{F})=1\,\text{s}\)。</p></div>
+    <div><span class="sn">STEP 4 · 求時間</span><div class="eq">\[12(1-e^{-t})=9\;\Rightarrow\;e^{-t}=\tfrac14\;\Rightarrow\;t=\ln 4\approx\boxed{1.39\ \text{s}}\]</div><p class="note">工程直覺：經過 \(1\tau\) 約達 63.2%，\(5\tau\) 約達 99.3%，一般視為充飽。</p></div>
+  </div>
+
+  <div class="card done-box" id="done" hidden>
+    <div class="badge"><span>分離<br>達人</span></div>
+    <h3>🎉 恭喜！你已掌握【一階線性微分方程(II)：可分離變數法】！</h3>
+    <p class="note" id="hintUsed"></p>
+  </div>
+</section>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function tex(el){ if(window.renderMathInElement){ renderMathInElement(el,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}],output:"mathml",throwOnError:false}); } }
+function tx(s,d){ try{return katex.renderToString(s,{output:"mathml",displayMode:!!d,throwOnError:false});}catch(e){return s;} }
+
+/* ---- stage nav ---- */
+let maxStage=0;
+function show(n){
+  for(let i=0;i<4;i++){ $("s"+i).hidden = i!==n; }
+  document.querySelectorAll(".step").forEach(b=>{
+    const s=+b.dataset.s; b.disabled = s>maxStage;
+    b.classList.toggle("cur",s===n); b.classList.toggle("done",s<maxStage && s!==n);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function unlock(n){ maxStage=Math.max(maxStage,n); show(n); }
+document.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>show(+b.dataset.s)));
+$("go1").onclick=()=>unlock(1);
+
+/* ---- plot ---- */
+const W=560,H=330,L=48,R=16,T=14,B=42, pw=W-L-R, ph=H-T-B, tMax=10;
+const X=t=>L+t/tMax*pw, Y=v=>T+(1-v/100)*ph;
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function draw(){
+  const k=+$("k").value,T0=+$("T0").value,Ta=+$("Ta").value;
+  $("ko").textContent=k.toFixed(2); $("T0o").textContent=T0; $("Tao").textContent=Ta;
+  let s="";
+  for(let t=0;t<=tMax;t+=2) s+=`<line x1="${X(t)}" y1="${T}" x2="${X(t)}" y2="${T+ph}" stroke="var(--grid)"/><text x="${X(t)}" y="${H-B+18}" font-size="12" text-anchor="middle" fill="var(--muted)">${t}</text>`;
+  for(let v=0;v<=100;v+=20) s+=`<line x1="${L}" y1="${Y(v)}" x2="${L+pw}" y2="${Y(v)}" stroke="var(--grid)"/><text x="${L-8}" y="${Y(v)+4}" font-size="12" text-anchor="end" fill="var(--muted)">${v}</text>`;
+  s+=`<text x="${L+pw/2}" y="${H-6}" font-size="12" text-anchor="middle" fill="var(--muted)">時間 t (min)</text>`;
+  s+=`<text x="14" y="${T+ph/2}" font-size="12" text-anchor="middle" fill="var(--muted)" transform="rotate(-90 14 ${T+ph/2})">T (°C)</text>`;
+  // direction field
+  const sx=pw/tMax, sy=ph/100;
+  for(let t=0.5;t<tMax;t+=1) for(let v=5;v<100;v+=10){
+    const m=-k*(v-Ta); let dx=sx, dy=-m*sy; const len=Math.hypot(dx,dy), h=9;
+    dx=dx/len*h; dy=dy/len*h;
+    s+=`<line x1="${X(t)-dx}" y1="${Y(v)-dy}" x2="${X(t)+dx}" y2="${Y(v)+dy}" stroke="var(--field)" stroke-width="1.4" stroke-linecap="round"/>`;
+  }
+  s+=`<line x1="${L}" y1="${Y(Ta)}" x2="${L+pw}" y2="${Y(Ta)}" stroke="var(--accent)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${L+pw-4}" y="${Y(Ta)-6}" font-size="12" text-anchor="end" fill="var(--accent)">平衡解 T = Tₐ</text>`;
+  let d="";
+  for(let i=0;i<=200;i++){const t=i/200*tMax, v=Ta+(T0-Ta)*Math.exp(-k*t); d+=(i?"L":"M")+X(t).toFixed(1)+" "+Y(v).toFixed(1);}
+  s+=`<path d="${d}" fill="none" stroke="var(--accent2)" stroke-width="3" stroke-linecap="round"/>`;
+  const tau=1/k, vt=Ta+(T0-Ta)*Math.exp(-1);
+  if(tau<=tMax) s+=`<circle cx="${X(tau)}" cy="${Y(vt)}" r="5" fill="var(--accent2)" stroke="var(--surface)" stroke-width="2"/><text x="${X(tau)+8}" y="${Y(vt)+(T0>=Ta?-8:16)}" font-size="12" fill="var(--ink)">t = 1/k</text>`;
+  $("plot").innerHTML=s;
+  $("readout").textContent=`T(t) = ${Ta} + (${T0-Ta})·e^(−${k.toFixed(2)}t)   時間常數 1/k = ${tau.toFixed(2)} min   T(5) = ${(Ta+(T0-Ta)*Math.exp(-5*k)).toFixed(1)} °C`;
+}
+["k","T0","Ta"].forEach(id=>$(id).addEventListener("input",draw));
+draw();
+
+/* ---- examples ---- */
+let opened=false;
+document.querySelectorAll("details.ex").forEach(d=>d.addEventListener("toggle",()=>{
+  if(d.open && !opened){opened=true;$("go2").disabled=false;$("go2note").textContent="已展開例題，可以前往測驗";}
+}));
+$("go2").onclick=()=>{unlock(2);};
+
+/* ---- quiz ---- */
+const Q=[
+ {q:String.raw`下列哪一個微分方程是<b>可分離</b>的？`,o:[String.raw`y'=x+y`,String.raw`y'=xy^2+x`,String.raw`y'=\sin(xy)`,String.raw`y'=x^2+y^2`],a:1,
+  e:String.raw`\(xy^2+x=x(y^2+1)\)，可寫成 \(g(x)h(y)\)。其他三式都無法拆成 \(x\) 的函數乘 \(y\) 的函數。`},
+ {q:String.raw`\(\dfrac{dy}{dx}=\dfrac{y}{x}\ (x>0)\) 的通解為何？`,o:[String.raw`y=x+C`,String.raw`y=Cx`,String.raw`y=Ce^{x}`,String.raw`y=\dfrac{C}{x}`],a:1,
+  e:String.raw`\(\dfrac{dy}{y}=\dfrac{dx}{x}\Rightarrow\ln|y|=\ln x+C_1\Rightarrow y=Cx\)。`},
+ {q:String.raw`初值問題 \(\dfrac{dy}{dt}=-2y,\ y(0)=5\) 的解為？`,o:[String.raw`y=5e^{2t}`,String.raw`y=-2e^{5t}`,String.raw`y=5e^{-2t}`,String.raw`y=5-2t`],a:2,
+  e:String.raw`指數型 \(y=y_0e^{kt}\)，\(k=-2,\ y_0=5\)。`},
+ {q:String.raw`\(\dfrac{dy}{dx}=e^{x-y}\) 的通解（隱式）為？`,o:[String.raw`e^{y}=e^{x}+C`,String.raw`y=x+C`,String.raw`e^{-y}=e^{x}+C`,String.raw`y=e^{x}+C`],a:0,
+  e:String.raw`\(e^{x-y}=e^x e^{-y}\)，分離得 \(e^{y}dy=e^{x}dx\)，積分得 \(e^y=e^x+C\)，即 \(y=\ln(e^x+C)\)。`},
+ {q:String.raw`解 \(y'=y^2\) 時兩邊除以 \(y^2\)，得通解 \(y=-\dfrac{1}{x+C}\)。這個過程漏掉了哪一個解？`,o:[String.raw`y=1`,String.raw`y=-\dfrac{1}{x}`,String.raw`y=0`,String.raw`\text{沒有漏掉任何解}`],a:2,
+  e:String.raw`除以 \(y^2\) 需假設 \(y\neq0\)。常數函數 \(y=0\) 滿足 \(0=0^2\)，是平衡（奇異）解，且無法由任何 \(C\) 得到。\(y=-1/x\) 是 \(C=0\) 的情況，並沒有漏掉。`}
+];
+let answered=0,correct=0;
+function buildQuiz(){
+  answered=0;correct=0; $("quizEnd").hidden=true; $("go3").hidden=true; $("retry").hidden=true;
+  const box=$("quiz"); box.innerHTML="";
+  Q.forEach((it,i)=>{
+    const c=document.createElement("div"); c.className="card q";
+    c.innerHTML=`<div><span class="sn">第 ${i+1} 題</span><p>${it.q}</p></div><div class="opts"></div><div class="fbw"></div>`;
+    const opts=c.querySelector(".opts");
+    it.o.forEach((o,j)=>{
+      const b=document.createElement("button"); b.className="opt"; b.innerHTML=`(${"ABCD"[j]}) `+tx(o);
+      b.onclick=()=>{
+        opts.querySelectorAll("button").forEach(x=>x.disabled=true);
+        const ok=j===it.a; b.classList.add(ok?"right":"wrong"); opts.children[it.a].classList.add("right");
+        const f=document.createElement("div"); f.className="fb "+(ok?"ok":"no");
+        f.innerHTML=(ok?"✔ 答對了！":"✘ 答錯了，正確答案是 ("+"ABCD"[it.a]+")。")+" <span>"+it.e+"</span>";
+        c.querySelector(".fbw").appendChild(f); tex(f);
+        answered++; if(ok)correct++; if(answered===Q.length) finish();
+      };
+      opts.appendChild(b);
+    });
+    box.appendChild(c); tex(c);
+  });
+}
+function finish(){
+  $("quizEnd").hidden=false; $("score").textContent=`得分：${correct} / ${Q.length}`;
+  if(correct>=4){$("go3").hidden=false; $("score").textContent+="　達標！";}
+  else {$("retry").hidden=false; $("score").textContent+="　需答對 4 題以上";}
+}
+$("retry").onclick=()=>{buildQuiz(); window.scrollTo({top:0,behavior:"smooth"});};
+$("go3").onclick=()=>unlock(3);
+buildQuiz();
+
+/* ---- challenge ---- */
+const H3=[
+ String.raw`把方程改寫成 \(\dfrac{dv}{dt}=\dfrac{V_s-v}{RC}\)，右式只含 \(v\)，把 \((V_s-v)\) 移到左邊分母、\(dt\) 移到右邊。`,
+ String.raw`\(\displaystyle\int\frac{dv}{V_s-v}=-\ln|V_s-v|\)。積分後指數化可得 \(V_s-v=Ae^{-t/RC}\)，再用 \(v(0)=0\) 定出 \(A\)。`,
+ String.raw`先算 \(RC=10^4\times10^{-4}=1\,\text{s}\)。令 \(12(1-e^{-t})=9\)，得 \(e^{-t}=1/4\)，再取自然對數。`
+];
+let used=0,finished=false;
+$("hintBtn").onclick=()=>{
+  if(used>=3)return;
+  const d=document.createElement("div"); d.className="hint"; d.innerHTML=`<b>提示 ${used+1}：</b>`+H3[used];
+  $("hints").appendChild(d); tex(d); used++;
+  $("hintBtn").textContent=used<3?`取得提示（剩 ${3-used} 個）`:"提示已用完"; $("hintBtn").disabled=used>=3;
+};
+function complete(){
+  if(finished)return; finished=true; $("done").hidden=false;
+  $("hintUsed").textContent=`本次使用提示數：${used} / 3`+(used===0?"，完全靠自己，太厲害了！":"");
+  $("done").scrollIntoView({behavior:"smooth",block:"center"});
+  document.querySelectorAll(".step").forEach(b=>b.classList.add("done"));
+}
+$("solBtn").onclick=()=>{$("sol").hidden=false; complete();};
+$("checkBtn").onclick=()=>{
+  const v=parseFloat($("ans").value), f=$("checkFb");
+  if(isNaN(v)){f.className="fb no";f.textContent="請輸入一個數字，單位為秒。";return;}
+  if(Math.abs(v-Math.log(4))<0.015){f.className="fb ok";f.textContent="✔ 正確！t = ln 4 ≈ 1.39 s。";$("sol").hidden=false;complete();}
+  else{f.className="fb no";f.textContent="✘ 還不對。檢查時間常數 RC 的單位換算，或取一個提示。";}
+};
+
+/* ---- math render ---- */
+function renderAll(){ tex(document.querySelector(".wrap")); }
+if(window.renderMathInElement) renderAll(); else window.addEventListener("load",()=>{renderAll(); buildQuiz();});
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

@@ -1,0 +1,418 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>工程數學 | 二階齊次微分方程(I)：實數特徵根</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b;
+  --bg:#f3f5fb; --surface:#ffffff; --surface2:#e8ecf7;
+  --ink:#141a3a; --muted:#56608a; --line:#cfd6ea;
+  --accent:#1a237e; --accent2:#00897b; --accent2-soft:#d7f0ec;
+  --ok:#2e7d32; --ok-soft:#e3f3e4; --bad:#c62828; --bad-soft:#fbe6e6;
+  --hl:#fff6d6; --hl-line:#e0b400;
+  --c1:#1a237e; --c2:#e65100;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0d1030; --surface:#161a42; --surface2:#1f2455;
+    --ink:#e7eaff; --muted:#a2a9d6; --line:#2e3470;
+    --accent:#8c9eff; --accent2:#4dd0c0; --accent2-soft:#113a3a;
+    --ok:#81c784; --ok-soft:#173a1f; --bad:#ef9a9a; --bad-soft:#3d1a1f;
+    --hl:#2e2a14; --hl-line:#c9a227;
+    --c1:#8c9eff; --c2:#ffab66;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0d1030; --surface:#161a42; --surface2:#1f2455;
+  --ink:#e7eaff; --muted:#a2a9d6; --line:#2e3470;
+  --accent:#8c9eff; --accent2:#4dd0c0; --accent2-soft:#113a3a;
+  --ok:#81c784; --ok-soft:#173a1f; --bad:#ef9a9a; --bad-soft:#3d1a1f;
+  --hl:#2e2a14; --hl-line:#c9a227;
+  --c1:#8c9eff; --c2:#ffab66;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;font-size:16px;line-height:1.75;padding-inline:16px}
+.wrap{max-width:880px;margin:0 auto;padding-block:0 32px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px 10px;border-bottom:1px solid var(--line)}
+.course{font-size:12px;letter-spacing:.14em;color:var(--accent2);font-weight:700}
+h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(22px,4.4vw,32px);line-height:1.3;margin:2px 0 10px;text-wrap:balance;color:var(--accent)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{border:0;background:var(--surface2);color:var(--muted);font:inherit;font-size:13px;padding:6px 4px;border-radius:6px;cursor:pointer;text-align:center;position:relative;overflow:hidden}
+.step[disabled]{cursor:not-allowed;opacity:.55}
+.step.done{color:var(--accent2)}
+.step.cur{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .step.cur{color:#0d1030}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .step.cur{color:#0d1030}}
+.bar{height:5px;background:var(--surface2);border-radius:3px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:linear-gradient(90deg,var(--navy),var(--teal));transition:width .4s}
+section.stage{padding-block:22px 8px}
+h2{font-family:"Noto Serif TC",serif;font-size:24px;margin:0 0 12px;color:var(--accent)}
+h3{font-size:17px;margin:22px 0 8px}
+p{margin:0 0 12px;max-width:68ch}
+.def{background:var(--hl);border-left:4px solid var(--hl-line);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.def b.tag{font-size:12px;letter-spacing:.1em;color:var(--muted);display:block}
+.formula{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:14px 0;overflow-x:auto}
+table.cases{border-collapse:collapse;width:100%;font-size:15px}
+.tblwrap{overflow-x:auto;margin:10px 0}
+table.cases th,table.cases td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.cases th{font-size:13px;color:var(--muted);font-weight:500}
+table.cases tr.me td{background:var(--accent2-soft)}
+.lab{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:18px 0}
+.lab .eq{font-size:17px;overflow-x:auto;margin-bottom:6px}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 18px;margin:10px 0}
+.ctrls label{font-size:14px;color:var(--muted);display:flex;justify-content:space-between}
+.ctrls output{font-family:"JetBrains Mono",monospace;color:var(--ink);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--teal)}
+svg text{font-family:"JetBrains Mono",monospace;font-size:11px;fill:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;background:var(--k)}
+.warn{font-size:13px;color:var(--bad);min-height:1.2em}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 18px;background:var(--teal);color:#fff;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:focus-visible,.step:focus-visible,.opt:focus-visible,summary:focus-visible{outline:3px solid var(--hl-line);outline-offset:2px}
+.nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:20px 0 6px}
+.nav small{color:var(--muted)}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0}
+.ex .lvl{font-size:12px;letter-spacing:.1em;color:var(--accent2);font-weight:700}
+details{margin-top:10px}
+summary{cursor:pointer;color:var(--accent);font-weight:700;list-style:none}
+summary::before{content:"▸ ";}
+details[open] summary::before{content:"▾ ";}
+ol.sol{padding-left:22px;margin:10px 0 0}
+ol.sol li{margin:6px 0;overflow-x:auto}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0}
+.q .qn{font-size:12px;color:var(--muted);letter-spacing:.1em}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{font:inherit;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;overflow-x:auto}
+.opt:hover:not([disabled]){border-color:var(--teal)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{margin-top:10px;font-size:15px}
+.fb.ok b{color:var(--ok)} .fb.no b{color:var(--bad)}
+.score{font-weight:700;font-size:18px}
+.hint{background:var(--accent2-soft);border-radius:8px;padding:10px 14px;margin:10px 0}
+.hint b{color:var(--accent2)}
+.full{border-top:1px dashed var(--line);margin-top:14px;padding-top:12px}
+.done-box{text-align:center;padding:26px 12px;margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.badge{width:130px;height:130px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 0deg,var(--navy),var(--teal),var(--navy));animation:spin 6s linear infinite;box-shadow:0 0 0 6px var(--accent2-soft)}
+.badge div{width:104px;height:104px;border-radius:50%;background:var(--surface);display:grid;place-items:center;animation:spin 6s linear infinite reverse;font-family:"Noto Serif TC",serif;font-weight:900;color:var(--accent);font-size:15px;line-height:1.2}
+.badge-in{animation:pop .7s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.badge,.badge div,.badge-in{animation:none}.bar i{transition:none}}
+footer{text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-block:16px;margin-top:24px}
+math{font-size:1.08em}
+math[display="block"]{overflow-x:auto;overflow-y:hidden;padding:4px 0}
+@media (max-width:480px){.step{font-size:12px}.step .t{display:none}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="course">工程數學互動學習</div>
+  <h1>二階齊次微分方程(I)：實數特徵根</h1>
+  <nav class="steps" aria-label="關卡">
+    <button class="step cur" data-go="0" type="button">📚 <span class="t">學習</span></button>
+    <button class="step" data-go="1" type="button" disabled>🔍 <span class="t">理解</span></button>
+    <button class="step" data-go="2" type="button" disabled>✏️ <span class="t">測驗</span></button>
+    <button class="step" data-go="3" type="button" disabled>🏆 <span class="t">挑戰關</span></button>
+  </nav>
+  <div class="bar"><i id="barFill"></i></div>
+</header>
+
+<!-- ===== 關卡 1 ===== -->
+<section class="stage" id="s0">
+  <h2>📚 關卡 1　學習</h2>
+  <p>常係數二階線性齊次微分方程是描述彈簧—質量—阻尼系統、RLC 電路的核心模型：</p>
+  <div class="formula">$$a\,y''+b\,y'+c\,y=0,\qquad a\neq 0,\ a,b,c\in\mathbb{R}$$</div>
+  <p>由於指數函數微分後形狀不變，我們猜測解的形式為 $y=e^{rx}$。代入得 $e^{rx}(ar^2+br+c)=0$，而 $e^{rx}\neq 0$，所以 $r$ 必須滿足一個代數方程。</p>
+
+  <div class="def"><b class="tag">定義｜特徵方程式</b>
+    $$a r^2 + b r + c = 0$$
+    判別式 $\Delta=b^2-4ac$ 決定根的型態。本單元處理 $\Delta>0$：兩個<b>相異實根</b> $r_1\neq r_2$。
+  </div>
+
+  <div class="def"><b class="tag">核心公式｜相異實根的通解</b>
+    $$y(x)=c_1e^{r_1x}+c_2e^{r_2x},\qquad r_{1,2}=\frac{-b\pm\sqrt{b^2-4ac}}{2a}$$
+  </div>
+
+  <h3>為什麼兩個解就夠了？</h3>
+  <p>二階線性齊次方程的解空間是二維的，只需兩個<b>線性獨立</b>的解。用 Wronskian 檢驗：</p>
+  <div class="formula">$$W\!\left(e^{r_1x},e^{r_2x}\right)=\begin{vmatrix}e^{r_1x}&e^{r_2x}\\ r_1e^{r_1x}&r_2e^{r_2x}\end{vmatrix}=(r_2-r_1)\,e^{(r_1+r_2)x}\neq 0\quad(r_1\neq r_2)$$</div>
+  <p>因此 $\{e^{r_1x},e^{r_2x}\}$ 構成基本解集。常數 $c_1,c_2$ 由初始條件 $y(0)=y_0,\ y'(0)=v_0$ 決定：</p>
+  <div class="formula">$$c_1+c_2=y_0,\qquad r_1c_1+r_2c_2=v_0$$</div>
+
+  <h3>三種判別式情況一覽</h3>
+  <div class="tblwrap"><table class="cases">
+    <tr><th>判別式</th><th>特徵根</th><th>通解</th><th>機械系統</th></tr>
+    <tr class="me"><td>$b^2-4ac>0$</td><td>相異實根 $r_1\neq r_2$</td><td>$c_1e^{r_1x}+c_2e^{r_2x}$</td><td>過阻尼（本單元）</td></tr>
+    <tr><td>$b^2-4ac=0$</td><td>重根 $r$</td><td>$(c_1+c_2x)e^{rx}$</td><td>臨界阻尼</td></tr>
+    <tr><td>$b^2-4ac<0$</td><td>複數根 $\alpha\pm i\beta$</td><td>$e^{\alpha x}(c_1\cos\beta x+c_2\sin\beta x)$</td><td>欠阻尼</td></tr>
+  </table></div>
+
+  <div class="lab">
+    <b>互動實驗室｜調整特徵根與初始條件</b>
+    <div class="eq" id="labEq"></div>
+    <div class="eq" id="labSol"></div>
+    <div class="ctrls">
+      <div><label for="r1">$r_1$ <output id="r1o"></output></label><input type="range" id="r1" min="-4" max="1" step="0.1" value="-1"></div>
+      <div><label for="r2">$r_2$ <output id="r2o"></output></label><input type="range" id="r2" min="-4" max="1" step="0.1" value="-3"></div>
+      <div><label for="y0">$y(0)$ <output id="y0o"></output></label><input type="range" id="y0" min="-2" max="2" step="0.1" value="1"></div>
+      <div><label for="v0">$y'(0)$ <output id="v0o"></output></label><input type="range" id="v0" min="-4" max="4" step="0.1" value="2"></div>
+    </div>
+    <div class="warn" id="labWarn"></div>
+    <div style="overflow-x:auto">
+    <svg id="plot" viewBox="0 0 600 300" width="100%" role="img" aria-label="解 y(x) 與兩個指數分量的圖形"></svg>
+    </div>
+    <div class="legend">
+      <span style="--k:var(--accent2)">y(x) 完整解</span>
+      <span style="--k:var(--c1)">c₁e^{r₁x}</span>
+      <span style="--k:var(--c2)">c₂e^{r₂x}</span>
+    </div>
+    <p style="font-size:14px;color:var(--muted);margin-top:8px">觀察：兩根皆為負時解衰減至 0 且最多穿越平衡點一次（過阻尼）；任一根為正時解會發散。</p>
+  </div>
+
+  <div class="nav"><button class="btn" type="button" data-next="1">我已了解 → 前往例題</button></div>
+</section>
+
+<!-- ===== 關卡 2 ===== -->
+<section class="stage" id="s1" hidden>
+  <h2>🔍 關卡 2　理解</h2>
+  <div class="ex">
+    <div class="lvl">例題 1｜基礎</div>
+    <p>求 $y''-y'-6y=0$ 的通解。</p>
+    <details class="exd"><summary>顯示解題步驟</summary>
+      <ol class="sol">
+        <li>設 $y=e^{rx}$，得特徵方程式 $r^2-r-6=0$。</li>
+        <li>判別式 $\Delta=(-1)^2-4(1)(-6)=25>0$，為相異實根。</li>
+        <li>因式分解 $(r-3)(r+2)=0$，得 $r_1=3,\ r_2=-2$。</li>
+        <li>通解：$$y(x)=c_1e^{3x}+c_2e^{-2x}$$</li>
+        <li>驗證 $e^{3x}$：$9e^{3x}-3e^{3x}-6e^{3x}=0$ ✓</li>
+      </ol>
+    </details>
+  </div>
+  <div class="ex">
+    <div class="lvl">例題 2｜初值問題</div>
+    <p>解 $y''+5y'+4y=0$，$y(0)=2,\ y'(0)=1$。</p>
+    <details class="exd"><summary>顯示解題步驟</summary>
+      <ol class="sol">
+        <li>特徵方程式 $r^2+5r+4=(r+1)(r+4)=0$，$r_1=-1,\ r_2=-4$。</li>
+        <li>通解 $y=c_1e^{-x}+c_2e^{-4x}$，微分得 $y'=-c_1e^{-x}-4c_2e^{-4x}$。</li>
+        <li>代入初始條件：$$\begin{cases}c_1+c_2=2\\-c_1-4c_2=1\end{cases}$$</li>
+        <li>兩式相加：$-3c_2=3\Rightarrow c_2=-1$，故 $c_1=3$。</li>
+        <li>特解：$$y(x)=3e^{-x}-e^{-4x}$$ 檢查 $y(0)=3-1=2$ ✓，$y'(0)=-3+4=1$ ✓。</li>
+      </ol>
+    </details>
+  </div>
+  <div class="nav"><button class="btn" type="button" id="toQuiz" data-next="2" disabled>前往測驗</button><small id="exHint">請至少展開 1 個例題的解題步驟</small></div>
+</section>
+
+<!-- ===== 關卡 3 ===== -->
+<section class="stage" id="s2" hidden>
+  <h2>✏️ 關卡 3　測驗</h2>
+  <p>共 5 題，答對 4 題以上即可解鎖挑戰關。每題只能作答一次。</p>
+  <div id="quiz"></div>
+  <div class="nav">
+    <span class="score" id="score">得分：0 / 5</span>
+    <button class="btn" type="button" id="toChal" data-next="3" hidden>前往挑戰關</button>
+    <button class="btn ghost" type="button" id="retry" hidden>再試一次</button>
+  </div>
+</section>
+
+<!-- ===== 關卡 4 ===== -->
+<section class="stage" id="s3" hidden>
+  <h2>🏆 關卡 4　挑戰關</h2>
+  <div class="ex">
+    <div class="lvl">工程情境｜過阻尼避震器</div>
+    <p>自動化產線上的精密平台以彈簧—阻尼器支撐。質量 $m=1\ \text{kg}$、阻尼係數 $c=5\ \text{N·s/m}$、彈簧常數 $k=6\ \text{N/m}$，運動方程為</p>
+    <div class="formula">$$m\,y''+c\,y'+k\,y=0$$</div>
+    <p>平台被推離平衡位置 $y(0)=0.1\ \text{m}$ 後由靜止釋放 $y'(0)=0$。</p>
+    <p>(a) 驗證此系統為過阻尼；(b) 求位移 $y(t)$；(c) 平台在 $t>0$ 時是否會越過平衡點？並求 $y(1)$（取到 0.1 mm）。</p>
+  </div>
+  <div id="hints"></div>
+  <div class="nav">
+    <button class="btn ghost" type="button" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn" type="button" id="solBtn">查看完整解答</button>
+  </div>
+  <div id="fullSol" class="ex full" hidden>
+    <b>完整解答</b>
+    <ol class="sol">
+      <li>(a) $c^2-4mk=25-24=1>0$，特徵方程式有相異實根，屬過阻尼。</li>
+      <li>(b) 方程式 $y''+5y'+6y=0$，特徵方程式 $r^2+5r+6=(r+2)(r+3)=0$，$r_1=-2,\ r_2=-3$。</li>
+      <li>通解 $y=c_1e^{-2t}+c_2e^{-3t}$，$y'=-2c_1e^{-2t}-3c_2e^{-3t}$。</li>
+      <li>初始條件：$c_1+c_2=0.1$、$-2c_1-3c_2=0$，解得 $c_1=0.3,\ c_2=-0.2$。$$y(t)=0.3e^{-2t}-0.2e^{-3t}\ \text{(m)}$$</li>
+      <li>(c) 令 $y=0$：$0.3e^{-2t}=0.2e^{-3t}\Rightarrow e^{t}=\tfrac{2}{3}\Rightarrow t=\ln\tfrac{2}{3}<0$。所以 $t>0$ 時<b>不會</b>越過平衡點，平台單調趨近 0，這正是過阻尼的特性。</li>
+      <li>$y(1)=0.3e^{-2}-0.2e^{-3}\approx 0.3(0.13534)-0.2(0.04979)\approx 0.0306\ \text{m}=30.6\ \text{mm}$。</li>
+    </ol>
+    <div class="nav"><button class="btn" type="button" id="finishBtn">我完成了！</button></div>
+  </div>
+  <div id="done" class="done-box" hidden>
+    <div class="badge badge-in"><div>二階 ODE<br>實數特徵根</div></div>
+    <p style="font-size:20px;font-weight:700;margin:0 auto 6px;max-width:none">🎉 恭喜！你已掌握【二階齊次微分方程(I)：實數特徵根】！</p>
+    <p style="color:var(--muted);margin:0 auto;max-width:none" id="hintCount"></p>
+  </div>
+</section>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+</div>
+
+<script>
+const K = window.katex;
+const tex = (s, d=false) => K ? K.renderToString(s,{displayMode:d,throwOnError:false,output:'mathml'}) : s;
+function renderMath(el){
+  if(window.renderMathInElement) renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,output:'mathml'});
+}
+
+/* ---------- stage navigation ---------- */
+let unlocked = 0, cur = 0;
+const stepBtns = [...document.querySelectorAll('.step')];
+function show(i){
+  cur = i;
+  for(let k=0;k<4;k++){
+    document.getElementById('s'+k).hidden = k!==i;
+    stepBtns[k].disabled = k>unlocked;
+    stepBtns[k].classList.toggle('cur',k===i);
+    stepBtns[k].classList.toggle('done',k<unlocked && k!==i);
+  }
+  document.getElementById('barFill').style.width = ((i+1)/4*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+stepBtns.forEach(b=>b.addEventListener('click',()=>show(+b.dataset.go)));
+document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>{
+  const n=+b.dataset.next; unlocked=Math.max(unlocked,n); show(n);
+}));
+
+/* ---------- lab ---------- */
+const $ = id => document.getElementById(id);
+const fmt = v => { const s=(+v).toFixed(2).replace(/\.?0+$/,''); return s==='-0'?'0':s; };
+function sgnTerm(v, str, first){
+  if(Math.abs(v)<1e-9) return '';
+  const a=Math.abs(v), s = v<0 ? '-' : (first?'':'+');
+  const coef = (Math.abs(a-1)<1e-9 && str) ? '' : fmt(a);
+  return s+coef+str;
+}
+function lab(){
+  const r1=+$('r1').value, r2=+$('r2').value, y0=+$('y0').value, v0=+$('v0').value;
+  $('r1o').textContent=fmt(r1); $('r2o').textContent=fmt(r2); $('y0o').textContent=fmt(y0); $('v0o').textContent=fmt(v0);
+  const svg=$('plot');
+  if(Math.abs(r1-r2)<1e-9){
+    $('labWarn').textContent='r₁ = r₂ 為重根，不屬於本單元（見下一單元）。請將兩根調為相異。';
+    svg.innerHTML=''; $('labEq').innerHTML=''; $('labSol').innerHTML=''; return;
+  }
+  $('labWarn').textContent='';
+  const B=-(r1+r2), C=r1*r2;
+  let eq='y\'\''+sgnTerm(B,'y\'',false)+sgnTerm(C,'y',false)+'=0';
+  $('labEq').innerHTML='方程式：'+tex(eq);
+  const c2=(v0-r1*y0)/(r2-r1), c1=y0-c2;
+  const e1 = 'e^{'+fmt(r1)+'x}', e2='e^{'+fmt(r2)+'x}';
+  let sol = sgnTerm(c1, Math.abs(r1)<1e-9?'':e1, true);
+  if(Math.abs(r1)<1e-9 && Math.abs(c1)>1e-9) sol = (c1<0?'-':'')+fmt(Math.abs(c1));
+  let t2 = Math.abs(r2)<1e-9 ? (Math.abs(c2)>1e-9?(c2<0?'-':(sol?'+':''))+fmt(Math.abs(c2)):'') : sgnTerm(c2,e2,!sol);
+  sol += t2; if(!sol) sol='0';
+  $('labSol').innerHTML='特解：'+tex('y(x)='+sol+'\\quad(c_1='+fmt(c1)+',\\ c_2='+fmt(c2)+')');
+  // plot
+  const W=600,H=300,L=44,R=12,T=14,Bm=30, X0=0,X1=4, N=200;
+  const f=x=>c1*Math.exp(r1*x)+c2*Math.exp(r2*x), g1=x=>c1*Math.exp(r1*x), g2=x=>c2*Math.exp(r2*x);
+  let lo=Infinity,hi=-Infinity;
+  for(let i=0;i<=N;i++){const x=X0+(X1-X0)*i/N;for(const v of [f(x),g1(x),g2(x)]){lo=Math.min(lo,v);hi=Math.max(hi,v);}}
+  lo=Math.max(lo,-6); hi=Math.min(hi,6); lo=Math.min(lo,0); hi=Math.max(hi,0);
+  if(hi-lo<0.5){hi+=0.25;lo-=0.25;}
+  const step=niceStep((hi-lo)/5); lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step;
+  const sx=x=>L+(x-X0)/(X1-X0)*(W-L-R), sy=y=>T+(hi-y)/(hi-lo)*(H-T-Bm);
+  const path=fn=>{let d='';for(let i=0;i<=N;i++){const x=X0+(X1-X0)*i/N;let y=fn(x);y=Math.max(lo-1,Math.min(hi+1,y));d+=(i?'L':'M')+sx(x).toFixed(1)+' '+sy(y).toFixed(1);}return d;};
+  let s='<defs><clipPath id="cp"><rect x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-Bm)+'"/></clipPath></defs>';
+  for(let y=lo;y<=hi+1e-9;y+=step){s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+sy(y)+'" y2="'+sy(y)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(sy(y)+4)+'" text-anchor="end">'+fmt(y)+'</text>';}
+  for(let x=0;x<=4;x++){s+='<line x1="'+sx(x)+'" x2="'+sx(x)+'" y1="'+T+'" y2="'+(H-Bm)+'" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 3"/><text x="'+sx(x)+'" y="'+(H-Bm+16)+'" text-anchor="middle">'+x+'</text>';}
+  s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+sy(0)+'" y2="'+sy(0)+'" stroke="var(--muted)" stroke-width="1.2"/>';
+  s+='<text x="'+(W-R)+'" y="'+(H-4)+'" text-anchor="end">x</text>';
+  s+='<g clip-path="url(#cp)" fill="none"><path d="'+path(g1)+'" stroke="var(--c1)" stroke-width="1.6" stroke-dasharray="6 4"/><path d="'+path(g2)+'" stroke="var(--c2)" stroke-width="1.6" stroke-dasharray="6 4"/><path d="'+path(f)+'" stroke="var(--accent2)" stroke-width="3"/></g>';
+  s+='<circle cx="'+sx(0)+'" cy="'+sy(Math.max(lo,Math.min(hi,y0)))+'" r="4" fill="var(--accent2)"/>';
+  svg.innerHTML=s;
+}
+function niceStep(r){const p=Math.pow(10,Math.floor(Math.log10(r)));const m=r/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+['r1','r2','y0','v0'].forEach(id=>$(id).addEventListener('input',lab));
+
+/* ---------- examples ---------- */
+document.querySelectorAll('.exd').forEach(d=>d.addEventListener('toggle',()=>{
+  if(d.open){$('toQuiz').disabled=false;$('exHint').textContent='';}
+}));
+
+/* ---------- quiz ---------- */
+const Q=[
+ {q:'$y\'\'-9y=0$ 的通解為何？',o:['$y=c_1e^{3x}+c_2e^{-3x}$','$y=c_1\\cos 3x+c_2\\sin 3x$','$y=(c_1+c_2x)e^{3x}$','$y=c_1e^{9x}+c_2e^{-9x}$'],a:0,
+  e:'特徵方程式 $r^2-9=0$，$r=\\pm 3$ 為相異實根，故 $y=c_1e^{3x}+c_2e^{-3x}$。餘弦正弦解對應的是 $y\'\'+9y=0$。'},
+ {q:'$2y\'\'+3y\'-2y=0$ 的特徵根為何？',o:['$r=-\\tfrac12,\\ 2$','$r=\\tfrac12,\\ -2$','$r=1,\\ -2$','$r=2,\\ -1$'],a:1,
+  e:'$2r^2+3r-2=(2r-1)(r+2)=0$，得 $r=\\tfrac12$ 與 $r=-2$。'},
+ {q:'$ay\'\'+by\'+cy=0$ 的特徵方程式有兩相異實根的條件是？',o:['$b^2-4ac<0$','$b^2-4ac=0$','$b^2-4ac>0$','$ac>0$'],a:2,
+  e:'判別式 $\\Delta=b^2-4ac>0$ 時二次方程有兩相異實根。'},
+ {q:'$y\'\'+3y\'=0$ 的通解為何？',o:['$y=c_1e^{3x}+c_2e^{-3x}$','$y=c_1x+c_2e^{-3x}$','$y=(c_1+c_2x)e^{-3x}$','$y=c_1+c_2e^{-3x}$'],a:3,
+  e:'$r^2+3r=r(r+3)=0$，$r_1=0,\\ r_2=-3$。$e^{0x}=1$，所以 $y=c_1+c_2e^{-3x}$。'},
+ {q:'初值問題 $y\'\'-4y=0,\\ y(0)=0,\\ y\'(0)=4$ 的解為？',o:['$y=e^{2x}-e^{-2x}$','$y=2e^{2x}-2e^{-2x}$','$y=e^{2x}+e^{-2x}$','$y=4e^{2x}$'],a:0,
+  e:'$y=c_1e^{2x}+c_2e^{-2x}$；$c_1+c_2=0$，$2c_1-2c_2=4$，得 $c_1=1,\\ c_2=-1$，即 $y=e^{2x}-e^{-2x}=2\\sinh 2x$。'}
+];
+let answered=0, correct=0;
+function buildQuiz(){
+  answered=0; correct=0; $('score').textContent='得分：0 / 5'; $('toChal').hidden=true; $('retry').hidden=true;
+  const box=$('quiz'); box.innerHTML='';
+  Q.forEach((it,qi)=>{
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML='<div class="qn">第 '+(qi+1)+' 題</div><div>'+it.q+'</div><div class="opts">'+
+      it.o.map((o,oi)=>'<button type="button" class="opt" data-q="'+qi+'" data-o="'+oi+'">'+String.fromCharCode(65+oi)+'.　'+o+'</button>').join('')+
+      '</div><div class="fb" hidden></div>';
+    box.appendChild(d);
+  });
+  renderMath(box);
+  box.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>pick(b)));
+}
+function pick(b){
+  const qi=+b.dataset.q, oi=+b.dataset.o, it=Q[qi], card=b.closest('.q');
+  card.querySelectorAll('.opt').forEach(x=>{x.disabled=true; if(+x.dataset.o===it.a) x.classList.add('right');});
+  const ok=oi===it.a; if(!ok) b.classList.add('wrong');
+  const fb=card.querySelector('.fb'); fb.hidden=false; fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML='<b>'+(ok?'✔ 答對了！':'✘ 答錯了。')+'</b> '+it.e; renderMath(fb);
+  answered++; if(ok) correct++;
+  $('score').textContent='得分：'+correct+' / 5';
+  if(answered===5){
+    if(correct>=4){$('toChal').hidden=false; $('score').textContent+='　已解鎖挑戰關！';}
+    else{$('retry').hidden=false; $('score').textContent+='　需答對 4 題才能解鎖';}
+  }
+}
+$('retry').addEventListener('click',buildQuiz);
+
+/* ---------- challenge ---------- */
+const H=[
+ '先判斷阻尼型態：計算 $c^2-4mk$ 的正負號。大於 0 表示特徵方程式有兩相異實根。',
+ '代入數值後方程式為 $y\'\'+5y\'+6y=0$，特徵方程式 $r^2+5r+6=0$ 可因式分解，得到兩個負實根。',
+ '寫出 $y=c_1e^{r_1t}+c_2e^{r_2t}$，由 $y(0)=0.1$ 與 $y\'(0)=0$ 列出聯立方程 $c_1+c_2=0.1,\\ r_1c_1+r_2c_2=0$ 解出 $c_1,c_2$。要判斷是否越過平衡點，就解 $y(t)=0$ 看 $t$ 是否為正。'
+];
+let used=0;
+$('hintBtn').addEventListener('click',()=>{
+  if(used>=3) return;
+  const d=document.createElement('div'); d.className='hint'; d.innerHTML='<b>提示 '+(used+1)+'：</b>'+H[used];
+  $('hints').appendChild(d); renderMath(d); used++;
+  $('hintBtn').textContent= used<3 ? '取得提示（剩 '+(3-used)+' 個）' : '提示已用完';
+  if(used>=3) $('hintBtn').disabled=true;
+});
+$('solBtn').addEventListener('click',()=>{$('fullSol').hidden=false;$('fullSol').scrollIntoView({behavior:'smooth',block:'start'});});
+$('finishBtn').addEventListener('click',()=>{
+  const d=$('done'); d.hidden=false;
+  $('hintCount').textContent='本次使用提示數：'+used+' / 3'+(used===0?'　零提示通關，太強了！':'');
+  const b=d.querySelector('.badge'); b.classList.remove('badge-in'); void b.offsetWidth; b.classList.add('badge-in');
+  stepBtns[3].classList.add('done');
+  d.scrollIntoView({behavior:'smooth',block:'center'});
+});
+
+/* ---------- boot ---------- */
+function boot(){ renderMath(document.body); lab(); buildQuiz(); show(0); }
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

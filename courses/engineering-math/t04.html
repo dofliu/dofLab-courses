@@ -1,0 +1,391 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>工程數學 | 二階齊次微分方程(II)：重根與複數根</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b; --bg:#f3f5fb; --surface:#ffffff; --ink:#151936;
+  --muted:#586080; --line:#dde1ef; --tint:#e8eaf8; --tealtint:#e0f2ef;
+  --ok:#2e7d32; --oktint:#e6f4e7; --bad:#c62828; --badtint:#fbe9e9; --gold:#f2a900;
+  --accent:var(--navy); --accent2:var(--teal);
+  --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+    --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+    --accent:#9fa8ff; --accent2:#4fc3b4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+  --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+  --accent:#9fa8ff; --accent2:#4fc3b4;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;margin:0}
+.wrap{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+header.top{background:var(--navy);color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top .in{max-width:880px;margin:0 auto;padding:14px 16px 12px}
+.course{font-size:12px;letter-spacing:.14em;opacity:.8}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(20px,4.2vw,28px);line-height:1.3;margin:2px 0 10px;text-wrap:balance}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.steps button{font:inherit;font-size:13px;border:0;border-radius:6px;padding:6px 4px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.steps button[aria-current="true"]{background:#00897b;font-weight:700}
+.steps button:disabled{opacity:.45;cursor:not-allowed}
+.bar{height:5px;background:rgba(255,255,255,.18);border-radius:3px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:#4fe0c8;transition:width .4s}
+section.stage{padding-top:24px}
+h2{font-family:var(--serif);font-size:24px;margin:8px 0 12px;color:var(--accent);text-wrap:balance}
+h3{font-size:18px;margin:26px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+.def{border:1px solid var(--line);border-left:5px solid var(--teal);background:var(--tealtint);border-radius:8px;padding:12px 16px;margin:14px 0}
+.def b.lab{display:block;font-size:12px;letter-spacing:.12em;color:var(--accent2)}
+.md{overflow-x:auto;padding:4px 0;text-align:center}
+.md math{font-size:1.15em}
+table.cases{border-collapse:collapse;width:100%;font-size:15px}
+.tbl{overflow-x:auto;margin:12px 0}
+table.cases th,table.cases td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:middle}
+table.cases th{font-size:13px;color:var(--muted);font-weight:500}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 20px}
+.ctrls label{font-size:14px;color:var(--muted);display:flex;justify-content:space-between}
+.ctrls output{font-family:var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.readout{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{font-size:13px;padding:3px 10px;border-radius:999px;background:var(--tint);color:var(--accent)}
+.chip.k{background:var(--teal);color:#fff;font-weight:700}
+svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 18px;background:var(--teal);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:focus-visible,.steps button:focus-visible,.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 8px}
+.note{font-size:14px;color:var(--muted)}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ex .tag{font-size:12px;letter-spacing:.1em;color:var(--accent2);font-weight:700}
+.sol{border-top:1px dashed var(--line);margin-top:12px;padding-top:6px}
+.sol ol{padding-left:22px;margin:6px 0}
+.sol li{margin:8px 0}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.q .n{font-family:var(--mono);color:var(--accent2);font-size:13px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{font:inherit;text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;overflow-x:auto}
+.opt.right{border-color:var(--ok);background:var(--oktint)}
+.opt.wrong{border-color:var(--bad);background:var(--badtint)}
+.fb{margin-top:8px;font-size:15px;padding:8px 12px;border-radius:8px}
+.fb.ok{background:var(--oktint)} .fb.no{background:var(--badtint)}
+.score{font-weight:700;font-size:18px}
+.hint{background:var(--tint);border-radius:8px;padding:10px 14px;margin:10px 0}
+.hint b{color:var(--accent)}
+.done{text-align:center;padding:24px 12px}
+.badge{width:150px;height:150px;margin:8px auto 16px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(from 0deg,#00897b,#1a237e,#00897b);animation:spin 6s linear infinite;box-shadow:0 0 0 6px var(--tealtint)}
+.badge span{width:122px;height:122px;border-radius:50%;background:var(--surface);display:grid;place-items:center;animation:spin 6s linear infinite reverse;
+  font-family:var(--serif);font-weight:900;color:var(--accent);font-size:15px;line-height:1.3}
+.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.badge,.badge span,.pop{animation:none}}
+input.num{font:inherit;font-family:var(--mono);width:110px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+footer{text-align:center;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding:18px 16px;margin-top:20px}
+</style>
+
+<header class="top"><div class="in">
+  <div class="course">工程數學互動學習 · 第 5 講</div>
+  <h1>二階齊次微分方程(II)：重根與複數根</h1>
+  <nav class="steps" aria-label="關卡">
+    <button id="nav0" aria-current="true" data-go="0">📚 學習</button>
+    <button id="nav1" data-go="1" disabled>🔍 理解</button>
+    <button id="nav2" data-go="2" disabled>✏️ 測驗</button>
+    <button id="nav3" data-go="3" disabled>🏆 挑戰</button>
+  </nav>
+  <div class="bar"><i id="prog"></i></div>
+</div></header>
+
+<main class="wrap">
+
+<!-- ============ STAGE 1 ============ -->
+<section class="stage" id="s0">
+  <h2>關卡 1 · 從特徵方程式看解的形式</h2>
+  <p>上一講處理了特徵根為兩相異實根的情形。本講處理另外兩種情況：<b>重根</b>與<b>共軛複數根</b>。考慮常係數二階齊次方程式</p>
+  <div class="md" data-tex="a\,y''+b\,y'+c\,y=0,\qquad a\neq 0"></div>
+  <p>代入 <span class="m">y=e^{rx}</span> 得到特徵方程式 <span class="m">ar^2+br+c=0</span>，其判別式 <span class="m">\Delta=b^2-4ac</span> 決定解的形式。</p>
+
+  <div class="tbl"><table class="cases">
+    <thead><tr><th>判別式</th><th>特徵根</th><th>通解</th></tr></thead>
+    <tbody>
+      <tr><td><span class="m">\Delta>0</span></td><td><span class="m">r_1\neq r_2</span>（實數）</td><td><span class="m">c_1e^{r_1x}+c_2e^{r_2x}</span></td></tr>
+      <tr><td><span class="m">\Delta=0</span></td><td><span class="m">r=-\dfrac{b}{2a}</span>（重根）</td><td><span class="m">(c_1+c_2x)\,e^{rx}</span></td></tr>
+      <tr><td><span class="m">\Delta<0</span></td><td><span class="m">r=\alpha\pm i\beta</span></td><td><span class="m">e^{\alpha x}(c_1\cos\beta x+c_2\sin\beta x)</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>情形一：重根 <span class="m">\Delta=0</span></h3>
+  <p>只得到一個解 <span class="m">y_1=e^{rx}</span>，但二階方程需要兩個線性獨立解。用降階法令 <span class="m">y_2=u(x)e^{rx}</span> 代入，因 <span class="m">2ar+b=0</span>，所有含 <span class="m">u'</span> 與 <span class="m">u</span> 的項相消，只剩</p>
+  <div class="md" data-tex="a\,u''\,e^{rx}=0\;\Rightarrow\;u''=0\;\Rightarrow\;u=x"></div>
+  <div class="def"><b class="lab">重點定義 · 重根</b>
+    若 <span class="m">r</span> 是特徵方程式的重根，則 <span class="m">e^{rx}</span> 與 <span class="m">xe^{rx}</span> 線性獨立（Wronskian <span class="m">W=e^{2rx}\neq0</span>），通解為
+    <div class="md" data-tex="y=(c_1+c_2x)\,e^{rx}"></div>
+  </div>
+
+  <h3>情形二：共軛複數根 <span class="m">\Delta<0</span></h3>
+  <p>此時 <span class="m">r=\alpha\pm i\beta</span>，其中 <span class="m">\alpha=-\dfrac{b}{2a}</span>、<span class="m">\beta=\dfrac{\sqrt{4ac-b^2}}{2a}</span>。由 Euler 公式 <span class="m">e^{i\theta}=\cos\theta+i\sin\theta</span>：</p>
+  <div class="md" data-tex="e^{(\alpha\pm i\beta)x}=e^{\alpha x}(\cos\beta x\pm i\sin\beta x)"></div>
+  <p>把兩個複數解相加除以 2、相減除以 <span class="m">2i</span>，得到兩個<b>實數</b>解 <span class="m">e^{\alpha x}\cos\beta x</span> 與 <span class="m">e^{\alpha x}\sin\beta x</span>。</p>
+  <div class="def"><b class="lab">重點定義 · 複數根</b>
+    若特徵根為 <span class="m">\alpha\pm i\beta\ (\beta>0)</span>，通解為
+    <div class="md" data-tex="y=e^{\alpha x}\left(c_1\cos\beta x+c_2\sin\beta x\right)"></div>
+    <span class="m">\alpha</span> 控制振幅的衰減（<span class="m">\alpha<0</span>）或成長（<span class="m">\alpha>0</span>），<span class="m">\beta</span> 是振盪的角頻率。
+  </div>
+
+  <h3>互動圖：彈簧阻尼系統</h3>
+  <p>質量–彈簧–阻尼器 <span class="m">m\ddot{x}+c\dot{x}+kx=0</span> 除以 <span class="m">m</span> 後寫成 <span class="m">y''+by'+cy=0</span>。調整 <span class="m">b</span>（阻尼）與 <span class="m">c</span>（剛性），觀察初始條件 <span class="m">y(0)=1,\ y'(0)=0</span> 下的響應。</p>
+  <div class="panel">
+    <div class="ctrls">
+      <div><label for="sb">阻尼係數 b <output id="ob">1.00</output></label><input id="sb" type="range" min="0" max="8" step="0.05" value="1"></div>
+      <div><label for="sc">剛性係數 c <output id="oc">4.00</output></label><input id="sc" type="range" min="0.25" max="16" step="0.25" value="4"></div>
+    </div>
+    <div class="readout" id="readout"></div>
+    <div style="overflow-x:auto">
+    <svg id="plot" viewBox="0 0 640 260" width="100%" role="img" aria-label="y(t) 響應曲線">
+      <g id="grid"></g>
+      <line x1="44" y1="130" x2="628" y2="130" stroke="var(--muted)" stroke-width="1"/>
+      <path id="env1" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 4" opacity=".55"/>
+      <path id="env2" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 4" opacity=".55"/>
+      <path id="curve" fill="none" stroke="var(--accent2)" stroke-width="2.6"/>
+      <text x="630" y="146" text-anchor="end">t</text>
+    </svg></div>
+    <div class="actions" style="margin:8px 0 0">
+      <button class="btn ghost" id="bCrit">設為臨界阻尼（Δ=0）</button>
+      <button class="btn ghost" id="bUnder">欠阻尼範例</button>
+      <button class="btn ghost" id="bFree">無阻尼 b=0</button>
+    </div>
+    <p class="note">虛線為包絡線 <span class="m">\pm e^{\alpha t}</span>（僅在複數根時顯示）。臨界阻尼是「最快回到平衡而不振盪」的情形，汽車避震器與門弓器都以此為設計目標。</p>
+  </div>
+
+  <div class="actions"><button class="btn" id="to1">我已了解 → 前往例題</button></div>
+</section>
+
+<!-- ============ STAGE 2 ============ -->
+<section class="stage" id="s1" hidden>
+  <h2>關卡 2 · 例題解析</h2>
+
+  <div class="ex">
+    <div class="tag">例題 1 · 重根</div>
+    <p>求解初值問題 <span class="m">y''-6y'+9y=0,\ y(0)=2,\ y'(0)=1</span>。</p>
+    <button class="btn ghost" data-sol="e1" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e1" hidden><ol>
+      <li>特徵方程式：<span class="m">r^2-6r+9=(r-3)^2=0</span>，得重根 <span class="m">r=3</span>。</li>
+      <li>通解：<span class="m">y=(c_1+c_2x)e^{3x}</span>。</li>
+      <li>代入 <span class="m">y(0)=2</span>：<span class="m">c_1=2</span>。</li>
+      <li>微分：<span class="m">y'=\big(c_2+3c_1+3c_2x\big)e^{3x}</span>，代入 <span class="m">y'(0)=1</span>：<span class="m">c_2+3c_1=1\Rightarrow c_2=-5</span>。</li>
+      <li>答案：<span class="m">y=(2-5x)\,e^{3x}</span>。驗算：<span class="m">y(0)=2</span>，<span class="m">y'(0)=-5+6=1</span> ✓</li>
+    </ol></div>
+  </div>
+
+  <div class="ex">
+    <div class="tag">例題 2 · 複數根</div>
+    <p>求解初值問題 <span class="m">y''+4y'+13y=0,\ y(0)=1,\ y'(0)=0</span>。</p>
+    <button class="btn ghost" data-sol="e2" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e2" hidden><ol>
+      <li>特徵方程式：<span class="m">r^2+4r+13=0</span>，<span class="m">r=\dfrac{-4\pm\sqrt{16-52}}{2}=-2\pm3i</span>，故 <span class="m">\alpha=-2,\ \beta=3</span>。</li>
+      <li>通解：<span class="m">y=e^{-2x}(c_1\cos3x+c_2\sin3x)</span>。</li>
+      <li>代入 <span class="m">y(0)=1</span>：<span class="m">c_1=1</span>。</li>
+      <li>微分：<span class="m">y'=e^{-2x}\big[(-2c_1+3c_2)\cos3x+(-3c_1-2c_2)\sin3x\big]</span>，代入 <span class="m">y'(0)=0</span>：<span class="m">-2+3c_2=0\Rightarrow c_2=\tfrac23</span>。</li>
+      <li>答案：<span class="m">y=e^{-2x}\left(\cos3x+\tfrac23\sin3x\right)</span>，為振幅以 <span class="m">e^{-2x}</span> 衰減、角頻率 3 rad 的阻尼振盪。</li>
+    </ol></div>
+  </div>
+
+  <div class="actions"><button class="btn" id="to2" disabled>前往測驗</button><span class="note" id="n2">請至少展開 1 個例題的解題步驟</span></div>
+</section>
+
+<!-- ============ STAGE 3 ============ -->
+<section class="stage" id="s2" hidden>
+  <h2>關卡 3 · 小測驗</h2>
+  <p class="note">共 5 題，每題作答一次即顯示解析。答對 4 題以上解鎖挑戰關。</p>
+  <div id="quiz"></div>
+  <div class="panel" id="result" hidden>
+    <div class="score" id="scoreTxt"></div>
+    <div class="actions"><button class="btn" id="to3" hidden>前往挑戰關</button><button class="btn ghost" id="retry" hidden>再試一次</button></div>
+  </div>
+</section>
+
+<!-- ============ STAGE 4 ============ -->
+<section class="stage" id="s3" hidden>
+  <h2>關卡 4 · 挑戰：RLC 串聯電路的放電</h2>
+  <div class="ex">
+    <div class="tag">工程情境</div>
+    <p>RLC 串聯電路中，<span class="m">L=1\ \text{H}</span>、<span class="m">R=4\ \Omega</span>、<span class="m">C=\tfrac{1}{20}\ \text{F}</span>，無外加電源。電容器上的電荷 <span class="m">q(t)</span> 滿足</p>
+    <div class="md" data-tex="L\,q''+R\,q'+\frac{1}{C}\,q=0"></div>
+    <p>初始電荷 <span class="m">q(0)=10\ \text{mC}</span>、初始電流 <span class="m">i(0)=q'(0)=0</span>。</p>
+    <p>(a) 求 <span class="m">q(t)</span> 與電流 <span class="m">i(t)</span>。<br>(b) 求阻尼振盪的角頻率與週期。<br>(c) 保持 L、C 不變，電阻 R 應為多少才恰為臨界阻尼？</p>
+  </div>
+
+  <div id="hints"></div>
+  <div class="actions">
+    <button class="btn ghost" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn ghost" id="fullBtn">查看完整解答</button>
+  </div>
+
+  <div class="panel">
+    <label for="ansR"><b>作答 (c)：</b>臨界阻尼電阻 R ≈ </label>
+    <input class="num" id="ansR" inputmode="decimal" placeholder="例如 5.00"> Ω
+    <button class="btn" id="checkR">檢查答案</button>
+    <div class="fb" id="rfb" hidden></div>
+  </div>
+
+  <div class="ex" id="full" hidden>
+    <div class="tag">完整解答</div>
+    <ol>
+      <li>代入數值：<span class="m">q''+4q'+20q=0</span>，特徵方程式 <span class="m">r^2+4r+20=0</span>。</li>
+      <li><span class="m">r=\dfrac{-4\pm\sqrt{16-80}}{2}=-2\pm4i</span>，欠阻尼：<span class="m">q=e^{-2t}(c_1\cos4t+c_2\sin4t)</span>。</li>
+      <li><span class="m">q(0)=10\Rightarrow c_1=10</span>；<span class="m">q'(0)=-2c_1+4c_2=0\Rightarrow c_2=5</span>。</li>
+      <li>(a) <span class="m">q(t)=e^{-2t}(10\cos4t+5\sin4t)\ \text{mC}</span>，<span class="m">i(t)=q'(t)=-50\,e^{-2t}\sin4t\ \text{mA}</span>。</li>
+      <li>(b) 角頻率 <span class="m">\omega_d=\beta=4\ \text{rad/s}</span>，週期 <span class="m">T=\dfrac{2\pi}{4}=\dfrac{\pi}{2}\approx1.571\ \text{s}</span>。</li>
+      <li>(c) 臨界阻尼需 <span class="m">\Delta=R^2-\dfrac{4L}{C}=0</span>，<span class="m">R=2\sqrt{L/C}=2\sqrt{20}=4\sqrt5\approx8.94\ \Omega</span>。</li>
+    </ol>
+  </div>
+
+  <div class="panel done" id="doneBox" hidden>
+    <div class="badge pop"><span>重根與<br>複數根<br>★ 達成</span></div>
+    <div class="score">🎉 恭喜！你已掌握【二階齊次微分方程(II)：重根與複數根】！</div>
+    <p class="note" id="hintUsed"></p>
+  </div>
+</main>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+
+<script>
+(function(){
+const T=(s,disp)=>{try{return katex.renderToString(s,{throwOnError:false,displayMode:!!disp,output:'mathml'})}catch(e){return s}};
+function renderMath(root){
+  (root||document).querySelectorAll('span.m').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.textContent,false);el.dataset.done=1}});
+  (root||document).querySelectorAll('.md[data-tex]').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.dataset.tex,true);el.dataset.done=1}});
+}
+
+/* ---------- stage navigation ---------- */
+let unlocked=0;
+function go(i){
+  for(let k=0;k<4;k++){document.getElementById('s'+k).hidden=k!==i;document.getElementById('nav'+k).setAttribute('aria-current',k===i?'true':'false')}
+  document.getElementById('prog').style.width=((i+1)*25)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function unlock(i){unlocked=Math.max(unlocked,i);for(let k=0;k<=unlocked;k++)document.getElementById('nav'+k).disabled=false}
+document.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+document.getElementById('to1').onclick=()=>{unlock(1);go(1)};
+
+/* ---------- interactive plot ---------- */
+const sb=document.getElementById('sb'),sc=document.getElementById('sc');
+const X0=44,X1=628,Y0=130,YS=100,TMAX=10;
+(function grid(){let g='';for(let t=0;t<=TMAX;t+=2){const x=X0+(X1-X0)*t/TMAX;g+=`<line x1="${x}" y1="20" x2="${x}" y2="240" stroke="var(--line)"/><text x="${x}" y="254" text-anchor="middle">${t}</text>`}
+ [-1,-0.5,0.5,1].forEach(v=>{const y=Y0-v*YS;g+=`<line x1="${X0}" y1="${y}" x2="${X1}" y2="${y}" stroke="var(--line)"/><text x="38" y="${y+4}" text-anchor="end">${v}</text>`});
+ g+=`<text x="38" y="134" text-anchor="end">0</text>`;document.getElementById('grid').innerHTML=g})();
+const clampY=v=>Math.max(8,Math.min(252,Y0-v*YS));
+function draw(){
+  const b=+sb.value,c=+sc.value;document.getElementById('ob').textContent=b.toFixed(2);document.getElementById('oc').textContent=c.toFixed(2);
+  let y=1,v=0,h=0.01,d=`M${X0},${clampY(1)}`;const f=(y,v)=>-b*v-c*y;
+  for(let i=1;i<=TMAX/h;i++){
+    const k1y=v,k1v=f(y,v),k2y=v+h/2*k1v,k2v=f(y+h/2*k1y,v+h/2*k1v),k3y=v+h/2*k2v,k3v=f(y+h/2*k2y,v+h/2*k2v),k4y=v+h*k3v,k4v=f(y+h*k3y,v+h*k3v);
+    y+=h/6*(k1y+2*k2y+2*k3y+k4y);v+=h/6*(k1v+2*k2v+2*k3v+k4v);
+    if(i%4===0)d+=`L${(X0+(X1-X0)*i*h/TMAX).toFixed(1)},${clampY(y).toFixed(1)}`;
+  }
+  document.getElementById('curve').setAttribute('d',d);
+  const D=b*b-4*c,eps=1e-9;let kind,roots,form;
+  const e1=document.getElementById('env1'),e2=document.getElementById('env2');e1.setAttribute('d','');e2.setAttribute('d','');
+  if(Math.abs(D)<1e-6){kind='重根 · 臨界阻尼';const r=-b/2;roots=`r=${r.toFixed(3)}\\ (\\text{重根})`;form=`y=(c_1+c_2t)e^{${r.toFixed(2)}t}`}
+  else if(D>0){kind='相異實根 · 過阻尼';const s=Math.sqrt(D);roots=`r_1=${((-b+s)/2).toFixed(3)},\\ r_2=${((-b-s)/2).toFixed(3)}`;form=`y=c_1e^{r_1t}+c_2e^{r_2t}`}
+  else{const al=-b/2,be=Math.sqrt(-D)/2;kind=b===0?'純虛根 · 無阻尼':'複數根 · 欠阻尼';roots=`r=${al.toFixed(2)}\\pm${be.toFixed(3)}i`;
+    form=`y=e^{${al.toFixed(2)}t}(c_1\\cos ${be.toFixed(2)}t+c_2\\sin ${be.toFixed(2)}t)`;
+    let p1=`M${X0},${clampY(1)}`,p2=`M${X0},${clampY(-1)}`;for(let t=0.1;t<=TMAX+eps;t+=0.1){const x=X0+(X1-X0)*t/TMAX,A=Math.exp(al*t);p1+=`L${x.toFixed(1)},${clampY(A).toFixed(1)}`;p2+=`L${x.toFixed(1)},${clampY(-A).toFixed(1)}`}
+    e1.setAttribute('d',p1);e2.setAttribute('d',p2)}
+  document.getElementById('readout').innerHTML=`<span class="chip k">${kind}</span><span class="chip">${T('\\Delta=b^2-4c='+D.toFixed(2))}</span><span class="chip">${T(roots)}</span><span class="chip">${T(form)}</span>`;
+}
+sb.oninput=sc.oninput=draw;
+document.getElementById('bCrit').onclick=()=>{const k=Math.min(4,Math.max(1,Math.round(Math.sqrt(+sc.value))));sc.value=k*k;sb.value=2*k;draw()};
+document.getElementById('bUnder').onclick=()=>{sb.value=0.6;sc.value=9;draw()};
+document.getElementById('bFree').onclick=()=>{sb.value=0;draw()};
+
+/* ---------- examples ---------- */
+let opened=0;
+document.querySelectorAll('[data-sol]').forEach(btn=>btn.onclick=()=>{
+  const el=document.getElementById(btn.dataset.sol);el.hidden=!el.hidden;btn.setAttribute('aria-expanded',!el.hidden);
+  btn.textContent=el.hidden?'顯示解題步驟':'收合解題步驟';
+  if(!el.hidden){opened++;document.getElementById('to2').disabled=false;document.getElementById('n2').hidden=true}
+});
+document.getElementById('to2').onclick=()=>{unlock(2);go(2)};
+
+/* ---------- quiz ---------- */
+const Q=[
+ {q:String.raw`y''+4y'+4y=0 \text{ 的通解為？}`,o:[String.raw`c_1e^{2x}+c_2e^{-2x}`,String.raw`(c_1+c_2x)e^{-2x}`,String.raw`(c_1+c_2x)e^{2x}`,String.raw`e^{-2x}(c_1\cos2x+c_2\sin2x)`],a:1,
+  e:String.raw`r^2+4r+4=(r+2)^2=0\text{，重根 }r=-2\text{，故 }y=(c_1+c_2x)e^{-2x}\text{。}`},
+ {q:String.raw`y''+9y=0 \text{ 的通解為？}`,o:[String.raw`c_1\cos9x+c_2\sin9x`,String.raw`c_1e^{3x}+c_2e^{-3x}`,String.raw`c_1\cos3x+c_2\sin3x`,String.raw`(c_1+c_2x)e^{3x}`],a:2,
+  e:String.raw`r^2+9=0\Rightarrow r=\pm3i\text{，}\alpha=0,\ \beta=3\text{。}`},
+ {q:String.raw`y''-2y'+5y=0 \text{ 的通解為？}`,o:[String.raw`e^{-x}(c_1\cos2x+c_2\sin2x)`,String.raw`e^{x}(c_1\cos2x+c_2\sin2x)`,String.raw`e^{2x}(c_1\cos x+c_2\sin x)`,String.raw`e^{x}(c_1\cos4x+c_2\sin4x)`],a:1,
+  e:String.raw`r=\frac{2\pm\sqrt{4-20}}{2}=1\pm2i\text{，故 }\alpha=1,\ \beta=2\text{（振幅隨 }x\text{ 成長）。}`},
+ {q:String.raw`\text{若 }y''+ky'+16y=0\ (k>0)\text{ 的特徵方程式有重根，則 }k=?`,o:[String.raw`k=4`,String.raw`k=8`,String.raw`k=16`,String.raw`k=32`],a:1,
+  e:String.raw`\Delta=k^2-64=0\Rightarrow k=8\text{，此時 }r=-4\text{ 為重根。}`},
+ {q:String.raw`\text{通解為 }y=e^{-x}(c_1\cos2x+c_2\sin2x)\text{ 的方程式是？}`,o:[String.raw`y''-2y'+5y=0`,String.raw`y''+2y'+3y=0`,String.raw`y''+2y'+5y=0`,String.raw`y''+2y'-3y=0`],a:2,
+  e:String.raw`\text{根 }-1\pm2i\text{：}(r+1)^2+4=r^2+2r+5\text{。}`}
+];
+let answered=0,correct=0;
+function buildQuiz(){
+  answered=0;correct=0;document.getElementById('result').hidden=true;
+  const box=document.getElementById('quiz');box.innerHTML='';
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="n">第 ${i+1} 題</div><div>${T(it.q)}</div><div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${T(o)}</button>`).join('')}</div><div class="fb" hidden></div>`;
+    d.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(d.dataset.done)return;d.dataset.done=1;answered++;const j=+b.dataset.j,ok=j===it.a;if(ok)correct++;
+      d.querySelectorAll('.opt').forEach((x,k)=>{x.disabled=true;if(k===it.a)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+      const fb=d.querySelector('.fb');fb.hidden=false;fb.className='fb '+(ok?'ok':'no');fb.innerHTML=(ok?'✔ 答對了！':'✘ 答錯了，正確答案是 '+String.fromCharCode(65+it.a)+'。')+' '+T(it.e);
+      if(answered===Q.length)finish();
+    });
+    box.appendChild(d);
+  });
+}
+function finish(){
+  const r=document.getElementById('result');r.hidden=false;const pass=correct>=4;
+  document.getElementById('scoreTxt').textContent=`得分：${correct} / 5 　${pass?'通過！挑戰關已解鎖。':'需答對 4 題以上才能解鎖挑戰關。'}`;
+  document.getElementById('to3').hidden=!pass;document.getElementById('retry').hidden=pass;if(pass)unlock(3);
+  r.scrollIntoView({behavior:'smooth',block:'center'});
+}
+document.getElementById('retry').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'})};
+document.getElementById('to3').onclick=()=>go(3);
+
+/* ---------- challenge ---------- */
+const H=[
+ String.raw`代入 L、R、C 得 <span class="m">q''+4q'+20q=0</span>。先寫出特徵方程式並計算判別式 <span class="m">\Delta=16-80</span>。`,
+ String.raw`特徵根為 <span class="m">-2\pm4i</span>，設 <span class="m">q=e^{-2t}(c_1\cos4t+c_2\sin4t)</span>，用 <span class="m">q(0)=10</span> 與 <span class="m">q'(0)=0</span> 解出 <span class="m">c_1,c_2</span>。阻尼角頻率就是 <span class="m">\beta</span>。`,
+ String.raw`臨界阻尼即重根：<span class="m">\left(\tfrac{R}{L}\right)^2=\tfrac{4}{LC}</span>，所以 <span class="m">R=2\sqrt{L/C}</span>。`
+];
+let used=0,finished=false;
+const hb=document.getElementById('hintBtn');
+hb.onclick=()=>{if(used>=3)return;const d=document.createElement('div');d.className='hint';d.innerHTML=`<b>提示 ${used+1}：</b>${H[used]}`;document.getElementById('hints').appendChild(d);renderMath(d);used++;
+  hb.textContent=used<3?`取得提示（剩 ${3-used} 個）`:'提示已用完';hb.disabled=used>=3};
+document.getElementById('fullBtn').onclick=()=>{document.getElementById('full').hidden=false;complete(true)};
+document.getElementById('checkR').onclick=()=>{
+  const v=parseFloat(document.getElementById('ansR').value),fb=document.getElementById('rfb');fb.hidden=false;
+  if(isNaN(v)){fb.className='fb no';fb.textContent='請輸入數值，例如 8.94。';return}
+  if(Math.abs(v-4*Math.sqrt(5))<0.06){fb.className='fb ok';fb.innerHTML='✔ 正確！'+T('R=4\\sqrt5\\approx8.94\\ \\Omega');complete(false)}
+  else{fb.className='fb no';fb.textContent='還不對。提示：臨界阻尼時判別式 R² − 4L/C = 0。'}
+};
+function complete(viewed){
+  if(finished)return;finished=true;const b=document.getElementById('doneBox');b.hidden=false;
+  document.getElementById('hintUsed').textContent=`本次使用提示數：${used} / 3${viewed?'（已查看完整解答）':''}`;
+  document.getElementById('prog').style.width='100%';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'center'}),100);
+}
+
+function init(){renderMath();draw();buildQuiz()}
+if(window.katex)init();else window.addEventListener('load',init);
+})();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

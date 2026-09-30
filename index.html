@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>劉瑞弘研究室 互動課程</title>
+<meta name="description" content="國立勤益科技大學 智慧自動化工程系 劉瑞弘研究室的互動式課程入口。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="./"><i></i>dofLab courses</a>
+      <span class="org">國立勤益科技大學 · 智慧自動化工程系</span>
+    </div>
+    <div class="hero-body">
+      <div class="eyebrow">劉瑞弘 研究室 · 互動課程平台</div>
+      <h1>劉瑞弘研究室 互動課程</h1>
+      <p class="lead">為智慧自動化工程系學生設計的互動學習單元。每個單元都有可以拖動參數的圖形、逐步展開的例題、即時批改的測驗，以及結合電路、機構與訊號的工程挑戰題。</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="sec" aria-labelledby="h-courses">
+    <h2 id="h-courses">課程</h2>
+    <div class="courses">
+      <article class="course">
+        <div class="chips"><span class="chip">大學部</span><span class="chip">30 個單元</span><span class="chip">每 12 小時新增</span></div>
+        <h3><a href="courses/engineering-math/">工程數學互動學習</a></h3>
+        <p class="desc">常微分方程、拉普拉斯轉換、傅立葉分析、線性代數、向量分析、偏微分方程、Z 轉換與複變函數。</p>
+        <div class="prog">
+          <div class="prog-top"><span>已上線單元</span><b id="em-count">– / 30</b></div>
+          <div class="prog-track"><i id="em-bar"></i></div>
+        </div>
+        <ul class="latest" id="em-latest" aria-label="最新單元"></ul>
+        <a class="btn" href="courses/engineering-math/">進入課程 →</a>
+      </article>
+      <article class="course placeholder">
+        <h3>下一門課程籌備中</h3>
+        <p class="desc">研究室的其他課程完成後會陸續放在這裡。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="h-how">
+    <h2 id="h-how">每個單元的四個關卡</h2>
+    <p class="sub">關卡依序解鎖。完成前一關才能進入下一關，所以建議從頭開始，不要直接跳到挑戰題。</p>
+    <ol class="stages">
+      <li><span class="k">關卡 1</span><b>📚 學習</b><span>定義、核心公式，以及可以調參數觀察的互動圖。</span></li>
+      <li><span class="k">關卡 2</span><b>🔍 理解</b><span>兩個由淺入深的例題，逐步展開推導過程。</span></li>
+      <li><span class="k">關卡 3</span><b>✏️ 測驗</b><span>5 題選擇題，即時顯示解析，答對 4 題過關。</span></li>
+      <li><span class="k">關卡 4</span><b>🏆 挑戰</b><span>工程情境綜合題，最多 3 個提示，完成可得徽章。</span></li>
+    </ol>
+  </section>
+</main>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+
+<script src="courses/engineering-math/manifest.js"></script>
+<script>
+(function(){
+  var m = window.EM_MANIFEST, list = document.getElementById('em-latest');
+  if(!m){ list.innerHTML = '<li>單元清單載入失敗，請直接進入課程。</li>'; return; }
+  var done = {}; m.entries.forEach(function(e){ done[e.index] = true; });
+  var n = Object.keys(done).length;
+  document.getElementById('em-count').textContent = n + ' / 30';
+  document.getElementById('em-bar').style.width = (n/30*100) + '%';
+  var latest = m.entries.slice().sort(function(a,b){ return b.slot - a.slot; }).slice(0,3);
+  latest.forEach(function(e){
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="n">' + String(e.index).padStart(2,'0') + (e.round>1?' R'+e.round:'') + '</span>';
+    var a = document.createElement('a'); a.href = 'courses/engineering-math/' + e.file; a.textContent = e.title;
+    li.appendChild(a); list.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>
