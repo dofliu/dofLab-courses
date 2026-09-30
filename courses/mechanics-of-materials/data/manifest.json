@@ -136,7 +136,16 @@
       "full_title": "[MOM-CH5-G3] Torsion - 綜合挑戰：齒輪減速機與兩端固定軸的設計",
       "file": "ch05-g3.html",
       "published": "2026-09-30T12:53+08:00"
+    },
+    {
+      "ch": 6,
+      "game": 1,
+      "code": "MOM-CH6-G1",
+      "title": "彎曲探索：跳水板與書架層板",
+      "full_title": "[MOM-CH6-G1] Bending - 彎曲探索：跳水板與書架層板",
+      "file": "ch06-g1.html",
+      "published": "2026-10-01T03:54+08:00"
     }
   ],
-  "updated": "2026-09-30T12:53+08:00"
+  "updated": "2026-10-01T03:54+08:00"
 }
