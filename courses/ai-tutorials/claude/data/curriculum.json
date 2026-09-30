@@ -329,10 +329,14 @@
         "排程工作：自動化例行事",
         "Skills：把工作流程打包"
       ],
-      "status": "in_progress",
-      "updated": "2026-09-30T03:06:52Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-09-30T03:11:08Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/overview.html",
+        "src": "courses/ai-tutorials/claude/src/009-personal-work-overview.js",
+        "i18n": "courses/ai-tutorials/claude/src/009-personal-work-overview.i18n.js"
+      },
+      "notes": "QA zh/en：runtime errors none、untranslated none。7 個分鏡、86 秒；圖解（會議流程、功率曲線、簡報大綱、連接器、時間軸、Skills）約 6/7。查證：support.claude.com（Google Workspace 連接器 Gmail／日曆／雲端硬碟、Skills）。情境：生活（郵件、週會、文件、簡報、週五週報）、智慧自動化（PLC 警報交班、OEE 簡報、工單、交班格式）、風能運維（風速功率曲線、SCADA 日報排程、巡檢報告）；三類皆出現，人員確認停機／處置。排程工作僅用通用描述，未寫特定產品細節。",
       "cases": {
         "life": "上班族一天的郵件、會議與報告",
         "automation": "產線工程師整理 PLC 警報與交班紀錄",

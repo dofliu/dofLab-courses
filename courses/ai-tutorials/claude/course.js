@@ -205,7 +205,28 @@ window.CLAUDE_COURSE = {
     },
     "icon": "📋",
     "color": "#1e7a5c",
-    "episodes": []
+    "episodes": [],
+    "overview": {
+     "id": "009-personal-work-overview",
+     "no": 0,
+     "file": "overview.html",
+     "path": "personal-work/overview.html",
+     "title": {
+      "zh": "Claude 如何融入你的一天工作",
+      "en": "How Claude Fits Into Your Workday"
+     },
+     "sub": {
+      "zh": "郵件、會議、文件與試算表、簡報、連接器、排程工作、Skills",
+      "en": "Email, meetings, documents and spreadsheets, slides, connectors, scheduled tasks, Skills"
+     },
+     "shots": 7,
+     "dur": 86,
+     "langs": [
+      "zh",
+      "en"
+     ],
+     "asof": "2026-09"
+    }
    },
    {
     "slug": "project-dev",
@@ -264,7 +285,7 @@ window.CLAUDE_COURSE = {
     "episodes": []
    }
   ],
-  "updated": "2026-09-30",
+  "updated": "2026-09-30T03:11:08Z",
   "languages": [
    "zh",
    "en"
@@ -350,7 +371,7 @@ window.CLAUDE_COURSE = {
    "no": 0,
    "title": "Claude 如何融入你的一天工作",
    "title_en": "Personal Work: Overview",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "010-personal-work-ep01",
@@ -731,6 +752,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 8,
+ "live": 9,
  "total": 51
 };

@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：52（kit 1、總覽片 6、單集 45）　已完成：9
+總單元數：52（kit 1、總覽片 6、單集 45）　已完成：10
 
 ## 單元清單
 
@@ -20,7 +20,7 @@
 | 006-claude-basics-ep05 | claude-basics | 搜尋與深度研究 | ✅ done | 2026-09-29 |
 | 007-claude-basics-ep06 | claude-basics | Artifacts 與可分享成果 | ✅ done | 2026-09-29 |
 | 008-claude-basics-ep07 | claude-basics | 限制、查證與隱私 | ✅ done | 2026-09-29 |
-| 009-personal-work-overview | personal-work | Claude 如何融入你的一天工作 | todo | — |
+| 009-personal-work-overview | personal-work | Claude 如何融入你的一天工作 | ✅ done | 2026-09-30 |
 | 010-personal-work-ep01 | personal-work | 郵件與訊息草擬 | todo | — |
 | 011-personal-work-ep02 | personal-work | 會議全流程 | todo | — |
 | 012-personal-work-ep03 | personal-work | 文件寫作與改寫 | todo | — |
@@ -70,3 +70,4 @@
 
 - 2026-09-28～29｜000-kit～008-claude-basics-ep07｜✅ done｜舊流程存於 Google Drive「Claude AI 應用動畫館」｜三語（zh/en/ja）版本，詳細紀錄見 Drive 上 PROGRESS.md
 - 2026-09-30｜遷移｜✅ done｜courses/ai-tutorials/claude/claude-basics/*.html、src/*、data/*、_studio/*、courses/ai-tutorials/index.html、根目錄 index.html 卡片｜從 Drive 版 HTML 抽出原始碼與 kit-claude.js 原版，改用雙語引擎（LANGS=zh,en、移除日本語按鈕、加入「← 課程目錄」連結）重建 8 支動畫，QA zh/en 全通過；課綱 43 個待製作單元已加入生活／智慧自動化／風能運維三類案例
+- 2026-09-30｜009-personal-work-overview｜✅ done｜personal-work/overview.html、src/009-personal-work-overview(.i18n).js｜7 分鏡 86 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
