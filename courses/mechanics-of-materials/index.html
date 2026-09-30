@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>材料力學互動遊戲</title>
+<meta name="description" content="材料力學互動遊戲：依 Hibbeler《Mechanics of Materials》14 章、42 個 60 分鐘遊戲 — 國立勤益科技大學 劉瑞弘研究室">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+  /* 材料力學課程色：深藍 + 工程橙，沿用共用版型 */
+  :root{--navy:#1a3a5c;--teal:#e8640a;--accent:#1a3a5c;--accent-2:#c85408;--accent-2-soft:#fde8d8;--live:#c85408;--chip-bg:#e6edf5;--chip-fg:#1a3a5c}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--accent:#9cc0e6;--accent-2:#ff9a52;--accent-2-soft:#3a2211;--live:#ff9a52;--chip-bg:#1f3350;--chip-fg:#cfe0f3}}
+  :root[data-theme="dark"]{--accent:#9cc0e6;--accent-2:#ff9a52;--accent-2-soft:#3a2211;--live:#ff9a52;--chip-bg:#1f3350;--chip-fg:#cfe0f3}
+  .hero .eyebrow{color:#ffb069}
+  .meter-track i{background:#e8640a}
+  .mark i{background:#e8640a}
+  .unit .no{font-size:13px}
+  .gk{display:block;font-size:12px;color:var(--muted);font-weight:400}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="../../"><i></i>dofLab courses</a>
+      <span class="org">國立勤益科技大學 · 智慧自動化工程系</span>
+    </div>
+    <div class="hero-body">
+      <nav class="crumb" aria-label="路徑"><a href="../../">← 所有課程</a></nav>
+      <div class="eyebrow">MECHANICS OF MATERIALS · 14 CHAPTERS · 42 GAMES</div>
+      <h1>材料力學互動遊戲</h1>
+      <p class="lead">依 Hibbeler《Mechanics of Materials》章節順序，每章三個 60 分鐘的遊戲：G1 概念探索、G2 計算工坊、G3 綜合設計挑戰。每個遊戲都有卡通工程師導覽、可拖動參數的範例、即時批改的練習，以及依學號產生題目的限時測驗與成績報告。</p>
+      <div class="meter">
+        <div class="meter-top"><span>已上線</span><b id="count">– / 42</b></div>
+        <div class="meter-track"><i id="bar"></i></div>
+      </div>
+      <p class="next" id="next"></p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="sec" aria-labelledby="h-how">
+    <h2 id="h-how">每個遊戲的四個階段</h2>
+    <ol class="stages">
+      <li><span class="k">PHASE 1 · 10 分</span><b>概念理解</b><span>生活化類比、SVG 動畫與 3 題「你知道嗎？」。</span></li>
+      <li><span class="k">PHASE 2 · 15 分</span><b>範例解題</b><span>兩個工程情境逐步解題，加上滑桿即時實驗。</span></li>
+      <li><span class="k">PHASE 3 · 20 分</span><b>練習關卡</b><span>4 題計算與選擇，即時回饋並可查看解題步驟。</span></li>
+      <li><span class="k">PHASE 4 · 15 分</span><b>測試挑戰</b><span>依學號產生數值的 5 題限時測驗，完成後可列印成績報告。</span></li>
+    </ol>
+  </section>
+
+  <section class="sec" aria-labelledby="h-units">
+    <div class="tools">
+      <h2 id="h-units">遊戲目錄</h2>
+      <div class="seg" role="group" aria-label="篩選">
+        <button id="f-all" aria-pressed="true">全部</button>
+        <button id="f-live" aria-pressed="false">只看已上線</button>
+      </div>
+    </div>
+    <input class="search" id="q" type="search" placeholder="搜尋，例如：扭轉、螺栓" aria-label="搜尋遊戲">
+    <div id="chapters" style="display:grid;gap:28px"></div>
+    <p class="empty" id="empty" hidden>沒有符合條件的遊戲。</p>
+  </section>
+</main>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+
+<script src="manifest.js"></script>
+<script>
+(function(){
+  var M = window.MOM_MANIFEST || {entries:[]};
+  var CH = window.MOM_CHAPTERS || [];
+  var GK = window.MOM_GAMES || ['核心概念探索','公式應用與工程案例','綜合挑戰與設計情境'];
+  function fmt(s){
+    var d = new Date(new Date(s).getTime() + 8*3600*1000), p = function(n){ return String(n).padStart(2,'0'); };
+    return (d.getUTCMonth()+1) + '/' + d.getUTCDate() + ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes());
+  }
+  var by = {}, latest = null;
+  M.entries.forEach(function(e){ by[e.ch + '-' + e.game] = e; if(!latest || e.published > latest.published) latest = e; });
+  var n = M.entries.length;
+  document.getElementById('count').textContent = n + ' / 42';
+  document.getElementById('bar').style.width = (n/42*100) + '%';
+  var nx = null;
+  for(var c=1;c<=14 && !nx;c++) for(var g=1;g<=3;g++) if(!by[c+'-'+g]){ nx=[c,g]; break; }
+  document.getElementById('next').innerHTML = nx
+    ? '下一個遊戲：<b>CH' + nx[0] + '-G' + nx[1] + ' ' + (CH[nx[0]-1]||['',''])[1] + ' · ' + GK[nx[1]-1] + '</b>'
+    : '<b>全部 42 個遊戲已上線！</b>';
+
+  var box = document.getElementById('chapters');
+  CH.forEach(function(ch, i){
+    var c = i + 1, sec = document.createElement('section'); sec.className = 'chapter';
+    sec.innerHTML = '<h3><span class="cn">CH ' + String(c).padStart(2,'0') + '</span>' + ch[1] + ' · ' + ch[0] + '</h3>';
+    var ul = document.createElement('ul'); ul.className = 'units';
+    for(var g=1; g<=3; g++){
+      var e = by[c+'-'+g], li = document.createElement('li');
+      var no = '<span class="no">G' + g + '</span>';
+      if(e){
+        var isNew = latest && e === latest;
+        li.className = 'unit'; li.dataset.live = '1';
+        li.dataset.title = ch[0] + ch[1] + e.title;
+        li.innerHTML = no + '<div class="t"><a href="' + e.file + '">' + e.title + '</a><span class="gk">' + GK[g-1] + '</span></div>' +
+          '<span class="state ' + (isNew?'new':'live') + '">' + (isNew?'最新 · ':'') + fmt(e.published) + '</span>';
+      } else {
+        li.className = 'unit soon'; li.dataset.live = '0'; li.dataset.title = ch[0] + ch[1] + GK[g-1];
+        li.innerHTML = no + '<div class="t"><span class="name">' + GK[g-1] + '</span></div><span class="state soon">製作中</span>';
+      }
+      ul.appendChild(li);
+    }
+    sec.appendChild(ul); box.appendChild(sec);
+  });
+
+  var onlyLive = false, q = document.getElementById('q');
+  function apply(){
+    var term = q.value.trim().toLowerCase(), any = false;
+    box.querySelectorAll('.chapter').forEach(function(sec){
+      var shown = 0;
+      sec.querySelectorAll('li').forEach(function(li){
+        var ok = (!onlyLive || li.dataset.live === '1') && (!term || li.dataset.title.toLowerCase().indexOf(term) >= 0);
+        li.hidden = !ok; if(ok) shown++;
+      });
+      sec.hidden = shown === 0; if(shown) any = true;
+    });
+    document.getElementById('empty').hidden = any;
+  }
+  function setF(v){ onlyLive = v; document.getElementById('f-all').setAttribute('aria-pressed', !v); document.getElementById('f-live').setAttribute('aria-pressed', v); apply(); }
+  document.getElementById('f-all').onclick = function(){ setF(false); };
+  document.getElementById('f-live').onclick = function(){ setF(true); };
+  q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>

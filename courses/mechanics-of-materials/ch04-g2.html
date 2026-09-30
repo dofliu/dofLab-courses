@@ -1,0 +1,809 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1.05rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.9rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.diagram{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.hl{transition:opacity .3s}
+.slider{display:grid;grid-template-columns:130px 1fr 90px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 80px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:110px 1fr 60px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.flowchart{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:.88rem}
+.flowchart span.box{background:#e9eef5;color:var(--navy);border-radius:8px;padding:6px 10px;font-weight:700}
+.flowchart span.box.hot{background:var(--orange);color:#fff}
+.flowchart span.arr{color:var(--orange);font-weight:900}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes flow{to{stroke-dashoffset:-20}}
+.flow{stroke-dasharray:6 4;animation:flow .8s linear infinite}
+@keyframes pulse{50%{opacity:.25}}
+.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.swing{transform-origin:100px 6px;animation:swing 2.6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+</style>
+<style>
+@keyframes squash{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.9)}}
+.squash{transform-origin:100px 46px;animation:squash 2.6s ease-in-out infinite}
+@keyframes heat{0%,100%{opacity:.25}50%{opacity:.9}}
+.heat{animation:heat 3s ease-in-out infinite}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.share{display:flex;height:26px;border-radius:6px;overflow:hidden;font-size:.8rem;font-weight:700;color:#fff}
+.share span{display:flex;align-items:center;justify-content:center;transition:width .3s;white-space:nowrap;overflow:hidden}
+</style>
+<title>[MOM-CH4-G2] Axial Load - 軸力計算工坊：靜不定桿件與複合柱</title>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH4-G2</span>軸力計算工坊：靜不定桿件</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 4 · Axial Load · Game 2</span>
+      <h2>軸力計算工坊：靜不定桿件與複合柱</h2>
+      <p style="color:var(--muted);max-width:65ch">兩端都被牆夾住的桿、鋼管裡灌滿混凝土的柱子、碰到牆才開始受力的拉桿……光靠平衡方程式<b>解不出來</b>。這一關要學會第 4 章最重要的工具：<b>平衡 + 相容條件 + 力–位移關係</b>，以及「先拿掉一個支承，再用疊加把它加回來」的<b>力法</b>。全程約 60 分鐘。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>靜不定軸力桿的四個核心觀念</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="兩端固定桿">
+          <rect x="6" y="20" width="14" height="52" fill="#8a99ab"/><rect x="180" y="20" width="14" height="52" fill="#8a99ab"/>
+          <rect x="20" y="40" width="160" height="12" fill="#1a3a5c"/>
+          <g stroke="#e8640a" stroke-width="3" fill="#e8640a"><line x1="80" y1="30" x2="104" y2="30"/><polygon points="110,30 100,24 100,36"/></g>
+          <text x="90" y="22" font-size="10" fill="#e8640a" font-weight="700">P</text>
+          <text x="30" y="68" font-size="11" fill="#c62f2f" font-weight="700">F_A ?</text><text x="140" y="68" font-size="11" fill="#c62f2f" font-weight="700">F_B ?</text>
+          <text x="100" y="86" font-size="10" fill="#1a3a5c" text-anchor="middle">2 個未知數，只有 1 條 ΣF = 0</text>
+        </svg>
+        <h3>靜不定</h3><span class="formula">未知數 &gt; 平衡式</span>
+        <p class="life">像兩個人各拉住繩子一端、你在中間推一把：誰出力比較多？只用「力的總和為零」<b>答不出來</b>，還得看繩子怎麼變形。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="相容條件">
+          <rect x="6" y="20" width="14" height="52" fill="#8a99ab"/><rect x="180" y="20" width="14" height="52" fill="#8a99ab"/>
+          <rect x="20" y="40" width="70" height="12" fill="#1f8a4c" opacity=".7"/>
+          <g class="squash"><rect x="90" y="40" width="90" height="12" fill="#c62f2f" opacity=".7"/></g>
+          <text x="55" y="34" font-size="10" fill="#1f8a4c" text-anchor="middle">伸長 δ_AC</text>
+          <text x="135" y="34" font-size="10" fill="#c62f2f" text-anchor="middle">縮短 δ_CB</text>
+          <text x="100" y="74" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">δ_AC + δ_CB = 0</text>
+          <text x="100" y="88" font-size="9.5" fill="#5b6b7e" text-anchor="middle">兩牆不動 → 總長不變</text>
+        </svg>
+        <h3>相容條件</h3><span class="formula">δ_A/B = 0</span>
+        <p class="life">多出來的那條方程式，來自<b>幾何限制</b>：牆不會動，所以整根桿的總伸長一定是零。一段被拉長多少，另一段就得被壓短多少。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="力法疊加">
+          <rect x="4" y="14" width="10" height="28" fill="#8a99ab"/><rect x="14" y="24" width="70" height="8" fill="#1a3a5c"/>
+          <g stroke="#e8640a" stroke-width="2.5" fill="#e8640a"><line x1="40" y1="18" x2="56" y2="18"/><polygon points="61,18 53,14 53,22"/></g>
+          <text x="96" y="32" font-size="14" fill="#1a3a5c" font-weight="700">+</text>
+          <rect x="108" y="14" width="10" height="28" fill="#8a99ab"/><rect x="118" y="24" width="70" height="8" fill="#1a3a5c"/>
+          <g stroke="#c62f2f" stroke-width="2.5" fill="#c62f2f"><line x1="198" y1="28" x2="194" y2="28"/><polygon points="188,28 196,23 196,33"/></g>
+          <text x="186" y="18" font-size="9" fill="#c62f2f">F_B</text>
+          <text x="100" y="62" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">δ_P − δ_B = 0（或 = 間隙）</text>
+          <text x="100" y="82" font-size="9.5" fill="#5b6b7e" text-anchor="middle">拿掉多餘支承 → 分開算 → 加回來</text>
+        </svg>
+        <h3>力法（疊加）</h3><span class="formula">δ_P − δ_B = δ_gap</span>
+        <p class="life">先假裝右邊的牆不存在，算出 P 讓端點跑多遠；再算反力 F_B 把它推回多少。兩者相減要等於零（或等於原本的間隙）。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="複合柱截面">
+          <circle cx="60" cy="46" r="34" fill="#1a3a5c"/><circle cx="60" cy="46" r="28" fill="#bfb7a8"/>
+          <g fill="#8a7f6c"><circle cx="50" cy="38" r="2"/><circle cx="68" cy="52" r="2.4"/><circle cx="58" cy="60" r="1.6"/><circle cx="72" cy="36" r="1.8"/><circle cx="46" cy="56" r="2"/></g>
+          <text x="104" y="34" font-size="10" fill="#1a3a5c" font-weight="700">鋼管 E = 200 GPa</text>
+          <text x="104" y="50" font-size="10" fill="#8a7f6c" font-weight="700">混凝土 E ≈ 25 GPa</text>
+          <text x="104" y="68" font-size="10" fill="#e8640a" font-weight="700">同應變 → σ 差 8 倍</text>
+        </svg>
+        <h3>複合構件</h3><span class="formula">Pᵢ = P·AᵢEᵢ / ΣAE</span>
+        <p class="life">鋼管混凝土柱被壓時，鋼和混凝土<b>一起縮短同樣的量</b>。誰的 AE 大、誰就分到較多的力；應力比等於彈性模數比。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：兩面牆，誰扛得多？</h3>
+      <p class="note">鋼桿（E = 200 GPa）夾在兩面剛性牆之間，總長 1000 mm，AC 段截面積 400 mm²。在 C 點施加向右的力 P。</p>
+      <div class="grid2">
+        <svg viewBox="0 0 460 300" class="ndiag" id="ffFig" aria-label="兩端固定桿"></svg>
+        <div class="stack">
+          <div class="slider"><span>載荷 P</span><input type="range" id="sP1" min="10" max="120" step="5" value="60"><span class="mono" id="vP1">60 kN</span></div>
+          <div class="slider"><span>位置 a（AC 長）</span><input type="range" id="sA1" min="100" max="900" step="10" value="300"><span class="mono" id="vA1">300 mm</span></div>
+          <div class="slider"><span>面積比 A_CB/A_AC</span><input type="range" id="sR1" min="0.25" max="3" step="0.05" value="1"><span class="mono" id="vR1">1.00</span></div>
+          <div class="readout">
+            <div><small>左牆反力 F_A</small><b id="r1a">—</b></div>
+            <div><small>右牆反力 F_B</small><b id="r1b">—</b></div>
+            <div><small>C 點位移 δ_C</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note">觀察：面積相同時 F_A = P·b/L——離力<b>越近</b>的牆，那一段越短、越硬，就扛得越多。這就是「剛度大的路徑分到較多的力」。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：鋼管混凝土柱與有間隙的拉桿</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：捷運高架站的鋼管混凝土柱</h3>
+      <p style="color:var(--muted);margin-top:4px">圓鋼管外徑 300 mm、壁厚 10 mm，內部灌滿混凝土。E_st = 200 GPa、E_c = 25 GPa，柱高 4 m，承受軸壓 P = 2000 kN。求鋼管與混凝土各自的應力，以及柱子縮短量。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="stack">
+          <svg viewBox="0 0 460 240" class="ndiag" id="cfFig" aria-label="鋼管混凝土柱"></svg>
+          <div class="share" id="shareBar"></div>
+        </div>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：改變設計參數</h3>
+        <div class="slider"><span>軸壓 P</span><input type="range" id="sPc" min="500" max="4000" step="100" value="2000"><span class="mono" id="vPc">2000 kN</span></div>
+        <div class="slider"><span>鋼管壁厚 t</span><input type="range" id="sTc" min="4" max="25" step="1" value="10"><span class="mono" id="vTc">10 mm</span></div>
+        <div class="slider"><span>混凝土 E_c</span><input type="range" id="sEc" min="15" max="40" step="1" value="25"><span class="mono" id="vEc">25 GPa</span></div>
+        <div class="readout">
+          <div><small>鋼管應力 σ_st</small><b id="rA1">—</b></div>
+          <div><small>混凝土應力 σ_c</small><b id="rA2">—</b></div>
+          <div><small>柱縮短量 δ</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：碰到牆才開始受力的拉桿（力法）</h3>
+      <p style="color:var(--muted);margin-top:4px">A-36 鋼桿直徑 10 mm（E = 200 GPa），A 端固定，B 端與牆之間原本有 0.2 mm 間隙。在 C 點（AC = 400 mm、CB = 800 mm）施加 P = 20 kN 向右。求兩端反力。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 200" class="ndiag" id="gapFig" aria-label="有間隙拉桿"></svg>
+          <div class="slider"><span>載荷 P</span><input type="range" id="sPg" min="0" max="40" step="1" value="20"><span class="mono" id="vPg">20 kN</span></div>
+          <div class="slider"><span>間隙 δ_gap</span><input type="range" id="sG" min="0" max="1" step="0.05" value="0.2"><span class="mono" id="vG">0.20 mm</span></div>
+          <div class="readout">
+            <div><small>無牆時 δ_P</small><b id="rB1">—</b></div>
+            <div><small>F_A</small><b id="rB2">—</b></div>
+            <div><small>F_B</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道靜不定題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差，依題目指定單位輸入數字即可。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：靜不定構件檢測</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH4-G2] Axial Load｜軸力計算工坊：靜不定桿件與複合柱</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const PI=Math.PI;
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-10 12 92)"><rect x="2" y="84" width="8" height="18" rx="2" fill="#5b6b7e"/><rect x="0" y="80" width="12" height="6" rx="1" fill="#1a3a5c"/><circle cx="6" cy="106" r="3" fill="#ffd166" stroke="#1a3a5c"/></g>
+</svg>`;
+}
+
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+guide("#guide0","歡迎回到第 4 章！上一關我們用 <b>δ = PL/(AE)</b> 算變形；這一關的桿件被<b>夾住、灌滿、擋住</b>，光靠平衡解不出來。別擔心，我教你一套三步驟：<b>平衡 → 相容 → 力–位移</b>。先填資料吧！");
+guide("#guide1","判斷口訣：數一數<b>未知反力</b>和<b>可用的平衡方程式</b>。未知數多幾個，就要再找幾條「變形必須吻合」的相容條件。下面拖拖看，兩面牆怎麼分攤 P。");
+guide("#guide2","案例 A 是<b>並聯</b>（鋼與混凝土一起縮短，力相加）；案例 B 是<b>力法</b>（先拿掉右牆，算完再用反力推回去）。點選步驟卡看每一步，也可以拖滑桿改設計。");
+guide("#guide3","解靜不定題的三條式子要寫齊：① ΣF = 0；② 相容條件（δ 的關係）；③ δ = NL/(AE) 代入 ② 。單位一律 <b>N、mm、MPa</b>。");
+guide("#guide4","檢測開始！數值依你的學號產生。記得先判斷桿會不會碰到牆、並聯構件要用 ΣAE 分配。加油！");
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  if(!/\d/.test(i)){$("#loginErr").textContent="學號需包含數字，用來產生你的專屬題目。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+function near(val,ans,tol=0.02){return Number.isFinite(val)&&Math.abs(val-ans)<=Math.max(Math.abs(ans)*tol,1e-9);}
+function yay(){const m=["太棒了！","完全正確！","相容條件抓得好！","靜不定難不倒你！","就是這樣！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function arrow(x,y,dir,len,col,lab){
+  const x2=x+dir*len,h=x2-dir*10;
+  return `<g stroke="${col}" fill="${col}" stroke-width="3"><line x1="${x}" y1="${y}" x2="${h}" y2="${y}"/><polygon points="${x2},${y} ${h},${y-6} ${h},${y+6}" stroke-width="0"/></g>`+(lab?`<text x="${(x+x2)/2}" y="${y-10}" font-size="11" font-weight="700" fill="${col}" text-anchor="middle">${lab}</text>`:"");
+}
+function wall(x,y,h,side){ // side -1 hatch to left, +1 to right
+  let s=`<rect x="${side<0?x-14:x}" y="${y}" width="14" height="${h}" fill="#8a99ab"/>`;
+  for(let i=0;i<h/12;i++){const yy=y+i*12;s+=side<0?`<line x1="${x-14}" y1="${yy+10}" x2="${x-24}" y2="${yy+2}" stroke="#5b6b7e"/>`:`<line x1="${x+14}" y1="${yy+10}" x2="${x+24}" y2="${yy+2}" stroke="#5b6b7e"/>`;}
+  return s;
+}
+
+/* ---------- Phase 1: fixed-fixed bar ---------- */
+function drawFF(){
+  const P=+$("#sP1").value,a=+$("#sA1").value,R=+$("#sR1").value;
+  $("#vP1").textContent=P+" kN";$("#vA1").textContent=a+" mm";$("#vR1").textContent=R.toFixed(2);
+  const L=1000,b=L-a,E=200000,A1=400,A2=400*R;
+  const k1=A1*E/a,k2=A2*E/b,FA=P*k1/(k1+k2),FB=P-FA,dC=FA*1000*a/(A1*E);
+  const s1=FA*1000/A1,s2=FB*1000/A2;
+  const x0=40,x1=420,sc=(x1-x0)/L,xc=x0+a*sc,h1=18,h2=Math.max(6,Math.min(40,18*Math.sqrt(R)));
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`;
+  s+=wall(x0,40,90,-1)+wall(x1,40,90,1);
+  s+=`<rect x="${x0}" y="${85-h1/2}" width="${xc-x0}" height="${h1}" fill="#1f8a4c" opacity=".75"/>`;
+  s+=`<rect x="${xc}" y="${85-h2/2}" width="${x1-xc}" height="${h2}" fill="#c62f2f" opacity=".7"/>`;
+  s+=`<circle cx="${xc}" cy="85" r="4" fill="#1a3a5c"/><text x="${xc}" y="${85+Math.max(h1,h2)/2+16}" font-size="12" fill="#1a3a5c" text-anchor="middle" font-weight="700">C</text>`;
+  s+=arrow(xc-30,52,1,40,"#e8640a","P = "+P+" kN");
+  const la=16+FA/120*50,lb=16+FB/120*50;
+  s+=arrow(x0+la+4,112,-1,la,"#1a3a5c","F_A");
+  s+=arrow(x1-4,112,-1,lb,"#1a3a5c","F_B");
+  s+=`<text x="${(x0+xc)/2}" y="30" font-size="11" fill="#1f8a4c" text-anchor="middle">a = ${a}</text><text x="${(xc+x1)/2}" y="30" font-size="11" fill="#c62f2f" text-anchor="middle">b = ${b}</text>`;
+  const yb=215,ns=60/120;
+  s+=`<text x="12" y="160" font-size="11" fill="#1a3a5c">軸力圖 N (kN)</text>`;
+  s+=`<line x1="${x0}" y1="${yb}" x2="${x1}" y2="${yb}" stroke="#1a3a5c" stroke-width="1.5"/>`;
+  s+=`<rect x="${x0}" y="${yb-FA*ns}" width="${xc-x0}" height="${FA*ns}" fill="#1f8a4c" opacity=".45" stroke="#1f8a4c"/>`;
+  s+=`<rect x="${xc}" y="${yb}" width="${x1-xc}" height="${FB*ns}" fill="#c62f2f" opacity=".4" stroke="#c62f2f"/>`;
+  s+=`<text x="${(x0+xc)/2}" y="${yb-FA*ns-6}" font-size="11" fill="#1f8a4c" text-anchor="middle" font-weight="700">+${fmt(FA,1)} (拉)</text>`;
+  s+=`<text x="${(xc+x1)/2}" y="${yb+FB*ns+14}" font-size="11" fill="#c62f2f" text-anchor="middle" font-weight="700">−${fmt(FB,1)} (壓)</text>`;
+  s+=`<text x="12" y="292" font-size="10" fill="#5b6b7e">綠＝拉、紅＝壓；兩段變形一伸一縮，互相抵消</text>`;
+  $("#ffFig").innerHTML=s;
+  $("#r1a").textContent=fmt(FA,1)+" kN";$("#r1b").textContent=fmt(FB,1)+" kN";$("#r1c").textContent=fmt(dC,3)+" mm";
+  const mx=Math.max(s1,s2),ok=mx<=250;
+  $("#r1d").innerHTML=`<div class="row" style="justify-content:space-between"><span class="mono" style="font-size:.85rem">σ_AC = ${fmt(s1,0)} MPa，σ_CB = −${fmt(s2,0)} MPa</span><span class="badge ${ok?"ok":"no"}">${ok?"≤ σ_Y = 250 MPa ✓":"超過降伏，線彈性解不再適用！"}</span></div>`;
+}
+["#sP1","#sA1","#sR1"].forEach(k=>$(k).addEventListener("input",drawFF));
+drawFF();
+
+const P1Q=[
+  {q:"一根桿兩端都焊在牆上，中間受軸力 P。為什麼稱它為「靜不定」？",o:["因為桿子不會動","未知反力有 2 個，但沿軸向只有 1 條平衡方程式","因為材料是非線性的","因為載荷會隨時間改變"],a:1,why:"F_A 和 F_B 兩個未知數，只有 ΣF_x = 0 一條式子。必須補上相容條件：兩牆不動，所以 δ_AC + δ_CB = 0。"},
+  {q:"均勻截面的兩端固定桿，力 P 作用在離 A 牆 1/4 長度處。哪一面牆承受較大的反力？",o:["A 牆（離力比較近）","B 牆（離力比較遠）","一樣大，各 P/2","要看材料的 E 才知道"],a:0,why:"F_A = P·b/L = 3P/4。AC 段較短、勁度 AE/L 較大，就像兩條彈簧並聯時較硬的那條分到較多的力。而且答案和 E 無關（E 會約掉）。"},
+  {q:"鋼筋混凝土柱受壓時，鋼筋與混凝土的應變相同。兩者的應力關係是？",o:["應力相同","混凝土應力較大，因為面積大","鋼筋應力約為混凝土的 E_st/E_c 倍（約 8 倍）","鋼筋不受力"],a:2,why:"同應變 ε → σ = Eε，所以 σ_st/σ_c = E_st/E_c ≈ 200/25 = 8。這也是為什麼少量鋼筋就能分擔可觀的軸力。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">🔩✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick(+b.dataset.i,b.classList.contains("on"));}));
+}
+
+/* ---------- Phase 2A: concrete-filled steel tube ---------- */
+function cft(P,t,Ec){ // P kN, t mm, Ec GPa
+  const D=300,Di=D-2*t,Ast=PI/4*(D*D-Di*Di),Ac=PI/4*Di*Di,Es=200000,Ecm=Ec*1000,L=4000;
+  const sum=Ast*Es+Ac*Ecm,Pst=P*Ast*Es/sum,Pc=P-Pst;
+  return {Ast,Ac,Es,Ecm,sum,Pst,Pc,sst:Pst*1000/Ast,sc:Pc*1000/Ac,d:P*1000*L/sum,L,Di};
+}
+function drawCF(){
+  const P=+$("#sPc").value,t=+$("#sTc").value,Ec=+$("#sEc").value;
+  $("#vPc").textContent=P+" kN";$("#vTc").textContent=t+" mm";$("#vEc").textContent=Ec+" GPa";
+  const r=cft(P,t,Ec),R=90,ri=R*r.Di/300;
+  let s=`<rect width="460" height="240" fill="#fbfcfe"/>`;
+  s+=`<circle cx="110" cy="120" r="${R}" fill="#1a3a5c"/><circle cx="110" cy="120" r="${ri}" fill="#bfb7a8" style="transition:r .3s"/>`;
+  const dots=[[80,95,3],[130,90,2.5],[100,140,3.5],[140,135,2.2],[75,130,2.4],[115,110,1.8],[95,70,2],[150,110,2.6],[118,165,2.2]];
+  dots.forEach(d=>s+=`<circle cx="${d[0]}" cy="${d[1]}" r="${d[2]}" fill="#8a7f6c"/>`);
+  s+=`<text x="110" y="20" font-size="11" fill="#1a3a5c" text-anchor="middle" font-weight="700">截面 D = 300 mm, t = ${t} mm</text>`;
+  // stress bars
+  const bx=250,bw=60,base=210,smax=Math.max(250,r.sst),sc=160/smax;
+  s+=`<line x1="${bx-10}" y1="${base}" x2="450" y2="${base}" stroke="#1a3a5c"/>`;
+  s+=`<line x1="${bx-10}" y1="${base-250*sc}" x2="450" y2="${base-250*sc}" stroke="#c62f2f" stroke-dasharray="4 3"/><text x="448" y="${base-250*sc-4}" font-size="9.5" fill="#c62f2f" text-anchor="end">σ_Y 鋼 = 250</text>`;
+  s+=`<rect x="${bx}" y="${base-r.sst*sc}" width="${bw}" height="${r.sst*sc}" fill="#1a3a5c" style="transition:all .3s"/>`;
+  s+=`<rect x="${bx+90}" y="${base-r.sc*sc}" width="${bw}" height="${Math.max(1,r.sc*sc)}" fill="#8a7f6c" style="transition:all .3s"/>`;
+  s+=`<text x="${bx+bw/2}" y="${base-r.sst*sc-6}" font-size="11" fill="#1a3a5c" text-anchor="middle" font-weight="700">${fmt(r.sst,1)}</text>`;
+  s+=`<text x="${bx+90+bw/2}" y="${base-r.sc*sc-6}" font-size="11" fill="#8a7f6c" text-anchor="middle" font-weight="700">${fmt(r.sc,2)}</text>`;
+  s+=`<text x="${bx+bw/2}" y="${base+16}" font-size="10.5" fill="#1a3a5c" text-anchor="middle">σ_st 鋼管</text><text x="${bx+90+bw/2}" y="${base+16}" font-size="10.5" fill="#8a7f6c" text-anchor="middle">σ_c 混凝土</text>`;
+  s+=`<text x="${bx-6}" y="30" font-size="10.5" fill="#5b6b7e">壓應力 (MPa)</text>`;
+  $("#cfFig").innerHTML=s;
+  const pst=r.Pst/P*100;
+  $("#shareBar").innerHTML=`<span style="width:${pst}%;background:#1a3a5c">鋼管 ${fmt(pst,1)}%</span><span style="width:${100-pst}%;background:#8a7f6c">混凝土 ${fmt(100-pst,1)}%</span>`;
+  $("#rA1").textContent=fmt(r.sst,1)+" MPa";$("#rA2").textContent=fmt(r.sc,2)+" MPa";$("#rA3").textContent=fmt(r.d,3)+" mm";
+  const okS=r.sst<=250,okC=r.sc<=0.45*Ec*1.2; // rough allowable indicator
+  $("#rA4").innerHTML=`<div class="row" style="justify-content:space-between"><span>應力比 σ_st/σ_c = ${fmt(r.sst/r.sc,2)} = E_st/E_c</span><span class="badge ${okS?"ok":"no"}">${okS?"鋼管未降伏 ✓":"鋼管降伏！需加厚或加大斷面"}</span></div>`;
+}
+["#sPc","#sTc","#sEc"].forEach(k=>$(k).addEventListener("input",drawCF));
+const r0=cft(2000,10,25);
+const STEPS_A=[
+  {t:"截面積",d:`A_st = π/4(300² − 280²) = ${fmt(r0.Ast,1)} mm²；A_c = π/4(280²) = ${fmt(r0.Ac,1)} mm²`},
+  {t:"平衡方程式",d:"P_st + P_c = P = 2000 kN（兩個未知數、一條式子 → 靜不定）"},
+  {t:"相容條件",d:"鋼管與混凝土一起縮短：δ_st = δ_c → P_st·L/(A_st E_st) = P_c·L/(A_c E_c)"},
+  {t:"解出分配",d:`ΣAE = ${fmt(r0.Ast,1)}×200 000 + ${fmt(r0.Ac,1)}×25 000 = ${(r0.sum/1e9).toFixed(4)}×10⁹ N；P_st = P·A_stE_st/ΣAE = ${fmt(r0.Pst,1)} kN，P_c = ${fmt(r0.Pc,1)} kN`},
+  {t:"應力與縮短量",d:`σ_st = ${fmt(r0.sst,1)} MPa，σ_c = ${fmt(r0.sc,2)} MPa（比值 8 = E_st/E_c）；δ = PL/ΣAE = 2×10⁶×4000/${(r0.sum/1e9).toFixed(4)}×10⁹ = ${fmt(r0.d,3)} mm`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sPc").value=2000;$("#sTc").value=10;$("#sEc").value=25;drawCF();});
+drawCF();
+
+/* ---------- Phase 2B: rod with gap ---------- */
+const GB={A:PI*100/4,E:200000,L1:400,L2:800};
+function gapSolve(P,g){
+  const dP=P*1000*GB.L1/(GB.A*GB.E);
+  if(dP<=g)return {dP,FB:0,FA:P,contact:false,dC:dP,dEnd:dP};
+  const FB=(dP-g)*GB.A*GB.E/((GB.L1+GB.L2)*1000);
+  const FA=P-FB;return {dP,FB,FA,contact:true,dC:FA*1000*GB.L1/(GB.A*GB.E),dEnd:g};
+}
+function drawGap(){
+  const P=+$("#sPg").value,g=+$("#sG").value;
+  $("#vPg").textContent=P+" kN";$("#vG").textContent=fmt(g,2)+" mm";
+  const r=gapSolve(P,g),x0=40,sc=0.28,xs=x0+GB.L1*sc,xe=x0+(GB.L1+GB.L2)*sc,mag=60;
+  const wallX=xe+g*mag;
+  let s=`<rect width="460" height="200" fill="#fbfcfe"/>`;
+  s+=wall(x0,50,70,-1)+wall(wallX,50,70,1);
+  s+=`<rect x="${x0}" y="78" width="${xe-x0}" height="14" fill="#c9d3df" opacity=".6"/>`;
+  const shiftC=Math.min(r.dC,1.2)*mag,shiftE=Math.min(r.dEnd,1.2)*mag;
+  s+=`<rect x="${x0}" y="78" width="${xs+shiftC-x0}" height="14" fill="#1f8a4c" opacity=".8" style="transition:all .3s"/>`;
+  s+=`<rect x="${xs+shiftC}" y="78" width="${xe+shiftE-xs-shiftC}" height="14" fill="${r.contact?"#c62f2f":"#1a3a5c"}" opacity=".8" style="transition:all .3s"/>`;
+  s+=`<text x="${xs+shiftC}" y="112" font-size="12" fill="#1a3a5c" text-anchor="middle" font-weight="700">C</text>`;
+  if(P>0)s+=arrow(xs+shiftC-20,64,1,36,"#e8640a","P = "+P+" kN");
+  s+=`<line x1="${xe}" y1="126" x2="${xe}" y2="140" stroke="#5b6b7e"/><line x1="${wallX}" y1="126" x2="${wallX}" y2="140" stroke="#5b6b7e"/>`;
+  s+=`<text x="${(xe+wallX)/2}" y="152" font-size="10" fill="#5b6b7e" text-anchor="middle">間隙 ${fmt(g,2)} mm（放大）</text>`;
+  s+=r.contact?`<text x="230" y="30" font-size="12" fill="#c62f2f" text-anchor="middle" font-weight="700">碰到牆！F_B = ${fmt(r.FB,2)} kN，CB 段受壓</text>`:`<text x="230" y="30" font-size="12" fill="#1f8a4c" text-anchor="middle" font-weight="700">沒碰到牆 → 靜定，F_B = 0</text>`;
+  s+=`<text x="${x0}" y="186" font-size="10" fill="#5b6b7e">AC = 400 mm，CB = 800 mm，d = 10 mm（位移放大 60 倍）</text>`;
+  $("#gapFig").innerHTML=s;
+  $("#rB1").textContent=fmt(r.dP,4)+" mm";$("#rB2").textContent=fmt(r.FA,2)+" kN";$("#rB3").textContent=fmt(r.FB,2)+" kN";
+  const sAC=r.FA*1000/GB.A;
+  $("#rB4").innerHTML=`<span class="badge ${r.contact?"no":"ok"}">${r.contact?"靜不定：相容條件 δ_P − δ_B = 間隙":"靜定：P 全由 A 端承擔"}</span> <span class="note mono">σ_AC = ${fmt(sAC,1)} MPa</span>`;
+}
+["#sPg","#sG"].forEach(k=>$(k).addEventListener("input",drawGap));
+const g0=gapSolve(20,0.2);
+const STEPS_B=[
+  {t:"先判斷會不會碰到牆",d:`拿掉 B 牆：δ_P = P·L_AC/(AE) = 20 000×400/(${fmt(GB.A,2)}×200 000) = ${fmt(g0.dP,4)} mm > 0.2 mm → 會接觸`},
+  {t:"力法：B 端施加未知 F_B",d:"F_B 使 B 端向左移動 δ_B = F_B·L_AB/(AE)，L_AB = 1200 mm"},
+  {t:"相容條件",d:"δ_P − δ_B = 0.2 mm（B 端最終位移剛好等於間隙）"},
+  {t:"解 F_B",d:`F_B = (${fmt(g0.dP,4)} − 0.2)×${fmt(GB.A,2)}×200 000 / 1200 = ${fmt(g0.FB*1000,0)} N = ${fmt(g0.FB,2)} kN`},
+  {t:"平衡求 F_A",d:`F_A = P − F_B = 20 − ${fmt(g0.FB,2)} = ${fmt(g0.FA,2)} kN（Hibbeler 例題答案 F_A = 15.9 kN、F_B = 4.05 kN）`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sPg").value=20;$("#sG").value=0.2;drawGap();});
+drawGap();
+
+/* ---------- Phase 3 practice ---------- */
+const q2Ast=4*PI*25*25/4,q2Ac=300*300-q2Ast,q2sum=q2Ast*200000+q2Ac*25000,q2=200000*900000/q2sum;
+const q3dT=40*(12e-6*300+23e-6*200),q3f=300/(500*200000)+200/(800*70000),q3=q3dT/q3f/1000;
+const P3Q=[
+  {type:"num",q:"均勻鋼桿 AB 長 1.0 m，兩端固定在剛性牆上。在距 A 端 0.3 m 的 C 點施加 60 kN 向右的軸力。求 A 端反力 F_A（kN）。",ans:42,unit:"kN",dp:2,
+   hint:"平衡：F_A + F_B = 60；相容：F_A·a/(AE) = F_B·b/(AE)。A、E 相同時會約掉 → F_A = P·b/L。",
+   sol:["平衡：F_A + F_B = 60 kN","相容：δ_AC = δ_CB → F_A(300) = F_B(700)","F_A = 60 × 700/1000","F_A = 42.0 kN（F_B = 18.0 kN）"]},
+  {type:"num",q:"300 mm × 300 mm 的混凝土柱內配 4 根直徑 25 mm 的鋼筋。E_st = 200 GPa、E_c = 25 GPa，柱受軸壓 900 kN。求鋼筋的壓應力 σ_st（MPa）。",ans:q2,unit:"MPa",dp:2,
+   hint:"A_st = 4 × π(25)²/4；A_c = 300² − A_st。同應變 → σ_st = E_st·P/ΣAE。",
+   sol:[`A_st = 4π(25)²/4 = ${fmt(q2Ast,1)} mm²，A_c = 90 000 − ${fmt(q2Ast,1)} = ${fmt(q2Ac,1)} mm²`,`ΣAE = ${fmt(q2Ast,1)}×200 000 + ${fmt(q2Ac,1)}×25 000 = ${(q2sum/1e9).toFixed(4)}×10⁹ N`,`ε = P/ΣAE = 900 000/${(q2sum/1e9).toFixed(4)}×10⁹ = ${(900000/q2sum*1e6).toFixed(1)}×10⁻⁶`,`σ_st = E_st·ε = ${fmt(q2,2)} MPa（σ_c = ${fmt(q2/8,2)} MPa）`]},
+  {type:"num",q:"鋼段（L = 300 mm、A = 500 mm²、E = 200 GPa、α = 12×10⁻⁶/°C）與鋁段（L = 200 mm、A = 800 mm²、E = 70 GPa、α = 23×10⁻⁶/°C）串接，兩端緊貼剛性牆、無間隙。溫度均勻上升 40 °C，求桿內軸力 F（kN）。",ans:q3,unit:"kN",dp:2,
+   hint:"串聯：兩段軸力相同 F。相容：自由熱伸長總和 = F 造成的縮短總和 → F = Σ(αΔTL) / Σ(L/AE)。",
+   sol:[`自由熱伸長：40 × (12×10⁻⁶×300 + 23×10⁻⁶×200) = ${fmt(q3dT,3)} mm`,`柔度：300/(500×200 000) + 200/(800×70 000) = ${(q3f*1e6).toFixed(4)}×10⁻⁶ mm/N`,`相容：F × 柔度 = 熱伸長`,`F = ${fmt(q3dT,3)} / ${(q3f*1e6).toFixed(4)}×10⁻⁶ = ${fmt(q3*1000,0)} N = ${fmt(q3,2)} kN（壓）`]},
+  {type:"mc",q:"兩端固定的均勻鋼桿整體升溫 ΔT。若把桿長加倍（其他不變），桿內的熱應力會？",
+   o:["變成 2 倍","變成 1/2","不變，σ = EαΔT 與長度無關","變成 4 倍"],a:2,
+   hint:"熱伸長 αΔTL 與 L 成正比，但把它壓回去所需的應變 δ/L 卻與 L 無關。",
+   sol:["相容：αΔTL − FL/(AE) = 0","F = AEαΔT（L 約掉）","σ = F/A = EαΔT","→ 選 C：與長度無關"]}
+];
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 42.5。";return;}
+  const ok=q.type==="num"?near(v,q.ans):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">🔩</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+/* ---------- Phase 4 seeded test ---------- */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+4)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 fixed-fixed stepped bar
+  {const L1=vary(400,10),L2=vary(600,10),A1=vary(500,10),A2=vary(300,10),P=vary(50,1);
+   const f1=L1/A1,f2=L2/A2,FA=P*f2/(f1+f2);
+   qs.push({type:"num",title:"兩端固定階梯桿",q:`鋼桿 AB 兩端固定在剛性牆上。AC 段長 ${L1} mm、截面積 ${A1} mm²；CB 段長 ${L2} mm、截面積 ${A2} mm²（E 相同）。在 C 點施加 ${P} kN 向右的軸力，求 A 端反力 F_A（kN）。`,ans:FA,unit:"kN",dp:2,
+    sol:`平衡 F_A + F_B = ${P}；相容 F_A·${L1}/${A1} = F_B·${L2}/${A2} → F_A = P·(L₂/A₂)/(L₁/A₁ + L₂/A₂) = ${P}×${fmt(f2,4)}/(${fmt(f1,4)}+${fmt(f2,4)}) = ${fmt(FA,2)} kN`});}
+  // Q2 concrete-filled tube
+  {const D=vary(300,10),t=vary(10,1),Ec=vary(25,1),P=vary(2000,50),L=4000;
+   const Di=D-2*t,Ast=PI/4*(D*D-Di*Di),Ac=PI/4*Di*Di,sum=Ast*200000+Ac*Ec*1000,sc=Ec*1000*P*1000/sum;
+   qs.push({type:"num",title:"鋼管混凝土柱",q:`圓鋼管外徑 ${D} mm、壁厚 ${t} mm，內部灌滿混凝土。E_st = 200 GPa、E_c = ${Ec} GPa，柱受軸壓 ${P} kN。求混凝土的壓應力 σ_c（MPa）。`,ans:sc,unit:"MPa",dp:2,
+    sol:`A_st = π/4(${D}² − ${Di}²) = ${fmt(Ast,1)} mm²；A_c = π/4(${Di}²) = ${fmt(Ac,1)} mm²；ΣAE = ${(sum/1e9).toFixed(4)}×10⁹ N；σ_c = E_c·P/ΣAE = ${Ec*1000}×${P*1000}/${(sum/1e9).toFixed(4)}×10⁹ = ${fmt(sc,2)} MPa`});}
+  // Q3 rod with gap
+  {const d=vary(12,1),L1=vary(400,10),L2=vary(800,10),P=vary(25,1),A=PI*d*d/4,E=200000;
+   const dP=P*1000*L1/(A*E),g=Math.max(0.05,Math.round(dP*(0.3+0.3*r())*100)/100);
+   const FB=(dP-g)*A*E/((L1+L2)*1000);
+   qs.push({type:"num",title:"有間隙的拉桿",q:`A-36 鋼桿直徑 ${d} mm（E = 200 GPa），A 端固定，B 端與剛性牆之間有 ${fmt(g,2)} mm 間隙。在 C 點（AC = ${L1} mm、CB = ${L2} mm）施加 ${P} kN 向右。求 B 端反力 F_B（kN）。`,ans:FB,unit:"kN",dp:3,
+    sol:`A = ${fmt(A,2)} mm²；δ_P = ${P*1000}×${L1}/(${fmt(A,2)}×200 000) = ${fmt(dP,4)} mm > ${fmt(g,2)} → 接觸；F_B = (δ_P − δ_gap)·AE/L_AB = (${fmt(dP-g,4)})×${fmt(A,2)}×200 000/${L1+L2} = ${fmt(FB,3)} kN`});}
+  // Q4 two-material thermal
+  {const Ls=vary(300,10),As=vary(500,10),La=vary(200,10),Aa=vary(800,10),dT=vary(40,1);
+   const dTf=dT*(12e-6*Ls+23e-6*La),fl=Ls/(As*200000)+La/(Aa*70000),F=dTf/fl/1000;
+   qs.push({type:"num",title:"雙材料熱應力",q:`鋼段（L = ${Ls} mm、A = ${As} mm²、E = 200 GPa、α = 12×10⁻⁶/°C）與鋁段（L = ${La} mm、A = ${Aa} mm²、E = 70 GPa、α = 23×10⁻⁶/°C）串接，兩端緊貼剛性牆。溫度上升 ${dT} °C，求桿內軸力大小 F（kN）。`,ans:F,unit:"kN",dp:2,
+    sol:`Σ熱伸長 = ${dT}×(12×10⁻⁶×${Ls} + 23×10⁻⁶×${La}) = ${fmt(dTf,4)} mm；Σ柔度 = ${Ls}/(${As}×200 000) + ${La}/(${Aa}×70 000) = ${(fl*1e6).toFixed(4)}×10⁻⁶ mm/N；F = ${fmt(F,2)} kN（壓）`});}
+  // Q5 concept judgment
+  {const pool=[
+    {q:"鋼筋混凝土柱若改用 E 較高的高強度混凝土（其他條件不變），鋼筋分擔的軸力會？",o:["變小","變大","不變","變成零"],why:"P_st = P·A_stE_st/ΣAE，E_c 增加使 ΣAE 變大，鋼筋分擔比例下降。"},
+    {q:"兩端固定的均勻鋼桿整體升溫 ΔT。熱應力與桿長 L 的關係是？",o:["與 L 無關，σ = EαΔT","與 L 成正比","與 L 成反比","與 L² 成正比"],why:"相容條件中 L 約掉：σ = EαΔT。"},
+    {q:"有間隙的拉桿，若算出無牆時的位移 δ_P 小於間隙，則牆的反力 F_B 為？",o:["0，桿未碰到牆，屬於靜定問題","等於 P","等於 P/2","等於 P·δ_P/間隙"],why:"沒有接觸就沒有反力，整個 P 由固定端承擔。"},
+    {q:"力法中，對移除的多餘支承所寫的相容條件，意義是？",o:["該支承點的總位移必須等於實際限制值（0 或間隙）","多餘反力等於外力","各段應力必須相等","各段伸長量必須相等"],why:"疊加後的位移要回到支承真實的幾何限制，這就是補上的那條方程式。"}
+   ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q.ans):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"太精彩了！平衡、相容、力–位移三步驟你已經運用自如。下一關的綜合設計挑戰，就交給你這位靜不定高手！",B:"很扎實！再多檢查一次「會不會碰到牆」和 ΣAE 的單位，下一次就能拿 A。",C:"方法已經上手，回到 Phase 2 點一次步驟卡，特別留意相容條件那一步是怎麼寫出來的。",D:"別灰心！先把三句話背起來：未知數比平衡式多 → 找相容條件；並聯同變形、串聯同內力；力法 = 拿掉支承再加回來。再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 4 章 Axial Load · 遊戲 2（MOM-CH4-G2）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。</p>`;
+  S.summary=`[MOM-CH4-G2] Axial Load 軸力計算工坊 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

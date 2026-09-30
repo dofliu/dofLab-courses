@@ -25,6 +25,13 @@ courses/ai-tutorials/
     data/PROGRESS.md             進度與執行紀錄
     _studio/                     動畫引擎（build.py、qa.py、kit-claude.js）
 tools/build_claude_course.py     重建 Claude 課程目錄資料
+courses/mechanics-of-materials/
+  index.html                     材料力學遊戲目錄（讀取 manifest.js）
+  chNN-gK.html                   各遊戲（NN = 章 1–14，K = 遊戲 1–3）
+  data/manifest.json             已上線遊戲清單（唯一資料來源）
+  data/SPEC.md                   遊戲製作規格（排程依此製作下一個遊戲）
+  manifest.js                    由 manifest.json 自動產生
+tools/add_mom_game.py            新增／更新材料力學遊戲的工具
 ```
 
 ## 新增一個工程數學單元
@@ -35,6 +42,15 @@ python3 tools/add_topic.py --slot <排程序號> --src <單元 HTML 檔>
 
 排程序號以 2026-09-25 12:00（台灣時間）為 0，每 12 小時 +1；主題 = slot % 30，輪次 = slot // 30 + 1。
 來源檔可以是完整 HTML，也可以是不含 `<html>/<body>` 骨架的片段，工具會自動補齊，並加上「← 課程目錄」連結。
+
+## 新增一個材料力學遊戲
+
+```bash
+python3 tools/add_mom_game.py --next                                   # 查下一個要做的遊戲
+python3 tools/add_mom_game.py --ch 5 --game 3 --src <遊戲 HTML 檔>      # 加入網站並更新清單
+```
+
+遊戲規格見 `courses/mechanics-of-materials/data/SPEC.md`。來源檔 `<title>` 需為 `[MOM-CH{章}-G{遊戲}] {英文章名} - {中文副標題}`。
 
 ## 新增其他課程
 

@@ -1,0 +1,133 @@
+{
+  "course": "材料力學互動遊戲",
+  "total": 42,
+  "entries": [
+    {
+      "ch": 1,
+      "game": 1,
+      "code": "MOM-CH1-G1",
+      "title": "應力探索：橋樑承受的力量",
+      "full_title": "[MOM-CH1-G1] Stress - 應力探索：橋樑承受的力量",
+      "file": "ch01-g1.html",
+      "published": "2026-09-25T21:00+08:00"
+    },
+    {
+      "ch": 1,
+      "game": 2,
+      "code": "MOM-CH1-G2",
+      "title": "應力計算工坊：螺栓與銷釘的工程案例",
+      "full_title": "[MOM-CH1-G2] Stress - 應力計算工坊：螺栓與銷釘的工程案例",
+      "file": "ch01-g2.html",
+      "published": "2026-09-26T05:00+08:00"
+    },
+    {
+      "ch": 1,
+      "game": 3,
+      "code": "MOM-CH1-G3",
+      "title": "綜合挑戰：吊架連接件的最弱環節設計",
+      "full_title": "[MOM-CH1-G3] Stress - 綜合挑戰：吊架連接件的最弱環節設計",
+      "file": "ch01-g3.html",
+      "published": "2026-09-26T13:00+08:00"
+    },
+    {
+      "ch": 2,
+      "game": 1,
+      "code": "MOM-CH2-G1",
+      "title": "應變探索：橡皮筋與橋墊的變形",
+      "full_title": "[MOM-CH2-G1] Strain - 應變探索：橡皮筋與橋墊的變形",
+      "file": "ch02-g1.html",
+      "published": "2026-09-26T21:00+08:00"
+    },
+    {
+      "ch": 2,
+      "game": 2,
+      "code": "MOM-CH2-G2",
+      "title": "應變計算工坊：非均勻變形與板件剪應變",
+      "full_title": "[MOM-CH2-G2] Strain - 應變計算工坊：非均勻變形與板件剪應變",
+      "file": "ch02-g2.html",
+      "published": "2026-09-27T05:00+08:00"
+    },
+    {
+      "ch": 2,
+      "game": 3,
+      "code": "MOM-CH2-G3",
+      "title": "綜合挑戰：橋梁吊索與支承墊的變形設計",
+      "full_title": "[MOM-CH2-G3] Strain - 綜合挑戰：橋梁吊索與支承墊的變形設計",
+      "file": "ch02-g3.html",
+      "published": "2026-09-27T13:00+08:00"
+    },
+    {
+      "ch": 3,
+      "game": 1,
+      "code": "MOM-CH3-G1",
+      "title": "材料性質探索：拉伸試驗與應力應變曲線",
+      "full_title": "[MOM-CH3-G1] Mechanical Properties - 材料性質探索：拉伸試驗與應力應變曲線",
+      "file": "ch03-g1.html",
+      "published": "2026-09-27T21:00+08:00"
+    },
+    {
+      "ch": 3,
+      "game": 2,
+      "code": "MOM-CH3-G2",
+      "title": "材料性質計算工坊：偏移法、應變能與隔震墊",
+      "full_title": "[MOM-CH3-G2] Mechanical Properties - 材料性質計算工坊：偏移法、應變能與隔震墊",
+      "file": "ch03-g2.html",
+      "published": "2026-09-28T05:00+08:00"
+    },
+    {
+      "ch": 3,
+      "game": 3,
+      "code": "MOM-CH3-G3",
+      "title": "綜合挑戰：起重機拉桿的選材與安全設計",
+      "full_title": "[MOM-CH3-G3] Mechanical Properties - 綜合挑戰：起重機拉桿的選材與安全設計",
+      "file": "ch03-g3.html",
+      "published": "2026-09-28T13:00+08:00"
+    },
+    {
+      "ch": 4,
+      "game": 1,
+      "code": "MOM-CH4-G1",
+      "title": "軸力探索：電梯鋼索與鐵軌的伸縮",
+      "full_title": "[MOM-CH4-G1] Axial Load - 軸力探索：電梯鋼索與鐵軌的伸縮",
+      "file": "ch04-g1.html",
+      "published": "2026-09-28T21:00+08:00"
+    },
+    {
+      "ch": 4,
+      "game": 2,
+      "code": "MOM-CH4-G2",
+      "title": "軸力計算工坊：靜不定桿件與複合柱",
+      "full_title": "[MOM-CH4-G2] Axial Load - 軸力計算工坊：靜不定桿件與複合柱",
+      "file": "ch04-g2.html",
+      "published": "2026-09-29T05:00+08:00"
+    },
+    {
+      "ch": 4,
+      "game": 3,
+      "code": "MOM-CH4-G3",
+      "title": "綜合挑戰：剛性梁吊桿與鐵軌伸縮縫的設計",
+      "full_title": "[MOM-CH4-G3] Axial Load - 綜合挑戰：剛性梁吊桿與鐵軌伸縮縫的設計",
+      "file": "ch04-g3.html",
+      "published": "2026-09-29T13:00+08:00"
+    },
+    {
+      "ch": 5,
+      "game": 1,
+      "code": "MOM-CH5-G1",
+      "title": "扭轉探索：擰毛巾與汽車傳動軸",
+      "full_title": "[MOM-CH5-G1] Torsion - 扭轉探索：擰毛巾與汽車傳動軸",
+      "file": "ch05-g1.html",
+      "published": "2026-09-29T21:00+08:00"
+    },
+    {
+      "ch": 5,
+      "game": 2,
+      "code": "MOM-CH5-G2",
+      "title": "扭轉計算工坊：傳動軸應力與扭轉角",
+      "full_title": "[MOM-CH5-G2] Torsion - 扭轉計算工坊：傳動軸應力與扭轉角",
+      "file": "ch05-g2.html",
+      "published": "2026-09-30T05:00+08:00"
+    }
+  ],
+  "updated": "2026-09-30T12:05+08:00"
+}

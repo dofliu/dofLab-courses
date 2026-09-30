@@ -1,0 +1,667 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>[MOM-CH5-G2] Torsion - 扭轉計算工坊：傳動軸應力與扭轉角</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: workshop notebook — sticky phase rail on top, one worksheet card per phase, engineer guide at each phase head */
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --orange:#e8640a; --orange-soft:#fde8d8;
+  --paper:#f5f6fa; --card:#ffffff; --ink:#1c2633; --muted:#5b6778; --line:#d9dee8;
+  --good:#1f8a4c; --good-soft:#e2f4ea; --bad:#c62f2f; --bad-soft:#fbe5e5;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 10px rgba(10,30,50,.25)}
+.topbar .in{max-width:1040px;margin:0 auto;padding:10px 16px 0;display:flex;flex-direction:column;gap:8px}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand b{font-size:15px;letter-spacing:.02em}
+.brand .tag{font-family:var(--f-mono);font-size:12px;background:var(--orange);padding:2px 8px;border-radius:4px;margin-right:8px}
+.brand .who{font-size:12.5px;opacity:.85}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:0 0 auto;border:0;background:transparent;color:#c9d6e6;padding:8px 12px;font-size:14px;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button.on{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tabs button:disabled{opacity:.4;cursor:not-allowed}
+.pbar{height:6px;background:#0f2640}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--orange),#ffb069);transition:width .5s ease}
+
+/* phases */
+.phase{display:none;animation:fadeSlide .45s ease}
+.phase.on{display:block}
+@keyframes fadeSlide{from{opacity:.2;transform:translateY(14px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-top:18px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);font-weight:700}
+h2{font-size:24px;color:var(--navy);font-weight:900}
+h3{font-size:18px;color:var(--navy);font-weight:700}
+.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid2>*{min-width:0}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+
+/* guide */
+.guide{display:flex;gap:14px;align-items:flex-end;margin-top:20px}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--card);border:2px solid var(--navy);border-radius:14px;padding:12px 16px;min-width:0;flex:1}
+.bubble::before{content:"";position:absolute;left:-12px;bottom:22px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:var(--orange)}
+.eng-arm{transform-origin:66px 78px;animation:wave 2.4s ease-in-out infinite}
+@keyframes wave{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(-18deg)}80%{transform:rotate(6deg)}90%{transform:rotate(-12deg)}}
+
+/* formula tiles */
+.formulas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:14px}
+.ftile{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fbfcfe}
+.ftile .eq{font-family:var(--f-mono);font-size:17px;color:var(--navy);font-weight:600}
+.ftile small{display:block;color:var(--muted);font-size:13px;line-height:1.5;margin-top:4px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* svg figure */
+.fig{background:#eef2f8;border-radius:8px;padding:8px;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:300px}
+
+/* quiz */
+.q{border-top:1px dashed var(--line);padding-top:14px;margin-top:14px}
+.q:first-of-type{border-top:0;margin-top:6px}
+.q .stem{font-weight:500}
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.opt{text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:9px 12px;cursor:pointer;font-size:15px;color:var(--ink);transition:border-color .2s,background .2s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#eaf0f8}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:8px;padding:8px 12px;border-radius:6px;font-size:14px;display:none}
+.fb.show{display:block;animation:fadeSlide .3s ease}
+.fb.good{background:var(--good-soft);color:var(--good)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.reward{position:relative}
+.star{position:absolute;pointer-events:none;font-size:18px;color:var(--orange);animation:pop 1s ease-out forwards}
+@keyframes pop{0%{opacity:1;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.3)}}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.step{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.step>button{width:100%;text-align:left;background:#f7f9fc;border:0;padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:15px;color:var(--navy);font-weight:700}
+.step>button .n{flex:0 0 26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:13px;font-family:var(--f-mono)}
+.step.open>button .n{background:var(--orange)}
+.step .body{display:none;padding:10px 14px 14px 50px;font-size:14.5px}
+.step.open .body{display:block;animation:fadeSlide .3s ease}
+.calc{font-family:var(--f-mono);background:#f2f5fa;border-radius:6px;padding:6px 10px;display:block;margin-top:6px;overflow-x:auto;white-space:nowrap;font-size:13.5px}
+
+/* sliders */
+.ctrl{display:grid;grid-template-columns:120px 1fr 92px;gap:10px;align-items:center;margin-top:8px}
+.ctrl label{font-size:14px}
+.ctrl output{font-family:var(--f-mono);font-size:13.5px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--orange)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:14px}
+.readout div{background:var(--navy);color:#fff;border-radius:8px;padding:10px 12px}
+.readout small{display:block;font-size:12px;opacity:.8}
+.readout b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+.readout .warn{background:var(--bad)}
+
+/* buttons, inputs */
+.btn{border:0;border-radius:8px;padding:10px 18px;font-size:15px;font-weight:700;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.navy{background:var(--navy)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);width:100%}
+.field input:focus{border-color:var(--navy)}
+.numin{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.numin input{font-family:var(--f-mono);font-size:15px;padding:8px 10px;width:150px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.numin input.right{border-color:var(--good);background:var(--good-soft)}
+.numin input.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.solution{display:none;margin-top:10px;background:#fff8f2;border-left:4px solid var(--orange);padding:10px 14px;border-radius:0 6px 6px 0;font-size:14.5px}
+.solution.show{display:block;animation:fadeSlide .3s ease}
+.scorepill{display:inline-block;background:var(--orange-soft);color:var(--orange);font-weight:700;padding:3px 12px;border-radius:99px;font-family:var(--f-mono)}
+.mini{height:8px;background:#e6eaf1;border-radius:99px;overflow:hidden;margin-top:8px}
+.mini i{display:block;height:100%;background:var(--good);width:0;transition:width .4s}
+.timer{font-family:var(--f-mono);font-size:22px;font-weight:600;color:var(--navy);background:var(--orange-soft);padding:4px 14px;border-radius:8px}
+.timer.low{color:#fff;background:var(--bad)}
+.badge{display:inline-block;font-size:12px;padding:1px 8px;border-radius:4px;background:#e8edf5;color:var(--navy);font-weight:700;margin-right:6px}
+
+/* report */
+.report table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+.report th,.report td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+.report th{background:#eef2f8;color:var(--navy)}
+.tblwrap{overflow-x:auto}
+.grade{font-size:56px;font-weight:900;color:var(--orange);line-height:1}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px 18px;margin-top:10px}
+.kv div{border-bottom:1px solid var(--line);padding-bottom:4px}
+.kv small{color:var(--muted);display:block;font-size:12px}
+.ok{color:var(--good);font-weight:700}.ng{color:var(--bad);font-weight:700}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:24px 16px 30px;border-top:1px solid var(--line);margin-top:30px}
+
+@media (max-width:520px){
+  .ctrl{grid-template-columns:1fr 80px}
+  .ctrl input{grid-column:1/-1;grid-row:2}
+  h2{font-size:21px}
+  .guide svg{flex-basis:70px;width:70px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.phase,.noprint,footer .noprint{display:none!important}
+  #p-report{display:block!important}
+  body{background:#fff}
+  .card{border:1px solid #999;break-inside:avoid}
+}
+</style>
+
+<div class="topbar">
+  <div class="in">
+    <div class="brand">
+      <div><span class="tag">MOM-CH5-G2</span><b>扭轉計算工坊：傳動軸應力與扭轉角</b></div>
+      <div class="who" id="whoLbl">尚未登錄學生資料</div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-p="p-start" class="on">開始</button>
+      <button data-p="p1" disabled>Phase 1 概念</button>
+      <button data-p="p2" disabled>Phase 2 範例</button>
+      <button data-p="p3" disabled>Phase 3 練習</button>
+      <button data-p="p4" disabled>Phase 4 測試</button>
+      <button data-p="p-report" disabled>成績報告</button>
+    </nav>
+  </div>
+  <div class="pbar"><i id="pbar"></i></div>
+</div>
+
+<div class="wrap">
+
+<!-- START -->
+<section class="phase on" id="p-start">
+  <div class="guide" id="g0"></div>
+  <div class="card">
+    <div class="eyebrow">Chapter 5 · Torsion · Game 2</div>
+    <h2>把扭轉公式用在真實的傳動軸上</h2>
+    <p class="muted">本遊戲約 60 分鐘，共四個階段：概念複習（10 分）→ 範例解題（15 分）→ 練習關卡（20 分）→ 測試挑戰（15 分）。測試題數值依你的學號產生，每位同學題目不同。</p>
+    <div class="grid2" style="margin-top:10px">
+      <div class="field"><label for="inName">姓名</label><input id="inName" placeholder="例如：王小明" autocomplete="name"></div>
+      <div class="field"><label for="inId">學號</label><input id="inId" placeholder="例如：4A123045" inputmode="text"></div>
+      <div class="field"><label for="inClass">班級</label><input id="inClass" placeholder="例如：智動二甲"></div>
+    </div>
+    <div class="row"><button class="btn" id="startBtn">開始遊戲</button><span id="startMsg" class="muted" style="font-size:14px"></span></div>
+  </div>
+</section>
+
+<!-- PHASE 1 -->
+<section class="phase" id="p1">
+  <div class="guide" id="g1"></div>
+  <div class="card">
+    <div class="eyebrow">Phase 1 · 概念理解 · 10 分鐘</div>
+    <h2>擰毛巾、鎖螺絲，都是在「扭轉」</h2>
+    <div class="grid2" style="margin-top:12px">
+      <div>
+        <p>雙手反向擰毛巾，毛巾上原本平行的條紋會變成<b>螺旋線</b>。圓軸受扭矩 T 時也一樣：每個橫截面繞軸心轉一個小角度，越遠的截面轉得越多，表面的小方格被「推歪」成平行四邊形，這就是<b>剪應變 γ</b>。</p>
+        <p>因為材料在線彈性範圍內 τ = Gγ，而 γ 從軸心 0 線性增加到外表面最大，所以剪應力也是<b>中心為零、外表面最大</b>。</p>
+      </div>
+      <div class="fig">
+        <svg id="twistSvg" viewBox="0 0 440 220" role="img" aria-label="圓軸受扭矩時表面線條變成螺旋線的動畫">
+          <defs>
+            <linearGradient id="cyl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fa9c6"/><stop offset=".45" stop-color="#e6eef7"/><stop offset="1" stop-color="#5d7c9f"/></linearGradient>
+            <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#e8640a"/></marker>
+          </defs>
+          <rect x="30" y="40" width="20" height="140" fill="#1a3a5c"/>
+          <g stroke="#1a3a5c" stroke-width="2"><line x1="30" y1="50" x2="18" y2="62"/><line x1="30" y1="80" x2="18" y2="92"/><line x1="30" y1="110" x2="18" y2="122"/><line x1="30" y1="140" x2="18" y2="152"/><line x1="30" y1="170" x2="18" y2="182"/></g>
+          <rect x="50" y="60" width="320" height="100" fill="url(#cyl)"/>
+          <ellipse cx="370" cy="110" rx="16" ry="50" fill="#c9d7e6" stroke="#1a3a5c" stroke-width="1.5"/>
+          <g id="twLines"></g>
+          <path d="M392,62 A26,50 0 0 1 392,158" fill="none" stroke="#e8640a" stroke-width="4" marker-end="url(#ah)"/>
+          <text x="400" y="52" font-size="16" font-weight="700" fill="#e8640a">T</text>
+          <text x="60" y="205" font-size="13" fill="#1a3a5c" font-family="JetBrains Mono,monospace" id="twLbl">φ = 0.0°</text>
+          <text x="230" y="205" font-size="12" fill="#5b6778">固定端 → 自由端，扭轉角線性增加</text>
+        </svg>
+      </div>
+    </div>
+    <h3 style="margin-top:18px">本遊戲會用到的四條公式</h3>
+    <div class="formulas">
+      <div class="ftile"><div class="eq">τ = T·ρ / J</div><small>扭轉公式。ρ 為到軸心距離；ρ = c（外半徑）時 τ 最大：τ<sub>max</sub> = Tc/J</small></div>
+      <div class="ftile"><div class="eq">J = πc⁴ / 2</div><small>實心圓軸極慣性矩。空心軸：J = π(c<sub>o</sub>⁴ − c<sub>i</sub>⁴)/2，單位 m⁴</small></div>
+      <div class="ftile"><div class="eq">φ = T·L / (J·G)</div><small>扭轉角（rad）。多段軸：φ = Σ T<sub>i</sub>L<sub>i</sub>/(J<sub>i</sub>G<sub>i</sub>)，內扭矩要逐段求</small></div>
+      <div class="ftile"><div class="eq">P = T·ω = 2πf·T</div><small>功率（W）。ω 單位 rad/s；轉速 n rpm → ω = 2πn/60</small></div>
+    </div>
+  </div>
+  <div class="card reward" id="p1quiz">
+    <div class="eyebrow">你知道嗎？ · 3 題</div>
+    <h3>先暖身：選對會有小獎勵</h3>
+    <div id="p1qs"></div>
+    <div class="row"><span class="scorepill" id="p1score">0 / 3</span><button class="btn navy" onclick="go('p2')">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<!-- PHASE 2 -->
+<section class="phase" id="p2">
+  <div class="guide" id="g2"></div>
+  <div class="card">
+    <div class="eyebrow">範例 1 · 汽車空心傳動軸</div>
+    <h3>空心鋼軸的最大與最小剪應力</h3>
+    <div class="grid2" style="margin-top:10px">
+      <div>
+        <p>一輛後驅車的傳動軸為空心鋼管，外徑 <span class="mono">80 mm</span>、內徑 <span class="mono">68 mm</span>，引擎傳來扭矩 <span class="mono">T = 1.5 kN·m</span>。求管壁外表面與內表面的剪應力。</p>
+        <div class="steps" id="ex1"></div>
+      </div>
+      <div class="fig"><svg id="ex1Svg" viewBox="0 0 300 260" role="img" aria-label="空心軸截面剪應力分布"></svg></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="eyebrow">範例 2 · 齒輪箱階梯軸</div>
+    <h3>兩段不同直徑的鋼軸，自由端轉了幾度？</h3>
+    <div class="grid2" style="margin-top:10px">
+      <div>
+        <p>鋼軸 A 端固定於牆面。B 處齒輪施加 <span class="mono">T<sub>B</sub> = 500 N·m</span>，自由端 C 施加 <span class="mono">T<sub>C</sub> = 300 N·m</span>（同方向）。AB 段直徑 50 mm、長 0.8 m；BC 段直徑 30 mm、長 0.6 m；G = 80 GPa。</p>
+        <div class="steps" id="ex2"></div>
+      </div>
+      <div class="fig"><svg id="ex2Svg" viewBox="0 0 440 230" role="img" aria-label="階梯軸受兩個扭矩與內扭矩圖"></svg></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="eyebrow">互動實驗台</div>
+    <h3>拉動參數，看應力與扭轉角怎麼變</h3>
+    <p class="muted" style="margin-top:4px">試試看：外徑固定時把內徑慢慢加大，τ<sub>max</sub> 升得很慢，但重量大幅下降。這就是傳動軸做成空心的原因。</p>
+    <div class="grid2">
+      <div>
+        <div class="ctrl"><label for="sT">扭矩 T</label><input type="range" id="sT" min="100" max="5000" step="50" value="1500"><output id="oT"></output></div>
+        <div class="ctrl"><label for="sDo">外徑 d<sub>o</sub></label><input type="range" id="sDo" min="20" max="120" step="1" value="80"><output id="oDo"></output></div>
+        <div class="ctrl"><label for="sDi">內徑 d<sub>i</sub></label><input type="range" id="sDi" min="0" max="110" step="1" value="68"><output id="oDi"></output></div>
+        <div class="ctrl"><label for="sL">長度 L</label><input type="range" id="sL" min="0.2" max="3" step="0.1" value="1.5"><output id="oL"></output></div>
+        <div class="ctrl"><label for="sG">剪力模數 G</label><input type="range" id="sG" min="25" max="80" step="1" value="75"><output id="oG"></output></div>
+        <p class="muted" style="font-size:13px;margin-top:8px">G 參考：鋼 75–80 GPa、鈦合金 44 GPa、鋁合金 26–27 GPa。容許剪應力以 80 MPa 為警示線。</p>
+      </div>
+      <div>
+        <div class="fig"><svg id="labSvg" viewBox="0 0 300 220" role="img" aria-label="截面剪應力線性分布"></svg></div>
+        <div class="readout">
+          <div id="rdTau"><small>τ<sub>max</sub>（外表面）</small><b id="rTau">–</b></div>
+          <div><small>τ（內表面）</small><b id="rTi">–</b></div>
+          <div><small>扭轉角 φ</small><b id="rPhi">–</b></div>
+          <div><small>與同外徑實心軸相比重量</small><b id="rW">–</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="row"><button class="btn navy" onclick="go('p3')">前往 Phase 3 練習 →</button></div>
+  </div>
+</section>
+
+<!-- PHASE 3 -->
+<section class="phase" id="p3">
+  <div class="guide" id="g3"></div>
+  <div class="card">
+    <div class="eyebrow">Phase 3 · 練習關卡 · 20 分鐘</div>
+    <div class="row" style="justify-content:space-between;margin-top:0">
+      <h3>四道練習題，每題 10 分</h3>
+      <span class="scorepill" id="p3score">0 / 40</span>
+    </div>
+    <div class="mini"><i id="p3bar"></i></div>
+    <p class="muted" style="font-size:13.5px;margin-top:8px">計分：第一次就答對 10 分，修正後答對 6 分；答對前先看解題步驟則該題 0 分。計算題容許誤差 ±2%。</p>
+    <div id="p3qs"></div>
+    <div class="row"><button class="btn navy" onclick="go('p4')">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<!-- PHASE 4 -->
+<section class="phase" id="p4">
+  <div class="guide" id="g4"></div>
+  <div class="card" id="p4confirm">
+    <div class="eyebrow">Phase 4 · 測試挑戰 · 15 分鐘</div>
+    <h3>確認你的資料</h3>
+    <div class="kv" id="p4info"></div>
+    <p class="muted" style="margin-top:10px">共 5 題，每題 12 分。題目數值由學號產生。按下開始後倒數 15 分鐘，時間到會自動交卷。全部作答後才能交卷查看成績。</p>
+    <div class="row"><button class="btn" id="p4start">開始測試</button></div>
+  </div>
+  <div class="card" id="p4exam" hidden>
+    <div class="row" style="justify-content:space-between;margin-top:0">
+      <h3>正式測試</h3><span class="timer" id="timer">15:00</span>
+    </div>
+    <div class="mini"><i id="p4bar"></i></div>
+    <div id="p4qs"></div>
+    <div class="row"><button class="btn" id="p4submit" disabled>交卷並查看成績</button><span class="muted" id="p4left" style="font-size:14px"></span></div>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section class="phase" id="p-report">
+  <div class="card report" id="reportCard"></div>
+  <div class="row noprint">
+    <button class="btn" onclick="try{window.print()}catch(e){}">列印 / 存成 PDF</button>
+    <button class="btn ghost" id="copyBtn">複製成績文字</button>
+    <span class="muted" id="copyMsg" style="font-size:13.5px">也可以複製成績文字，貼到作業繳交區。</span>
+  </div>
+</section>
+
+</div>
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const PI=Math.PI;
+const f=(x,d=2)=>Number(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sci=x=>{const e=Math.floor(Math.log10(Math.abs(x)));return (x/10**e).toFixed(3)+'×10^'+e};
+const J=(co,ci=0)=>PI/2*(co**4-ci**4);
+const S={name:'',id:'',cls:'',seed:1,p1:{},p3:{},p2steps:new Set(),p4:{answers:{},started:false,done:false},visited:new Set(['p-start'])};
+const GAME='[MOM-CH5-G2] Torsion - 扭轉計算工坊：傳動軸應力與扭轉角';
+
+/* ---------- engineer ---------- */
+function engineer(){return `<svg viewBox="0 0 100 130" aria-hidden="true">
+<ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+<rect x="30" y="72" width="40" height="44" rx="8" fill="#1a3a5c"/>
+<rect x="44" y="72" width="12" height="44" fill="#e8640a" opacity=".9"/>
+<rect x="33" y="112" width="12" height="12" rx="3" fill="#2d2d2d"/><rect x="55" y="112" width="12" height="12" rx="3" fill="#2d2d2d"/>
+<g class="eng-arm"><rect x="64" y="76" width="10" height="30" rx="5" fill="#1a3a5c"/><circle cx="69" cy="106" r="5" fill="#f3c9a4"/>
+<g transform="translate(69 108) rotate(-30)"><rect x="-2" y="0" width="4" height="18" fill="#8a96a8"/><circle cx="0" cy="20" r="4" fill="none" stroke="#8a96a8" stroke-width="3"/></g></g>
+<rect x="26" y="76" width="10" height="28" rx="5" fill="#1a3a5c"/>
+<circle cx="50" cy="50" r="20" fill="#f3c9a4"/>
+<circle cx="43" cy="50" r="2.6" fill="#1c2633"/><circle cx="57" cy="50" r="2.6" fill="#1c2633"/>
+<path d="M43 58 Q50 64 57 58" stroke="#1c2633" stroke-width="2" fill="none" stroke-linecap="round"/>
+<circle cx="38" cy="56" r="3" fill="#f09a86" opacity=".6"/><circle cx="62" cy="56" r="3" fill="#f09a86" opacity=".6"/>
+<path d="M27 44 Q28 24 50 24 Q72 24 73 44 Z" fill="#e8640a"/><rect x="24" y="42" width="52" height="6" rx="3" fill="#c85408"/><rect x="47" y="26" width="6" height="16" fill="#ffb069"/>
+</svg>`}
+function guide(id,html){$('#'+id).innerHTML=engineer()+`<div class="bubble"><b>扭力工程師 阿轉：</b>${html}</div>`}
+guide('g0','嗨！上一關你用擰毛巾理解了扭轉，這一關我們要<b>動手算</b>：空心傳動軸的應力、階梯軸的扭轉角、還有馬達功率換算扭矩。先登錄資料吧！');
+guide('g1','先花幾分鐘複習觀念。注意看動畫裡的線條：<b>越靠近自由端，扭得越多</b>。等一下所有計算都從這四條公式出發。');
+guide('g2','每個範例都拆成幾個步驟，<b>點一下步驟</b>就會展開說明。我最常看到的錯誤是單位：mm 一定要先換成 m 再代入！');
+guide('g3','換你上場了！計算題請依題目指定單位作答。卡住可以看解題步驟，不過那題就不計分囉。');
+guide('g4','最後一關！每位同學的數值都不一樣，所以請獨立作答。<b>先求內扭矩、再換單位、最後代公式</b>，你一定行！');
+
+/* ---------- navigation ---------- */
+const tabs=[...document.querySelectorAll('#tabs button')];
+function go(p){
+  if(p==='p-report'&&!S.p4.done)return;
+  document.querySelectorAll('.phase').forEach(s=>s.classList.toggle('on',s.id===p));
+  tabs.forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  S.visited.add(p);
+  if(p==='p4')renderP4Info();
+  window.scrollTo({top:0,behavior:'smooth'});
+  progress();
+}
+window.go=go;
+tabs.forEach(b=>b.addEventListener('click',()=>{if(!b.disabled)go(b.dataset.p)}));
+function progress(){
+  const a=Object.keys(S.p1).length/3;
+  const b=S.p2steps.size/(EX1.length+EX2.length);
+  const c=Object.values(S.p3).filter(q=>q.done).length/4;
+  const d=S.p4.done?1:Object.keys(S.p4.answers).length/5;
+  $('#pbar').style.width=((a+b+c+d)/4*100).toFixed(1)+'%';
+}
+
+/* ---------- start ---------- */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,'');
+  if(digits.length>=1){const n=parseInt(digits.slice(-4),10);if(n>0)return n}
+  let h=0;for(const ch of id)h=(h*31+ch.charCodeAt(0))>>>0;return (h%9999)+1;
+}
+$('#startBtn').addEventListener('click',()=>{
+  const n=$('#inName').value.trim(),i=$('#inId').value.trim(),c=$('#inClass').value.trim();
+  if(!n||!i||!c){$('#startMsg').textContent='請填寫姓名、學號與班級三個欄位。';$('#startMsg').style.color='var(--bad)';return}
+  S.name=n;S.id=i;S.cls=c;S.seed=seedFrom(i);
+  $('#whoLbl').textContent=`${c}｜${n}｜${i}`;
+  tabs.forEach(b=>{if(b.dataset.p!=='p-report')b.disabled=false});
+  buildP4();
+  go('p1');
+});
+
+/* ---------- twist animation ---------- */
+(function(){
+  const g=$('#twLines'),lbl=$('#twLbl');const x0=50,x1=370,cy=110,R=50,N=10;
+  let t0=performance.now();
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function frame(now){
+    const s=reduce?0.7:(0.5-0.5*Math.cos((now-t0)/1400));
+    const phi=s*1.3; let out='';
+    for(let k=0;k<N;k++){
+      const th0=k*2*PI/N;let seg=[];
+      for(let j=0;j<=40;j++){
+        const x=x0+(x1-x0)*j/40,th=th0+phi*j/40,depth=Math.sin(th),y=cy-R*Math.cos(th);
+        if(depth>0)seg.push(x.toFixed(1)+','+y.toFixed(1));
+        else if(seg.length){out+=`<polyline points="${seg.join(' ')}" fill="none" stroke="#1a3a5c" stroke-width="1.6" opacity=".8"/>`;seg=[]}
+      }
+      if(seg.length)out+=`<polyline points="${seg.join(' ')}" fill="none" stroke="#1a3a5c" stroke-width="1.6" opacity=".8"/>`;
+    }
+    g.innerHTML=out;lbl.textContent='φ = '+(phi*180/PI).toFixed(1)+'°';
+    if(!reduce)requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- reward ---------- */
+function burst(el){
+  const r=el.getBoundingClientRect(),host=el.closest('.reward'),hr=host.getBoundingClientRect();
+  for(let i=0;i<10;i++){const s=document.createElement('span');s.className='star';s.textContent=i%2?'★':'✦';
+    s.style.left=(r.left-hr.left+r.width*0.8)+'px';s.style.top=(r.top-hr.top+r.height/2-10)+'px';
+    const a=Math.random()*2*PI,d=40+Math.random()*50;s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');
+    host.appendChild(s);setTimeout(()=>s.remove(),1000)}
+}
+
+/* ---------- phase 1 quiz ---------- */
+const P1=[
+ {s:'擰毛巾時，毛巾表面的纖維主要承受哪一種應力？',o:['剪應力（纖維被相對錯動）','正壓應力（被擠壓）','只有彎曲應力'],a:0,e:'扭轉讓相鄰截面相對轉動，表面小方格被推歪，產生的是剪應變與剪應力。'},
+ {s:'實心圓軸受扭矩時，剪應力最大的位置在哪裡？',o:['軸心','外表面','整個截面相等'],a:1,e:'τ = Tρ/J 與 ρ 成正比，ρ = c 的外表面最大，軸心為零。'},
+ {s:'汽車傳動軸常做成空心鋼管，最主要的原因是？',o:['空心比較好加工','軸心附近的材料應力很小，挖掉可大幅減重而強度損失少','空心內部要走電線'],a:1,e:'J 與 ρ⁴ 有關，外圈材料貢獻大部分抗扭能力；內部材料承受的 τ 小，挖空很划算。'}];
+$('#p1qs').innerHTML=P1.map((q,i)=>`<div class="q" data-i="${i}"><div class="stem">${i+1}. ${q.s}</div><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div><div class="fb"></div></div>`).join('');
+$('#p1qs').addEventListener('click',e=>{
+  const b=e.target.closest('.opt');if(!b)return;const qd=b.closest('.q'),i=+qd.dataset.i,j=+b.dataset.j,q=P1[i];
+  if(S.p1[i]===true)return;
+  qd.querySelectorAll('.opt').forEach(x=>x.classList.remove('right','wrong'));
+  const fb=qd.querySelector('.fb');
+  if(j===q.a){b.classList.add('right');S.p1[i]=true;fb.className='fb show good';fb.textContent='✓ 答對了！'+q.e;burst(b)}
+  else{b.classList.add('wrong');if(S.p1[i]===undefined)S.p1[i]=false;fb.className='fb show bad';fb.textContent='✗ 再想想：想像截面上不同半徑位置的變形量。'}
+  $('#p1score').textContent=Object.values(S.p1).filter(v=>v===true).length+' / 3';progress();
+});
+
+/* ---------- phase 2 examples ---------- */
+const e1={T:1500,co:0.040,ci:0.034};e1.J=J(e1.co,e1.ci);e1.to=e1.T*e1.co/e1.J;e1.ti=e1.T*e1.ci/e1.J;
+const EX1=[
+ ['整理已知並換成 SI 單位',`T = 1.5 kN·m = 1500 N·m；c<sub>o</sub> = 80/2 = 40 mm = 0.040 m；c<sub>i</sub> = 68/2 = 34 mm = 0.034 m。<span class="calc">直徑先除以 2 得半徑，再 mm → m</span>`,0],
+ ['計算空心截面極慣性矩 J',`J = π(c<sub>o</sub>⁴ − c<sub>i</sub>⁴)/2<span class="calc">J = π(0.040⁴ − 0.034⁴)/2 = ${sci(e1.J)} m⁴</span>`,1],
+ ['外表面最大剪應力 τ<sub>max</sub>',`ρ = c<sub>o</sub>：<span class="calc">τ_max = Tc_o/J = 1500×0.040 / ${sci(e1.J)} = ${f(e1.to/1e6)} MPa</span>`,2],
+ ['內表面剪應力 τ<sub>i</sub>',`ρ = c<sub>i</sub>，也可用線性比例：<span class="calc">τ_i = τ_max × c_i/c_o = ${f(e1.to/1e6)} × 34/40 = ${f(e1.ti/1e6)} MPa</span>管壁內外應力只差 15%，材料幾乎都被「用滿」。`,3]];
+const e2={TB:500,TC:300,d1:0.05,d2:0.03,L1:0.8,L2:0.6,G:80e9};
+e2.TAB=e2.TB+e2.TC;e2.TBC=e2.TC;e2.J1=J(e2.d1/2);e2.J2=J(e2.d2/2);
+e2.p1=e2.TAB*e2.L1/(e2.J1*e2.G);e2.p2=e2.TBC*e2.L2/(e2.J2*e2.G);e2.p=e2.p1+e2.p2;
+const EX2=[
+ ['用截面法求各段內扭矩',`在 BC 段切開取右側自由體：T<sub>BC</sub> = T<sub>C</sub> = 300 N·m。<br>在 AB 段切開取右側：T<sub>AB</sub> = T<sub>B</sub> + T<sub>C</sub> = 800 N·m。<span class="calc">取自由端那側做自由體，就不用先求牆的反扭矩</span>`,0],
+ ['各段極慣性矩',`<span class="calc">J_AB = π(0.025)⁴/2 = ${sci(e2.J1)} m⁴</span><span class="calc">J_BC = π(0.015)⁴/2 = ${sci(e2.J2)} m⁴</span>`,1],
+ ['各段扭轉角',`<span class="calc">φ_AB = 800×0.8 / (${sci(e2.J1)}×80×10⁹) = ${f(e2.p1,5)} rad</span><span class="calc">φ_BC = 300×0.6 / (${sci(e2.J2)}×80×10⁹) = ${f(e2.p2,5)} rad</span>`,2],
+ ['疊加得到 C 端扭轉角',`兩段同方向，直接相加：<span class="calc">φ_C = ${f(e2.p1,5)} + ${f(e2.p2,5)} = ${f(e2.p,5)} rad = ${f(e2.p*180/PI)}°</span>細的 BC 段雖然扭矩小，但 J 小很多，貢獻了大部分的轉角。`,3]];
+function buildSteps(host,arr,tag,onStep){
+  host.innerHTML=arr.map((s,i)=>`<div class="step" data-k="${tag}${i}"><button aria-expanded="false"><span class="n">${i+1}</span>${s[0]}</button><div class="body">${s[1]}</div></div>`).join('');
+  host.addEventListener('click',e=>{const b=e.target.closest('.step>button');if(!b)return;const st=b.parentElement,k=st.dataset.k;
+    st.classList.toggle('open');b.setAttribute('aria-expanded',st.classList.contains('open'));S.p2steps.add(k);onStep(+k.slice(1));progress()});
+}
+function drawEx1(stage){
+  const cx=100,cy=130,Ro=80,Ri=68;let s=`<circle cx="${cx}" cy="${cy}" r="${Ro}" fill="#9fb4cc" stroke="#1a3a5c" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="${Ri}" fill="#eef2f8" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<path d="M${cx+40},${cy-92} A95,95 0 0 1 ${cx+92},${cy-40}" fill="none" stroke="#e8640a" stroke-width="3" marker-end="url(#ah2)"/><text x="${cx+70}" y="${cy-92}" fill="#e8640a" font-weight="700" font-size="14">T</text>`;
+  if(stage>=0)s+=`<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-Ro}" stroke="#1a3a5c" stroke-dasharray="3 3"/><text x="${cx+4}" y="${cy-40}" font-size="11" fill="#1a3a5c">c_o=40</text><line x1="${cx}" y1="${cy}" x2="${cx-Ri*0.7}" y2="${cy+Ri*0.7}" stroke="#1a3a5c" stroke-dasharray="3 3"/><text x="${cx-52}" y="${cy+30}" font-size="11" fill="#1a3a5c">c_i=34</text>`;
+  if(stage>=2){const h1=70,h2=h1*34/40;
+    s+=`<g><line x1="${cx+Ri}" y1="${cy}" x2="${cx+Ri}" y2="${cy-h2}" stroke="#e8640a" stroke-width="3"/><line x1="${cx+Ro}" y1="${cy}" x2="${cx+Ro}" y2="${cy-h1}" stroke="#e8640a" stroke-width="3"/><polygon points="${cx+Ri},${cy} ${cx+Ri},${cy-h2} ${cx+Ro},${cy-h1} ${cx+Ro},${cy}" fill="#e8640a" opacity=".25"/><line x1="${cx}" y1="${cy}" x2="${cx+Ri}" y2="${cy-h2}" stroke="#e8640a" stroke-dasharray="4 4"/></g>`;
+    s+=`<text x="${cx+Ro+6}" y="${cy-h1+4}" font-size="12" font-weight="700" fill="#e8640a">${f(e1.to/1e6,1)} MPa</text>`;}
+  if(stage>=3)s+=`<text x="${cx+Ri-8}" y="${cy-70*34/40-8}" font-size="12" font-weight="700" fill="#c85408" text-anchor="end">${f(e1.ti/1e6,1)}</text>`;
+  s+=`<text x="10" y="252" font-size="11" fill="#5b6778">剪應力沿半徑線性分布（虛線延伸至軸心為 0）</text>`;
+  $('#ex1Svg').innerHTML=`<defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#e8640a"/></marker></defs>`+s;
+}
+function drawEx2(stage){
+  let s=`<defs><marker id="ah3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#e8640a"/></marker></defs>`;
+  s+=`<rect x="20" y="20" width="14" height="100" fill="#1a3a5c"/><text x="14" y="138" font-size="13" font-weight="700" fill="#1a3a5c">A</text>`;
+  s+=`<rect x="34" y="45" width="220" height="50" fill="#9fb4cc" stroke="#1a3a5c"/><rect x="254" y="55" width="150" height="30" fill="#c3d2e2" stroke="#1a3a5c"/>`;
+  s+=`<rect x="244" y="30" width="20" height="80" rx="3" fill="#5d7c9f"/><text x="250" y="138" font-size="13" font-weight="700" fill="#1a3a5c">B</text><text x="402" y="108" font-size="13" font-weight="700" fill="#1a3a5c">C</text>`;
+  s+=`<path d="M272,26 A18,44 0 0 1 272,114" fill="none" stroke="#e8640a" stroke-width="3" marker-end="url(#ah3)"/><text x="278" y="24" font-size="12" fill="#e8640a" font-weight="700">500 N·m</text>`;
+  s+=`<path d="M414,50 A12,22 0 0 1 414,92" fill="none" stroke="#e8640a" stroke-width="3" marker-end="url(#ah3)"/><text x="360" y="40" font-size="12" fill="#e8640a" font-weight="700">300 N·m</text>`;
+  s+=`<text x="120" y="75" font-size="11" fill="#1a3a5c">Ø50, 0.8 m</text><text x="300" y="75" font-size="11" fill="#1a3a5c">Ø30, 0.6 m</text>`;
+  if(stage>=0){const base=205,sc=0.07;
+    s+=`<line x1="34" y1="${base}" x2="404" y2="${base}" stroke="#5b6778"/><text x="4" y="${base+4}" font-size="10" fill="#5b6778">T(x)</text>`;
+    s+=`<rect x="34" y="${base-800*sc}" width="220" height="${800*sc}" fill="#e8640a" opacity=".3" stroke="#e8640a"/><rect x="254" y="${base-300*sc}" width="150" height="${300*sc}" fill="#e8640a" opacity=".3" stroke="#e8640a"/>`;
+    s+=`<text x="130" y="${base-800*sc-4}" font-size="12" font-weight="700" fill="#c85408">800 N·m</text><text x="300" y="${base-300*sc-4}" font-size="12" font-weight="700" fill="#c85408">300 N·m</text>`;}
+  if(stage>=3)s+=`<text x="300" y="130" font-size="12" font-weight="700" fill="#1a3a5c">φ_C = ${f(e2.p*180/PI)}°</text>`;
+  $('#ex2Svg').innerHTML=s;
+}
+let ex1s=-1,ex2s=-1;
+buildSteps($('#ex1'),EX1,'a',i=>{ex1s=Math.max(ex1s,i);drawEx1(ex1s)});
+buildSteps($('#ex2'),EX2,'b',i=>{ex2s=Math.max(ex2s,i);drawEx2(ex2s)});
+drawEx1(-1);drawEx2(-1);
+
+/* ---------- lab ---------- */
+const sl=['sT','sDo','sDi','sL','sG'].map(id=>$('#'+id));
+function lab(){
+  const T=+$('#sT').value,dO=+$('#sDo').value;let dI=+$('#sDi').value;
+  if(dI>dO-4){dI=Math.max(0,dO-4);$('#sDi').value=dI}
+  const L=+$('#sL').value,G=+$('#sG').value;
+  $('#oT').textContent=T+' N·m';$('#oDo').textContent=dO+' mm';$('#oDi').textContent=dI+' mm';$('#oL').textContent=L.toFixed(1)+' m';$('#oG').textContent=G+' GPa';
+  const co=dO/2000,ci=dI/2000,Jv=J(co,ci),tmax=T*co/Jv,ti=T*ci/Jv,phi=T*L/(Jv*G*1e9);
+  $('#rTau').textContent=f(tmax/1e6,1)+' MPa';$('#rTi').textContent=f(ti/1e6,1)+' MPa';
+  $('#rPhi').textContent=f(phi*180/PI,2)+'°';$('#rW').textContent=f((1-(dI/dO)**2)*100,0)+'%';
+  $('#rdTau').classList.toggle('warn',tmax>80e6);
+  const cx=90,cy=110,Rmax=85,Ro=Rmax*dO/120+15,Ri=dI>0?Ro*dI/dO:0;
+  const h=Math.min(95,tmax/1e6*0.9),hi=h*(Ri/Ro);
+  let s=`<circle cx="${cx}" cy="${cy}" r="${Ro}" fill="#9fb4cc" stroke="#1a3a5c" stroke-width="2"/>`;
+  if(Ri>0)s+=`<circle cx="${cx}" cy="${cy}" r="${Ri}" fill="#eef2f8" stroke="#1a3a5c" stroke-width="1.5"/>`;
+  s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Ro+40}" y2="${cy}" stroke="#5b6778"/>`;
+  s+=`<polygon points="${cx+Ri},${cy} ${cx+Ri},${cy-hi} ${cx+Ro},${cy-h} ${cx+Ro},${cy}" fill="#e8640a" opacity=".35" stroke="#e8640a" stroke-width="2"/>`;
+  s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Ri}" y2="${cy-hi}" stroke="#e8640a" stroke-dasharray="4 4"/>`;
+  const warnY=cy-80*0.9;s+=`<line x1="${cx}" y1="${warnY}" x2="${cx+Ro+40}" y2="${warnY}" stroke="#c62f2f" stroke-dasharray="5 4"/><text x="${cx+Ro+42}" y="${warnY+4}" font-size="10" fill="#c62f2f">80 MPa</text>`;
+  s+=`<text x="${cx+Ro+4}" y="${Math.max(12,cy-h-4)}" font-size="12" font-weight="700" fill="#c85408">${f(tmax/1e6,1)}</text>`;
+  s+=`<text x="8" y="214" font-size="11" fill="#5b6778">截面示意（左）與 τ 分布（右，高度 ∝ τ）</text>`;
+  $('#labSvg').innerHTML=s;
+}
+sl.forEach(x=>x.addEventListener('input',lab));lab();
+
+/* ---------- phase 3 ---------- */
+const q1={T:500,c:0.02};q1.J=J(q1.c);q1.ans=q1.T*q1.c/q1.J/1e6;
+const q3={P:30e3,n:1800};q3.w=2*PI*q3.n/60;q3.ans=q3.P/q3.w;
+const q4={T:1200,c:0.025,L:2,G:75e9};q4.J=J(q4.c);q4.rad=q4.T*q4.L/(q4.J*q4.G);q4.ans=q4.rad*180/PI;
+const Jh=J(0.025,0.02),Js=J(0.015);
+const P3=[
+ {type:'num',s:'一實心鋼軸直徑 40 mm，承受扭矩 500 N·m。求最大剪應力 τ<sub>max</sub>。',unit:'MPa',ans:q1.ans,hint:'先把直徑換成半徑 c = 0.020 m，J = πc⁴/2，再用 τ = Tc/J。',
+  sol:`<span class="calc">J = π(0.020)⁴/2 = ${sci(q1.J)} m⁴</span><span class="calc">τ_max = 500×0.020 / ${sci(q1.J)} = ${f(q1.ans)} MPa</span>`},
+ {type:'mc',s:'空心軸（外徑 50 mm、內徑 40 mm）與「截面積相同」的實心軸（直徑 30 mm）承受相同扭矩，何者 τ<sub>max</sub> 較小？',o:['實心軸較小','空心軸較小','兩者相同','無法判斷，需要知道材料'],a:1,hint:'面積相同代表用料一樣。比較兩者的 c/J 值。',
+  sol:`空心：<span class="calc">c/J = 0.025 / ${sci(Jh)} = ${f(0.025/Jh,0)} m⁻³</span>實心：<span class="calc">c/J = 0.015 / ${sci(Js)} = ${f(0.015/Js,0)} m⁻³</span>空心軸的 τ<sub>max</sub> 只有實心軸的 ${f((0.025/Jh)/(0.015/Js)*100,0)}%，同樣用料抗扭能力更好。`},
+ {type:'num',s:'一台 30 kW 的馬達以 1800 rpm 帶動輸送帶軸。求軸所承受的扭矩 T。',unit:'N·m',ans:q3.ans,hint:'P = Tω，ω 要用 rad/s：ω = 2πn/60。',
+  sol:`<span class="calc">ω = 2π×1800/60 = ${f(q3.w)} rad/s</span><span class="calc">T = P/ω = 30000 / ${f(q3.w)} = ${f(q3.ans)} N·m</span>`},
+ {type:'num',s:'實心鋼軸直徑 50 mm、長 2 m，G = 75 GPa，兩端承受扭矩 1.2 kN·m。求兩端相對扭轉角 φ（以「度」作答）。',unit:'°',ans:q4.ans,hint:'φ = TL/(JG) 算出來是弳度 rad，最後乘上 180/π 轉成度。',
+  sol:`<span class="calc">J = π(0.025)⁴/2 = ${sci(q4.J)} m⁴</span><span class="calc">φ = 1200×2 / (${sci(q4.J)}×75×10⁹) = ${f(q4.rad,5)} rad</span><span class="calc">φ = ${f(q4.rad,5)} × 180/π = ${f(q4.ans)}°</span>`}];
+const cheers=['太棒了，工程師的直覺出來了！','完全正確，單位也處理得漂亮！','好厲害，這題很多人會卡住！','正確！你已經可以設計傳動軸了！'];
+function renderP3(){
+  $('#p3qs').innerHTML=P3.map((q,i)=>{
+    const input=q.type==='num'?`<div class="numin"><input id="p3in${i}" type="number" step="any" inputmode="decimal" placeholder="輸入數值"><span>${q.unit}</span><button class="btn" data-act="chk" data-i="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-act="mc" data-i="${i}" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div>`;
+    return `<div class="q reward" id="p3q${i}"><div class="stem"><span class="badge">${q.type==='num'?'計算':'選擇'}</span>${i+1}. ${q.s}</div>${input}<div class="fb" id="p3fb${i}"></div><div class="row"><button class="btn ghost" data-act="sol" data-i="${i}">查看解題步驟</button></div><div class="solution" id="p3sol${i}">${q.sol}</div></div>`}).join('');
+}
+renderP3();
+function p3Update(){
+  const tot=Object.values(S.p3).reduce((a,q)=>a+(q.pts||0),0);
+  $('#p3score').textContent=tot+' / 40';
+  $('#p3bar').style.width=(Object.values(S.p3).filter(q=>q.done).length/4*100)+'%';progress();
+}
+function p3Result(i,ok,el){
+  const st=S.p3[i]||(S.p3[i]={tries:0,sol:false,done:false,pts:0});if(st.done)return;
+  st.tries++;const fb=$('#p3fb'+i);
+  if(ok){st.done=true;st.pts=st.sol?0:(st.tries===1?10:6);fb.className='fb show good';fb.textContent=`✓ ${cheers[i]}（+${st.pts} 分）`;burst(el)}
+  else{fb.className='fb show bad';fb.textContent='✗ 還差一點。提示：'+P3[i].hint}
+  p3Update();
+}
+$('#p3qs').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const i=+b.dataset.i,q=P3[i];
+  if(b.dataset.act==='sol'){const st=S.p3[i]||(S.p3[i]={tries:0,sol:false,done:false,pts:0});if(!st.done)st.sol=true;$('#p3sol'+i).classList.toggle('show');return}
+  if(S.p3[i]&&S.p3[i].done)return;
+  if(b.dataset.act==='chk'){const inp=$('#p3in'+i),v=parseFloat(inp.value);if(isNaN(v))return;const ok=Math.abs(v-q.ans)/Math.abs(q.ans)<=0.02;inp.classList.remove('right','wrong');inp.classList.add(ok?'right':'wrong');p3Result(i,ok,b)}
+  if(b.dataset.act==='mc'){const j=+b.dataset.j,ok=j===q.a;b.parentElement.querySelectorAll('.opt').forEach(x=>x.classList.remove('right','wrong'));b.classList.add(ok?'right':'wrong');p3Result(i,ok,b)}
+});
+
+/* ---------- phase 4 ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let P4=[];
+function buildP4(){
+  const r=mulberry32(S.seed*2654435761>>>0);const v=b=>b*(0.8+0.4*r());
+  const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  // T1 hollow shaft
+  const doM=Math.round(v(60)),diM=Math.round(doM*v(0.72)),T1=Math.round(v(2000)/10)*10;
+  const J1=J(doM/2000,diM/2000),a1=T1*(doM/2000)/J1/1e6;
+  // T2 design diameter from power
+  const P=Math.round(v(45)),n=Math.round(v(1200)/10)*10,ta=Math.round(v(60));
+  const w=2*PI*n/60,T2=P*1000/w,d2=Math.cbrt(16*T2/(PI*ta*1e6))*1000;
+  // T3 stepped shaft
+  const TB=Math.round(v(600)/10)*10,TC=Math.round(v(250)/10)*10,dA=Math.round(v(50)),dB=Math.round(v(32)),LA=+v(0.9).toFixed(2),LB=+v(0.7).toFixed(2),G=75e9;
+  const a3=((TB+TC)*LA/(J(dA/2000)*G)+TC*LB/(J(dB/2000)*G))*180/PI;
+  // T4 concept (variant)
+  const V=[
+    {s:'一實心圓軸承受的扭矩不變，若直徑加倍，最大剪應力 τ<sub>max</sub> 變為原來的幾倍？',c:'1/8 倍',w:['1/2 倍','1/4 倍','1/16 倍'],why:'τ = Tc/J ∝ 1/c³，c 變 2 倍 → τ 變 1/8。'},
+    {s:'一實心圓軸承受的扭矩與長度不變，若直徑加倍，扭轉角 φ 變為原來的幾倍？',c:'1/16 倍',w:['1/2 倍','1/4 倍','1/8 倍'],why:'φ = TL/(JG) ∝ 1/c⁴，c 變 2 倍 → φ 變 1/16。'},
+    {s:'馬達輸出功率不變，若轉速提高為原來的 2 倍，軸承受的扭矩變為原來的幾倍？',c:'1/2 倍',w:['2 倍','4 倍','1/4 倍'],why:'P = Tω，P 固定時 T ∝ 1/ω。'},
+    {s:'同一根軸，若長度加倍而扭矩減半，扭轉角 φ 變為原來的幾倍？',c:'1 倍（不變）',w:['1/4 倍','2 倍','4 倍'],why:'φ ∝ TL，(1/2)×2 = 1。'}];
+  const vv=V[Math.floor(r()*V.length)];
+  // T5 inner-surface stress
+  const co5=Math.round(v(45)),ci5=Math.round(co5*v(0.7)),tm5=Math.round(v(80));
+  const c5=tm5*ci5/co5;
+  const d5=[c5,tm5,tm5*(ci5/co5)**2,tm5*(1-ci5/co5)].map(x=>f(x,1)+' MPa');
+  P4=[
+    {type:'num',s:`空心鋼軸外徑 ${doM} mm、內徑 ${diM} mm，承受扭矩 ${T1} N·m。求最大剪應力 τ<sub>max</sub>。`,unit:'MPa',ans:a1,show:f(a1)+' MPa'},
+    {type:'num',s:`一台 ${P} kW 馬達以 ${n} rpm 驅動實心鋼軸，容許剪應力 τ<sub>allow</sub> = ${ta} MPa。求所需最小軸徑 d。`,unit:'mm',ans:d2,show:f(d2)+' mm'},
+    {type:'num',s:`階梯鋼軸 A 端固定，B 處施加 ${TB} N·m、自由端 C 施加 ${TC} N·m（同方向）。AB 段直徑 ${dA} mm、長 ${LA} m；BC 段直徑 ${dB} mm、長 ${LB} m；G = 75 GPa。求 C 端扭轉角（度）。`,unit:'°',ans:a3,show:f(a3)+'°'},
+    {type:'mc',s:vv.s,opts:shuffle([vv.c,...vv.w]),ans:vv.c,show:vv.c,why:vv.why},
+    {type:'mc',s:`空心軸外徑 ${co5*2} mm、內徑 ${ci5*2} mm，已知外表面剪應力為 ${tm5} MPa。判斷內表面的剪應力為多少？`,opts:shuffle(d5),ans:d5[0],show:d5[0],why:'τ 沿半徑線性分布：τ_i = τ_max × c_i/c_o。'}];
+}
+function renderP4Info(){
+  $('#p4info').innerHTML=`<div><small>姓名</small>${esc(S.name)}</div><div><small>學號</small>${esc(S.id)}</div><div><small>班級</small>${esc(S.cls)}</div><div><small>題目種子</small><span class="mono">${S.seed}</span></div>`;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+let timerId=null,endAt=0;
+$('#p4start').addEventListener('click',()=>{
+  if(S.p4.started)return;S.p4.started=true;$('#p4confirm').hidden=true;$('#p4exam').hidden=false;
+  $('#p4qs').innerHTML=P4.map((q,i)=>{
+    const body=q.type==='num'?`<div class="numin"><input id="p4in${i}" data-i="${i}" type="number" step="any" inputmode="decimal" placeholder="輸入數值"><span>${q.unit}</span></div>`
+     :`<div class="opts">${q.opts.map((o,j)=>`<button class="opt" data-i="${i}" data-v="${esc(o)}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div>`;
+    return `<div class="q"><div class="stem"><span class="badge">${q.type==='num'?'計算':'判斷'}</span>${i+1}. ${q.s}</div>${body}</div>`}).join('');
+  endAt=Date.now()+15*60*1000;tick();timerId=setInterval(tick,1000);p4Check();
+});
+$('#p4qs').addEventListener('input',e=>{const t=e.target;if(t.matches('input')){const v=t.value.trim();if(v==='')delete S.p4.answers[t.dataset.i];else S.p4.answers[t.dataset.i]=v;p4Check()}});
+$('#p4qs').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;b.parentElement.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');S.p4.answers[b.dataset.i]=P4[+b.dataset.i].opts.find(o=>esc(o)===b.dataset.v);p4Check()});
+function p4Check(){const n=Object.keys(S.p4.answers).length;$('#p4submit').disabled=n<5;$('#p4left').textContent=n<5?`已作答 ${n} / 5 題`:'全部作答完成，可以交卷。';$('#p4bar').style.width=n/5*100+'%';progress()}
+function tick(){const ms=Math.max(0,endAt-Date.now()),m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);$('#timer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;$('#timer').classList.toggle('low',ms<120000);if(ms<=0)finish(true)}
+$('#p4submit').addEventListener('click',()=>finish(false));
+
+function finish(timeout){
+  if(S.p4.done)return;S.p4.done=true;clearInterval(timerId);
+  const used=Math.round((15*60*1000-Math.max(0,endAt-Date.now()))/1000);
+  const rows=P4.map((q,i)=>{const a=S.p4.answers[i];let ok=false;
+    if(q.type==='num'){const v=parseFloat(a);ok=!isNaN(v)&&Math.abs(v-q.ans)/Math.abs(q.ans)<=0.02}else ok=a===q.ans;
+    return {q,a:a===undefined?'（未作答）':(q.type==='num'?a+' '+q.unit:a),ok}});
+  const t4=rows.filter(r=>r.ok).length*12;
+  const t3=Object.values(S.p3).reduce((a,q)=>a+(q.pts||0),0);
+  const total=t3+t4;const g=total>=85?'A':total>=70?'B':total>=60?'C':'D';
+  const msg={A:'傳動軸交給你設計，我放一百個心！繼續保持這份嚴謹。',B:'觀念很紮實，再多注意單位換算，下次就是 A！',C:'基本功到位了。回頭看看 Phase 2 的步驟，把內扭矩與 J 的計算再練熟。',D:'別灰心，每位工程師都是從算錯開始的。重做一次練習關卡，你會進步很多！'}[g];
+  const now=new Date();const dt=now.toLocaleString('zh-TW',{hour12:false});
+  $('#reportCard').innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start;margin-top:0">
+     <div><div class="eyebrow">成績報告</div><h2>${GAME}</h2><p class="muted" style="margin:4px 0 0">${timeout?'時間到自動交卷':'學生主動交卷'}｜作答時間 ${Math.floor(used/60)} 分 ${used%60} 秒</p></div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="mono" style="font-weight:700">${total} / 100</div></div>
+   </div>
+   <div class="kv"><div><small>姓名</small>${esc(S.name)}</div><div><small>班級</small>${esc(S.cls)}</div><div><small>學號</small>${esc(S.id)}</div><div><small>日期時間</small>${dt}</div><div><small>Phase 3 練習得分</small><b>${t3}</b> / 40</div><div><small>Phase 4 測試得分</small><b>${t4}</b> / 60</div></div>
+   <h3 style="margin-top:18px">Phase 4 各題結果</h3>
+   <div class="tblwrap"><table><thead><tr><th>題</th><th>題目</th><th>你的答案</th><th>正確答案</th><th>結果</th></tr></thead><tbody>
+   ${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.q.s}${r.q.why?`<br><small class="muted">${r.q.why}</small>`:''}</td><td class="mono">${esc(r.a)}</td><td class="mono">${r.q.show}</td><td class="${r.ok?'ok':'ng'}">${r.ok?'✓ 12':'✗ 0'}</td></tr>`).join('')}
+   </tbody></table></div>
+   <p style="margin-top:12px"><b>Phase 3 練習明細：</b>${P3.map((q,i)=>`第${i+1}題 ${S.p3[i]&&S.p3[i].done?S.p3[i].pts+' 分':'未完成'}`).join('、')}</p>
+   <div class="guide" style="margin-top:10px">${engineer()}<div class="bubble"><b>扭力工程師 阿轉：</b>${msg}</div></div>
+   <p class="muted" style="font-size:12.5px;margin-top:12px">等第標準：A ≥ 85、B ≥ 70、C ≥ 60、D < 60｜計算題容許誤差 ±2%｜題目種子 ${S.seed}</p>
+   <p class="muted" style="font-size:12.5px;text-align:center">國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</p>`;
+  S.report=`${GAME}\n姓名：${S.name}　班級：${S.cls}　學號：${S.id}\n日期：${dt}\nPhase 3 練習：${t3}/40\nPhase 4 測試：${t4}/60\n`+rows.map((r,i)=>`  第${i+1}題 ${r.ok?'✓':'✗'} 作答：${r.a}｜正解：${r.q.show}`).join('\n')+`\n總分：${total}/100　等第：${g}`;
+  tabs.find(b=>b.dataset.p==='p-report').disabled=false;
+  go('p-report');
+}
+$('#copyBtn').addEventListener('click',()=>{
+  const txt=S.report||'';
+  const fallback=()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');$('#copyMsg').textContent='已複製成績文字。'}catch(e){$('#copyMsg').textContent='請手動選取報告內容複製。'}ta.remove()};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>{$('#copyMsg').textContent='已複製成績文字，可貼到作業繳交區。'},fallback);else fallback();
+});
+})();
+</script>
+
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

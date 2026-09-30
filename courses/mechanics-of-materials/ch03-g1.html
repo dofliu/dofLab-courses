@@ -1,0 +1,825 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>[MOM-CH3-G1] Mechanical Properties - 材料性質探索：拉伸試驗與應力應變曲線</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1.05rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.9rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.diagram{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.hl{transition:opacity .3s}
+.slider{display:grid;grid-template-columns:130px 1fr 90px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 80px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:110px 1fr 60px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.flowchart{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:.88rem}
+.flowchart span.box{background:#e9eef5;color:var(--navy);border-radius:8px;padding:6px 10px;font-weight:700}
+.flowchart span.box.hot{background:var(--orange);color:#fff}
+.flowchart span.arr{color:var(--orange);font-weight:900}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes flow{to{stroke-dashoffset:-20}}
+.flow{stroke-dasharray:6 4;animation:flow .8s linear infinite}
+@keyframes pulse{50%{opacity:.25}}
+.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.swing{transform-origin:100px 6px;animation:swing 2.6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+</style>
+<style>
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.cmp div{background:#f0f3f8;border-radius:8px;padding:8px 10px;font-size:.88rem}
+@media (max-width:460px){.cmp{grid-template-columns:1fr}}
+@keyframes pull{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.18)}}
+.pull{transform-origin:100px 46px;animation:pull 2.6s ease-in-out infinite}
+@keyframes thin{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.8)}}
+.thin{transform-origin:100px 46px;animation:thin 2.6s ease-in-out infinite}
+@keyframes spring{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.35)}}
+.spring{transform-origin:100px 10px;animation:spring 2.4s ease-in-out infinite}
+.seg{cursor:pointer}
+.regbtns{display:flex;gap:6px;flex-wrap:wrap}
+.regbtns .opt{padding:6px 12px}
+.matbtns{display:flex;gap:6px;flex-wrap:wrap}
+</style>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH3-G1</span>材料性質探索</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 3 · Mechanical Properties · Game 1</span>
+      <h2>材料性質探索：拉伸試驗與應力–應變曲線</h2>
+      <p style="color:var(--muted);max-width:65ch">前兩章學了應力 σ 和應變 ε，這一章要把兩者連起來：把鋼棒夾進拉伸試驗機一路拉到斷，畫出<b>應力–應變曲線</b>。你會認識彈性、降伏、應變硬化、頸縮四個區段，學會虎克定律 σ = Eε、蒲松比 ν 與剪力模數 G。全程約 60 分鐘。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>材料的「個性」：拉一拉就知道</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="拉伸試驗試件">
+          <rect x="6" y="30" width="22" height="32" rx="3" fill="#1a3a5c"/><rect x="172" y="30" width="22" height="32" rx="3" fill="#1a3a5c"/>
+          <g class="pull">
+            <path d="M28 36 H56 Q64 36 66 41 H134 Q136 36 144 36 H172 V56 H144 Q136 56 134 51 H66 Q64 56 56 56 H28 Z" fill="#8a99ab" stroke="#1a3a5c" stroke-width="1.5"/>
+            <line x1="80" y1="46" x2="120" y2="46" stroke="#e8640a" stroke-width="2"/>
+            <circle cx="80" cy="46" r="2.5" fill="#e8640a"/><circle cx="120" cy="46" r="2.5" fill="#e8640a"/>
+          </g>
+          <text x="100" y="80" font-size="10" fill="#1a3a5c" text-anchor="middle">標距 L₀ 之間量 δ</text>
+          <g stroke="#e8640a" stroke-width="2.5" fill="#e8640a"><line x1="4" y1="16" x2="30" y2="16"/><polygon points="0,16 9,11 9,21"/><line x1="170" y1="16" x2="196" y2="16"/><polygon points="200,16 191,11 191,21"/></g>
+        </svg>
+        <h3>拉伸試驗</h3><span class="formula">σ = P/A₀，ε = δ/L₀</span>
+        <p class="life">像拉麥芽糖：慢慢拉、同時記錄「用了多大力」和「拉長多少」，換算成 σ 與 ε 就能畫出材料的身分證——應力–應變曲線。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="彈簧虎克定律">
+          <rect x="70" y="2" width="60" height="8" fill="#1a3a5c"/>
+          <g class="spring"><path d="M100 10 l12 5 l-24 6 l24 6 l-24 6 l24 6 l-24 6 l12 5" fill="none" stroke="#1a3a5c" stroke-width="2.5"/><rect x="86" y="50" width="28" height="18" rx="3" fill="#e8640a"/></g>
+          <text x="160" y="40" font-size="11" fill="#1a3a5c" text-anchor="middle">F = kx</text>
+          <text x="160" y="58" font-size="11" fill="#e8640a" text-anchor="middle">σ = Eε</text>
+        </svg>
+        <h3>虎克定律</h3><span class="formula">σ = E·ε</span>
+        <p class="life">像彈簧秤：在彈性範圍內，應力與應變成正比，比例常數就是<b>彈性模數 E</b>（楊氏模數）。鋼約 200 GPa、鋁約 70 GPa——E 越大越「硬」、越難拉長。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="延性與脆性">
+          <path d="M14 30 H40 Q46 30 50 40 Q52 46 50 52 Q46 62 40 62 H14 Z" fill="#8a99ab" stroke="#1a3a5c" stroke-width="1.5"/>
+          <path d="M86 30 H60 Q54 30 50 40 Q48 46 50 52 Q54 62 60 62 H86 Z" fill="#8a99ab" stroke="#1a3a5c" stroke-width="1.5" class="pulse"/>
+          <text x="50" y="82" font-size="10" fill="#1a3a5c" text-anchor="middle">延性：頸縮後斷</text>
+          <rect x="114" y="30" width="34" height="32" fill="#cfd8e3" stroke="#1a3a5c" stroke-width="1.5"/>
+          <rect x="152" y="30" width="34" height="32" fill="#cfd8e3" stroke="#1a3a5c" stroke-width="1.5"/>
+          <path d="M148 30 L150 40 L147 50 L150 62" stroke="#c62f2f" stroke-width="2" fill="none"/>
+          <text x="150" y="82" font-size="10" fill="#1a3a5c" text-anchor="middle">脆性：幾乎不變形就斷</text>
+        </svg>
+        <h3>延性 vs 脆性</h3><span class="formula">伸長率 = (L_f − L₀)/L₀</span>
+        <p class="life">麥芽糖會越拉越細（頸縮）才斷，是<b>延性</b>材料，如低碳鋼、鋁；粉筆或餅乾「啪」一聲就斷、斷面平整，是<b>脆性</b>材料，如鑄鐵、玻璃、混凝土。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="蒲松效應">
+          <g class="pull"><g class="thin"><rect x="50" y="30" width="100" height="32" rx="4" fill="#ffd166" stroke="#1a3a5c" stroke-width="1.5"/></g></g>
+          <g stroke="#e8640a" stroke-width="2.5" fill="#e8640a"><line x1="14" y1="46" x2="36" y2="46"/><polygon points="8,46 17,41 17,51"/><line x1="164" y1="46" x2="186" y2="46"/><polygon points="192,46 183,41 183,51"/></g>
+          <g stroke="#1a3a5c" stroke-width="1.8" fill="#1a3a5c"><line x1="100" y1="14" x2="100" y2="24"/><polygon points="100,28 96,21 104,21"/><line x1="100" y1="78" x2="100" y2="68"/><polygon points="100,64 96,71 104,71"/></g>
+          <text x="100" y="90" font-size="10" fill="#1a3a5c" text-anchor="middle">縱向變長，橫向變細</text>
+        </svg>
+        <h3>蒲松比 ν</h3><span class="formula">ν = −ε_lat / ε_long</span>
+        <p class="life">把橡皮擦拉長，它的腰會變細。橫向應變與縱向應變的比值（取正值）就是蒲松比 ν，多數金屬約 0.25～0.35，理論上限 0.5。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動曲線：點一點，認識應力–應變圖的四個區段</h3>
+      <div class="grid2">
+        <svg viewBox="0 0 460 280" class="diagram" id="ssFig" aria-label="低碳鋼應力應變曲線"></svg>
+        <div class="stack">
+          <div class="regbtns" id="regBtns"></div>
+          <div id="regInfo" class="sol show" style="margin-top:0"></div>
+          <p class="note">示意圖依 A-36 低碳鋼繪製（E = 200 GPa，σ<sub>Y</sub> ≈ 250 MPa，σ<sub>u</sub> ≈ 400 MPa）。橫軸<b>不按比例</b>：左側彈性區被放大了約 50 倍，否則那段直線細到看不見。</p>
+        </div>
+      </div>
+      <div class="cmp">
+        <div><b style="color:var(--navy)">強度指標</b><br>比例限 σ<sub>pl</sub>、降伏強度 σ<sub>Y</sub>（沒有明顯降伏點時用 0.2% 偏移法）、極限強度 σ<sub>u</sub>（曲線最高點）、斷裂應力 σ<sub>f</sub>。</div>
+        <div><b style="color:var(--orange)">能量指標</b><br>彈性區面積 = 回彈模數 u<sub>r</sub> = σ<sub>pl</sub>²/(2E)；整條曲線下面積 = 韌性模數 u<sub>t</sub>，代表材料斷裂前能吸收的能量。</div>
+      </div>
+      <p class="note">剪切也有自己的虎克定律：τ = Gγ，且三個彈性常數相互關聯：<b class="mono">G = E / [2(1 + ν)]</b>。</p>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：試驗室裡的數據</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：鋼材進料檢驗——虛擬拉伸試驗機</h3>
+      <p style="color:var(--muted);margin-top:4px">工廠進了一批鋼筋，品管人員取直徑 d = 12.5 mm、標距 L₀ = 50 mm 的試件做拉伸試驗。在比例限時荷重 P = 30.7 kN、伸長 δ = 0.0625 mm；最大荷重 49.1 kN；斷裂後標距長 65 mm、頸縮處直徑 7.5 mm。求 σ<sub>pl</sub>、E、σ<sub>u</sub>、伸長率與斷面縮率。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 280" class="diagram" id="ssA" aria-label="虛擬拉伸試驗曲線"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：轉動試驗機，把試件一路拉到斷</h3>
+        <div class="slider"><span>試驗機拉伸量</span><input type="range" id="sE" min="0" max="1000" step="1" value="0"><span class="mono" id="vE">0 mm</span></div>
+        <div class="readout">
+          <div><small>工程應變 ε</small><b id="rA1">—</b></div>
+          <div><small>工程應力 σ</small><b id="rA2">—</b></div>
+          <div><small>荷重 P</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：拉過降伏點後再卸載，材料會沿著與彈性段<b>平行</b>的直線回彈（橘色虛線），回不到原點——剩下的就是永久變形。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：無人機起落架拉桿——蒲松比與剪力模數</h3>
+      <p style="color:var(--muted);margin-top:4px">直徑 d = 25 mm、長 L = 300 mm 的鋁合金拉桿（E = 70 GPa，ν = 0.33）承受軸向拉力 P = 40 kN。求軸向伸長 δ、直徑的改變量 Δd，以及剪力模數 G。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 320 220" class="diagram" aria-label="拉桿變形">
+          <rect x="30" y="70" width="12" height="80" fill="#1a3a5c"/>
+          <g stroke="#1a3a5c" stroke-width="1.5"><line x1="30" y1="80" x2="22" y2="72"/><line x1="30" y1="100" x2="22" y2="92"/><line x1="30" y1="120" x2="22" y2="112"/><line x1="30" y1="140" x2="22" y2="132"/></g>
+          <rect x="42" y="90" width="220" height="40" fill="none" stroke="#8a99ab" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <rect id="rod" x="42" y="90" width="220" height="40" fill="#b9c4d2" stroke="#1a3a5c" stroke-width="2"/>
+          <g id="rodArr" stroke="#e8640a" stroke-width="3" fill="#e8640a"><line x1="266" y1="110" x2="292" y2="110" class="flow"/><polygon points="300,110 290,104 290,116"/></g>
+          <text id="rodP" x="280" y="96" font-size="11" fill="#e8640a" text-anchor="middle">P</text>
+          <text x="152" y="160" font-size="11" fill="#1a3a5c" text-anchor="middle">L = 300 mm（虛線為原尺寸，變形放大顯示）</text>
+          <text x="152" y="40" font-size="12" fill="#1a3a5c" text-anchor="middle" id="rodInfo"></text>
+          <text x="152" y="58" font-size="11" fill="#5b6b7e" text-anchor="middle" id="rodInfo2"></text>
+        </svg>
+        <div class="steps" id="stepsB"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：換材料、加荷重</h3>
+        <div class="matbtns" id="matBtns"></div>
+        <div class="slider"><span>軸向拉力 P</span><input type="range" id="sP" min="5" max="120" step="1" value="40"><span class="mono" id="vP">40 kN</span></div>
+        <div class="readout">
+          <div><small>軸向伸長 δ</small><b id="rB1">—</b></div>
+          <div><small>直徑改變 Δd</small><b id="rB2">—</b></div>
+          <div><small>剪力模數 G</small><b id="rB3">—</b></div>
+        </div>
+        <div id="rB4"></div>
+        <p class="note">觀察：同樣的 P，鋼桿伸長只有鋁桿的約 1/3，因為 E 大了約 3 倍；而紅銅合金的降伏強度低，荷重稍大就會離開虎克定律的適用範圍。</p>
+      </div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道材料性質題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差，依題目指定單位輸入數字即可。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：你的專屬材料試驗報告</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH3-G1] Mechanical Properties｜材料性質探索</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const PI=Math.PI, RAD=PI/180;
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <rect x="0" y="86" width="26" height="8" rx="2" fill="#ffd166" stroke="#1a3a5c" stroke-width="1.2" transform="rotate(-14 13 90)"/>
+  <g stroke="#1a3a5c" stroke-width="1" transform="rotate(-14 13 90)"><line x1="4" y1="86" x2="4" y2="90"/><line x1="9" y1="86" x2="9" y2="89"/><line x1="14" y1="86" x2="14" y2="90"/><line x1="19" y1="86" x2="19" y2="89"/><line x1="24" y1="86" x2="24" y2="90"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+guide("#guide0","歡迎來到第三章！今天我在<b>材料試驗室</b>值班。前兩章學會算應力和應變，現在要問：這種材料能承受多大的應力？會變形多少？答案都藏在一條曲線裡。先填好資料吧！");
+guide("#guide1","每種材料都有自己的個性：有的很<b>硬</b>（E 大）、有的很<b>韌</b>（能拉很長才斷）、有的很<b>脆</b>。拉伸試驗就是幫材料做「體檢」，點下方曲線的四個區段看看。");
+guide("#guide2","試驗室的日常：量出荷重 P 與伸長 δ，換算成 σ 和 ε，再從曲線讀出 E、σ<sub>Y</sub>、σ<sub>u</sub>。點選步驟、拖動滑桿，親手把試件拉斷！");
+guide("#guide3","三個提醒：面積用<b>原始</b>截面積 A₀（工程應力）、MPa 除以無因次的 ε 結果還是 MPa（1 GPa = 1000 MPa）、蒲松比的負號代表「橫向縮小」。");
+guide("#guide4","最後一關，你的專屬試驗報告！數值依學號產生。記得先判斷材料還在不在彈性範圍，再決定能不能用 σ = Eε。加油！");
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  if(!/\d/.test(i)){$("#loginErr").textContent="學號需包含數字，用來產生你的專屬題目。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+function near(val,ans,tol=0.02){return Number.isFinite(val)&&Math.abs(val-ans)<=Math.abs(ans)*tol;}
+function yay(){const m=["太棒了！","完全正確！","量得很準！","材料判讀正確！","就是這樣！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+
+/* ---------- Stress-strain model (A-36-like, schematic) ---------- */
+const EST=200000, SY=250, SU=400, EY=SY/EST;
+function sig(e){
+  if(e<=EY)return EST*e;
+  if(e<=0.02)return SY;
+  if(e<=0.20){const t=(e-0.02)/0.18;return SY+(SU-SY)*(1-(1-t)*(1-t));}
+  const t=Math.min(1,(e-0.20)/0.10);return SU-80*t*t;
+}
+const EMAX=0.30, XB=0.0025;
+function ex(e){return e<=XB?50+e/XB*80:130+(e-XB)/(EMAX-XB)*310;}
+function xe(x){return x<=130?(x-50)/80*XB:XB+(x-130)/310*(EMAX-XB);}
+function sy(s){return 240-s*210/450;}
+function region(e){return e<=EY?0:e<=0.02?1:e<=0.20?2:e<EMAX?3:4;}
+const REG=[
+  {n:"彈性區",c:"#1f8a4c",a:0,b:EY,t:"應力與應變成直線關係（虎克定律 σ = Eε），直線斜率就是彈性模數 E。卸載後材料完全回到原長，就像彈簧。直線的終點是比例限 σ<sub>pl</sub>，低碳鋼的比例限與彈性限、降伏點非常接近。"},
+  {n:"降伏",c:"#e8640a",a:EY,b:0.02,t:"應力幾乎不增加，應變卻一直變大——材料「撐不住」開始塑性流動。低碳鋼有明顯的降伏平台，σ<sub>Y</sub> ≈ 250 MPa。此後再卸載就會留下永久變形，所以設計時通常把工作應力控制在 σ<sub>Y</sub> 以下。"},
+  {n:"應變硬化",c:"#24507d",a:0.02,b:0.20,t:"材料內部晶格重新排列，需要更大的應力才能繼續變形，曲線再度上升，直到最高點＝極限強度 σ<sub>u</sub> ≈ 400 MPa。冷作加工（如冷拉鋼線）就是利用這個現象讓金屬變強。"},
+  {n:"頸縮",c:"#c62f2f",a:0.20,b:EMAX,t:"過了 σ<sub>u</sub>，試件某處截面開始急劇縮小（頸縮），承載力下降，最後在頸部斷裂。工程應力用原始面積 A₀ 計算，所以曲線往下掉；若用真實面積算（真應力），其實仍在上升。"}
+];
+function axes(svg,label){
+  let s=`<rect x="0" y="0" width="460" height="280" fill="#fbfcfe"/>`;
+  for(const v of [100,200,300,400])s+=`<line x1="50" y1="${sy(v)}" x2="445" y2="${sy(v)}" stroke="#e6ebf2"/><text x="44" y="${sy(v)+4}" font-size="10" fill="#5b6b7e" text-anchor="end">${v}</text>`;
+  for(const v of [0.001,0.002])s+=`<text x="${ex(v)}" y="255" font-size="9" fill="#5b6b7e" text-anchor="middle">${v}</text>`;
+  for(const v of [0.05,0.10,0.15,0.20,0.25,0.30])s+=`<text x="${ex(v)}" y="255" font-size="9" fill="#5b6b7e" text-anchor="middle">${v.toFixed(2)}</text>`;
+  s+=`<line x1="130" y1="30" x2="130" y2="240" stroke="#8a99ab" stroke-dasharray="3 3"/><text x="134" y="40" font-size="9" fill="#8a99ab">← 放大 | 壓縮 →</text>`;
+  s+=`<line x1="50" y1="240" x2="450" y2="240" stroke="#1a3a5c" stroke-width="1.5"/><line x1="50" y1="240" x2="50" y2="22" stroke="#1a3a5c" stroke-width="1.5"/>`;
+  s+=`<text x="450" y="272" font-size="11" fill="#1a3a5c" text-anchor="end">ε (mm/mm)</text><text x="12" y="18" font-size="11" fill="#1a3a5c">σ (MPa)</text>`;
+  return s;
+}
+function segPath(a,b){let d="";const n=60;for(let i=0;i<=n;i++){const e=a+(b-a)*i/n;d+=(i?"L":"M")+ex(e).toFixed(1)+" "+sy(sig(e)).toFixed(1);}return d;}
+/* Phase 1 figure */
+(function(){
+  let s=axes();
+  REG.forEach((r,i)=>{s+=`<path class="seg" data-r="${i}" id="seg${i}" d="${segPath(r.a,r.b)}" fill="none" stroke="${r.c}" stroke-width="4" stroke-linecap="round"/>`;});
+  s+=`<path d="${segPath(0,EMAX)}" fill="none" stroke="transparent" stroke-width="18" class="seg" data-r="-1"/>`;
+  s+=`<g font-size="10" fill="#1a3a5c"><circle cx="${ex(EY)}" cy="${sy(SY)}" r="4" fill="#e8640a"/><text x="${ex(EY)-4}" y="${sy(SY)-8}" text-anchor="end">σY</text>`;
+  s+=`<circle cx="${ex(0.2)}" cy="${sy(SU)}" r="4" fill="#24507d"/><text x="${ex(0.2)}" y="${sy(SU)-8}" text-anchor="middle">σu</text>`;
+  s+=`<text x="${ex(0.3)}" y="${sy(320)-8}" text-anchor="end">斷裂 ✕</text></g>`;
+  s+=`<circle id="ssDot" r="6" fill="#e8640a" stroke="#fff" stroke-width="2" cx="50" cy="240"/>`;
+  $("#ssFig").innerHTML=s;
+  $("#regBtns").innerHTML=REG.map((r,i)=>`<button class="opt" data-r="${i}" style="border-left:5px solid ${r.c}">${i+1}. ${r.n}</button>`).join("");
+  function show(i){
+    REG.forEach((r,k)=>{$("#seg"+k).setAttribute("stroke-width",k===i?7:3);$("#seg"+k).setAttribute("opacity",i<0||k===i?1:.35);});
+    $("#regBtns").querySelectorAll(".opt").forEach(b=>b.classList.toggle("sel",+b.dataset.r===i));
+    const r=REG[i];$("#regInfo").innerHTML=`<b style="color:${r.c}">${r.n}</b>：${r.t}`;
+  }
+  $("#regBtns").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>show(+b.dataset.r)));
+  $("#ssFig").querySelectorAll(".seg").forEach(p=>p.addEventListener("click",ev=>{
+    const pt=$("#ssFig").getBoundingClientRect();const x=(ev.clientX-pt.left)/pt.width*460;show(Math.min(3,region(xe(x))));
+  }));
+  show(0);
+  // travelling dot animation
+  let u=0;const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(!reduce)setInterval(()=>{u=(u+0.004)%1;const x=50+u*390,e=xe(x);$("#ssDot").setAttribute("cx",x.toFixed(1));$("#ssDot").setAttribute("cy",sy(sig(e)).toFixed(1));},40);
+})();
+
+/* Phase 1 quiz */
+const P1Q=[
+  {q:"兩根尺寸相同的桿件，一根是鋼（E = 200 GPa），一根是鋁（E = 70 GPa），受相同的拉應力（都在彈性範圍內）。哪一根伸長比較多？",o:["鋼桿","鋁桿","一樣多","無法判斷"],a:1,why:"ε = σ/E，E 越小應變越大。鋁的 E 約為鋼的 1/3，所以伸長約為鋼的 3 倍。"},
+  {q:"拉伸試驗中，低碳鋼試件在斷裂前某處截面突然明顯變細，這個現象叫什麼？",o:["降伏","應變硬化","頸縮","潛變"],a:2,why:"過了極限強度 σu 之後，變形集中在局部、截面急劇縮小，稱為頸縮（necking），是延性材料的特徵。"},
+  {q:"拉長一塊橡皮擦時，它的寬度會怎麼變？描述這個比例的材料常數是？",o:["變寬；彈性模數 E","變窄；蒲松比 ν","不變；剪力模數 G","變窄；降伏強度 σY"],a:1,why:"縱向伸長時橫向收縮，ν = −ε_lat/ε_long。金屬 ν 約 0.3，橡膠接近 0.5。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">🔩✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片和互動曲線，找找線索。";}
+    updateProgress();
+  }));
+})();
+
+/* Phase 2 */
+const A0=Math.PI/4*12.5*12.5, L0A=50;
+const STEPS_A=[
+  {t:"原始截面積",d:"A₀ = π/4 × 12.5² = 122.7 mm²（工程應力一律用原始面積）",e:0},
+  {t:"比例限應力",d:"σpl = P/A₀ = 30 700 N / 122.7 mm² = 250 MPa",e:EY},
+  {t:"彈性模數 E",d:"εpl = δ/L₀ = 0.0625/50 = 0.00125 → E = σpl/εpl = 250/0.00125 = 200 000 MPa = 200 GPa",e:EY},
+  {t:"極限強度",d:"σu = 49 100 N / 122.7 mm² = 400 MPa（曲線最高點）",e:0.2},
+  {t:"伸長率與斷面縮率",d:"伸長率 = (65 − 50)/50 = 30%；斷面縮率 = (12.5² − 7.5²)/12.5² = 64% → 延性很好的鋼材，合格！",e:EMAX}
+];
+const STEPS_B=[
+  {t:"截面積與應力",d:"A = π/4 × 25² = 490.9 mm²；σ = 40 000/490.9 = 81.5 MPa < σY = 255 MPa，可用虎克定律"},
+  {t:"軸向應變與伸長",d:"ε_long = σ/E = 81.5/70 000 = 0.001164；δ = ε·L = 0.001164 × 300 = 0.349 mm"},
+  {t:"蒲松效應：橫向應變",d:"ε_lat = −ν·ε_long = −0.33 × 0.001164 = −0.000384"},
+  {t:"直徑改變量",d:"Δd = ε_lat·d = −0.000384 × 25 = −0.0096 mm（直徑縮小約 0.01 mm）"},
+  {t:"剪力模數",d:"G = E/[2(1 + ν)] = 70/(2 × 1.33) = 26.3 GPa"}
+];
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick(steps[+b.dataset.i],b.classList.contains("on"));}));
+}
+(function(){
+  let s=axes();
+  s+=`<path d="${segPath(0,EMAX)}" fill="none" stroke="#cfd8e3" stroke-width="3"/>`;
+  s+=`<path id="aTrace" d="" fill="none" stroke="#1a3a5c" stroke-width="3.5" stroke-linecap="round"/>`;
+  s+=`<line id="aUnl" x1="0" y1="0" x2="0" y2="0" stroke="#e8640a" stroke-width="2" stroke-dasharray="5 4" opacity="0"/>`;
+  s+=`<circle id="aPerm" r="4" fill="#fff" stroke="#e8640a" stroke-width="2" opacity="0" cx="0" cy="240"/>`;
+  s+=`<circle id="aDot" r="6" fill="#e8640a" stroke="#fff" stroke-width="2" cx="50" cy="240"/>`;
+  s+=`<text id="aBreak" x="${ex(EMAX)-6}" y="${sy(320)-12}" font-size="16" fill="#c62f2f" text-anchor="end" opacity="0" font-weight="900">💥 斷裂</text>`;
+  $("#ssA").innerHTML=s;
+})();
+renderSteps($("#stepsA"),STEPS_A,(st,on)=>{if(on){$("#sE").value=Math.round((ex(st.e)-50)/390*1000);updA();}});
+renderSteps($("#stepsB"),STEPS_B);
+function gline(label,u,txt){
+  const ok=u<=1;
+  return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${ok?"var(--ok)":"var(--bad)"}"></i></div><span class="mono">${txt||fmt(u*100,0)+"%"}</span></div>`;
+}
+function updA(){
+  const x=50+(+$("#sE").value)/1000*390,e=Math.min(EMAX,xe(x)),s=sig(e),d=e*L0A,P=s*A0/1000,r=region(e);
+  $("#vE").textContent=(d<0.1?fmt(d,4):fmt(d,2))+" mm";
+  $("#rA1").textContent=e<0.01?fmt(e,5):fmt(e,3);
+  $("#rA2").textContent=fmt(s,1)+" MPa";
+  $("#rA3").textContent=fmt(P,2)+" kN";
+  $("#aTrace").setAttribute("d",segPath(0,e));
+  $("#aDot").setAttribute("cx",ex(e).toFixed(1));$("#aDot").setAttribute("cy",sy(s).toFixed(1));
+  const ep=Math.max(0,e-s/EST),plastic=e>EY+1e-9&&e<EMAX;
+  $("#aUnl").setAttribute("opacity",plastic?1:0);$("#aPerm").setAttribute("opacity",plastic?1:0);
+  if(plastic){$("#aUnl").setAttribute("x1",ex(e));$("#aUnl").setAttribute("y1",sy(s));$("#aUnl").setAttribute("x2",ex(ep));$("#aUnl").setAttribute("y2",240);$("#aPerm").setAttribute("cx",ex(ep));}
+  const broke=e>=EMAX-1e-6;$("#aBreak").setAttribute("opacity",broke?1:0);
+  const names=["彈性區","降伏平台","應變硬化","頸縮","已斷裂"],cls=r===0?"ok":"no";
+  $("#rA4").innerHTML=gline("σ / σu",s/SU)+`<div class="row" style="justify-content:space-between;margin-top:8px"><span>${r===0?"卸載後完全回復原長":broke?"試件已斷裂：伸長率 30%":`卸載後永久應變 ε<sub>p</sub> = ε − σ/E = <b class="mono">${fmt(ep,4)}</b>（永久伸長 ${fmt(ep*L0A,3)} mm）`}</span><span class="badge ${cls}">目前區段：${names[r]}</span></div>`;
+}
+$("#sE").addEventListener("input",updA);updA();
+
+const MATS=[
+  {n:"鋁合金 6061-T6",E:70,nu:0.33,sy:255,c:"#b9c4d2"},
+  {n:"A-36 結構鋼",E:200,nu:0.30,sy:250,c:"#8a99ab"},
+  {n:"紅銅合金 C83400",E:101,nu:0.35,sy:70,c:"#d99a6c"},
+  {n:"鈦合金 Ti-6Al-4V",E:120,nu:0.36,sy:924,c:"#9fb3a6"}
+];
+let mat=0;
+$("#matBtns").innerHTML=MATS.map((m,i)=>`<button class="opt${i===0?" sel":""}" data-m="${i}">${m.n}</button>`).join("");
+$("#matBtns").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{mat=+b.dataset.m;$("#matBtns").querySelectorAll(".opt").forEach(x=>x.classList.toggle("sel",x===b));updB();}));
+function updB(){
+  const m=MATS[mat],P=+$("#sP").value,A=Math.PI/4*625,s=P*1000/A,E=m.E*1000;
+  $("#vP").textContent=P+" kN";
+  const el=s<=m.sy,eL=s/E,dl=eL*300,eT=-m.nu*eL,dd=eT*25,G=m.E/(2*(1+m.nu));
+  $("#rB1").textContent=el?fmt(dl,3)+" mm":"不適用";
+  $("#rB2").textContent=el?fmt(dd,4)+" mm":"不適用";
+  $("#rB3").textContent=fmt(G,1)+" GPa";
+  $("#rB4").innerHTML=gline("σ / σY",s/m.sy)+`<div class="row" style="justify-content:space-between;margin-top:8px"><span>σ = ${fmt(s,1)} MPa；E = ${m.E} GPa，ν = ${m.nu}，σ<sub>Y</sub> = ${m.sy} MPa</span><span class="badge ${el?"ok":"no"}">${el?"彈性範圍：σ = Eε 成立":"已超過降伏強度，虎克定律不再適用"}</span></div>`;
+  const k=el?1:1.6, sx=Math.min(60,dl*60*k), shr=Math.min(12,Math.abs(dd)*600*k);
+  $("#rod").setAttribute("width",(220+sx).toFixed(1));$("#rod").setAttribute("y",(90+shr).toFixed(1));$("#rod").setAttribute("height",(40-2*shr).toFixed(1));
+  $("#rod").setAttribute("fill",el?m.c:"#e7a0a0");
+  $("#rodArr").setAttribute("transform",`translate(${sx.toFixed(1)} 0)`);$("#rodP").setAttribute("x",(280+sx).toFixed(1));
+  $("#rodInfo").textContent=el?`δ = ${fmt(dl,3)} mm，Δd = ${fmt(dd,4)} mm`:`σ = ${fmt(s,0)} MPa > σY，材料已降伏！`;
+  $("#rodInfo2").textContent=m.n;
+}
+$("#sP").addEventListener("input",updB);updB();
+
+/* Phase 3 practice */
+const P3Q=[
+  {type:"num",q:"直徑 10 mm、標距 50 mm 的鋼試件，在彈性範圍內受拉力 15 kN 時，標距伸長 0.048 mm。求彈性模數 E（GPa）。",ans:(15000/(Math.PI/4*100))/(0.048/50)/1000,unit:"GPa",dp:1,
+   hint:"先算 A = π/4 × 10² = 78.54 mm²，σ = P/A；再算 ε = δ/L₀；E = σ/ε，最後 MPa ÷ 1000 換成 GPa。",
+   sol:["A = π/4 × 10² = 78.54 mm²","σ = 15 000 / 78.54 = 191.0 MPa","ε = 0.048 / 50 = 0.00096","E = 191.0 / 0.00096 = 198 944 MPa ≈ 198.9 GPa"]},
+  {type:"mc",q:"下列關於延性與脆性材料的敘述，何者正確？",
+   o:["鑄鐵拉伸時會明顯頸縮，斷面呈杯錐狀","低碳鋼斷裂前有很大的塑性變形，伸長率常超過 20%","脆性材料的極限強度一定比延性材料低","延性材料沒有降伏點，所以要用 0.2% 偏移法"],a:1,
+   hint:"延性材料＝斷裂前能大量變形（有頸縮）；脆性材料幾乎不變形就斷、斷面平整。強度高低與延脆性是兩回事。",
+   sol:["鑄鐵是脆性材料，斷面平整、幾乎無頸縮 → A 錯","低碳鋼伸長率約 20～30%，是典型延性材料 → B 對","高強度陶瓷、玻璃纖維強度很高卻很脆 → C 錯","0.2% 偏移法用於「無明顯降伏平台」的延性材料（如鋁），不是所有延性材料 → D 錯"]},
+  {type:"num",q:"直徑 20 mm 的圓桿受軸向拉力，量得軸向應變 ε_long = 0.0008，直徑減少了 0.0048 mm。求材料的蒲松比 ν。",ans:(0.0048/20)/0.0008,unit:"（無單位）",dp:3,
+   hint:"ε_lat = Δd/d = −0.0048/20；ν = −ε_lat/ε_long。",
+   sol:["ε_lat = −0.0048 / 20 = −0.00024","ν = −ε_lat / ε_long = 0.00024 / 0.0008","ν = 0.300"]},
+  {type:"num",q:"標距 50 mm 的鋼試件（E = 200 GPa）被拉到 σ = 320 MPa、ε = 0.030 後完全卸載。求卸載後標距的永久伸長量（mm）。",ans:(0.030-320/200000)*50,unit:"mm",dp:3,
+   hint:"卸載沿平行於彈性段的直線回彈，回彈的應變 = σ/E。永久應變 = ε − σ/E，再乘上標距。",
+   sol:["彈性回復應變 = σ/E = 320 / 200 000 = 0.0016","永久應變 εp = 0.030 − 0.0016 = 0.0284","永久伸長 = 0.0284 × 50 = 1.42 mm"]}
+];
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 198.9。";return;}
+  const ok=q.type==="num"?near(v,q.ans):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">🔩</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+/* Phase 4 seeded test */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(5));};
+  const qs=[];
+  // Q1 E from tension-test data
+  {const d=pick([10,12,12.5,13,14],r),L0=50,Et=pick([70,105,200],r),sTarget=Et===70?vary(150,5):vary(200,5);
+   const A=Math.PI/4*d*d,P=Math.round(sTarget*A/100)/10; // kN, 0.1 precision
+   const del=+((P*1000/A)/(Et*1000)*L0).toFixed(4);
+   const ans=(P*1000/A)/(del/L0)/1000;
+   qs.push({type:"num",title:"由試驗數據求 E",q:`直徑 ${d} mm、標距 ${L0} mm 的金屬試件做拉伸試驗。在比例限以下，荷重 ${fmt(P,1)} kN 時量得標距伸長 ${fmt(del,4)} mm。求材料的彈性模數 E（GPa）。`,ans,unit:"GPa",dp:1,
+    sol:`A = π/4×${d}² = ${fmt(A,2)} mm²；σ = ${fmt(P*1000,0)}/${fmt(A,2)} = ${fmt(P*1000/A,1)} MPa；ε = ${fmt(del,4)}/${L0} = ${fmt(del/L0,6)}；E = σ/ε = ${fmt(ans,1)} GPa`});}
+  // Q2 elongation via Hooke's law
+  {const m=pick([{n:"A-36 鋼",E:200},{n:"鋁合金",E:70}],r),d=vary(20,1),L=vary(1.5,0.1),A=Math.PI/4*d*d;
+   let P=vary(m.E===200?35:25,1);const s=P*1000/A;
+   const ans=s/(m.E*1000)*L*1000;
+   qs.push({type:"num",title:"虎克定律求伸長",q:`直徑 ${d} mm、長 ${fmt(L,1)} m 的${m.n}圓桿（E = ${m.E} GPa）承受 ${P} kN 軸向拉力，應力在彈性範圍內。求桿件的伸長量（mm）。`,ans,unit:"mm",dp:3,
+    sol:`A = ${fmt(A,2)} mm²；σ = ${fmt(s,2)} MPa；ε = σ/E = ${fmt(s/(m.E*1000),6)}；δ = ε·L = ${fmt(ans,3)} mm`});}
+  // Q3 Poisson ratio (MC)
+  {const d=vary(25,1),eL=vary(0.0010,0.00005),nu=pick([0.28,0.30,0.32,0.33,0.35],r);
+   const dd=+(nu*eL*d).toFixed(5),ans=(dd/d)/eL,elat=dd/d;
+   const vals=[fmt(ans,3),fmt(elat,6),fmt(1/ans,3),fmt(1-ans,3)];
+   const order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"蒲松比",q:`直徑 ${d} mm 的圓桿受軸向拉力，應變規量得軸向應變 ${fmt(eL,5)}，同時以測微計量得直徑減少 ${fmt(dd,5)} mm。材料的蒲松比 ν 最接近？`,
+    o:order.map(k=>"ν = "+vals[k]),a:order.indexOf(0),
+    sol:`ε_lat = −${fmt(dd,5)}/${d} = −${fmt(elat,6)}；ν = ${fmt(elat,6)}/${fmt(eL,5)} = ${fmt(ans,3)}`});}
+  // Q4 G from E and nu
+  {const E=vary(100,1),nu=pick([0.25,0.28,0.30,0.32,0.34,0.36],r);
+   const ans=E/(2*(1+nu));
+   qs.push({type:"num",title:"剪力模數 G",q:`某新型合金經拉伸試驗測得彈性模數 E = ${E} GPa、蒲松比 ν = ${nu}。求其剪力模數 G（GPa）。`,ans,unit:"GPa",dp:2,
+    sol:`G = E/[2(1+ν)] = ${E}/(2×${fmt(1+nu,2)}) = ${fmt(ans,2)} GPa`});}
+  // Q5 permanent strain after unloading (MC)
+  {const s=vary(320,5),e=vary(0.025,0.001),E=200;
+   const rec=s/(E*1000),ans=e-rec;
+   const vals=[fmt(ans,4),fmt(e,4),fmt(rec,4),fmt(e+rec,4)];
+   const order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"卸載與永久應變",q:`鋼試件（E = ${E} GPa）已超過降伏點，被拉到 σ = ${s} MPa、ε = ${fmt(e,3)} 時將荷重完全卸除。卸載後試件留下的永久應變為？`,
+    o:order.map(k=>"εp = "+vals[k]),a:order.indexOf(0),
+    sol:`卸載沿平行彈性段的直線回彈：回復應變 = σ/E = ${s}/${E*1000} = ${fmt(rec,4)}；εp = ${fmt(e,3)} − ${fmt(rec,4)} = ${fmt(ans,4)}`});}
+  return qs;
+}
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q.ans):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"你已經讀懂材料的身分證了！E、σY、σu、ν、G 都難不倒你，下一關我們用這些性質做工程判斷。",B:"觀念很紮實，再留意 MPa 與 GPa 的換算、以及「先確認在彈性範圍才用 σ = Eε」，就能拿到 A。",C:"基本觀念已建立，回到 Phase 2 再轉一次虛擬試驗機，看看每個區段 σ 和 ε 怎麼變。",D:"別灰心！先記住三句話：σ = Eε 只在彈性區成立、ν = −ε橫/ε縱、G = E/[2(1+ν)]。再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 3 章 Mechanical Properties · 遊戲 1（MOM-CH3-G1）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。</p>`;
+  S.summary=`[MOM-CH3-G1] Mechanical Properties 材料性質探索 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+
+
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

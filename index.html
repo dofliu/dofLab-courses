@@ -50,6 +50,17 @@
         </div>
         <a class="btn" href="courses/ai-tutorials/">進入主題 →</a>
       </article>
+      <article class="course">
+        <div class="chips"><span class="chip">大學部</span><span class="chip">14 章 · 42 個遊戲</span><span class="chip">每日 3 個</span></div>
+        <h3><a href="courses/mechanics-of-materials/">材料力學互動遊戲</a></h3>
+        <p class="desc">依 Hibbeler《Mechanics of Materials》章節：應力、應變、軸力、扭轉、彎曲、剪力、應力轉換、撓度、挫曲與能量法。每個遊戲 60 分鐘，含依學號出題的測驗與成績報告。</p>
+        <div class="prog">
+          <div class="prog-top"><span>已上線遊戲</span><b id="mom-count">– / 42</b></div>
+          <div class="prog-track"><i id="mom-bar"></i></div>
+        </div>
+        <ul class="latest" id="mom-latest" aria-label="最新遊戲"></ul>
+        <a class="btn" href="courses/mechanics-of-materials/">進入課程 →</a>
+      </article>
       <article class="course placeholder">
         <h3>下一門課程籌備中</h3>
         <p class="desc">研究室的其他課程完成後會陸續放在這裡。</p>
@@ -92,6 +103,17 @@
 <script src="courses/ai-tutorials/claude/course.js"></script>
 <script>
 (function(){ var D=window.CLAUDE_COURSE; if(!D) return; document.getElementById('ai-count').textContent=D.live+' / '+D.total; document.getElementById('ai-bar').style.width=(D.live/D.total*100)+'%'; })();
+</script>
+<script src="courses/mechanics-of-materials/manifest.js"></script>
+<script>
+(function(){
+  var M=window.MOM_MANIFEST, list=document.getElementById('mom-latest'); if(!M) return;
+  var n=M.entries.length; document.getElementById('mom-count').textContent=n+' / 42'; document.getElementById('mom-bar').style.width=(n/42*100)+'%';
+  M.entries.slice().sort(function(a,b){ return a.published<b.published?1:-1; }).slice(0,3).forEach(function(e){
+    var li=document.createElement('li'); li.innerHTML='<span class="n">CH'+e.ch+'-G'+e.game+'</span>';
+    var a=document.createElement('a'); a.href='courses/mechanics-of-materials/'+e.file; a.textContent=e.title; li.appendChild(a); list.appendChild(li);
+  });
+})();
 </script>
 </body>
 </html>
