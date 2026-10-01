@@ -145,7 +145,16 @@
       "full_title": "[MOM-CH6-G1] Bending - 彎曲探索：跳水板與書架層板",
       "file": "ch06-g1.html",
       "published": "2026-10-01T03:54+08:00"
+    },
+    {
+      "ch": 6,
+      "game": 2,
+      "code": "MOM-CH6-G2",
+      "title": "彎曲計算工坊：T 形截面與外伸梁的應力分析",
+      "full_title": "[MOM-CH6-G2] Bending - 彎曲計算工坊：T 形截面與外伸梁的應力分析",
+      "file": "ch06-g2.html",
+      "published": "2026-10-02T03:54+08:00"
     }
   ],
-  "updated": "2026-10-01T03:54+08:00"
+  "updated": "2026-10-02T03:54+08:00"
 }
