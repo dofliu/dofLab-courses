@@ -357,10 +357,14 @@
         "連接 Gmail／Outlook",
         "寄出前檢查"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-01T01:44:40Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-01T01:49:44Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/ep01.html",
+        "src": "courses/ai-tutorials/claude/src/010-personal-work-ep01.js",
+        "i18n": "courses/ai-tutorials/claude/src/010-personal-work-ep01.i18n.js"
+      },
+      "notes": "QA zh/en：runtime errors none、untranslated none。6 個分鏡、77 秒；圖解（收件匣分類、三種回覆策略、連接流程、寄出前檢查）約 4/6。查證：support.claude.com（Google Workspace 連接器：Gmail 搜尋／閱讀／草擬／回覆／轉寄、動作預設需核准；Microsoft 365 連接器）。情境：生活（家長信、朋友邀約、語氣調整）、智慧自動化（設備廠商技術回覆轉待辦）、風能運維（給業主的停機通知與安全提醒）；三類皆出現，停機與上鎖掛牌由人員確認。",
       "cases": {
         "life": "回覆家長、朋友邀約與客服信件",
         "automation": "把設備廠商的技術回覆整理成待辦",

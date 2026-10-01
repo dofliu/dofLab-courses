@@ -205,7 +205,29 @@ window.CLAUDE_COURSE = {
     },
     "icon": "📋",
     "color": "#1e7a5c",
-    "episodes": [],
+    "episodes": [
+     {
+      "id": "010-personal-work-ep01",
+      "no": 1,
+      "file": "ep01.html",
+      "path": "personal-work/ep01.html",
+      "title": {
+       "zh": "郵件與訊息草擬",
+       "en": "Email & Messages"
+      },
+      "sub": {
+       "zh": "收件匣分類、三種回覆策略、語氣調整、連接 Gmail／Outlook、寄出前檢查",
+       "en": "Inbox sorting, three reply strategies, tone, connecting Gmail/Outlook, pre-send checks"
+      },
+      "shots": 6,
+      "dur": 77,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
+     }
+    ],
     "overview": {
      "id": "009-personal-work-overview",
      "no": 0,
@@ -285,7 +307,7 @@ window.CLAUDE_COURSE = {
     "episodes": []
    }
   ],
-  "updated": "2026-09-30T03:11:08Z",
+  "updated": "2026-10-01T01:49:44Z",
   "languages": [
    "zh",
    "en"
@@ -380,7 +402,7 @@ window.CLAUDE_COURSE = {
    "no": 1,
    "title": "郵件與訊息草擬",
    "title_en": "Email & Messages",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "011-personal-work-ep02",
@@ -752,6 +774,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 9,
+ "live": 10,
  "total": 51
 };
