@@ -385,10 +385,14 @@
         "行動項目與負責人",
         "會後追蹤信"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-02T01:45:25Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-02T01:50:03Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/ep02.html",
+        "src": "courses/ai-tutorials/claude/src/011-personal-work-ep02.js",
+        "i18n": "courses/ai-tutorials/claude/src/011-personal-work-ep02.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors: none、untranslated: none）；6 分鏡 79 秒；圖解 5／6（第 2 鏡為對話場景）；查證：support.claude.com（Google Calendar 連接器、Microsoft 365 連接器），資訊截至 2026-10；情境：生活（社區管委會議程與追蹤信）＋智慧自動化（產線改善會議、OEE、停機原因、行動項目）＋風能運維（風場晨會逐字稿、出海決議、追蹤信）",
       "cases": {
         "life": "社區或社團會議的議程與紀錄",
         "automation": "產線改善會議（OEE、停機原因）行動項目",

@@ -226,6 +226,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "011-personal-work-ep02",
+      "no": 2,
+      "file": "ep02.html",
+      "path": "personal-work/ep02.html",
+      "title": {
+       "zh": "會議全流程",
+       "en": "Meetings End to End"
+      },
+      "sub": {
+       "zh": "會前議程、會中紀錄、逐字稿轉摘要、行動項目與負責人、會後追蹤信、日曆連接與隱私",
+       "en": "Agenda, live notes, transcript to summary, action items and owners, follow-up message, calendar connectors and privacy"
+      },
+      "shots": 6,
+      "dur": 79,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -307,7 +328,7 @@ window.CLAUDE_COURSE = {
     "episodes": []
    }
   ],
-  "updated": "2026-10-01T01:49:44Z",
+  "updated": "2026-10-02",
   "languages": [
    "zh",
    "en"
@@ -411,7 +432,7 @@ window.CLAUDE_COURSE = {
    "no": 2,
    "title": "會議全流程",
    "title_en": "Meetings End to End",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "012-personal-work-ep03",
@@ -774,6 +795,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 10,
+ "live": 11,
  "total": 51
 };
