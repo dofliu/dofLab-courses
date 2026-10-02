@@ -22,7 +22,7 @@
 | 008-claude-basics-ep07 | claude-basics | 限制、查證與隱私 | ✅ done | 2026-09-29 |
 | 009-personal-work-overview | personal-work | Claude 如何融入你的一天工作 | ✅ done | 2026-09-30 |
 | 010-personal-work-ep01 | personal-work | 郵件與訊息草擬 | ✅ done | 2026-10-01 |
-| 011-personal-work-ep02 | personal-work | 會議全流程 | todo | — |
+| 011-personal-work-ep02 | personal-work | 會議全流程 | 🔄 in_progress | 2026-10-02 |
 | 012-personal-work-ep03 | personal-work | 文件寫作與改寫 | todo | — |
 | 013-personal-work-ep04 | personal-work | 試算表與資料分析 | todo | — |
 | 014-personal-work-ep05 | personal-work | 簡報製作 | todo | — |
