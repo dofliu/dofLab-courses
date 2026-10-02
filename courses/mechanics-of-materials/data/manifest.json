@@ -154,7 +154,16 @@
       "full_title": "[MOM-CH6-G2] Bending - 彎曲計算工坊：T 形截面與外伸梁的應力分析",
       "file": "ch06-g2.html",
       "published": "2026-10-02T03:54+08:00"
+    },
+    {
+      "ch": 6,
+      "game": 3,
+      "code": "MOM-CH6-G3",
+      "title": "綜合挑戰：鋼板補強木梁與屋頂檁條的斜向彎曲",
+      "full_title": "[MOM-CH6-G3] Bending - 綜合挑戰：鋼板補強木梁與屋頂檁條的斜向彎曲",
+      "file": "ch06-g3.html",
+      "published": "2026-10-03T03:56+08:00"
     }
   ],
-  "updated": "2026-10-02T03:54+08:00"
+  "updated": "2026-10-03T03:56+08:00"
 }
