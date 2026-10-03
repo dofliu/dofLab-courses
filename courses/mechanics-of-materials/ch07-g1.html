@@ -1,0 +1,865 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH7-G1] Transverse Shear - 剪力探索：疊木板與集成材梁的滑移</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+</style>
+</head><body>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH7-G1</span>剪力探索：疊木板與集成材梁的滑移</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 7 · Transverse Shear · Game 1</span>
+      <h2>剪力探索：疊木板與集成材梁的滑移</h2>
+      <p style="color:var(--muted);max-width:65ch">把一疊沒黏的木板當成梁來壓，木板之間會<b>互相滑動</b>；用膠黏起來之後，梁就硬得多——膠合面正在承受<b>縱向剪應力</b>。這一關你會看到梁裡的<b>橫向剪力 V</b> 如何在截面上形成<b>拋物線分布</b>的剪應力，學會用<b>一次矩 Q = ȳ′A′</b> 與<b>剪力公式 τ = VQ/(It)</b> 算出任一高度的剪應力，並理解為什麼工字鋼的剪力幾乎都由腹板承擔。全程約 60 分鐘。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>橫向剪力的四個核心觀念</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="疊木板彎曲時互相滑動">
+          <g class="slipb"><rect x="30" y="14" width="140" height="14" fill="#c99a64" stroke="#1a3a5c"/></g>
+          <rect x="30" y="30" width="140" height="14" fill="#b98a5a" stroke="#1a3a5c"/>
+          <g class="slip"><rect x="30" y="46" width="140" height="14" fill="#a5784a" stroke="#1a3a5c"/></g>
+          <polygon points="36,60 29,72 43,72" fill="#8a99ab"/><polygon points="164,60 157,72 171,72" fill="#8a99ab"/>
+          <line x1="100" y1="0" x2="100" y2="10" stroke="#e8640a" stroke-width="3"/><polygon points="100,14 95,6 105,6" fill="#e8640a"/>
+          <text x="100" y="88" font-size="10" fill="#c62f2f" text-anchor="middle" font-weight="700">沒黏：層與層之間滑動</text>
+        </svg>
+        <h3>縱向剪力從哪來？</h3><span class="formula">τ_縱向 = τ_橫向</span>
+        <p class="life">把一疊撲克牌彎曲，牌的兩端會錯開。梁黏成一體後不能滑，<b>膠合面就要承受縱向剪應力</b>。剪應力成對出現：截面上的垂直剪應力，一定伴隨同樣大小的水平剪應力。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="剪力公式">
+          <rect x="24" y="12" width="56" height="70" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <rect x="24" y="12" width="56" height="22" fill="#fde9da" stroke="#e8640a"/>
+          <line x1="16" y1="34" x2="88" y2="34" stroke="#c62f2f" stroke-width="2"/>
+          <line x1="16" y1="47" x2="88" y2="47" stroke="#e8640a" stroke-dasharray="4 3"/>
+          <text x="52" y="27" font-size="10" fill="#e8640a" text-anchor="middle" font-weight="700">A′</text>
+          <text x="52" y="91" font-size="9" fill="#c62f2f" text-anchor="middle">切口寬 t</text>
+          <text x="92" y="51" font-size="9" fill="#e8640a">NA</text>
+          <text x="140" y="40" font-size="13" fill="#1a3a5c" text-anchor="middle" font-weight="700">τ = VQ / (It)</text>
+          <text x="140" y="60" font-size="9" fill="#5b6b7e" text-anchor="middle">V：截面剪力  I：整個截面</text>
+          <text x="140" y="73" font-size="9" fill="#5b6b7e" text-anchor="middle">t：所求點的截面寬度</text>
+        </svg>
+        <h3>剪力公式</h3><span class="formula">τ = VQ / (It)</span>
+        <p class="life">想像在梁的某個高度「水平切一刀」：切口以上那塊材料要靠切口的剪應力才能跟下面一起受彎。V 越大、切口以上那塊越「有份量」（Q 大）、切口越窄（t 小），剪應力就越大。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="一次矩 Q">
+          <rect x="60" y="8" width="70" height="78" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <rect x="60" y="8" width="70" height="26" fill="#fde9da" stroke="#e8640a" stroke-width="1.5"/>
+          <circle cx="95" cy="21" r="3.5" fill="#e8640a"/>
+          <line x1="52" y1="47" x2="140" y2="47" stroke="#e8640a" stroke-dasharray="4 3"/>
+          <line x1="146" y1="21" x2="146" y2="47" stroke="#1a3a5c"/><polygon points="146,21 142,28 150,28" fill="#1a3a5c"/>
+          <text x="152" y="38" font-size="10" fill="#1a3a5c" font-weight="700">ȳ′</text>
+          <text x="40" y="24" font-size="10" fill="#e8640a" font-weight="700" text-anchor="middle">A′</text>
+          <text x="30" y="51" font-size="9" fill="#e8640a">NA</text>
+        </svg>
+        <h3>一次矩 Q</h3><span class="formula">Q = ȳ′ · A′</span>
+        <p class="life">像蹺蹺板上的「重量 × 力臂」：A′ 是切口以外那塊面積，ȳ′ 是它的形心到中性軸的距離。切口越靠近中性軸，A′ 越大，<b>Q 在中性軸達到最大</b>；在上下表面 A′ = 0，所以 Q = 0。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="矩形截面拋物線剪應力分布">
+          <rect x="24" y="10" width="40" height="72" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <line x1="16" y1="46" x2="72" y2="46" stroke="#e8640a" stroke-dasharray="4 3"/>
+          <line x1="110" y1="8" x2="110" y2="84" stroke="#1a3a5c"/>
+          <path d="M110 10 Q170 46 110 82 Z" fill="#fde9da" stroke="#e8640a" stroke-width="2" class="spread"/>
+          <text x="142" y="50" font-size="10" fill="#e8640a" font-weight="700">τ_max</text>
+          <text x="114" y="14" font-size="9" fill="#5b6b7e">τ = 0</text>
+          <text x="114" y="90" font-size="9" fill="#5b6b7e">τ = 0</text>
+        </svg>
+        <h3>拋物線分布</h3><span class="formula">τ_max = 1.5 V / A（矩形）</span>
+        <p class="life">剪應力和彎曲應力剛好相反：<b>上下表面為零、中性軸最大</b>。矩形截面的最大值是平均值 V/A 的 1.5 倍——所以木梁剪斷時，裂縫常沿著梁高中央水平延伸。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：在矩形截面上「水平切一刀」</h3>
+      <p class="note">調整剪力 V、截面尺寸，並移動切口高度 y（由中性軸量起，向上為正）。左圖橘色區為 A′、橘點為其形心；右圖為整個截面的剪應力分布，紅線標出切口處的 τ。</p>
+      <div class="grid2">
+        <svg viewBox="0 0 460 270" class="ndiag" id="secFig" aria-label="矩形截面剪應力分布"></svg>
+        <div class="stack">
+          <div class="slider"><span>剪力 V</span><input type="range" id="sV1" min="1" max="60" step="0.5" value="20"><span class="mono" id="vV1">20 kN</span></div>
+          <div class="slider"><span>寬度 b</span><input type="range" id="sB1" min="40" max="300" step="5" value="100"><span class="mono" id="vB1">100 mm</span></div>
+          <div class="slider"><span>高度 h</span><input type="range" id="sH1" min="60" max="400" step="10" value="200"><span class="mono" id="vH1">200 mm</span></div>
+          <div class="slider"><span>切口高度 y</span><input type="range" id="sY1" min="-50" max="50" step="1" value="25"><span class="mono" id="vY1">+50 mm</span></div>
+          <div class="readout">
+            <div><small>一次矩 Q = ȳ′A′</small><b id="r1a">—</b></div>
+            <div><small>切口處 τ</small><b id="r1b">—</b></div>
+            <div><small>τ_max（中性軸）</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note">觀察：把切口拉到中性軸（y = 0），τ 達到最大 1.5V/A；拉到上下緣，A′ 縮成零，τ 也歸零。b 加倍、h 加倍，τ_max 都只變 1/2——剪應力只看截面積，和彎曲應力「h 平方」的規律不同。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：集成材步道梁與陽台工字鋼</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：集成材步道梁的膠合面撐得住嗎？</h3>
+      <p style="color:var(--muted);margin-top:4px">公園木棧道的主梁用 3 層 60 mm 厚的木板膠合而成（集成材），寬 b = 140 mm、總高 h = 180 mm，跨距 4 m 簡支。小型維修車停在跨中，輪壓 P = 12 kN。求最大剪力、膠合面上的剪應力與截面最大剪應力，並與膠合面容許剪應力 0.6 MPa 比較。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 290" class="ndiag" id="gluFig" aria-label="集成材梁與膠合面剪應力"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：換載重、換層數</h3>
+        <div class="slider"><span>輪壓 P</span><input type="range" id="sPa" min="2" max="40" step="0.5" value="12"><span class="mono" id="vPa">12 kN</span></div>
+        <div class="slider"><span>寬度 b</span><input type="range" id="sBa" min="80" max="240" step="10" value="140"><span class="mono" id="vBa">140 mm</span></div>
+        <div class="slider"><span>層數 n（每層 60 mm）</span><input type="range" id="sNa" min="2" max="6" step="1" value="3"><span class="mono" id="vNa">3 層</span></div>
+        <div class="readout">
+          <div><small>最大剪力 V_max</small><b id="rA1">—</b></div>
+          <div><small>最危險膠合面 τ</small><b id="rA2">—</b></div>
+          <div><small>截面 τ_max</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：層數為偶數時，正中央就是一道膠合面，剛好落在剪應力最大的中性軸上；層數為奇數時，最靠近中性軸的膠合面最危險。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：陽台懸臂工字鋼——剪力誰來扛？</h3>
+      <p style="color:var(--muted);margin-top:4px">陽台外伸的懸臂鋼梁為工字形：總深 d = 300 mm、翼板寬 b_f = 150 mm、翼板厚 t_f = 12 mm、腹板厚 t_w = 8 mm。自由端承受花台與欄杆合力 P = 40 kN，因此全長剪力 V = 40 kN。求腹板與翼板交界處及中性軸的剪應力，並算出腹板承擔了多少比例的剪力。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 280" class="ndiag" id="ibFig" aria-label="工字鋼剪應力分布"></svg>
+          <div class="slider"><span>剪力 V</span><input type="range" id="sVb" min="10" max="150" step="1" value="40"><span class="mono" id="vVb">40 kN</span></div>
+          <div class="slider"><span>腹板厚 t_w</span><input type="range" id="sTw" min="5" max="20" step="0.5" value="8"><span class="mono" id="vTw">8 mm</span></div>
+          <div class="slider"><span>翼板厚 t_f</span><input type="range" id="sTf" min="6" max="25" step="1" value="12"><span class="mono" id="vTf">12 mm</span></div>
+          <div class="readout">
+            <div><small>交界處（腹板）τ</small><b id="rB1">—</b></div>
+            <div><small>中性軸 τ_max</small><b id="rB2">—</b></div>
+            <div><small>腹板承擔剪力</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">觀察：在交界處剪應力會「跳一階」——同樣的 Q，翼板寬 b_f 比腹板厚 t_w 大很多，所以翼板內的 τ 很小。腹板裡的 τ 幾乎是常數，工程上常用 V / (t_w·d) 來快速估算。</p>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道剪應力題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差，依題目指定單位輸入數字即可。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：梁的剪力檢驗員</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH7-G1] Transverse Shear｜剪力探索：疊木板與集成材梁的滑移</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-18 86 96)"><rect x="74" y="84" width="26" height="5" fill="#c99a64" stroke="#1a3a5c" stroke-width=".8"/><rect x="78" y="89" width="26" height="5" fill="#a5784a" stroke="#1a3a5c" stroke-width=".8"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+guide("#guide0","歡迎來到第 7 章！我手上這兩片木板，疊著彎會互相滑開，黏起來就變成一根結實的梁——差別就在<b>橫向剪力</b>。先填好資料吧！");
+guide("#guide1","第 6 章學的彎曲應力在上下緣最大；今天的<b>剪應力剛好反過來：中性軸最大、上下緣為零</b>。關鍵只有一條公式 τ = VQ/(It)，重點是把 Q 算對。");
+guide("#guide2","兩個案例：A 是<b>集成材</b>，要檢查膠合面會不會被剪開；B 是<b>工字鋼</b>，你會看到翼板負責抗彎、腹板負責抗剪的分工。每一步都可以點開看說明。");
+guide("#guide3","算 Q 的三步驟：① 在所求高度切一刀 ② 取切口以外的面積 A′ ③ 找 A′ 的形心到中性軸距離 ȳ′。單位用 N、mm，τ 就直接是 MPa。");
+guide("#guide4","檢驗員上工！每位同學的梁都不一樣。先找出 V，再判斷是要 τ_max（中性軸）還是指定高度的 τ，最後別忘了 t 是「那個位置」的寬度。加油！");
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+function near(val,ans,tol=0.02){return Number.isFinite(val)&&Math.abs(Math.abs(val)-Math.abs(ans))<=Math.max(Math.abs(ans)*tol,1e-9);}
+function yay(){const m=["太棒了！","完全正確！","剪得漂亮！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+const Irect=(b,h)=>b*Math.pow(h,3)/12;                       // mm^4
+const Qrect=(b,h,y)=>b*(h/2-y)*(h/2+y)/2;                     // first moment of area above y (mm^3)
+const fi=x=>Math.round(x).toLocaleString("en-US");
+const sci=x=>{if(!Number.isFinite(x)||x===0)return "0";const e=Math.floor(Math.log10(Math.abs(x)));return (x/Math.pow(10,e)).toFixed(3)+"×10"+String(e).split("").map(c=>"⁰¹²³⁴⁵⁶⁷⁸⁹"["0123456789".indexOf(c)]||"⁻").join("");};
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+
+/* ---------- Phase 1: rectangular section, shear at height y ---------- */
+function rectShear(VkN,b,h,y){
+  const V=VkN*1e3,I=Irect(b,h),Ap=b*(h/2-y),yb=(h/2+y)/2,Q=Ap*yb,tau=V*Q/(I*b),tmax=1.5*V/(b*h);
+  return {V,I,Ap,yb,Q,tau,tmax};
+}
+function drawSec(){
+  const V=+$("#sV1").value,b=+$("#sB1").value,h=+$("#sH1").value,yp=+$("#sY1").value,y=yp/100*h;
+  $("#vV1").textContent=V+" kN";$("#vB1").textContent=b+" mm";$("#vH1").textContent=h+" mm";$("#vY1").textContent=(y>=0?"+":"")+fmt(y,0)+" mm";
+  const r=rectShear(V,b,h,y);
+  const sc=Math.min(150/b,200/h),bw=b*sc,hh=h*sc,cx=100,cy=132,yt=cy-hh/2,yb=cy+hh/2,yc=cy-y*sc;
+  let s=`<rect width="460" height="270" fill="#fbfcfe"/>`;
+  s+=`<rect x="${cx-bw/2}" y="${yt}" width="${bw}" height="${hh}" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<rect x="${cx-bw/2}" y="${yt}" width="${bw}" height="${yc-yt}" fill="#fde9da" stroke="#e8640a" stroke-width="1.5" style="transition:height .2s"/>`;
+  s+=`<line x1="${cx-bw/2-12}" y1="${cy}" x2="${cx+bw/2+12}" y2="${cy}" stroke="#e8640a" stroke-dasharray="4 3"/>`;
+  s+=`<text x="${cx+bw/2+14}" y="${cy+4}" font-size="10" fill="#e8640a">NA</text>`;
+  s+=`<line x1="${cx-bw/2-12}" y1="${yc}" x2="${cx+bw/2+12}" y2="${yc}" stroke="#c62f2f" stroke-width="2.5"/>`;
+  s+=`<text x="${cx-bw/2-14}" y="${yc-4}" font-size="10" fill="#c62f2f" text-anchor="end">切口</text>`;
+  const ycen=cy-r.yb*sc;
+  s+=`<circle cx="${cx}" cy="${ycen}" r="4" fill="#e8640a" stroke="#fff"/>`;
+  s+=`<line x1="${cx+8}" y1="${ycen}" x2="${cx+8}" y2="${cy}" stroke="#1a3a5c" stroke-width="1.2"/>`;
+  s+=`<text x="${cx+12}" y="${(ycen+cy)/2+4}" font-size="10" fill="#1a3a5c" font-weight="700">ȳ′=${fmt(r.yb,1)}</text>`;
+  s+=`<text x="${cx}" y="${yb+18}" font-size="10.5" fill="#5b6b7e" text-anchor="middle">b × h = ${b} × ${h} mm</text>`;
+  // V arrow on section
+  s+=`<line x1="${cx-bw/2-30}" y1="${yt+10}" x2="${cx-bw/2-30}" y2="${yb-12}" stroke="#1a3a5c" stroke-width="2.5"/><polygon points="${cx-bw/2-30},${yb-4} ${cx-bw/2-35},${yb-14} ${cx-bw/2-25},${yb-14}" fill="#1a3a5c"/>`;
+  s+=`<text x="${cx-bw/2-36}" y="${yt+6}" font-size="11" fill="#1a3a5c" font-weight="700" text-anchor="middle">V</text>`;
+  // distribution
+  const xa=270,A=130;
+  s+=`<line x1="${xa}" y1="${yt-6}" x2="${xa}" y2="${yb+6}" stroke="#1a3a5c"/>`;
+  let pts=`${xa},${yt} `;
+  for(let k=0;k<=40;k++){const yy=h/2-h*k/40,f=1-Math.pow(2*yy/h,2);pts+=`${(xa+A*f).toFixed(1)},${(cy-yy*sc).toFixed(1)} `;}
+  pts+=`${xa},${yb}`;
+  s+=`<polygon points="${pts}" fill="#fde9da" stroke="#e8640a" stroke-width="2"/>`;
+  for(let k=1;k<10;k++){const yy=h/2-h*k/10,f=1-Math.pow(2*yy/h,2);s+=`<line x1="${xa}" y1="${cy-yy*sc}" x2="${xa+A*f}" y2="${cy-yy*sc}" stroke="#e8640a" stroke-width="1" opacity=".55"/>`;}
+  const fy=1-Math.pow(2*y/h,2);
+  s+=`<line x1="${xa}" y1="${yc}" x2="${xa+A*fy}" y2="${yc}" stroke="#c62f2f" stroke-width="3"/>`;
+  s+=`<text x="${Math.min(xa+A*fy+6,380)}" y="${yc-4}" font-size="10.5" fill="#c62f2f" font-weight="700">τ = ${fmt(r.tau,3)} MPa</text>`;
+  s+=`<text x="${xa+A+4}" y="${cy+16}" font-size="10" fill="#e8640a" text-anchor="end" font-weight="700">τ_max = ${fmt(r.tmax,3)}</text>`;
+  s+=`<text x="${xa+4}" y="${yt-10}" font-size="9.5" fill="#5b6b7e">τ = 0（上緣）</text>`;
+  s+=`<text x="12" y="262" font-size="10.5" fill="#5b6b7e">τ(y) = V(h²/4 − y²)/(2I)：拋物線，中性軸最大、上下緣為零</text>`;
+  $("#secFig").innerHTML=s;
+  $("#r1a").textContent=sci(r.Q)+" mm³";
+  $("#r1b").textContent=fmt(r.tau,3)+" MPa";
+  $("#r1c").textContent=fmt(r.tmax,3)+" MPa";
+  $("#r1d").innerHTML=`<p class="note mono">A′ = ${b} × ${fmt(h/2-y,0)} = ${fi(r.Ap)} mm²，ȳ′ = ${fmt(r.yb,1)} mm，I = ${sci(r.I)} mm⁴</p>`+gauge("τ / τ_max",r.tau/r.tmax).replace(/background:[^"]+"/,'background:#e8640a"')+`<p class="note" style="margin-top:4px">平均剪應力 V/A = ${fmt(r.V/(b*h),3)} MPa，τ_max 是它的 1.5 倍。</p>`;
+}
+["#sV1","#sB1","#sH1","#sY1"].forEach(k=>$(k).addEventListener("input",drawSec));
+drawSec();
+
+const P1Q=[
+  {q:"把一疊沒有黏合的木板放在兩個支點上，中央往下壓，會觀察到什麼？",o:["木板之間沒有任何相對運動","每片木板各自彎曲，層與層之間在兩端錯開滑動","只有最上面那片會彎","木板會被拉長但不會彎"],a:1,why:"沒黏的木板各自繞自己的中性軸彎曲，上片的下緣伸長、下片的上緣縮短，接觸面就互相滑動。黏起來後膠合面阻止滑動，承受的正是縱向剪應力。"},
+  {q:"矩形截面梁受剪力 V 時，截面上的剪應力在哪裡最大？",o:["上下表面","中性軸","離中性軸 h/4 處","整個截面均勻相同"],a:1,why:"τ = VQ/(It)，矩形截面寬度 t 不變，Q 在中性軸最大、在上下表面為零，所以 τ 呈拋物線分布，中性軸最大 = 1.5V/A。"},
+  {q:"一次矩 Q = ȳ′A′ 中的 A′ 指的是什麼？",o:["整個截面的面積","所求高度「以外」（切口外側）那部分的截面積","腹板的面積","中性軸以下的面積，與所求位置無關"],a:1,why:"在所求點水平切開，A′ 是切口外側那塊面積，ȳ′ 是它的形心到中性軸的距離。切口越靠近中性軸，Q 越大。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">🪵✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 2A: glulam beam, glue-line shear ---------- */
+const LAM_T=60,GLU_SA=0.6;
+function glulam(PkN,b,n){
+  const V=PkN*1e3/2,h=n*LAM_T,I=Irect(b,h),tmax=1.5*V/(b*h);
+  const lines=[];for(let k=1;k<n;k++){const y=h/2-k*LAM_T,Q=Qrect(b,h,y),tau=V*Q/(I*b);lines.push({k,y,Q,tau});}
+  const worst=lines.reduce((a,c)=>c.tau>a.tau?c:a,lines[0]);
+  return {V,h,I,tmax,lines,worst};
+}
+function drawGlu(){
+  const P=+$("#sPa").value,b=+$("#sBa").value,n=+$("#sNa").value;
+  $("#vPa").textContent=P+" kN";$("#vBa").textContent=b+" mm";$("#vNa").textContent=n+" 層";
+  const r=glulam(P,b,n),u=r.worst.tau/GLU_SA;
+  let s=`<rect width="460" height="290" fill="#fbfcfe"/>`;
+  // elevation
+  const x0=30,x1=260,xm=145,bt=34,bh=Math.min(62,n*12),lh=bh/n;
+  const woods=["#c99a64","#b98a5a","#a5784a"];
+  for(let k=0;k<n;k++)s+=`<rect x="${x0}" y="${bt+k*lh}" width="${x1-x0}" height="${lh}" fill="${woods[k%3]}" stroke="#7a5532" stroke-width=".8"/>`;
+  r.lines.forEach(L=>{const yy=bt+L.k*lh;s+=`<line x1="${x0}" y1="${yy}" x2="${x1}" y2="${yy}" stroke="${L===r.worst?util(u):"#7a5532"}" stroke-width="${L===r.worst?3:1}"/>`;});
+  s+=`<polygon points="${x0},${bt+bh} ${x0-8},${bt+bh+13} ${x0+8},${bt+bh+13}" fill="#8a99ab" stroke="#1a3a5c"/><circle cx="${x1}" cy="${bt+bh+6}" r="6" fill="#8a99ab" stroke="#1a3a5c"/>`;
+  s+=`<line x1="${xm}" y1="4" x2="${xm}" y2="${bt-6}" stroke="#e8640a" stroke-width="3"/><polygon points="${xm},${bt-1} ${xm-6},${bt-10} ${xm+6},${bt-10}" fill="#e8640a"/>`;
+  s+=`<text x="${xm+8}" y="16" font-size="11.5" fill="#e8640a" font-weight="700">P = ${P} kN</text>`;
+  s+=`<text x="${xm}" y="${bt+bh+26}" font-size="10" fill="#1a3a5c" text-anchor="middle">L = 4 m（簡支），${n} 層 × ${LAM_T} mm</text>`;
+  // shear diagram
+  const vy=172,vh=26;
+  s+=`<text x="10" y="${vy+4}" font-size="11" fill="#1a3a5c" font-weight="700">V</text>`;
+  s+=`<line x1="${x0}" y1="${vy}" x2="${x1}" y2="${vy}" stroke="#5b6b7e"/>`;
+  s+=`<rect x="${x0}" y="${vy-vh}" width="${xm-x0}" height="${vh}" fill="#e9eef5" stroke="#1a3a5c"/><rect x="${xm}" y="${vy}" width="${x1-xm}" height="${vh}" fill="#e9eef5" stroke="#1a3a5c"/>`;
+  s+=`<text x="${x0+4}" y="${vy-vh-4}" font-size="10" fill="#1a3a5c">+P/2 = ${fmt(r.V/1e3,2)} kN</text>`;
+  s+=`<text x="${x1}" y="${vy+vh+13}" font-size="10" fill="#1a3a5c" text-anchor="end">−P/2</text>`;
+  s+=`<text x="${x0}" y="${vy+vh+30}" font-size="10" fill="#5b6b7e">剪力圖：中央集中力 → 兩半段 |V| 相同</text>`;
+  // section + distribution
+  const sc=Math.min(60/b,200/r.h),sw=b*sc,sh=r.h*sc,cx=315,cy=140,yt=cy-sh/2,ybt=cy+sh/2;
+  for(let k=0;k<n;k++)s+=`<rect x="${cx-sw/2}" y="${yt+k*LAM_T*sc}" width="${sw}" height="${LAM_T*sc}" fill="${woods[k%3]}" stroke="#7a5532" stroke-width=".8"/>`;
+  s+=`<line x1="${cx-sw/2-6}" y1="${cy}" x2="${cx+sw/2+6}" y2="${cy}" stroke="#1a3a5c" stroke-dasharray="4 3"/>`;
+  const xa=cx+sw/2+16,A=Math.max(40,420-xa);
+  let pts=`${xa},${yt} `;
+  for(let k=0;k<=40;k++){const yy=r.h/2-r.h*k/40,f=1-Math.pow(2*yy/r.h,2);pts+=`${(xa+A*f).toFixed(1)},${(cy-yy*sc).toFixed(1)} `;}
+  pts+=`${xa},${ybt}`;
+  s+=`<line x1="${xa}" y1="${yt-4}" x2="${xa}" y2="${ybt+4}" stroke="#1a3a5c"/>`;
+  s+=`<polygon points="${pts}" fill="#fde9da" stroke="#e8640a" stroke-width="2"/>`;
+  r.lines.forEach(L=>{const yy=cy-L.y*sc,f=1-Math.pow(2*L.y/r.h,2),w=L===r.worst;
+    s+=`<line x1="${xa}" y1="${yy}" x2="${xa+A*f}" y2="${yy}" stroke="${w?util(u):"#7a5532"}" stroke-width="${w?3:1.5}"/>`;
+    s+=`<text x="${Math.min(xa+A*f+3,422)}" y="${yy-3}" font-size="9.5" fill="${w?util(u):"#5b6b7e"}" font-weight="${w?700:400}">${fmt(L.tau,3)}</text>`;});
+  s+=`<text x="${cx}" y="${ybt+16}" font-size="10" fill="#5b6b7e" text-anchor="middle">${b}×${r.h}</text>`;
+  s+=`<text x="${xa}" y="${yt-10}" font-size="10" fill="#e8640a">τ_max = ${fmt(r.tmax,3)} MPa</text>`;
+  s+=`<text x="12" y="282" font-size="10.5" fill="#5b6b7e">粗線＝最危險膠合面（綠＝安全、黃＝接近、紅＝超過 ${GLU_SA} MPa），數字單位 MPa</text>`;
+  $("#gluFig").innerHTML=s;
+  $("#rA1").textContent=fmt(r.V/1e3,2)+" kN";
+  $("#rA2").textContent=fmt(r.worst.tau,3)+" MPa";
+  $("#rA3").textContent=fmt(r.tmax,3)+" MPa";
+  $("#rA4").innerHTML=gauge(`膠合面 τ / ${GLU_SA}`,u)+`<div class="row" style="justify-content:space-between;margin-top:6px"><span class="note mono">最危險膠合面距中性軸 y = ${fmt(r.worst.y,0)} mm，Q = ${fi(r.worst.Q)} mm³</span><span class="badge ${u<=1?"ok":"no"}">${u<=1?"膠合面撐得住 ✓":"膠合面會被剪開！加寬截面或減少載重"}</span></div>`;
+}
+["#sPa","#sBa","#sNa"].forEach(k=>$(k).addEventListener("input",drawGlu));
+const ga=glulam(12,140,3),gl=ga.lines[0];
+const STEPS_A=[
+  {t:"求最大剪力",d:`簡支梁中央集中力 → 反力各 P/2，全長 |V| = P/2 = 12 / 2 = ${fmt(ga.V/1e3,1)} kN = ${fi(ga.V)} N`},
+  {t:"整個截面的慣性矩",d:`I = bh³/12 = 140 × 180³ / 12 = ${fi(ga.I)} mm⁴`},
+  {t:"膠合面位置與 A′、ȳ′",d:`上膠合面在頂面下 60 mm → 距中性軸 y = 90 − 60 = ${fmt(gl.y,0)} mm；A′ = 140 × 60 = 8,400 mm²，ȳ′ = 30 + 30 = 60 mm`},
+  {t:"一次矩 Q",d:`Q = ȳ′A′ = 60 × 8,400 = ${fi(gl.Q)} mm³（下膠合面對稱，Q 相同）`},
+  {t:"膠合面剪應力",d:`τ = VQ/(It) = ${fi(ga.V)} × ${fi(gl.Q)} / (${fi(ga.I)} × 140) = ${fmt(gl.tau,3)} MPa`},
+  {t:"中性軸最大值與判斷",d:`τ_max = 1.5V/A = 1.5 × ${fi(ga.V)} / (140 × 180) = ${fmt(ga.tmax,3)} MPa；膠合面 ${fmt(gl.tau,3)} / ${GLU_SA} = ${fmt(gl.tau/GLU_SA*100,0)}% → 安全`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sPa").value=12;$("#sBa").value=140;$("#sNa").value=3;drawGlu();});
+drawGlu();
+
+/* ---------- Phase 2B: wide-flange beam ---------- */
+const IB_D=300,IB_BF=150;
+function ibeam(VkN,tw,tf,d=IB_D,bf=IB_BF){
+  const V=VkN*1e3,hw=d/2-tf;                                   // hw: half web height
+  const I=(bf*Math.pow(d,3)-(bf-tw)*Math.pow(d-2*tf,3))/12;
+  const Qf=bf*tf*(d/2-tf/2),Qna=Qf+tw*hw*hw/2;
+  const tJw=V*Qf/(I*tw),tJf=V*Qf/(I*bf),tmax=V*Qna/(I*tw);
+  // shear carried by web: integral of tau*t_w over web = V/I * ∫Q(y)dy
+  const N=200;let F=0;for(let k=0;k<=N;k++){const y=-hw+2*hw*k/N,Q=Qf+tw*(hw*hw-y*y)/2,wgt=(k===0||k===N)?1:(k%2?4:2);F+=wgt*Q;}
+  F=V/I*F*(2*hw/N)/3;
+  const tAvg=V/(tw*d);
+  return {V,I,Qf,Qna,tJw,tJf,tmax,share:F/V,tAvg,hw,d,bf,tw,tf};
+}
+function drawIB(){
+  const V=+$("#sVb").value,tw=+$("#sTw").value,tf=+$("#sTf").value;
+  $("#vVb").textContent=V+" kN";$("#vTw").textContent=tw+" mm";$("#vTf").textContent=tf+" mm";
+  const r=ibeam(V,tw,tf);
+  const sc=200/IB_D,cx=110,cy=136,yt=cy-IB_D*sc/2,yb=cy+IB_D*sc/2,fw=IB_BF*sc,tfp=tf*sc,twp=Math.max(2,tw*sc);
+  let s=`<rect width="460" height="280" fill="#fbfcfe"/>`;
+  s+=`<rect x="${cx-fw/2}" y="${yt}" width="${fw}" height="${tfp}" fill="#8fa3ba" stroke="#1a3a5c"/>`;
+  s+=`<rect x="${cx-fw/2}" y="${yb-tfp}" width="${fw}" height="${tfp}" fill="#8fa3ba" stroke="#1a3a5c"/>`;
+  s+=`<rect x="${cx-twp/2}" y="${yt+tfp}" width="${twp}" height="${yb-yt-2*tfp}" fill="#e8640a" opacity=".8" stroke="#1a3a5c"/>`;
+  s+=`<line x1="${cx-fw/2-8}" y1="${cy}" x2="${cx+fw/2+8}" y2="${cy}" stroke="#1a3a5c" stroke-dasharray="4 3"/>`;
+  s+=`<text x="${cx}" y="${yb+16}" font-size="10" fill="#5b6b7e" text-anchor="middle">d=${IB_D}, b_f=${IB_BF}, t_f=${tf}, t_w=${tw}</text>`;
+  s+=`<text x="${cx+twp/2+4}" y="${cy-28}" font-size="10" fill="#e8640a" font-weight="700">腹板</text>`;
+  s+=`<text x="${cx}" y="${yt-6}" font-size="10" fill="#5b6b7e" text-anchor="middle">翼板</text>`;
+  // distribution
+  const xa=240,A=170/r.tmax;
+  let pts=`${xa},${yt} `;
+  const yj=r.d/2-r.tf;
+  const tf_=y=>r.V*(r.bf*(r.d/2-y)*(r.d/2+y)/2)/(r.I*r.bf),tw_=y=>r.V*(r.Qf+r.tw*(r.hw*r.hw-y*y)/2)/(r.I*r.tw);
+  const P=(y,t)=>{pts+=`${(xa+A*t).toFixed(1)},${(cy-y*sc).toFixed(1)} `;};
+  for(let k=0;k<=12;k++){const y=r.d/2-r.tf*k/12;P(y,tf_(y));}
+  for(let k=0;k<=40;k++){const y=yj-2*yj*k/40;P(y,tw_(y));}
+  for(let k=0;k<=12;k++){const y=-yj-r.tf*k/12;P(y,tf_(-y));}
+  pts+=`${xa},${yb}`;
+  s+=`<line x1="${xa}" y1="${yt-4}" x2="${xa}" y2="${yb+4}" stroke="#1a3a5c"/>`;
+  s+=`<polygon points="${pts}" fill="#fde9da" stroke="#e8640a" stroke-width="2"/>`;
+  s+=`<line x1="${xa}" y1="${cy}" x2="${xa+A*r.tmax}" y2="${cy}" stroke="#c62f2f" stroke-width="2"/>`;
+  s+=`<text x="${xa+A*r.tmax-2}" y="${cy-5}" font-size="10.5" fill="#c62f2f" text-anchor="end" font-weight="700">τ_max ${fmt(r.tmax,1)}</text>`;
+  const yjp=cy-yj*sc;
+  s+=`<line x1="${xa}" y1="${yjp}" x2="${xa+A*r.tJw}" y2="${yjp}" stroke="#1a3a5c" stroke-width="1.5" stroke-dasharray="3 2"/>`;
+  s+=`<text x="${xa+A*r.tJw+4}" y="${yjp+12}" font-size="10" fill="#1a3a5c">腹板交界 ${fmt(r.tJw,1)}</text>`;
+  s+=`<text x="${xa+A*r.tJf+4}" y="${yjp-4}" font-size="10" fill="#5b6b7e">翼板內 ${fmt(r.tJf,2)}</text>`;
+  s+=`<text x="12" y="272" font-size="10.5" fill="#5b6b7e">剪應力分布（MPa）：交界處因寬度 b_f → t_w 突然變窄而跳階</text>`;
+  $("#ibFig").innerHTML=s;
+  $("#rB1").textContent=fmt(r.tJw,2)+" MPa";
+  $("#rB2").textContent=fmt(r.tmax,2)+" MPa";
+  $("#rB3").textContent=fmt(r.share*100,1)+" %";
+  const u=r.tmax/100;
+  $("#rB4").innerHTML=gauge("τ_max / 100 MPa",u)+`<div class="row" style="justify-content:space-between;margin-top:6px"><span class="note mono">估算 V/(t_w·d) = ${fmt(r.tAvg,2)} MPa（誤差 ${fmt((r.tAvg/r.tmax-1)*100,0)}%）</span><span class="badge ${u<=1?"ok":"no"}">${u<=1?"腹板剪應力在容許範圍 ✓":"腹板剪應力過大！加厚腹板"}</span></div>`;
+}
+["#sVb","#sTw","#sTf"].forEach(k=>$(k).addEventListener("input",drawIB));
+const ib=ibeam(40,8,12);
+const STEPS_B=[
+  {t:"截面慣性矩（外框減去兩側空缺）",d:`I = [b_f d³ − (b_f − t_w)(d − 2t_f)³]/12 = [150×300³ − 142×276³]/12 = ${fi(ib.I)} mm⁴`},
+  {t:"交界處的 Q（只含一塊翼板）",d:`Q_f = b_f t_f (d/2 − t_f/2) = 150 × 12 × 144 = ${fi(ib.Qf)} mm³`},
+  {t:"交界處剪應力：同一個 Q，兩種寬度",d:`腹板側 τ = VQ_f/(I t_w) = 40,000 × ${fi(ib.Qf)} / (${fi(ib.I)} × 8) = ${fmt(ib.tJw,2)} MPa；翼板側 t = 150 → 只有 ${fmt(ib.tJf,2)} MPa`},
+  {t:"中性軸的 Q 與 τ_max",d:`Q_NA = Q_f + t_w(d/2 − t_f)²/2 = ${fi(ib.Qf)} + 8 × 138²/2 = ${fi(ib.Qna)} mm³；τ_max = VQ_NA/(I t_w) = ${fmt(ib.tmax,2)} MPa`},
+  {t:"腹板承擔多少剪力？",d:`把腹板上的 τ·t_w 從上積分到下 ≈ ${fmt(ib.share*V0(ib),2)} kN，占 V 的 ${fmt(ib.share*100,1)}%——剪力幾乎全由腹板承擔`},
+  {t:"工程快速估算",d:`τ ≈ V/(t_w·d) = 40,000 / (8 × 300) = ${fmt(ib.tAvg,2)} MPa，與 τ_max 相差 ${fmt((1-ib.tAvg/ib.tmax)*100,0)}%`}
+];
+function V0(r){return r.V/1e3;}
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sVb").value=40;$("#sTw").value=8;$("#sTf").value=12;drawIB();});
+drawIB();
+
+/* ---------- Phase 3 practice ---------- */
+const P3a=1.5*30e3/(100*200);
+const P3bI=Irect(100,200),P3bQ=Qrect(100,200,50),P3b=30e3*P3bQ/(P3bI*100);
+const P3cI=Irect(120,120),P3cQ=120*40*40,P3c=8e3*P3cQ/(P3cI*120);
+const P3Q=[
+  {type:"num",q:"一根矩形木梁截面寬 b = 100 mm、高 h = 200 mm，某截面的剪力 V = 30 kN。求截面上的最大剪應力 τ_max（MPa）。",ans:P3a,unit:"MPa",dp:3,
+   hint:"矩形截面最大剪應力在中性軸：τ_max = 1.5V/A，A = bh。",
+   sol:["A = 100 × 200 = 20,000 mm²","平均剪應力 V/A = 30,000 / 20,000 = 1.5 MPa",`τ_max = 1.5 × 1.5 = ${fmt(P3a,3)} MPa`]},
+  {type:"num",q:"承上題，求同一截面上、中性軸「上方 50 mm」處的剪應力 τ（MPa）。",ans:P3b,unit:"MPa",dp:4,
+   hint:"切口在 y = 50 mm，A′ 是切口以上的面積 100 × 50；它的形心距中性軸 ȳ′ = 50 + 25 = 75 mm。",
+   sol:[`I = 100 × 200³ / 12 = ${fi(P3bI)} mm⁴`,"A′ = 100 × (100 − 50) = 5,000 mm²，ȳ′ = 50 + 25 = 75 mm",`Q = 75 × 5,000 = ${fi(P3bQ)} mm³`,`τ = VQ/(It) = 30,000 × ${fi(P3bQ)} / (${fi(P3bI)} × 100) = ${fmt(P3b,4)} MPa`]},
+  {type:"num",q:"一根集成材梁由 3 層 40 mm 厚、120 mm 寬的木板膠合而成（總高 120 mm）。某截面剪力 V = 8 kN，求上方那道膠合面的剪應力 τ（MPa）。",ans:P3c,unit:"MPa",dp:4,
+   hint:"上膠合面以上是最上層木板：A′ = 120 × 40，形心距中性軸 ȳ′ = 60 − 20 = 40 mm。",
+   sol:[`I = 120 × 120³ / 12 = ${fi(P3cI)} mm⁴`,"膠合面距中性軸 y = 60 − 40 = 20 mm",`A′ = 120 × 40 = 4,800 mm²，ȳ′ = 40 mm → Q = ${fi(P3cQ)} mm³`,`τ = 8,000 × ${fi(P3cQ)} / (${fi(P3cI)} × 120) = ${fmt(P3c,4)} MPa`]},
+  {type:"mc",q:"工字形（寬翼）鋼梁承受剪力 V 時，下列敘述何者正確？",
+   o:["剪力幾乎全由腹板承擔，腹板內剪應力接近均勻","剪力主要由上下翼板承擔","翼板與腹板各承擔一半","最大剪應力出現在翼板外緣"],a:0,
+   hint:"在交界處同一個 Q 除以很寬的 b_f，翼板內的 τ 很小；腹板窄、τ 大，而且從交界到中性軸變化不大。",
+   sol:["τ = VQ/(It)：翼板的 t = b_f 很寬 → τ 很小","腹板 t = t_w 很窄 → τ 大，且從交界到中性軸只增加一些","積分可得腹板承擔約 90% 以上的 V","所以工程上常用 τ ≈ V/(t_w·d) 估算 → 選 A"]}
+];
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 1.25。";return;}
+  const ok=q.type==="num"?near(v,q.ans):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">🪵</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+/* ---------- Phase 4 seeded test ---------- */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+71)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 rectangle tau_max
+  {const V=vary(25,0.5),b=vary(100,5),h=vary(220,10),t=1.5*V*1e3/(b*h);
+   qs.push({type:"num",title:"矩形截面最大剪應力",q:`一根矩形截面梁寬 b = ${b} mm、高 h = ${h} mm，某截面剪力 V = ${fmt(V,1)} kN。求該截面的最大剪應力 τ_max（MPa）。`,ans:t,unit:"MPa",dp:3,
+    sol:`τ_max = 1.5V/A = 1.5 × ${fi(V*1e3)} / (${b} × ${h}) = ${fmt(t,3)} MPa（發生在中性軸）`});}
+  // Q2 simply supported UDL -> V_max -> tau_max
+  {const w=vary(8,0.5),L=vary(5,0.1),b=vary(120,10),h=vary(300,10),V=w*L/2,t=1.5*V*1e3/(b*h);
+   qs.push({type:"num",title:"簡支梁的最大剪應力",q:`一根簡支木梁跨距 L = ${fmt(L,1)} m，全長承受均佈載重 w = ${fmt(w,1)} kN/m，截面 ${b} mm（寬）× ${h} mm（高）。求梁內的最大剪應力 τ_max（MPa）。`,ans:t,unit:"MPa",dp:3,
+    sol:`V_max 在支承處 = wL/2 = ${fmt(w,1)} × ${fmt(L,1)} / 2 = ${fmt(V,3)} kN；τ_max = 1.5V/A = 1.5 × ${fi(V*1e3)} / (${b} × ${h}) = ${fmt(t,3)} MPa`});}
+  // Q3 rectangle tau at height y
+  {const V=vary(40,0.5),b=vary(80,5),h=vary(240,10),y=Math.round(h/2*(0.3+0.4*r())/5)*5,I=Irect(b,h),Q=Qrect(b,h,y),t=V*1e3*Q/(I*b);
+   qs.push({type:"num",title:"指定高度的剪應力",q:`矩形截面 ${b} mm（寬）× ${h} mm（高），剪力 V = ${fmt(V,1)} kN。求中性軸「下方 ${y} mm」處的剪應力 τ（MPa）。`,ans:t,unit:"MPa",dp:4,
+    sol:`A′ = ${b} × (${h/2} − ${y}) = ${fi(b*(h/2-y))} mm²，ȳ′ = (${h/2} + ${y})/2 = ${fmt((h/2+y)/2,1)} mm → Q = ${fi(Q)} mm³；I = ${fi(I)} mm⁴；τ = VQ/(It) = ${fmt(t,4)} MPa（上下對稱，取切口以下面積結果相同）`});}
+  // Q4 I-beam tau at NA
+  {const d=vary(250,10),bf=vary(125,5),tf=vary(10,1),tw=vary(7,0.5),V=vary(60,1),R=ibeam(V,tw,tf,d,bf);
+   qs.push({type:"num",title:"工字鋼腹板最大剪應力",q:`工字形鋼梁總深 d = ${d} mm、翼板寬 b_f = ${bf} mm、翼板厚 t_f = ${tf} mm、腹板厚 t_w = ${tw} mm，剪力 V = ${V} kN。求中性軸處的最大剪應力 τ_max（MPa）。`,ans:R.tmax,unit:"MPa",dp:2,
+    sol:`I = [${bf}×${d}³ − ${fmt(bf-tw,1)}×${fmt(d-2*tf,0)}³]/12 = ${fi(R.I)} mm⁴；Q_NA = ${bf}×${tf}×${fmt(d/2-tf/2,1)} + ${tw}×${fmt(d/2-tf,0)}²/2 = ${fi(R.Qna)} mm³；τ_max = VQ/(I t_w) = ${fi(V*1e3)} × ${fi(R.Qna)} / (${fi(R.I)} × ${tw}) = ${fmt(R.tmax,2)} MPa`});}
+  // Q5 concept
+  {const pool=[
+    {q:"矩形截面梁在相同剪力 V 下，若把截面「高度 h」加倍（寬度不變），最大剪應力變為原來的？",o:["1/2","1/4","1/8","不變"],why:"τ_max = 1.5V/(bh) ∝ 1/h，h 加倍 → τ_max 變 1/2。（彎曲應力則 ∝ 1/h²，變 1/4。）"},
+    {q:"矩形截面梁上、下表面處的橫向剪應力為何？",o:["零","最大","等於平均值 V/A","等於 1.5V/A"],why:"在上下表面切口以外的面積 A′ = 0，Q = 0，所以 τ = 0；這也符合梁表面沒有外加剪力的邊界條件。"},
+    {q:"用 τ = VQ/(It) 求工字鋼腹板與翼板交界處「腹板側」的剪應力時，t 應取多少？",o:["腹板厚 t_w","翼板寬 b_f","翼板厚 t_f","總深 d"],why:"t 是所求點的截面寬度；在腹板側切開，切口寬度就是腹板厚 t_w，所以 τ 比翼板側大很多（跳階）。"},
+    {q:"集成材梁由偶數層等厚木板膠合，哪一道膠合面的剪應力最大？",o:["正中央（中性軸上）那道","最上面那道","最下面那道","每道都一樣大"],why:"Q 在中性軸最大，偶數層時正中央的膠合面恰好在中性軸上，剪應力 = τ_max = 1.5V/A。"}
+   ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"剪應力觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q.ans):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"剪應力觀念一把抓！Q = ȳ′A′、τ = VQ/(It)、矩形 1.5V/A、工字鋼腹板扛剪力，你都掌握了。下一關我們來算釘子要釘多密！",B:"很不錯！再留意 Q 的 A′ 要取「切口以外」的面積、t 要取「所求位置」的寬度，下次就是 A。",C:"方向對了！回到 Phase 2 把集成材與工字鋼的步驟卡再點一次，特別是 ȳ′ 是「A′ 的形心到中性軸」的距離。",D:"別灰心！先記住一個畫面：一疊沒黏的木板彎曲時會互相滑動，膠合面就是在擋這個滑動。剪應力中間最大、上下為零——再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 7 章 Transverse Shear · 遊戲 1（MOM-CH7-G1）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以大小判定，容許 ±2% 誤差。</p>`;
+  S.summary=`[MOM-CH7-G1] Transverse Shear 剪力探索 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
