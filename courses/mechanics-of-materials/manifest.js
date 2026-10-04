@@ -173,9 +173,18 @@ window.MOM_MANIFEST = {
    "full_title": "[MOM-CH7-G1] Transverse Shear - 剪力探索：疊木板與集成材梁的滑移",
    "file": "ch07-g1.html",
    "published": "2026-10-04T03:52+08:00"
+  },
+  {
+   "ch": 7,
+   "game": 2,
+   "code": "MOM-CH7-G2",
+   "title": "剪流計算工坊：組合木梁的釘距與螺栓間距",
+   "full_title": "[MOM-CH7-G2] Transverse Shear - 剪流計算工坊：組合木梁的釘距與螺栓間距",
+   "file": "ch07-g2.html",
+   "published": "2026-10-05T03:54+08:00"
   }
  ],
- "updated": "2026-10-04T03:52+08:00"
+ "updated": "2026-10-05T03:54+08:00"
 };
 window.MOM_CHAPTERS = [["Stress", "應力"], ["Strain", "應變"], ["Mechanical Properties", "材料力學性質"], ["Axial Load", "軸向載重"], ["Torsion", "扭轉"], ["Bending", "彎曲"], ["Transverse Shear", "橫向剪力"], ["Combined Loadings", "組合載重"], ["Stress Transformation", "應力轉換"], ["Strain Transformation", "應變轉換"], ["Design of Beams & Shafts", "梁與軸的設計"], ["Deflection of Beams & Shafts", "梁與軸的撓度"], ["Buckling of Columns", "柱的挫曲"], ["Energy Methods", "能量法"]];
 window.MOM_GAMES = ["核心概念探索", "公式應用與工程案例", "綜合挑戰與設計情境"];

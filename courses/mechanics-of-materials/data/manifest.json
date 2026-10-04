@@ -172,7 +172,16 @@
       "full_title": "[MOM-CH7-G1] Transverse Shear - 剪力探索：疊木板與集成材梁的滑移",
       "file": "ch07-g1.html",
       "published": "2026-10-04T03:52+08:00"
+    },
+    {
+      "ch": 7,
+      "game": 2,
+      "code": "MOM-CH7-G2",
+      "title": "剪流計算工坊：組合木梁的釘距與螺栓間距",
+      "full_title": "[MOM-CH7-G2] Transverse Shear - 剪流計算工坊：組合木梁的釘距與螺栓間距",
+      "file": "ch07-g2.html",
+      "published": "2026-10-05T03:54+08:00"
     }
   ],
-  "updated": "2026-10-04T03:52+08:00"
+  "updated": "2026-10-05T03:54+08:00"
 }

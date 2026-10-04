@@ -1,0 +1,854 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH7-G2] Transverse Shear - 剪流計算工坊：組合木梁的釘距與螺栓間距</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+@keyframes hammer{0%,100%{transform:rotate(0deg)}40%{transform:rotate(-28deg)}55%{transform:rotate(6deg)}}
+.hammer{transform-box:fill-box;transform-origin:90% 90%;animation:hammer 1.6s ease-in-out infinite}
+@keyframes zip{0%{stroke-dashoffset:60}100%{stroke-dashoffset:0}}
+.zip{stroke-dasharray:6 4;animation:zip 2s linear infinite}
+</style>
+</head><body>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH7-G2</span>剪流計算工坊：組合木梁的釘距與螺栓間距</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 7 · Transverse Shear · Game 2</span>
+      <h2>剪流計算工坊：組合木梁的釘距與螺栓間距</h2>
+      <p style="color:var(--muted);max-width:65ch">工地上常把幾塊木板或鋼板<b>用釘子、螺栓「組合」成一根梁</b>。板與板之間的接合面要傳遞縱向剪力，單位長度上要傳遞的力叫做<b>剪流 q = VQ/I</b>（N/mm）。這一關你會練習找出「被釘住那塊板」的 Q、算出剪流，再用 <b>s = nF/q</b> 決定釘子最多可以隔多遠，並看看簡支梁為什麼<b>靠近支承要釘得密、跨中可以釘得疏</b>。全程約 60 分鐘。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>剪流與釘距的四個核心觀念</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="剪流像拉鍊">
+          <rect x="20" y="22" width="160" height="18" fill="#c99a64" stroke="#1a3a5c"/>
+          <rect x="20" y="42" width="160" height="18" fill="#a5784a" stroke="#1a3a5c"/>
+          <line x1="20" y1="41" x2="180" y2="41" stroke="#e8640a" stroke-width="3" class="zip"/>
+          <line x1="30" y1="12" x2="70" y2="12" stroke="#1a3a5c" stroke-width="2"/><polygon points="74,12 66,8 66,16" fill="#1a3a5c"/>
+          <line x1="170" y1="70" x2="130" y2="70" stroke="#1a3a5c" stroke-width="2"/><polygon points="126,70 134,66 134,74" fill="#1a3a5c"/>
+          <text x="100" y="88" font-size="10" fill="#e8640a" text-anchor="middle" font-weight="700">接合面每 mm 要傳 q 牛頓</text>
+        </svg>
+        <h3>剪流 q</h3><span class="formula">q = VQ / I（N/mm）</span>
+        <p class="life">像拉鍊：兩片布想互相滑開，拉鍊每一公分都得出力拉住。剪流就是接合面<b>每單位長度</b>要傳遞的縱向剪力，等於 τ × t，所以公式裡少了 t。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="釘距">
+          <rect x="14" y="26" width="172" height="16" fill="#c99a64" stroke="#1a3a5c"/>
+          <rect x="14" y="42" width="172" height="30" fill="#a5784a" stroke="#1a3a5c"/>
+          <g fill="#5b6b7e"><rect x="38" y="20" width="3" height="40"/><rect x="88" y="20" width="3" height="40"/><rect x="138" y="20" width="3" height="40"/></g>
+          <g fill="#1a3a5c"><rect x="34" y="18" width="11" height="3"/><rect x="84" y="18" width="11" height="3"/><rect x="134" y="18" width="11" height="3"/></g>
+          <line x1="40" y1="10" x2="89" y2="10" stroke="#e8640a" stroke-width="1.5"/><text x="64" y="8" font-size="10" fill="#e8640a" text-anchor="middle" font-weight="700">s</text>
+          <text x="100" y="88" font-size="10" fill="#1a3a5c" text-anchor="middle">每支釘負責一段 s 的剪流</text>
+        </svg>
+        <h3>釘距 s</h3><span class="formula">s = n F / q</span>
+        <p class="life">一支釘子能承受的剪力為 F，同一排有 n 支，就要負責長度 s 內的 q·s。<b>q 越大，釘子要越密</b>；釘子越強或一排釘越多支，就可以釘得越疏。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="Q 取被釘住那塊板">
+          <rect x="50" y="10" width="100" height="18" fill="#fde9da" stroke="#e8640a" stroke-width="2"/>
+          <rect x="88" y="28" width="24" height="56" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <rect x="98" y="6" width="4" height="36" fill="#5b6b7e"/><rect x="94" y="5" width="12" height="3" fill="#1a3a5c"/>
+          <line x1="40" y1="44" x2="160" y2="44" stroke="#e8640a" stroke-dasharray="4 3"/>
+          <circle cx="100" cy="19" r="3" fill="#e8640a"/>
+          <line x1="160" y1="19" x2="160" y2="44" stroke="#1a3a5c"/><text x="164" y="35" font-size="10" fill="#1a3a5c" font-weight="700">ȳ′</text>
+          <text x="40" y="22" font-size="10" fill="#e8640a" font-weight="700" text-anchor="middle">A′</text>
+          <text x="166" y="48" font-size="9" fill="#e8640a">NA</text>
+        </svg>
+        <h3>Q 要取哪塊？</h3><span class="formula">Q = ȳ′A′（被釘住的那塊）</span>
+        <p class="life">釘子把翼板「釘」在腹板上，翼板要靠釘子才能跟著一起彎，所以 A′ 就是<b>那塊翼板</b>，ȳ′ 是翼板形心到<b>整個截面中性軸</b>的距離——中性軸要先算出來！</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="支承附近釘得密">
+          <rect x="14" y="22" width="172" height="12" fill="#c99a64" stroke="#1a3a5c"/>
+          <rect x="14" y="34" width="172" height="22" fill="#a5784a" stroke="#1a3a5c"/>
+          <g fill="#5b6b7e"><rect x="20" y="18" width="2" height="26"/><rect x="28" y="18" width="2" height="26"/><rect x="36" y="18" width="2" height="26"/><rect x="44" y="18" width="2" height="26"/><rect x="60" y="18" width="2" height="26"/><rect x="78" y="18" width="2" height="26"/><rect x="100" y="18" width="2" height="26"/><rect x="122" y="18" width="2" height="26"/><rect x="140" y="18" width="2" height="26"/><rect x="156" y="18" width="2" height="26"/><rect x="164" y="18" width="2" height="26"/><rect x="172" y="18" width="2" height="26"/><rect x="180" y="18" width="2" height="26"/></g>
+          <polygon points="18,56 11,68 25,68" fill="#8a99ab"/><polygon points="182,56 175,68 189,68" fill="#8a99ab"/>
+          <text x="100" y="86" font-size="10" fill="#1a3a5c" text-anchor="middle">兩端密、中間疏</text>
+        </svg>
+        <h3>釘距跟著 V 變</h3><span class="formula">s(x) = nF·I / (V(x)·Q)</span>
+        <p class="life">均佈載重的簡支梁，剪力在支承最大、跨中為零。所以<b>支承附近要釘得密，跨中可以放寬</b>——就像拉鍊在受力最大的地方要做得最密。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：把翼板釘到腹板上做成 T 形梁</h3>
+      <p class="note">T 形梁由一塊翼板（寬 b_f × 30 mm）釘在一塊腹板（30 × 170 mm）上。調整剪力 V、單支釘的容許剪力 F 與翼板寬度，觀察中性軸、Q、剪流與釘距的變化。右側是 600 mm 長的一段側視圖，灰色短棒就是釘子。</p>
+      <div class="grid2">
+        <svg viewBox="0 0 460 270" class="ndiag" id="tFig" aria-label="T 形組合梁的剪流與釘距"></svg>
+        <div class="stack">
+          <div class="slider"><span>剪力 V</span><input type="range" id="sV1" min="0.5" max="8" step="0.1" value="2"><span class="mono" id="vV1">2 kN</span></div>
+          <div class="slider"><span>單釘容許 F</span><input type="range" id="sF1" min="200" max="2000" step="50" value="800"><span class="mono" id="vF1">800 N</span></div>
+          <div class="slider"><span>翼板寬 b_f</span><input type="range" id="sB1" min="60" max="260" step="10" value="150"><span class="mono" id="vB1">150 mm</span></div>
+          <div class="readout">
+            <div><small>翼板的 Q</small><b id="r1a">—</b></div>
+            <div><small>剪流 q</small><b id="r1b">—</b></div>
+            <div><small>最大釘距 s</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note">觀察：V 加倍 → q 加倍 → 釘距減半。翼板加寬時中性軸往上移，Q 與 I 都變，釘距的變化不是單純的比例——一定要重新算中性軸。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：釘合箱形梁與木棧板 T 形梁</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：舞台搭建用的釘合箱形梁</h3>
+      <p style="color:var(--muted);margin-top:4px">活動舞台的主梁由四塊木板釘成箱形：上下翼板 200 × 30 mm（橫跨全寬），兩側腹板 25 × 240 mm 夾在翼板之間，總高 300 mm。翼板每一排用 <b>2 支釘</b>（左右各釘入一塊腹板），每支釘的容許剪力 F = 600 N。某截面剪力 V = 5 kN，求剪流與最大釘距。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 290" class="ndiag" id="boxFig" aria-label="釘合箱形梁"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：換剪力、換釘子、換翼板厚度</h3>
+        <div class="slider"><span>剪力 V</span><input type="range" id="sVa" min="1" max="15" step="0.5" value="5"><span class="mono" id="vVa">5 kN</span></div>
+        <div class="slider"><span>單釘容許 F</span><input type="range" id="sFa" min="200" max="1500" step="50" value="600"><span class="mono" id="vFa">600 N</span></div>
+        <div class="slider"><span>翼板厚 t_f</span><input type="range" id="sTa" min="15" max="60" step="5" value="30"><span class="mono" id="vTa">30 mm</span></div>
+        <div class="readout">
+          <div><small>翼板的 Q</small><b id="rA1">—</b></div>
+          <div><small>剪流 q</small><b id="rA2">—</b></div>
+          <div><small>最大釘距 s</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：翼板越厚，翼板本身的 Q 越大，接合面要傳的力越多。施工上釘距通常取 5 mm 的倍數「往下取整」，而且一般不小於約 40 mm，以免木材劈裂——太密時就該換更強的釘或改用螺栓。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：倉庫平台的 T 形梁——釘距要分區</h3>
+      <p style="color:var(--muted);margin-top:4px">倉庫夾層平台的次梁為 T 形組合梁：翼板 150 × 30 mm 釘在腹板 30 × 170 mm 上，每排 1 支釘，F = 800 N。梁簡支、跨距 L = 4 m，承受均佈載重 w = 1.0 kN/m。求支承處的最小釘距，並把梁分成三區（兩端各 L/4 用密釘、中段 L/2 用疏釘）設計釘距。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 300" class="ndiag" id="zoneFig" aria-label="簡支 T 形梁的釘距分區"></svg>
+          <div class="slider"><span>均佈載重 w</span><input type="range" id="sWb" min="0.3" max="3" step="0.1" value="1"><span class="mono" id="vWb">1 kN/m</span></div>
+          <div class="slider"><span>跨距 L</span><input type="range" id="sLb" min="2" max="6" step="0.1" value="4"><span class="mono" id="vLb">4 m</span></div>
+          <div class="slider"><span>單釘容許 F</span><input type="range" id="sFb" min="300" max="2000" step="50" value="800"><span class="mono" id="vFb">800 N</span></div>
+          <div class="readout">
+            <div><small>支承處 V_max</small><b id="rB1">—</b></div>
+            <div><small>端區釘距 s₁</small><b id="rB2">—</b></div>
+            <div><small>中段釘距 s₂</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">觀察：中段的最大剪力只有 V_max 的一半（在 x = L/4 處），所以中段釘距可以放寬到約兩倍。橘色曲線是「各位置理論上允許的最大釘距」，藍色階梯是實際採用的設計，必須一直在曲線下方。</p>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道剪流與釘距題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差，依題目指定單位輸入數字即可（釘距請輸入理論值，不必取整）。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：組合梁的釘距審查員</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH7-G2] Transverse Shear｜剪流計算工坊：組合木梁的釘距與螺栓間距</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g class="hammer"><rect x="84" y="78" width="4" height="30" rx="1.5" fill="#a5784a" stroke="#1a3a5c" stroke-width=".8"/><rect x="76" y="72" width="20" height="9" rx="2" fill="#5b6b7e" stroke="#1a3a5c" stroke-width=".8"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+guide("#guide0","上一關我們看到膠合面要承受剪應力；這一關換成<b>釘子和螺栓</b>。我是阿力，今天帶著鐵鎚來——先填好資料，我們來算算釘子要釘多密！");
+guide("#guide1","剪流 q = VQ/I 就是 τ × t：把剪應力乘上接合面的寬度，得到<b>每 mm 長度要傳多少牛頓</b>。釘子一支支「接力」把它傳過去。");
+guide("#guide2","兩個案例：A 是<b>箱形梁</b>，一排有兩支釘；B 是<b>簡支 T 形梁</b>，剪力沿梁長變化，所以釘距要<b>分區設計</b>。點開每一步看計算。");
+guide("#guide3","解題三步驟：① 先找整個截面的中性軸與 I ② 取「被釘住那塊板」算 Q ③ q = VQ/I，s = nF/q。單位用 N、mm，q 就是 N/mm、s 就是 mm。");
+guide("#guide4","審查員上工！每位同學拿到的組合梁都不一樣。注意一排有幾支釘（n），T 形梁要先算中性軸，簡支梁要先求 V_max。加油！");
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+function near(val,ans,tol=0.02){return Number.isFinite(val)&&Math.abs(Math.abs(val)-Math.abs(ans))<=Math.max(Math.abs(ans)*tol,1e-9);}
+function yay(){const m=["太棒了！","完全正確！","釘得剛剛好！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+const fi=x=>Math.round(x).toLocaleString("en-US");
+const sci=x=>{if(!Number.isFinite(x)||x===0)return "0";const e=Math.floor(Math.log10(Math.abs(x)));return (x/Math.pow(10,e)).toFixed(3)+"×10"+String(e).split("").map(c=>"⁰¹²³⁴⁵⁶⁷⁸⁹"["0123456789".indexOf(c)]||"⁻").join("");};
+const floor5=x=>Math.floor(x/5)*5;
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+
+/* ---------- section models (mm, N) ---------- */
+// T-beam: flange bf×tf on top of web tw×hw; y measured from bottom
+function tbeam(bf,tf,tw,hw){
+  const A1=bf*tf,y1=hw+tf/2,A2=tw*hw,y2=hw/2,A=A1+A2,yb=(A1*y1+A2*y2)/A;
+  const I=bf*tf**3/12+A1*(y1-yb)**2+tw*hw**3/12+A2*(y2-yb)**2;
+  const d1=y1-yb,Q=A1*d1;
+  return {A1,y1,A2,y2,A,yb,I,d1,Q,h:hw+tf,bf,tf,tw,hw};
+}
+// box: flanges B×tf top & bottom, two webs tw×hw between flanges
+function boxbeam(B,tf,tw,hw){
+  const h=hw+2*tf,I=(B*h**3-(B-2*tw)*hw**3)/12,d1=h/2-tf/2,Q=B*tf*d1;
+  return {h,I,d1,Q,B,tf,tw,hw};
+}
+// I-beam built from 3 boards: flanges bf×tf, web tw×hw
+function ibuilt(bf,tf,tw,hw){
+  const h=hw+2*tf,I=(bf*h**3-(bf-tw)*hw**3)/12,d1=h/2-tf/2,Q=bf*tf*d1;
+  return {h,I,d1,Q,bf,tf,tw,hw};
+}
+const flow=(VkN,Q,I)=>VkN*1e3*Q/I;          // N/mm
+const spacing=(n,F,q)=>n*F/q;               // mm
+
+/* drawing helpers: parts in mm, x from centre, y from bottom */
+function secSVG(o){
+  // o:{parts:[{x,y,w,h,hl}],H,W,yNA,cx,cy,sc,nails:[{x,y1,y2}]}
+  const X=x=>o.cx+x*o.sc,Y=y=>o.cy+(o.H/2-y)*o.sc;
+  let s="";
+  o.parts.forEach(p=>{s+=`<rect x="${X(p.x)}" y="${Y(p.y+p.h)}" width="${p.w*o.sc}" height="${p.h*o.sc}" fill="${p.hl?"#fde9da":"#e9eef5"}" stroke="${p.hl?"#e8640a":"#1a3a5c"}" stroke-width="${p.hl?2:1.5}"/>`;});
+  (o.nails||[]).forEach(n=>{s+=`<rect x="${X(n.x)-1.5}" y="${Y(n.y1)}" width="3" height="${(n.y1-n.y2)*o.sc}" fill="#5b6b7e"/><rect x="${X(n.x)-5}" y="${Y(n.y1)-3}" width="10" height="3" fill="#1a3a5c"/>`;});
+  const ya=Y(o.yNA);
+  s+=`<line x1="${X(-o.W/2)-12}" y1="${ya}" x2="${X(o.W/2)+12}" y2="${ya}" stroke="#e8640a" stroke-dasharray="4 3"/>`;
+  s+=`<text x="${X(o.W/2)+14}" y="${ya+4}" font-size="10" fill="#e8640a">NA</text>`;
+  if(o.yc!==undefined){const yc=Y(o.yc);
+    s+=`<circle cx="${X(0)}" cy="${yc}" r="3.5" fill="#e8640a" stroke="#fff"/>`;
+    s+=`<line x1="${X(o.W/2)+6}" y1="${yc}" x2="${X(o.W/2)+6}" y2="${ya}" stroke="#1a3a5c" stroke-width="1.2"/>`;
+    s+=`<text x="${X(o.W/2)+10}" y="${(yc+ya)/2+4}" font-size="10" fill="#1a3a5c" font-weight="700">ȳ′=${fmt(o.ybar,1)}</text>`;}
+  return s;
+}
+function elevSVG(x0,y0,w,tfPx,twPx,seg,s,n){
+  // side view of segment length seg (mm) with nails at spacing s
+  let g=`<rect x="${x0}" y="${y0}" width="${w}" height="${tfPx}" fill="#c99a64" stroke="#7a5532"/><rect x="${x0}" y="${y0+tfPx}" width="${w}" height="${twPx}" fill="#a5784a" stroke="#7a5532"/>`;
+  const k=w/seg;let cnt=0;
+  if(Number.isFinite(s)&&s>0){for(let x=s/2;x<seg&&cnt<120;x+=s,cnt++){const px=x0+x*k;g+=`<rect x="${px-1}" y="${y0-4}" width="2" height="${tfPx+Math.min(twPx,tfPx*1.6)+4}" fill="#5b6b7e"/><rect x="${px-3}" y="${y0-5}" width="6" height="2" fill="#1a3a5c"/>`;}}
+  const sp=Math.min(s*k,w-10);
+  if(Number.isFinite(sp)&&sp>4){const a=x0+s/2*k;g+=`<line x1="${a}" y1="${y0-12}" x2="${a+sp}" y2="${y0-12}" stroke="#e8640a" stroke-width="1.5"/><text x="${a+sp/2}" y="${y0-16}" font-size="10" fill="#e8640a" text-anchor="middle" font-weight="700">s</text>`;}
+  g+=`<text x="${x0+w/2}" y="${y0+tfPx+twPx+14}" font-size="10" fill="#5b6b7e" text-anchor="middle">側視 ${seg} mm 段：${cnt} 排（每排 ${n} 支）</text>`;
+  return g;
+}
+
+/* ---------- Phase 1: T-beam interactive ---------- */
+const T_TF=30,T_TW=30,T_HW=170;
+function drawT(){
+  const V=+$("#sV1").value,F=+$("#sF1").value,bf=+$("#sB1").value;
+  $("#vV1").textContent=fmt(V,1)+" kN";$("#vF1").textContent=F+" N";$("#vB1").textContent=bf+" mm";
+  const t=tbeam(bf,T_TF,T_TW,T_HW),q=flow(V,t.Q,t.I),s=spacing(1,F,q);
+  const sc=Math.min(150/bf,180/t.h);
+  let g=`<rect width="460" height="270" fill="#fbfcfe"/>`;
+  g+=secSVG({parts:[{x:-bf/2,y:T_HW,w:bf,h:T_TF,hl:1},{x:-T_TW/2,y:0,w:T_TW,h:T_HW}],H:t.h,W:bf,yNA:t.yb,cx:100,cy:128,sc,nails:[{x:0,y1:t.h,y2:T_HW-T_TF*1.2}],yc:t.y1,ybar:t.d1});
+  g+=`<text x="100" y="${128+t.h*sc/2+18}" font-size="10" fill="#5b6b7e" text-anchor="middle">中性軸距底 ${fmt(t.yb,1)} mm</text>`;
+  g+=elevSVG(232,90,214,20,40,600,s,1);
+  g+=`<text x="232" y="40" font-size="11" fill="#1a3a5c" font-weight="700">q = ${fmt(q,2)} N/mm</text>`;
+  g+=`<text x="232" y="56" font-size="11" fill="#e8640a" font-weight="700">s ≤ F/q = ${fmt(s,1)} mm</text>`;
+  g+=`<text x="12" y="262" font-size="10.5" fill="#5b6b7e">橘色＝被釘住的翼板（A′），橘點＝其形心；虛線＝整個截面的中性軸</text>`;
+  $("#tFig").innerHTML=g;
+  $("#r1a").textContent=fi(t.Q)+" mm³";
+  $("#r1b").textContent=fmt(q,2)+" N/mm";
+  $("#r1c").textContent=fmt(s,1)+" mm";
+  const tau=q/T_TW;
+  $("#r1d").innerHTML=`<p class="note mono">I = ${sci(t.I)} mm⁴，ȳ′ = ${fmt(t.d1,1)} mm，Q = ${fi(t.A1)} × ${fmt(t.d1,1)}</p><p class="note mono">對照：接合面若改用膠合，膠層剪應力 τ = q/t_w = ${fmt(tau,3)} MPa</p>`+
+    (s<40?`<span class="badge no">釘距小於 40 mm，木材易劈裂——改用更強的釘或螺栓</span>`:`<span class="badge ok">實際施工可取 s = ${floor5(s)} mm ✓</span>`);
+}
+["#sV1","#sF1","#sB1"].forEach(k=>$(k).addEventListener("input",drawT));
+drawT();
+
+const P1Q=[
+  {q:"剪流 q 的單位是什麼？",o:["N/mm（力／長度）","MPa（力／面積）","N·mm（力 × 長度）","mm³"],a:0,why:"q = VQ/I：N × mm³ / mm⁴ = N/mm。它是「每單位梁長」要傳遞的縱向剪力，等於剪應力 τ 乘上接合面寬度 t。"},
+  {q:"把翼板釘在腹板上的 T 形梁，計算釘子的剪流時 Q 應取哪一部分？",o:["整個截面對中性軸的 Q","被釘住的那塊翼板對整個截面中性軸的一次矩","腹板對自己形心的一次矩","Q = 0，因為釘子不受剪"],a:1,why:"釘子要把翼板「拉住」跟腹板一起彎，翼板的縱向力差由釘子傳遞，所以 A′ 是翼板，ȳ′ 是翼板形心到整個截面中性軸的距離。"},
+  {q:"均佈載重的簡支組合梁，若用同一種釘子，哪裡的釘距應該最小？",o:["跨度中央","靠近兩端支承","全長都相同","懸空的上緣"],a:1,why:"s = nF·I/(VQ)，V 在支承處最大、跨中為零，所以支承附近剪流最大、釘子要最密；跨中可以放寬。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">🔨✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 2A: nailed box beam ---------- */
+const BX_B=200,BX_TW=25,BX_HW=240;
+function drawBox(){
+  const V=+$("#sVa").value,F=+$("#sFa").value,tf=+$("#sTa").value;
+  $("#vVa").textContent=fmt(V,1)+" kN";$("#vFa").textContent=F+" N";$("#vTa").textContent=tf+" mm";
+  const b=boxbeam(BX_B,tf,BX_TW,BX_HW),q=flow(V,b.Q,b.I),s=spacing(2,F,q);
+  const sc=Math.min(170/BX_B,220/b.h);
+  let g=`<rect width="460" height="290" fill="#fbfcfe"/>`;
+  const parts=[{x:-BX_B/2,y:b.h-tf,w:BX_B,h:tf,hl:1},{x:-BX_B/2,y:0,w:BX_B,h:tf},{x:-BX_B/2,y:tf,w:BX_TW,h:BX_HW},{x:BX_B/2-BX_TW,y:tf,w:BX_TW,h:BX_HW}];
+  const nx=BX_B/2-BX_TW/2;
+  g+=secSVG({parts,H:b.h,W:BX_B,yNA:b.h/2,cx:110,cy:130,sc,nails:[{x:-nx,y1:b.h,y2:b.h-tf-45},{x:nx,y1:b.h,y2:b.h-tf-45}],yc:b.h-tf/2,ybar:b.d1});
+  g+=`<text x="110" y="${130+b.h*sc/2+15}" font-size="10" fill="#5b6b7e" text-anchor="middle">B=${BX_B}, t_f=${tf}, t_w=${BX_TW}, h=${b.h}</text>`;
+  g+=elevSVG(240,110,206,Math.max(8,tf*0.5),46,600,s,2);
+  g+=`<text x="240" y="44" font-size="11" fill="#1a3a5c" font-weight="700">q = ${fmt(q,2)} N/mm</text>`;
+  g+=`<text x="240" y="62" font-size="11" fill="#e8640a" font-weight="700">s ≤ 2F/q = ${fmt(s,1)} mm</text>`;
+  g+=`<text x="240" y="80" font-size="10" fill="#5b6b7e">每支釘承受 q·s/2</text>`;
+  g+=`<text x="12" y="282" font-size="10.5" fill="#5b6b7e">一排 2 支釘：每支各釘進一塊腹板，共同分擔翼板的剪流</text>`;
+  $("#boxFig").innerHTML=g;
+  $("#rA1").textContent=fi(b.Q)+" mm³";
+  $("#rA2").textContent=fmt(q,2)+" N/mm";
+  $("#rA3").textContent=fmt(s,1)+" mm";
+  const use=floor5(s);
+  $("#rA4").innerHTML=`<div class="row" style="justify-content:space-between;margin-top:6px"><span class="note mono">I = ${sci(b.I)} mm⁴；取 s = ${use} mm 時每支釘受力 ${fmt(q*use/2,0)} N</span>${s<40?`<span class="badge no">太密了！換更強的釘或螺栓</span>`:`<span class="badge ok">釘距取 ${use} mm ✓</span>`}</div>`;
+}
+["#sVa","#sFa","#sTa"].forEach(k=>$(k).addEventListener("input",drawBox));
+const bA=boxbeam(BX_B,30,BX_TW,BX_HW),qA=flow(5,bA.Q,bA.I),sA=spacing(2,600,qA);
+const STEPS_A=[
+  {t:"整個截面的慣性矩（外框減內空）",d:`h = 240 + 2×30 = 300 mm；I = [B h³ − (B − 2t_w) h_w³]/12 = [200×300³ − 150×240³]/12 = ${fi(bA.I)} mm⁴`},
+  {t:"被釘住的是上翼板",d:`A′ = 200 × 30 = 6,000 mm²；箱形對稱 → 中性軸在中央，ȳ′ = 150 − 15 = ${fmt(bA.d1,0)} mm`},
+  {t:"一次矩 Q",d:`Q = ȳ′A′ = ${fmt(bA.d1,0)} × 6,000 = ${fi(bA.Q)} mm³`},
+  {t:"剪流 q",d:`q = VQ/I = 5,000 × ${fi(bA.Q)} / ${fi(bA.I)} = ${fmt(qA,3)} N/mm`},
+  {t:"一排 2 支釘 → 最大釘距",d:`每一段 s 的剪流 q·s 由 2 支釘分擔：2F = q·s → s = 2 × 600 / ${fmt(qA,3)} = ${fmt(sA,1)} mm`},
+  {t:"施工取整",d:`往下取 5 mm 的倍數 → s = ${floor5(sA)} mm；下翼板對稱，Q 相同，釘距一樣`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sVa").value=5;$("#sFa").value=600;$("#sTa").value=30;drawBox();});
+drawBox();
+
+/* ---------- Phase 2B: simply supported T-beam, zoned nail spacing ---------- */
+const ZB=tbeam(150,30,30,170);
+function zoned(w,L,F){
+  const Vmax=w*L/2,q1=flow(Vmax,ZB.Q,ZB.I),s1=spacing(1,F,q1),V2=w*L/4,q2=flow(V2,ZB.Q,ZB.I),s2=spacing(1,F,q2);
+  const u1=floor5(s1),u2=floor5(s2);
+  const nails=u1>0&&u2>0?2*Math.ceil(L*1e3/4/u1)+Math.ceil(L*1e3/2/u2):Infinity;
+  const uni=u1>0?Math.ceil(L*1e3/u1):Infinity;
+  return {Vmax,q1,s1,V2,q2,s2,u1,u2,nails,uni};
+}
+function drawZone(){
+  const w=+$("#sWb").value,L=+$("#sLb").value,F=+$("#sFb").value;
+  $("#vWb").textContent=fmt(w,1)+" kN/m";$("#vLb").textContent=fmt(L,1)+" m";$("#vFb").textContent=F+" N";
+  const r=zoned(w,L,F);
+  const x0=40,x1=430,W=x1-x0,k=W/(L*1e3);
+  let g=`<rect width="460" height="300" fill="#fbfcfe"/>`;
+  // load
+  for(let i=0;i<=12;i++){const x=x0+W*i/12;g+=`<line x1="${x}" y1="10" x2="${x}" y2="26" stroke="#e8640a" stroke-width="1.5"/><polygon points="${x},30 ${x-3},24 ${x+3},24" fill="#e8640a"/>`;}
+  g+=`<line x1="${x0}" y1="10" x2="${x1}" y2="10" stroke="#e8640a" stroke-width="1.5"/><text x="${x1}" y="8" font-size="10" fill="#e8640a" text-anchor="end" font-weight="700">w = ${fmt(w,1)} kN/m</text>`;
+  // beam elevation
+  const by=34;
+  g+=`<rect x="${x0}" y="${by}" width="${W}" height="9" fill="#c99a64" stroke="#7a5532"/><rect x="${x0}" y="${by+9}" width="${W}" height="20" fill="#a5784a" stroke="#7a5532"/>`;
+  const Lmm=L*1e3;let cnt=0;
+  const put=(a,b,s)=>{if(!(s>0))return;for(let x=a+s/2;x<b&&cnt<400;x+=s,cnt++)g+=`<rect x="${x0+x*k-0.6}" y="${by-2}" width="1.2" height="17" fill="#1a3a5c"/>`;};
+  put(0,Lmm/4,r.u1);put(Lmm/4,3*Lmm/4,r.u2);put(3*Lmm/4,Lmm,r.u1);
+  g+=`<polygon points="${x0},${by+29} ${x0-7},${by+41} ${x0+7},${by+41}" fill="#8a99ab" stroke="#1a3a5c"/><circle cx="${x1}" cy="${by+35}" r="6" fill="#8a99ab" stroke="#1a3a5c"/>`;
+  [0.25,0.75].forEach(f=>{g+=`<line x1="${x0+W*f}" y1="${by-6}" x2="${x0+W*f}" y2="${by+34}" stroke="#e8640a" stroke-dasharray="3 2"/>`;});
+  // V diagram
+  const vy=118,vh=26;
+  g+=`<text x="8" y="${vy+4}" font-size="11" fill="#1a3a5c" font-weight="700">V</text><line x1="${x0}" y1="${vy}" x2="${x1}" y2="${vy}" stroke="#5b6b7e"/>`;
+  g+=`<polygon points="${x0},${vy-vh} ${x0+W/2},${vy} ${x1},${vy+vh} ${x1},${vy} ${x0},${vy}" fill="#e9eef5" stroke="#1a3a5c"/>`;
+  g+=`<text x="${x0+4}" y="${vy-vh-3}" font-size="10" fill="#1a3a5c">V_max = wL/2 = ${fmt(r.Vmax,2)} kN</text>`;
+  // spacing plot
+  const py0=270,ph=100,smax=Math.max(r.s2*2.2,10),Y=s=>py0-Math.min(s,smax)/smax*ph;
+  g+=`<text x="8" y="${py0-ph-4}" font-size="11" fill="#1a3a5c" font-weight="700">s(x)</text><line x1="${x0}" y1="${py0}" x2="${x1}" y2="${py0}" stroke="#5b6b7e"/><line x1="${x0}" y1="${py0}" x2="${x0}" y2="${py0-ph-4}" stroke="#5b6b7e"/>`;
+  let pts="";
+  for(let i=0;i<=80;i++){const x=Lmm*i/80,V=Math.abs(w*(L/2-x/1e3)),s=V>1e-9?F*ZB.I/(V*1e3*ZB.Q):Infinity;pts+=`${(x0+x*k).toFixed(1)},${Y(s).toFixed(1)} `;}
+  g+=`<polyline points="${pts}" fill="none" stroke="#e8640a" stroke-width="2"/>`;
+  const a=x0+W/4,b=x0+3*W/4;
+  g+=`<polyline points="${x0},${Y(r.u1)} ${a},${Y(r.u1)} ${a},${Y(r.u2)} ${b},${Y(r.u2)} ${b},${Y(r.u1)} ${x1},${Y(r.u1)}" fill="none" stroke="#1a3a5c" stroke-width="2.5"/>`;
+  g+=`<text x="${x0+4}" y="${Y(r.u1)-5}" font-size="10" fill="#1a3a5c" font-weight="700">s₁=${r.u1}</text><text x="${x0+W/2}" y="${Y(r.u2)-5}" font-size="10" fill="#1a3a5c" font-weight="700" text-anchor="middle">s₂=${r.u2} mm</text>`;
+  g+=`<text x="12" y="292" font-size="10.5" fill="#5b6b7e">橘＝理論最大釘距 F·I/(VQ)；藍＝分區設計（取 5 mm 倍數）</text>`;
+  $("#zoneFig").innerHTML=g;
+  $("#rB1").textContent=fmt(r.Vmax,2)+" kN";
+  $("#rB2").textContent=r.u1+" mm";
+  $("#rB3").textContent=r.u2+" mm";
+  const save=Number.isFinite(r.uni)&&Number.isFinite(r.nails)?(1-r.nails/r.uni)*100:NaN;
+  $("#rB4").innerHTML=`<div class="row" style="justify-content:space-between;margin-top:6px"><span class="note mono">分區需約 ${Number.isFinite(r.nails)?r.nails:"—"} 支；全長都用 s₁ 需 ${Number.isFinite(r.uni)?r.uni:"—"} 支（省 ${fmt(save,0)}%）</span>${r.s1<40?`<span class="badge no">端區釘距 &lt; 40 mm，請換更強的釘</span>`:`<span class="badge ok">分區設計可行 ✓</span>`}</div>`;
+}
+["#sWb","#sLb","#sFb"].forEach(k=>$(k).addEventListener("input",drawZone));
+const zB=zoned(1,4,800);
+const STEPS_B=[
+  {t:"最大剪力在支承",d:`簡支均佈載重：V_max = wL/2 = 1.0 × 4 / 2 = ${fmt(zB.Vmax,1)} kN = ${fi(zB.Vmax*1e3)} N`},
+  {t:"先找 T 形截面的中性軸",d:`翼板 A₁ = 150×30 = 4,500 mm²，形心距底 185 mm；腹板 A₂ = 30×170 = 5,100 mm²，形心距底 85 mm → ȳ = (4,500×185 + 5,100×85)/9,600 = ${fmt(ZB.yb,2)} mm`},
+  {t:"平行軸定理求 I",d:`I = 150×30³/12 + 4,500×${fmt(ZB.y1-ZB.yb,2)}² + 30×170³/12 + 5,100×${fmt(ZB.yb-ZB.y2,2)}² = ${fi(ZB.I)} mm⁴`},
+  {t:"翼板的 Q 與支承處剪流",d:`Q = A₁ × ȳ′ = 4,500 × ${fmt(ZB.d1,2)} = ${fi(ZB.Q)} mm³；q₁ = VQ/I = ${fi(zB.Vmax*1e3)} × ${fi(ZB.Q)} / ${fi(ZB.I)} = ${fmt(zB.q1,3)} N/mm`},
+  {t:"端區釘距 s₁",d:`s₁ = F/q₁ = 800 / ${fmt(zB.q1,3)} = ${fmt(zB.s1,1)} mm → 取 ${zB.u1} mm（適用 0 ~ L/4 與 3L/4 ~ L）`},
+  {t:"中段釘距 s₂",d:`中段最大剪力在 x = L/4：V = wL/4 = ${fmt(zB.V2,1)} kN → q₂ = ${fmt(zB.q2,3)} N/mm，s₂ = 800 / ${fmt(zB.q2,3)} = ${fmt(zB.s2,1)} mm → 取 ${zB.u2} mm`},
+  {t:"省了多少釘子？",d:`分區約 ${zB.nails} 支；若全長都用 s₁ 要 ${zB.uni} 支，節省 ${fmt((1-zB.nails/zB.uni)*100,0)}%`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sWb").value=1;$("#sLb").value=4;$("#sFb").value=800;drawZone();});
+drawZone();
+
+/* ---------- Phase 3 practice ---------- */
+const P3a=flow(6,240e3,50e6);
+const P3bT=tbeam(100,20,20,120),P3bq=flow(1.2,P3bT.Q,P3bT.I),P3b=spacing(1,400,P3bq);
+const P3cB=boxbeam(180,20,20,160),P3cq=flow(4,P3cB.Q,P3cB.I),P3c=spacing(2,400,P3cq);
+const P3Q=[
+  {type:"num",q:"某組合梁截面 I = 50 × 10⁶ mm⁴，被釘住的上翼板對中性軸的一次矩 Q = 240 × 10³ mm³。若剪力 V = 6 kN，求接合面的剪流 q（N/mm）。",ans:P3a,unit:"N/mm",dp:2,
+   hint:"q = VQ/I，V 用 N、Q 用 mm³、I 用 mm⁴，答案就是 N/mm。",
+   sol:["V = 6 kN = 6,000 N",`q = VQ/I = 6,000 × 240,000 / 50,000,000 = ${fmt(P3a,2)} N/mm`]},
+  {type:"num",q:"T 形組合梁：翼板 100 × 20 mm 釘在腹板 20 × 120 mm 上（總高 140 mm），每排 1 支釘，單釘容許剪力 F = 400 N。剪力 V = 1.2 kN 時，最大釘距 s 為多少 mm？",ans:P3b,unit:"mm",dp:1,
+   hint:"先求中性軸：ȳ = (2000×130 + 2400×60)/4400；再用平行軸定理求 I；Q = 翼板面積 × (130 − ȳ)。",
+   sol:[`ȳ = (100×20×130 + 20×120×60)/(2,000 + 2,400) = ${fmt(P3bT.yb,2)} mm（距底）`,`I = 100×20³/12 + 2,000×${fmt(P3bT.d1,2)}² + 20×120³/12 + 2,400×${fmt(P3bT.yb-60,2)}² = ${fi(P3bT.I)} mm⁴`,`Q = 2,000 × ${fmt(P3bT.d1,2)} = ${fi(P3bT.Q)} mm³`,`q = 1,200 × ${fi(P3bT.Q)} / ${fi(P3bT.I)} = ${fmt(P3bq,3)} N/mm`,`s = F/q = 400 / ${fmt(P3bq,3)} = ${fmt(P3b,1)} mm`]},
+  {type:"num",q:"箱形梁由四塊木板釘成：上下翼板 180 × 20 mm，兩側腹板 20 × 160 mm 夾在翼板之間（總高 200 mm）。翼板每排 2 支釘（各釘入一塊腹板），F = 400 N。剪力 V = 4 kN 時，最大釘距 s 為多少 mm？",ans:P3c,unit:"mm",dp:1,
+   hint:"對稱截面中性軸在中央。I = [180×200³ − 140×160³]/12；Q = 180×20×90；s = 2F/q。",
+   sol:[`I = [180×200³ − (180 − 40)×160³]/12 = ${fi(P3cB.I)} mm⁴`,`Q = 180 × 20 × (100 − 10) = ${fi(P3cB.Q)} mm³`,`q = 4,000 × ${fi(P3cB.Q)} / ${fi(P3cB.I)} = ${fmt(P3cq,3)} N/mm`,`一排 2 支：s = 2F/q = 800 / ${fmt(P3cq,3)} = ${fmt(P3c,1)} mm`]},
+  {type:"mc",q:"一根均佈載重的簡支組合梁，原本按支承處計算的釘距 s₁ 全長施工。若改成「兩端 L/4 用 s₁、中段 L/2 用 s₂」，s₂ 最多可取 s₁ 的幾倍？",
+   o:["2 倍","4 倍","1.5 倍","不能放寬，必須全長相同"],a:0,
+   hint:"中段（L/4 ~ 3L/4）裡最大的剪力出現在 x = L/4，V = wL/4 是支承處 wL/2 的一半。",
+   sol:["s ∝ 1/V（I、Q、F 都不變）","中段最大剪力 V(L/4) = w(L/2 − L/4) = wL/4 = V_max / 2","所以 s₂ = 2 s₁ → 選 A"]}
+];
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 45.6。";return;}
+  const ok=q.type==="num"?near(v,q.ans):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">🔨</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+/* ---------- Phase 4 seeded test ---------- */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+72)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 shear flow, built-up I from three boards
+  {const bf=vary(150,10),tf=vary(25,5),tw=vary(25,5),hw=vary(200,10),V=vary(3,0.1),R=ibuilt(bf,tf,tw,hw),q=flow(V,R.Q,R.I);
+   qs.push({type:"num",title:"工字形組合梁的剪流",q:`工字形組合梁由三塊木板組成：上下翼板 ${bf} × ${tf} mm，腹板 ${tw} × ${hw} mm（總高 ${R.h} mm）。剪力 V = ${fmt(V,1)} kN，求上翼板與腹板接合面的剪流 q（N/mm）。`,ans:q,unit:"N/mm",dp:2,
+    sol:`I = [${bf}×${R.h}³ − ${bf-tw}×${hw}³]/12 = ${fi(R.I)} mm⁴；Q = ${bf}×${tf}×${fmt(R.d1,1)} = ${fi(R.Q)} mm³；q = VQ/I = ${fi(V*1e3)} × ${fi(R.Q)} / ${fi(R.I)} = ${fmt(q,2)} N/mm`});}
+  // Q2 T-beam spacing
+  {const bf=vary(150,10),tf=vary(30,5),tw=vary(30,5),hw=vary(180,10),V=vary(2,0.1),F=vary(800,50),T=tbeam(bf,tf,tw,hw),q=flow(V,T.Q,T.I),s=spacing(1,F,q);
+   qs.push({type:"num",title:"T 形組合梁的釘距",q:`T 形組合梁：翼板 ${bf} × ${tf} mm 釘在腹板 ${tw} × ${hw} mm 上，每排 1 支釘，單釘容許剪力 F = ${F} N。剪力 V = ${fmt(V,1)} kN 時，最大釘距 s 為多少 mm？`,ans:s,unit:"mm",dp:1,
+    sol:`ȳ（距底）= (${fi(T.A1)}×${fmt(T.y1,1)} + ${fi(T.A2)}×${fmt(T.y2,1)})/${fi(T.A)} = ${fmt(T.yb,2)} mm；I = ${fi(T.I)} mm⁴；Q = ${fi(T.A1)} × ${fmt(T.d1,2)} = ${fi(T.Q)} mm³；q = ${fmt(q,3)} N/mm；s = F/q = ${fmt(s,1)} mm`});}
+  // Q3 box beam spacing, 2 nails per row
+  {const B=vary(200,10),tf=vary(25,5),tw=vary(25,5),hw=vary(220,10),V=vary(5,0.1),F=vary(600,50),R=boxbeam(B,tf,tw,hw),q=flow(V,R.Q,R.I),s=spacing(2,F,q);
+   qs.push({type:"num",title:"箱形梁的釘距（每排 2 支）",q:`箱形梁由四塊木板釘成：上下翼板 ${B} × ${tf} mm，兩側腹板 ${tw} × ${hw} mm 夾在翼板之間（總高 ${R.h} mm）。翼板每排 2 支釘，F = ${F} N。剪力 V = ${fmt(V,1)} kN，求最大釘距 s（mm）。`,ans:s,unit:"mm",dp:1,
+    sol:`I = [${B}×${R.h}³ − ${B-2*tw}×${hw}³]/12 = ${fi(R.I)} mm⁴；Q = ${B}×${tf}×${fmt(R.d1,1)} = ${fi(R.Q)} mm³；q = ${fmt(q,3)} N/mm；s = 2F/q = ${fmt(s,1)} mm`});}
+  // Q4 two stacked boards bolted, simply supported UDL
+  {const b=vary(100,10),hh=vary(100,10),w=vary(4,0.1),L=vary(3,0.1),F=vary(4000,100),h=2*hh,V=w*L/2,Q=b*hh*hh/2,I=b*h**3/12,q=flow(V,Q,I),s=spacing(1,F,q);
+   qs.push({type:"num",title:"疊板螺栓梁的支承端間距",q:`兩塊 ${b} × ${hh} mm 的木板上下疊合（總高 ${h} mm），沿中心線每隔 s 鎖一支螺栓，單支螺栓容許剪力 F = ${F} N。梁簡支、跨距 L = ${fmt(L,1)} m、均佈載重 w = ${fmt(w,1)} kN/m。求支承附近的最大螺栓間距 s（mm）。`,ans:s,unit:"mm",dp:1,
+    sol:`V_max = wL/2 = ${fmt(V,3)} kN；I = ${b}×${h}³/12 = ${fi(I)} mm⁴；Q = (${b}×${hh})×${hh/2} = ${fi(Q)} mm³；q = ${fmt(q,3)} N/mm（= 1.5V/h）；s = F/q = ${fmt(s,1)} mm`});}
+  // Q5 concept
+  {const pool=[
+    {q:"組合梁其他條件不變，剪力 V 變成原來的 2 倍，最大釘距變為原來的？",o:["1/2","2 倍","1/4","不變"],why:"s = nF·I/(VQ) ∝ 1/V，V 加倍 → 剪流加倍 → 釘距減半。"},
+    {q:"箱形梁翼板每排改用 2 支釘（原為 1 支），其他不變，最大釘距變為原來的？",o:["2 倍","1/2","不變","4 倍"],why:"一段 s 內的剪流 q·s 改由 2 支釘分擔：s = 2F/q，釘距可以加倍。"},
+    {q:"剪流 q 與接合面剪應力 τ 的關係為何？（t 為接合面寬度）",o:["q = τ · t","q = τ / t","q = τ · A","q 與 τ 無關"],why:"τ = VQ/(It) → VQ/I = τ·t，所以剪流 q = τt，單位 N/mm。"},
+    {q:"計算 T 形組合梁翼板與腹板之間的釘子剪流時，ȳ′ 應量到哪裡？",o:["整個 T 形截面的中性軸","翼板自己的形心","梁的底面","腹板的形心"],why:"Q = ȳ′A′ 中的 ȳ′ 是 A′（翼板）形心到「整個截面」中性軸的距離，所以要先用 ȳ = ΣAy/ΣA 求中性軸。"}
+   ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"剪流觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q.ans):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"釘距審查一次過關！中性軸、被釘住那塊板的 Q、q = VQ/I、s = nF/q，還有分區設計，你都掌握了。下一關我們要挑戰綜合設計！",B:"很不錯！再留意一排有幾支釘（n），以及 T 形梁的 ȳ′ 要量到整個截面的中性軸，下次就是 A。",C:"方向對了！回到 Phase 2 把箱形梁與 T 形梁的步驟卡再點一次，特別是「先找中性軸、再取翼板算 Q」這兩步。",D:"別灰心！先記住一個畫面：釘子像拉鍊的齒，每一段 s 的剪流 q·s 都要由釘子扛下來。剪力越大，釘子就要越密——再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 7 章 Transverse Shear · 遊戲 2（MOM-CH7-G2）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以大小判定，容許 ±2% 誤差。</p>`;
+  S.summary=`[MOM-CH7-G2] Transverse Shear 剪流計算工坊 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
