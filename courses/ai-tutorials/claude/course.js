@@ -247,6 +247,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "012-personal-work-ep03",
+      "no": 3,
+      "file": "ep03.html",
+      "path": "personal-work/ep03.html",
+      "title": {
+       "zh": "文件寫作與改寫",
+       "en": "Writing & Rewriting"
+      },
+      "sub": {
+       "zh": "大綱先行、初稿生成、精簡／正式／易讀改寫、報告與公文格式、版本比較、風格與輸出檔案",
+       "en": "Outline first, first draft, concise/formal/plain rewrites, report and official-letter formats, version comparison, styles and file output"
+      },
+      "shots": 6,
+      "dur": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -328,7 +349,7 @@ window.CLAUDE_COURSE = {
     "episodes": []
    }
   ],
-  "updated": "2026-10-02",
+  "updated": "2026-10-05",
   "languages": [
    "zh",
    "en"
@@ -441,7 +462,7 @@ window.CLAUDE_COURSE = {
    "no": 3,
    "title": "文件寫作與改寫",
    "title_en": "Writing & Rewriting",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "013-personal-work-ep04",
@@ -795,6 +816,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 11,
+ "live": 12,
  "total": 51
 };

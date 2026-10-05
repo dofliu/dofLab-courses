@@ -413,10 +413,14 @@
         "報告與公文格式",
         "版本比較"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-05T01:44:43Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-05T01:49:25Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/ep03.html",
+        "src": "courses/ai-tutorials/claude/src/012-personal-work-ep03.js",
+        "i18n": "courses/ai-tutorials/claude/src/012-personal-work-ep03.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors: none、untranslated: none）；6 分鏡 80 秒，圖解 5/6（第 2 分鏡為對話場景）；查證來源：support.claude.com（Styles 風格設定、建立與編輯檔案），資訊截至 2026-10；情境：生活（中秋聚會企劃、公文、心得自傳）＋智慧自動化（換模 SOP 與版本比較）＋風能運維（巡檢報告與改寫）；數據皆為示意，AI 只提供草稿，SOP 發布與上鎖掛牌由人員確認。",
       "cases": {
         "life": "自傳、心得與活動企劃改寫",
         "automation": "設備 SOP 與作業指導書改寫成易讀版",
