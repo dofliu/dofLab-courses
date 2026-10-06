@@ -24,7 +24,7 @@
 | 010-personal-work-ep01 | personal-work | 郵件與訊息草擬 | ✅ done | 2026-10-01 |
 | 011-personal-work-ep02 | personal-work | 會議全流程 | ✅ done | 2026-10-02 |
 | 012-personal-work-ep03 | personal-work | 文件寫作與改寫 | ✅ done | 2026-10-05 |
-| 013-personal-work-ep04 | personal-work | 試算表與資料分析 | todo | — |
+| 013-personal-work-ep04 | personal-work | 試算表與資料分析 | 🔄 in_progress | — |
 | 014-personal-work-ep05 | personal-work | 簡報製作 | todo | — |
 | 015-personal-work-ep06 | personal-work | 連接器：讓 Claude 讀到你的資料 | todo | — |
 | 016-personal-work-ep07 | personal-work | 排程工作：自動化例行事 | todo | — |
