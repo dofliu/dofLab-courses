@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>入門基礎測驗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../../../assets/site.css">
+<style>
+.hero .lang{margin-left:auto}
+.hero .seg{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+.hero .seg button{color:#c5cbf0}
+.hero .seg button[aria-pressed="true"]{background:#4dd0c0;color:#0d1026}
+.qwrap{padding-block:28px 56px;display:grid;gap:16px}
+.prog{display:flex;justify-content:space-between;font:600 14px var(--f-mono);color:var(--muted)}
+.track{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.track i{display:block;height:100%;background:var(--accent-2);width:0;transition:width .3s}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.topic{font:600 12px var(--f-mono);letter-spacing:.08em;color:var(--accent-2)}
+.qtext{font-size:18px;font-weight:700;margin:0;line-height:1.6}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit;color:var(--fg);cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt .k{font:700 14px var(--f-mono);color:var(--accent);min-width:20px}
+.opt.ok{border-color:var(--live);background:var(--accent-2-soft)}
+.opt.bad{border-color:#d9534f;background:rgba(217,83,79,.12)}
+.opt[disabled]{cursor:default}
+.why{border-left:4px solid var(--accent-2);background:var(--surface-2);padding:12px 14px;border-radius:0 8px 8px 0;font-size:15px}
+.why b{display:block;margin-bottom:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.score{font:900 56px/1 var(--f-display);color:var(--accent)}
+.pass{color:var(--live)} .fail{color:#d9534f}
+.topics{display:grid;gap:8px}
+.tp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;font-size:15px;align-items:center}
+.tp .bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;grid-column:1/-1}
+.tp .bar i{display:block;height:100%;background:var(--accent-2)}
+.disc{font-size:13px;color:var(--muted)}
+.rev{display:grid;gap:10px}
+.rev .qcard{padding:14px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="../../../../"><i></i>dofLab courses</a>
+      <span class="org" data-zh="國立勤益科技大學 · 智慧自動化工程系" data-en="NCUT · Dept. of Intelligent Automation Engineering">國立勤益科技大學 · 智慧自動化工程系</span>
+      <div class="seg lang" role="group" aria-label="語言 Language"><button data-lang="zh" aria-pressed="true">中文</button><button data-lang="en" aria-pressed="false">EN</button></div>
+    </div>
+    <div class="hero-body">
+      <nav class="crumb"><a href="../" data-zh="← 課程目錄" data-en="← Course index">← 課程目錄</a></nav>
+      <div class="eyebrow" data-zh="CHECKPOINT · 測驗關卡" data-en="CHECKPOINT QUIZ">CHECKPOINT · 測驗關卡</div>
+      <h1 id="ttl">入門基礎測驗</h1>
+      <p class="lead" id="intro"></p>
+    </div>
+  </div>
+</header>
+<main class="wrap qwrap" id="main"></main>
+<footer data-zh="© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室" data-en="© Dr. Jui-Hung Liu Lab, Dept. of Intelligent Automation Engineering, NCUT">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script>
+(function(){
+  var Q = {"id": "q01-claude-basics", "series": "claude-basics", "type": "quiz", "no": 1, "title": {"zh": "入門基礎測驗", "en": "Claude Basics Checkpoint"}, "intro": {"zh": "檢查你是否掌握 Claude 的基本概念：模型怎麼運作、提示詞、上下文與記憶、搜尋、Artifacts 與隱私。80 分通過。", "en": "Check your grasp of Claude basics: how models work, prompting, context and memory, search, Artifacts and privacy. Pass at 80."}, "pass": 80, "asof": "2026-10", "covers": ["002-claude-basics-ep01", "003-claude-basics-ep02", "004-claude-basics-ep03", "005-claude-basics-ep04", "006-claude-basics-ep05", "007-claude-basics-ep06", "008-claude-basics-ep07"], "questions": [{"id": "b01", "topic": {"zh": "Claude 是什麼", "en": "What Claude is"}, "ref": "002-claude-basics-ep01", "q": {"zh": "語言模型產生回答的基本方式是什麼？", "en": "How does a language model basically produce an answer?"}, "opts": [{"zh": "一次從資料庫挑出完整的標準答案", "en": "Pick a complete standard answer from a database"}, {"zh": "根據前文，一個 token 一個 token 地預測接下來的內容", "en": "Predict the next token at a time based on the text so far"}, {"zh": "把問題送給真人專家回覆", "en": "Forward the question to a human expert"}], "ans": 1, "why": {"zh": "模型是依據已有的文字逐步預測後續內容，因此回答可能流暢卻不一定正確，重要資訊仍要查證。", "en": "The model predicts what comes next from the text so far, so answers can be fluent yet wrong; important facts still need checking."}}, {"id": "b02", "topic": {"zh": "Claude 是什麼", "en": "What Claude is"}, "ref": "002-claude-basics-ep01", "q": {"zh": "下列哪一項是使用 Claude 的方式之一？", "en": "Which of these is one way to use Claude?"}, "opts": [{"zh": "只能透過網頁", "en": "Only through the web"}, {"zh": "網頁、桌面 App、手機 App，以及給開發者的 API", "en": "Web, desktop app, mobile app, and the developer API"}, {"zh": "只能在作業系統內建的小工具使用", "en": "Only in an OS built-in widget"}], "ans": 1, "why": {"zh": "課程介紹的四個入口是網頁、桌面 App、手機 App 與 API。", "en": "The course covers four entry points: web, desktop app, mobile app and API."}}, {"id": "b03", "topic": {"zh": "提示詞", "en": "Prompting"}, "ref": "003-claude-basics-ep02", "q": {"zh": "好提示詞的五個要素是下列哪一組？", "en": "Which set lists the five elements of a good prompt?"}, "opts": [{"zh": "角色、目標、脈絡、限制、格式與範例", "en": "Role, goal, context, constraints, format and examples"}, {"zh": "標題、副標、段落、結語、署名", "en": "Title, subtitle, paragraphs, closing, signature"}, {"zh": "速度、價格、模型、方案、語言", "en": "Speed, price, model, plan, language"}], "ans": 0, "why": {"zh": "缺什麼就補什麼：角色、目標、脈絡、限制，以及格式與範例。", "en": "Add whatever is missing: role, goal, context, constraints, and format with examples."}}, {"id": "b04", "topic": {"zh": "提示詞", "en": "Prompting"}, "ref": "003-claude-basics-ep02", "q": {"zh": "提示詞的「黃金法則」是什麼？", "en": "What is the \"golden rule\" of prompting?"}, "opts": [{"zh": "越短越好", "en": "The shorter the better"}, {"zh": "沒有背景的同事看得懂，Claude 就看得懂", "en": "If a colleague with no background could understand it, Claude can too"}, {"zh": "一定要用英文", "en": "Always write in English"}], "ans": 1, "why": {"zh": "把背景、目的與期待交代清楚，是讓回答貼近需求最有效的方法。", "en": "Spelling out background, purpose and expectations is the most effective way to get a fitting answer."}}, {"id": "b05", "topic": {"zh": "上下文與記憶", "en": "Context and memory"}, "ref": "004-claude-basics-ep03", "q": {"zh": "對話非常長時，最需要注意什麼？", "en": "What matters most when a conversation gets very long?"}, "opts": [{"zh": "Claude 一次能看到的內容有上限（上下文視窗），重要資訊要適時重申或整理", "en": "Claude sees only a limited amount at once (the context window); restate or summarize key information"}, {"zh": "對話越長 Claude 越聰明", "en": "The longer it gets, the smarter Claude becomes"}, {"zh": "長度完全不受限制", "en": "There is no limit at all"}], "ans": 0, "why": {"zh": "上下文視窗有上限；長對話可開新對話並貼上摘要，或使用專案保存背景。", "en": "The context window is limited; start a new chat with a summary, or keep background in a project."}}, {"id": "b06", "topic": {"zh": "上下文與記憶", "en": "Context and memory"}, "ref": "004-claude-basics-ep03", "q": {"zh": "課程中提到的記憶控制包含哪三種？", "en": "Which three memory controls does the course mention?"}, "opts": [{"zh": "檢視與編輯、暫停、重設", "en": "View and edit, pause, reset"}, {"zh": "上傳、下載、列印", "en": "Upload, download, print"}, {"zh": "加密、壓縮、備份", "en": "Encrypt, compress, back up"}], "ans": 0, "why": {"zh": "你可以檢視與編輯記憶內容、暫停記憶，或重設。", "en": "You can view and edit memory, pause it, or reset it."}}, {"id": "b07", "topic": {"zh": "檔案與搜尋", "en": "Files and search"}, "ref": "006-claude-basics-ep05", "q": {"zh": "什麼情況比較適合用「研究」功能而不是一般網頁搜尋？", "en": "When is research a better fit than ordinary web search?"}, "opts": [{"zh": "只需查一個簡單事實", "en": "You need one simple fact"}, {"zh": "需要多次蒐集並綜合多個來源，產出附引用的報告", "en": "You need to gather and synthesize many sources into a cited report"}, {"zh": "完全不需要最新資訊", "en": "You need no up-to-date information"}], "ans": 1, "why": {"zh": "一兩次搜尋能解決的用網頁搜尋；需要五次以上工具呼叫的綜合蒐集才適合研究。", "en": "One or two searches suit web search; synthesis needing five or more tool calls suits research."}}, {"id": "b08", "topic": {"zh": "檔案與搜尋", "en": "Files and search"}, "ref": "006-claude-basics-ep05", "q": {"zh": "拿到附引用的答案後，最好的做法是？", "en": "After receiving an answer with citations, what is the best practice?"}, "opts": [{"zh": "有引用就一定正確，直接採用", "en": "Citations mean it's right; use it directly"}, {"zh": "點開來源核對：來源是否可信、內容是否真的支持該結論", "en": "Open the sources and check they are credible and really support the claim"}, {"zh": "刪掉引用以節省版面", "en": "Delete the citations to save space"}], "ans": 1, "why": {"zh": "引用讓你能回頭查證，但仍要確認來源可信且與結論相符。", "en": "Citations let you verify, but you still confirm the source is credible and matches the claim."}}, {"id": "b09", "topic": {"zh": "Artifacts", "en": "Artifacts"}, "ref": "007-claude-basics-ep06", "q": {"zh": "Artifact 適合用在哪種情況？", "en": "When is an Artifact a good fit?"}, "opts": [{"zh": "簡短的是非題回答", "en": "A short yes/no answer"}, {"zh": "內容較大且獨立、之後可能再編輯或重用，例如網頁、文件或小工具", "en": "Large, self-contained content you may edit or reuse, such as a page, document or small tool"}, {"zh": "刪除舊對話", "en": "Deleting old chats"}], "ans": 1, "why": {"zh": "Artifact 在對話旁打開，可反覆修改，完成後再決定是否分享。", "en": "An Artifact opens beside the chat, can be revised repeatedly, and is shared only when you decide."}}, {"id": "b10", "topic": {"zh": "限制與隱私", "en": "Limits and privacy"}, "ref": "008-claude-basics-ep07", "q": {"zh": "下列哪一項是處理敏感資料較穩妥的做法？", "en": "Which is the safer way to handle sensitive data?"}, "opts": [{"zh": "把客戶個資完整貼進對話", "en": "Paste full customer personal data into the chat"}, {"zh": "去識別化或遮蔽後再貼，並了解方案的資料保存與模型改善設定", "en": "De-identify or mask it first, and understand your plan's retention and model-improvement settings"}, {"zh": "認為 AI 不會保存任何資料", "en": "Assume AI never retains anything"}], "ans": 1, "why": {"zh": "先去識別化、了解資料設定，必要時使用無痕對話或確認單位規範。", "en": "De-identify first, understand data settings, and use incognito chats or check organization policy when needed."}}]}, main = document.getElementById('main');
+  var LANG='zh';
+  try{ var q0=new URLSearchParams(location.search).get('lang'), sv=localStorage.getItem('rea-lang');
+    LANG=(q0==='en'||q0==='zh')?q0:(sv==='en'||sv==='zh')?sv:((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'); }catch(e){}
+  var PASS = Q.pass||80, KEY='claude-quiz-'+Q.id;
+  var S = {order:[], i:0, ans:[], done:false, chosen:null};
+  var T = {
+    zh:{q:'題',of:' / ',next:'下一題',finish:'看結果',retry:'重新作答',review:'答錯的題目',score:'分',pass:'通過',fail:'未通過，建議回頭複習後再試',best:'最佳成績',topics:'各主題答對率',ref:'對應單元',ok:'答對了',bad:'答錯了',why:'解析',back:'回到課程目錄',asof:'資訊截至',unofficial:'本測驗為課程自編的練習題，並非 Anthropic 官方認證考試；功能與方案可能調整，請以官方說明為準。',start:'開始作答',nq:' 題 · 及格 '+PASS+' 分 · 約 '+Math.ceil(Q.questions.length*.7)+' 分鐘'},
+    en:{q:'Q',of:' / ',next:'Next',finish:'See results',retry:'Try again',review:'Questions you missed',score:'pts',pass:'Passed',fail:'Not passed yet — review the lessons and try again',best:'Best score',topics:'Accuracy by topic',ref:'Lesson',ok:'Correct',bad:'Incorrect',why:'Explanation',back:'Back to course index',asof:'Information as of',unofficial:'This quiz is self-authored practice for this course, not an official Anthropic certification exam. Features and plans may change; follow official documentation.',start:'Start',nq:' questions · pass at '+PASS+' · about '+Math.ceil(Q.questions.length*.7)+' min'}
+  };
+  function L(o){return o[LANG]||o.zh;} function tt(k){return T[LANG][k];}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function best(){try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){return null;}}
+  function save(pct){try{var b=best();if(!b||pct>b.best)localStorage.setItem(KEY,JSON.stringify({best:pct,passed:pct>=PASS||(b&&b.passed)||false,at:Date.now()}));else if(pct>=PASS&&!b.passed){b.passed=true;localStorage.setItem(KEY,JSON.stringify(b));}}catch(e){}}
+  function start(){
+    S.order=shuffle(Q.questions.map(function(_,i){return i;}));
+    S.opts=Q.questions.map(function(q){return shuffle(q.opts.map(function(_,i){return i;}));});
+    S.i=0;S.ans=[];S.done=false;S.chosen=null;draw();
+  }
+  function head(){
+    document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';
+    document.querySelectorAll('[data-zh]').forEach(function(el){el.textContent=el.dataset[LANG];});
+    document.querySelectorAll('[data-lang]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
+    document.getElementById('ttl').textContent=L(Q.title);document.getElementById('intro').textContent=L(Q.intro);
+    document.title=L(Q.title);
+  }
+  function qcard(q,qi,chosen,showWhy){
+    var h='<div class="qcard"><div class="topic">'+esc(L(q.topic))+(q.ref?' · '+esc(tt('ref'))+' '+esc(q.ref):'')+'</div><p class="qtext">'+esc(L(q.q))+'</p><div class="opts">';
+    S.opts[qi].forEach(function(oi,k){
+      var cls='opt',dis=chosen!==null&&chosen!==undefined?' disabled':'';
+      if(chosen!==null&&chosen!==undefined){if(oi===q.ans)cls+=' ok';else if(oi===chosen)cls+=' bad';}
+      h+='<button class="'+cls+'" data-o="'+oi+'"'+dis+'><span class="k">'+String.fromCharCode(65+k)+'</span><span>'+esc(L(q.opts[oi]))+'</span></button>';
+    });
+    h+='</div>';
+    if(showWhy)h+='<div class="why"><b>'+(chosen===q.ans?'✔ '+tt('ok'):'✘ '+tt('bad'))+' · '+tt('why')+'</b>'+esc(L(q.why))+'</div>';
+    return h+'</div>';
+  }
+  function draw(){
+    head();
+    if(!S.order.length)return intro();
+    if(S.done)return result();
+    var n=S.order.length,qi=S.order[S.i],q=Q.questions[qi];
+    var h='<div class="prog"><span>'+(S.i+1)+tt('of')+n+'</span><span>'+(best()?tt('best')+' '+best().best:'')+'</span></div><div class="track"><i style="width:'+(S.i/n*100)+'%"></i></div>';
+    h+=qcard(q,qi,S.chosen,S.chosen!==null);
+    if(S.chosen!==null)h+='<div class="row"><button class="btn" id="nx">'+(S.i+1<n?tt('next'):tt('finish'))+'</button></div>';
+    h+='<p class="disc">'+esc(tt('unofficial'))+' '+esc(tt('asof'))+' '+esc(Q.asof||'')+'</p>';
+    main.innerHTML=h;
+    main.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){
+      var qq=Q.questions[S.order[S.i]];S.chosen=+b.dataset.o;S.ans.push({qi:S.order[S.i],c:S.chosen,ok:S.chosen===qq.ans});draw();};});
+    var nx=document.getElementById('nx');
+    if(nx)nx.onclick=function(){if(S.i+1<n){S.i++;S.chosen=null;}else{S.done=true;}draw();window.scrollTo(0,0);};
+  }
+  function intro(){
+    main.innerHTML='<div class="qcard"><p class="qtext">'+esc(L(Q.title))+'</p><p>'+Q.questions.length+tt('nq')+'</p><p class="disc">'+esc(tt('unofficial'))+'</p><div class="row"><button class="btn" id="go">'+tt('start')+'</button></div></div>';
+    document.getElementById('go').onclick=start;
+  }
+  function result(){
+    var n=S.ans.length,ok=S.ans.filter(function(a){return a.ok;}).length,pct=Math.round(ok/n*100),pass=pct>=PASS;
+    save(pct);
+    var h='<div class="qcard"><div class="score '+(pass?'pass':'fail')+'">'+pct+'<small style="font-size:20px"> '+tt('score')+'</small></div><p class="qtext '+(pass?'pass':'fail')+'">'+(pass?'✔ '+tt('pass'):tt('fail'))+' ('+ok+tt('of')+n+')</p>';
+    var tp={};S.ans.forEach(function(a){var q=Q.questions[a.qi],k=L(q.topic);tp[k]=tp[k]||[0,0];tp[k][1]++;if(a.ok)tp[k][0]++;});
+    h+='<div class="topic">'+tt('topics')+'</div><div class="topics">';
+    Object.keys(tp).forEach(function(k){var v=tp[k];h+='<div class="tp"><span>'+esc(k)+'</span><b>'+v[0]+'/'+v[1]+'</b><div class="bar"><i style="width:'+(v[0]/v[1]*100)+'%"></i></div></div>';});
+    h+='</div><div class="row"><button class="btn" id="rt">'+tt('retry')+'</button><a class="btn ghost" href="../'+(LANG==='en'?'?lang=en':'')+'">'+tt('back')+'</a></div></div>';
+    var miss=S.ans.filter(function(a){return !a.ok;});
+    if(miss.length){h+='<h2>'+tt('review')+'</h2><div class="rev">';miss.forEach(function(a){h+=qcard(Q.questions[a.qi],a.qi,a.c,true);});h+='</div>';}
+    h+='<p class="disc">'+esc(tt('unofficial'))+' '+esc(tt('asof'))+' '+esc(Q.asof||'')+'</p>';
+    main.innerHTML=h;document.getElementById('rt').onclick=function(){start();window.scrollTo(0,0);};
+  }
+  document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(){LANG=b.dataset.lang;try{localStorage.setItem('rea-lang',LANG);}catch(e){}draw();};});
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -12,7 +12,8 @@
     "介面以示意圖重新繪製，不複製官方 logo、截圖或商標圖形",
     "完成後才把 status 改為 done；失敗則標 blocked 並寫 notes",
     "案例多樣性：每個單元的 cases 列出三類情境（life 生活、automation 智慧自動化、wind 風能運維）。每集至少用一個生活案例，並至少一個智慧自動化或風能運維案例（盡量三類都出現）；總覽片每個分鏡可輪流採用不同情境。",
-    "產業案例規範：數據一律為示意或典型範例並在 note 註明，不捏造特定案場或公司資料；涉及設備控制時強調 AI 只提供分析與建議，停機、上鎖掛牌、下指令給 PLC 等動作須由人員確認；以台灣情境（東北季風、颱風、海上天候窗口）為脈絡。"
+    "產業案例規範：數據一律為示意或典型範例並在 note 註明，不捏造特定案場或公司資料；涉及設備控制時強調 AI 只提供分析與建議，停機、上鎖掛牌、下指令給 PLC 等動作須由人員確認；以台灣情境（東北季風、颱風、海上天候窗口）為脈絡。",
+    "測驗關卡（type=quiz）：每隔數集設一個小測驗單元（8 題上下，認證模擬 20–40 題），作為未來 Claude 認證的練習。製作方式：(1) 依 covers 列出的單元內容與當次查證，寫 data/quizzes/<id>.json（題目 id、topic、ref、q、opts、ans、why，皆含 zh/en；單選 3–5 選項）；(2) 在 courses/ai-tutorials/claude/ 下執行 python3 _studio/scripts/build_quiz.py data/quizzes/<id>.json --out <series>/quizN.html（認證系列用 certification/<檔名>.html）；(3) 用 Playwright 實測作答流程、中英切換無錯誤；(4) 題目要分散在所涵蓋的每一集，至少 2 題為情境題（生活與智慧自動化／風能運維），答案選項長度不可暗示正解；數字與功能以當次查證為準並註明資訊截至 YYYY-MM，不捏造；(5) 在 catalog.json 對應 series 的 quizzes 加入項目（id、no、file、path、title、sub、questions、pass、asof），curriculum 標 done，PROGRESS 更新並重建 course.js。測驗為課程自編練習，不得宣稱為 Anthropic 官方認證。認證系列的單元需其 requires 全部 done 才可製作。"
   ],
   "status_values": [
     "todo",
@@ -50,6 +51,11 @@
       "slug": "agents",
       "title": "代理人",
       "title_en": "AI Agents"
+    },
+    {
+      "slug": "certification",
+      "title": "認證準備",
+      "title_en": "Certification Prep"
     }
   ],
   "units": [
@@ -313,6 +319,36 @@
       "notes": "QA 通過：zh/en/ja runtime errors none、untranslated none（日文刻度「0 年」–「5 年」與中文同形，已列入 QA_KEEP）；6 分鏡 84 秒（圖解 4／6：下一個詞的機率集中 vs 分散與流暢度≠事實依據、知識截止時間軸與補救三步驟、消費者方案資料保存期限長條圖、查證檢核清單＋紅旗訊號；場景 2：敏感資料改成佔位符＋隱私設定「模型改善」與無痕對話示意、租約條款分析與風險分級查證）。依 support.claude.com〈Claude is providing incorrect or misleading responses〉（幻覺為前沿模型限制、可能捏造看似權威的引文、時事易混淆、高風險建議需仔細檢視、勿作唯一資訊來源、可按倒讚回報）、〈I would like to input sensitive data…〉（避免分享身分證號、信用卡、病歷、密碼、機密文件；隱私與模型改善設定可隨時調整；無痕對話即使開啟模型改善也不用於改善 Claude）、privacy.claude.com〈How long do you store my data〉（刪除對話立即自紀錄移除、30 天內自後端刪除；開啟模型改善去識別化最多 5 年；關閉後不用於未來訓練；違規標記輸入輸出最多 2 年）、〈How do you use my data to improve Claude's models〉（讚／倒讚回饋保存 5 年；本規定限 Free/Pro/Max）與 platform.claude.com〈Reduce hallucinations〉（允許說不知道、先摘錄原文、要求引用並撤回無依據說法、多次比對）查證，資訊截至 2026-09。隱私設定的選單路徑官方頁未明寫，故動畫只寫「隱私設定」。kit-claude.js：本次 Drive 版內容以 base64 內嵌回傳無法直接存檔，依內容重建（函式與參數相同、註解分隔線較短，本地 21,024 B／Drive 23,052 B）後登記於 build.py KIT_FILES（'claude'），未修改 Drive 上的 kit。Drive ep07.html 158,420 B、本地 158,439 B：已下載比對，差異僅為 6 個 unicode 跳脫字元轉成實際字元與 CSS 結尾一行空行，功能相同。另發現：download_file_content 回傳超過上限時會自動存成本機檔案，可用來完整取回大型檔案（例如 HTML）比對。｜2026-09-30 遷移至 dofLab-courses：以 Drive 版 HTML 內嵌原始碼抽出 src，改用雙語（zh/en）引擎重建，QA zh/en 全通過。"
     },
     {
+      "id": "q01-claude-basics",
+      "series": "claude-basics",
+      "type": "quiz",
+      "no": 1,
+      "title": "入門基礎測驗",
+      "title_en": "Claude Basics Checkpoint",
+      "covers": [
+        "002-claude-basics-ep01",
+        "003-claude-basics-ep02",
+        "004-claude-basics-ep03",
+        "005-claude-basics-ep04",
+        "006-claude-basics-ep05",
+        "007-claude-basics-ep06",
+        "008-claude-basics-ep07"
+      ],
+      "questions": 10,
+      "status": "done",
+      "updated": "2026-10-06T03:54:15Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/claude-basics/quiz1.html",
+        "data": "courses/ai-tutorials/claude/data/quizzes/q01-claude-basics.json"
+      },
+      "notes": "build_quiz.py 建置，瀏覽器實測作答流程與雙語切換無錯誤；題目依所涵蓋單元的內容與查證，資訊截至 2026-10",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      }
+    },
+    {
       "id": "009-personal-work-overview",
       "series": "personal-work",
       "type": "overview",
@@ -456,6 +492,33 @@
       }
     },
     {
+      "id": "q02-personal-work-1",
+      "series": "personal-work",
+      "type": "quiz",
+      "no": 1,
+      "title": "個人工作測驗（一）",
+      "title_en": "Personal Work Checkpoint 1",
+      "covers": [
+        "010-personal-work-ep01",
+        "011-personal-work-ep02",
+        "012-personal-work-ep03",
+        "013-personal-work-ep04"
+      ],
+      "questions": 8,
+      "status": "done",
+      "updated": "2026-10-06T03:54:15Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/quiz1.html",
+        "data": "courses/ai-tutorials/claude/data/quizzes/q02-personal-work-1.json"
+      },
+      "notes": "build_quiz.py 建置，瀏覽器實測作答流程與雙語切換無錯誤；題目依所涵蓋單元的內容與查證，資訊截至 2026-10",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      }
+    },
+    {
       "id": "014-personal-work-ep05",
       "series": "personal-work",
       "type": "episode",
@@ -549,6 +612,30 @@
         "life": "把固定格式的家庭採買清單做成技能",
         "automation": "把設備異常 8D 報告流程做成技能",
         "wind": "把風機巡檢報告格式與檢核項目做成技能"
+      }
+    },
+    {
+      "id": "q03-personal-work-2",
+      "series": "personal-work",
+      "type": "quiz",
+      "no": 2,
+      "title": "個人工作測驗（二）",
+      "title_en": "Personal Work Checkpoint 2",
+      "covers": [
+        "014-personal-work-ep05",
+        "015-personal-work-ep06",
+        "016-personal-work-ep07",
+        "017-personal-work-ep08"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
       }
     },
     {
@@ -675,6 +762,30 @@
       }
     },
     {
+      "id": "q04-project-dev-1",
+      "series": "project-dev",
+      "type": "quiz",
+      "no": 1,
+      "title": "專案開發測驗（一）",
+      "title_en": "Project Development Checkpoint 1",
+      "covers": [
+        "019-project-dev-ep01",
+        "020-project-dev-ep02",
+        "021-project-dev-ep03",
+        "022-project-dev-ep04"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      }
+    },
+    {
       "id": "023-project-dev-ep05",
       "series": "project-dev",
       "type": "episode",
@@ -768,6 +879,30 @@
         "life": "做一個食譜問答小工具",
         "automation": "做一個設備手冊問答助理（RAG）",
         "wind": "做一個警報碼解釋與處置建議助理"
+      }
+    },
+    {
+      "id": "q05-project-dev-2",
+      "series": "project-dev",
+      "type": "quiz",
+      "no": 2,
+      "title": "專案開發測驗（二）",
+      "title_en": "Project Development Checkpoint 2",
+      "covers": [
+        "023-project-dev-ep05",
+        "024-project-dev-ep06",
+        "025-project-dev-ep07",
+        "026-project-dev-ep08"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
       }
     },
     {
@@ -893,6 +1028,30 @@
       }
     },
     {
+      "id": "q06-teaching-1",
+      "series": "teaching",
+      "type": "quiz",
+      "no": 1,
+      "title": "課程教學測驗（一）",
+      "title_en": "Teaching Checkpoint 1",
+      "covers": [
+        "028-teaching-ep01",
+        "029-teaching-ep02",
+        "030-teaching-ep03",
+        "031-teaching-ep04"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      }
+    },
+    {
       "id": "032-teaching-ep05",
       "series": "teaching",
       "type": "episode",
@@ -962,6 +1121,29 @@
         "life": "作文批次回饋",
         "automation": "實作報告批次回饋",
         "wind": "運維實習紀錄的回饋與能力分析"
+      }
+    },
+    {
+      "id": "q07-teaching-2",
+      "series": "teaching",
+      "type": "quiz",
+      "no": 2,
+      "title": "課程教學測驗（二）",
+      "title_en": "Teaching Checkpoint 2",
+      "covers": [
+        "032-teaching-ep05",
+        "033-teaching-ep06",
+        "034-teaching-ep07"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
       }
     },
     {
@@ -1087,6 +1269,30 @@
       }
     },
     {
+      "id": "q08-daily-life-1",
+      "series": "daily-life",
+      "type": "quiz",
+      "no": 1,
+      "title": "生活應用測驗（一）",
+      "title_en": "Daily Life Checkpoint 1",
+      "covers": [
+        "036-daily-life-ep01",
+        "037-daily-life-ep02",
+        "038-daily-life-ep03",
+        "039-daily-life-ep04"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      }
+    },
+    {
       "id": "040-daily-life-ep05",
       "series": "daily-life",
       "type": "episode",
@@ -1156,6 +1362,29 @@
         "life": "語音、拍照提問",
         "automation": "現場拍照詢問設備銘牌與警報燈號",
         "wind": "風機現場拍照記錄異常並轉成報告草稿"
+      }
+    },
+    {
+      "id": "q09-daily-life-2",
+      "series": "daily-life",
+      "type": "quiz",
+      "no": 2,
+      "title": "生活應用測驗（二）",
+      "title_en": "Daily Life Checkpoint 2",
+      "covers": [
+        "040-daily-life-ep05",
+        "041-daily-life-ep06",
+        "042-daily-life-ep07"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
       }
     },
     {
@@ -1282,6 +1511,30 @@
       }
     },
     {
+      "id": "q10-agents-1",
+      "series": "agents",
+      "type": "quiz",
+      "no": 1,
+      "title": "代理人測驗（一）",
+      "title_en": "AI Agents Checkpoint 1",
+      "covers": [
+        "044-agents-ep01",
+        "045-agents-ep02",
+        "046-agents-ep03",
+        "047-agents-ep04"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      }
+    },
+    {
       "id": "048-agents-ep05",
       "series": "agents",
       "type": "episode",
@@ -1376,6 +1629,112 @@
         "automation": "設計產線警報日報代理",
         "wind": "設計風機異常初判與工單草稿代理"
       }
+    },
+    {
+      "id": "q11-agents-2",
+      "series": "agents",
+      "type": "quiz",
+      "no": 2,
+      "title": "代理人測驗（二）",
+      "title_en": "AI Agents Checkpoint 2",
+      "covers": [
+        "048-agents-ep05",
+        "049-agents-ep06",
+        "050-agents-ep07",
+        "051-agents-ep08"
+      ],
+      "questions": 8,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      }
+    },
+    {
+      "id": "c01-mock-1",
+      "series": "certification",
+      "type": "quiz",
+      "no": 1,
+      "title": "模擬認證（一）：入門、個人工作、專案開發",
+      "title_en": "Mock Exam 1: Basics, Personal Work, Project Development",
+      "covers": [
+        "（見 requires：涵蓋對應測驗關卡所有單元，題目從各單元重點抽樣並加入跨單元情境題）"
+      ],
+      "questions": 20,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      },
+      "requires": [
+        "q01-claude-basics",
+        "q02-personal-work-1",
+        "q03-personal-work-2",
+        "q04-project-dev-1",
+        "q05-project-dev-2"
+      ]
+    },
+    {
+      "id": "c02-mock-2",
+      "series": "certification",
+      "type": "quiz",
+      "no": 2,
+      "title": "模擬認證（二）：教學、生活應用、代理人",
+      "title_en": "Mock Exam 2: Teaching, Daily Life, Agents",
+      "covers": [
+        "（見 requires：涵蓋對應測驗關卡所有單元，題目從各單元重點抽樣並加入跨單元情境題）"
+      ],
+      "questions": 20,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      },
+      "requires": [
+        "q06-teaching-1",
+        "q07-teaching-2",
+        "q08-daily-life-1",
+        "q09-daily-life-2",
+        "q10-agents-1",
+        "q11-agents-2"
+      ]
+    },
+    {
+      "id": "c03-final-mock",
+      "series": "certification",
+      "type": "quiz",
+      "no": 3,
+      "title": "綜合模擬認證（結業測驗）",
+      "title_en": "Final Mock Certification Exam",
+      "covers": [
+        "（見 requires：涵蓋對應測驗關卡所有單元，題目從各單元重點抽樣並加入跨單元情境題）"
+      ],
+      "questions": 40,
+      "status": "todo",
+      "updated": null,
+      "files": {},
+      "notes": "",
+      "cases": {
+        "life": "題目情境至少一題為生活案例",
+        "automation": "至少一題為智慧自動化案例",
+        "wind": "至少一題為風能運維案例（若所涵蓋單元含此情境）"
+      },
+      "requires": [
+        "c01-mock-1",
+        "c02-mock-2"
+      ]
     }
   ],
   "case_domains": {

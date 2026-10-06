@@ -1,0 +1,272 @@
+{
+ "id": "q02-personal-work-1",
+ "series": "personal-work",
+ "type": "quiz",
+ "no": 1,
+ "title": {
+  "zh": "個人工作測驗（一）",
+  "en": "Personal Work Checkpoint 1"
+ },
+ "intro": {
+  "zh": "涵蓋郵件、會議、文件寫作與試算表：檢查你是否知道什麼要先交代、什麼要人來核對。80 分通過。",
+  "en": "Covers email, meetings, documents and spreadsheets: do you know what to state up front and what people must verify? Pass at 80."
+ },
+ "pass": 80,
+ "asof": "2026-10",
+ "covers": [
+  "010-personal-work-ep01",
+  "011-personal-work-ep02",
+  "012-personal-work-ep03",
+  "013-personal-work-ep04"
+ ],
+ "questions": [
+  {
+   "id": "p01",
+   "topic": {
+    "zh": "郵件與訊息",
+    "en": "Email and messages"
+   },
+   "ref": "010-personal-work-ep01",
+   "q": {
+    "zh": "請 Claude 草擬郵件前，最該先交代哪些資訊？",
+    "en": "Before asking Claude to draft an email, what should you state first?"
+   },
+   "opts": [
+    {
+     "zh": "收件人、目的與語氣",
+     "en": "Recipient, purpose and tone"
+    },
+    {
+     "zh": "只要說「寫一封信」",
+     "en": "Just say \"write a letter\""
+    },
+    {
+     "zh": "你的帳號密碼",
+     "en": "Your account password"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "收件人、目的與語氣是草擬前最關鍵的三項資訊。",
+    "en": "Recipient, purpose and tone are the three most important inputs."
+   }
+  },
+  {
+   "id": "p02",
+   "topic": {
+    "zh": "郵件與訊息",
+    "en": "Email and messages"
+   },
+   "ref": "010-personal-work-ep01",
+   "q": {
+    "zh": "連接 Gmail 或 Outlook 讓 Claude 協助寄信時，較穩妥的做法是？",
+    "en": "When connecting Gmail or Outlook so Claude can help send mail, what is safer?"
+   },
+   "opts": [
+    {
+     "zh": "寄出前先預覽並由你核准",
+     "en": "Preview and approve before sending"
+    },
+    {
+     "zh": "全部自動寄出，不用看",
+     "en": "Send everything automatically without looking"
+    },
+    {
+     "zh": "把草稿視為定稿",
+     "en": "Treat drafts as final"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "草稿不是定稿；收件人、事實、附件、敏感資料與語氣都要先檢查。",
+    "en": "A draft is not final; check recipient, facts, attachments, sensitive data and tone first."
+   }
+  },
+  {
+   "id": "p03",
+   "topic": {
+    "zh": "會議",
+    "en": "Meetings"
+   },
+   "ref": "011-personal-work-ep02",
+   "q": {
+    "zh": "使用錄音與逐字稿整理會議前，必須先做什麼？",
+    "en": "What must you do before recording and transcribing a meeting?"
+   },
+   "opts": [
+    {
+     "zh": "先徵得與會者同意",
+     "en": "Get attendees' consent"
+    },
+    {
+     "zh": "先上傳到公開網站",
+     "en": "Upload it to a public site"
+    },
+    {
+     "zh": "不需要任何處理",
+     "en": "Nothing is needed"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "錄音與逐字稿涉及隱私，需事先取得與會者同意。",
+    "en": "Recording and transcripts affect privacy, so get consent beforehand."
+   }
+  },
+  {
+   "id": "p04",
+   "topic": {
+    "zh": "會議",
+    "en": "Meetings"
+   },
+   "ref": "011-personal-work-ep02",
+   "q": {
+    "zh": "一份完整的「行動項目」至少應包含哪些欄位？",
+    "en": "What fields should a complete action item include?"
+   },
+   "opts": [
+    {
+     "zh": "事項、負責人、期限與狀態",
+     "en": "Task, owner, due date and status"
+    },
+    {
+     "zh": "只有事項",
+     "en": "Task only"
+    },
+    {
+     "zh": "只有開會日期",
+     "en": "Only the meeting date"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "事項、負責人、期限與狀態，缺一不可，會後才追蹤得到。",
+    "en": "Task, owner, due date and status are all needed for follow-up."
+   }
+  },
+  {
+   "id": "p05",
+   "topic": {
+    "zh": "文件寫作",
+    "en": "Writing documents"
+   },
+   "ref": "012-personal-work-ep03",
+   "q": {
+    "zh": "寫長文件時，較有效率的順序是？",
+    "en": "What is a more efficient order when writing a long document?"
+   },
+   "opts": [
+    {
+     "zh": "先排大綱、確認方向，再生成初稿",
+     "en": "Outline and confirm direction first, then draft"
+    },
+    {
+     "zh": "直接要完整篇，不滿意再整篇重來",
+     "en": "Ask for the whole piece and redo it all if unhappy"
+    },
+    {
+     "zh": "只改標題",
+     "en": "Change only the title"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "大綱定好方向，初稿才不容易寫偏，也比整篇重來省時間。",
+    "en": "A settled outline keeps drafts on track and saves redoing the whole piece."
+   }
+  },
+  {
+   "id": "p06",
+   "topic": {
+    "zh": "文件寫作",
+    "en": "Writing documents"
+   },
+   "ref": "012-personal-work-ep03",
+   "q": {
+    "zh": "Claude 初稿裡缺少的資訊（例如沒提供的扭力值），較合適的處理是？",
+    "en": "How should missing information (e.g. a torque value you never supplied) be handled in a draft?"
+   },
+   "opts": [
+    {
+     "zh": "請 Claude 自行編一個合理的數字",
+     "en": "Let Claude invent a plausible number"
+    },
+    {
+     "zh": "標成待補，由熟悉設備的人核對補上",
+     "en": "Mark it as pending and have someone who knows the equipment fill it in"
+    },
+    {
+     "zh": "直接刪掉整個步驟",
+     "en": "Delete the whole step"
+    }
+   ],
+   "ans": 1,
+   "why": {
+    "zh": "缺少的資訊應標出，不要讓 AI 編造；SOP 與數值由負責人核對後才發布。",
+    "en": "Missing information should be flagged, not invented; the owner verifies SOPs and values before release."
+   }
+  },
+  {
+   "id": "p07",
+   "topic": {
+    "zh": "資料分析",
+    "en": "Data analysis"
+   },
+   "ref": "013-personal-work-ep04",
+   "q": {
+    "zh": "匯出的感測資料有日期格式不一、空白與重複列，請 Claude 清理時較好的做法是？",
+    "en": "Exported sensor data has mixed dates, blanks and duplicates. What is a good way to have Claude clean it?"
+   },
+   "opts": [
+    {
+     "zh": "保留原始檔，讓 Claude 先列出問題與處理規則，由你確認",
+     "en": "Keep the original; have Claude list problems and rules first, and confirm them"
+    },
+    {
+     "zh": "直接覆蓋原始檔",
+     "en": "Overwrite the original file"
+    },
+    {
+     "zh": "空白一律填 0",
+     "en": "Fill every blank with 0"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "原始檔另存、規則先確認，缺值標記而不是自行填數。",
+    "en": "Keep the original, confirm the rules, and flag missing values rather than filling them in."
+   }
+  },
+  {
+   "id": "p08",
+   "topic": {
+    "zh": "資料分析",
+    "en": "Data analysis"
+   },
+   "ref": "013-personal-work-ep04",
+   "q": {
+    "zh": "Claude 從資料中提出「C 機中班稼動率偏低可能因換線時間拉長」，這應該被視為？",
+    "en": "Claude says Machine C's low mid-shift utilization may come from longer changeovers. How should you treat this?"
+   },
+   "opts": [
+    {
+     "zh": "已證實的結論",
+     "en": "A proven conclusion"
+    },
+    {
+     "zh": "待驗證的假設，要回到原始資料與現場確認",
+     "en": "A hypothesis to verify against raw data and on site"
+    },
+    {
+     "zh": "與資料無關的猜測，可忽略",
+     "en": "An irrelevant guess to ignore"
+    }
+   ],
+   "ans": 1,
+   "why": {
+    "zh": "AI 給的是假設與建議；是否成立要抽查資料並由現場人員確認，設備動作仍由人員決定。",
+    "en": "AI offers hypotheses and suggestions; spot-check data and let on-site staff confirm. People still decide equipment actions."
+   }
+  }
+ ]
+}

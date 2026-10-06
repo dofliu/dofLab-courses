@@ -191,7 +191,30 @@ window.CLAUDE_COURSE = {
       "en"
      ],
      "asof": "2026-09"
-    }
+    },
+    "quizzes": [
+     {
+      "id": "q01-claude-basics",
+      "no": 1,
+      "file": "quiz1.html",
+      "path": "claude-basics/quiz1.html",
+      "title": {
+       "zh": "入門基礎測驗",
+       "en": "Claude Basics Checkpoint"
+      },
+      "sub": {
+       "zh": "涵蓋第 1–7 集：模型、提示詞、上下文、搜尋、Artifacts、隱私",
+       "en": "Covers lessons 1–7: models, prompting, context, search, Artifacts, privacy"
+      },
+      "questions": 10,
+      "pass": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
+     }
+    ]
    },
    {
     "slug": "personal-work",
@@ -311,7 +334,30 @@ window.CLAUDE_COURSE = {
       "en"
      ],
      "asof": "2026-09"
-    }
+    },
+    "quizzes": [
+     {
+      "id": "q02-personal-work-1",
+      "no": 1,
+      "file": "quiz1.html",
+      "path": "personal-work/quiz1.html",
+      "title": {
+       "zh": "個人工作測驗（一）",
+       "en": "Personal Work Checkpoint 1"
+      },
+      "sub": {
+       "zh": "涵蓋第 1–4 集：郵件、會議、文件、試算表",
+       "en": "Covers lessons 1–4: email, meetings, documents, spreadsheets"
+      },
+      "questions": 8,
+      "pass": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
+     }
+    ]
    },
    {
     "slug": "project-dev",
@@ -368,6 +414,21 @@ window.CLAUDE_COURSE = {
     "icon": "🤖",
     "color": "#1a4a6e",
     "episodes": []
+   },
+   {
+    "slug": "certification",
+    "title": {
+     "zh": "認證準備",
+     "en": "Certification Prep"
+    },
+    "description": {
+     "zh": "各系列的測驗關卡與綜合模擬認證，為未來取得 Claude 相關認證預作準備（課程自編練習，非官方考試）。",
+     "en": "Checkpoint quizzes and mock exams across the series, as preparation for future Claude certifications (self-authored practice, not an official exam)."
+    },
+    "icon": "🎓",
+    "color": "#6a4c93",
+    "episodes": [],
+    "quizzes": []
    }
   ],
   "updated": "2026-10-06",
@@ -450,6 +511,15 @@ window.CLAUDE_COURSE = {
    "status": "done"
   },
   {
+   "id": "q01-claude-basics",
+   "series": "claude-basics",
+   "type": "quiz",
+   "no": 1,
+   "title": "入門基礎測驗",
+   "title_en": "Claude Basics Checkpoint",
+   "status": "done"
+  },
+  {
    "id": "009-personal-work-overview",
    "series": "personal-work",
    "type": "overview",
@@ -495,6 +565,15 @@ window.CLAUDE_COURSE = {
    "status": "done"
   },
   {
+   "id": "q02-personal-work-1",
+   "series": "personal-work",
+   "type": "quiz",
+   "no": 1,
+   "title": "個人工作測驗（一）",
+   "title_en": "Personal Work Checkpoint 1",
+   "status": "done"
+  },
+  {
    "id": "014-personal-work-ep05",
    "series": "personal-work",
    "type": "episode",
@@ -528,6 +607,15 @@ window.CLAUDE_COURSE = {
    "no": 8,
    "title": "Skills：把工作流程打包",
    "title_en": "Skills",
+   "status": "todo"
+  },
+  {
+   "id": "q03-personal-work-2",
+   "series": "personal-work",
+   "type": "quiz",
+   "no": 2,
+   "title": "個人工作測驗（二）",
+   "title_en": "Personal Work Checkpoint 2",
    "status": "todo"
   },
   {
@@ -576,6 +664,15 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   },
   {
+   "id": "q04-project-dev-1",
+   "series": "project-dev",
+   "type": "quiz",
+   "no": 1,
+   "title": "專案開發測驗（一）",
+   "title_en": "Project Development Checkpoint 1",
+   "status": "todo"
+  },
+  {
    "id": "023-project-dev-ep05",
    "series": "project-dev",
    "type": "episode",
@@ -609,6 +706,15 @@ window.CLAUDE_COURSE = {
    "no": 8,
    "title": "用 API 打造 AI 應用",
    "title_en": "Building Apps with the API",
+   "status": "todo"
+  },
+  {
+   "id": "q05-project-dev-2",
+   "series": "project-dev",
+   "type": "quiz",
+   "no": 2,
+   "title": "專案開發測驗（二）",
+   "title_en": "Project Development Checkpoint 2",
    "status": "todo"
   },
   {
@@ -657,6 +763,15 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   },
   {
+   "id": "q06-teaching-1",
+   "series": "teaching",
+   "type": "quiz",
+   "no": 1,
+   "title": "課程教學測驗（一）",
+   "title_en": "Teaching Checkpoint 1",
+   "status": "todo"
+  },
+  {
    "id": "032-teaching-ep05",
    "series": "teaching",
    "type": "episode",
@@ -681,6 +796,15 @@ window.CLAUDE_COURSE = {
    "no": 7,
    "title": "回饋與學習分析",
    "title_en": "Feedback & Learning Analytics",
+   "status": "todo"
+  },
+  {
+   "id": "q07-teaching-2",
+   "series": "teaching",
+   "type": "quiz",
+   "no": 2,
+   "title": "課程教學測驗（二）",
+   "title_en": "Teaching Checkpoint 2",
    "status": "todo"
   },
   {
@@ -729,6 +853,15 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   },
   {
+   "id": "q08-daily-life-1",
+   "series": "daily-life",
+   "type": "quiz",
+   "no": 1,
+   "title": "生活應用測驗（一）",
+   "title_en": "Daily Life Checkpoint 1",
+   "status": "todo"
+  },
+  {
    "id": "040-daily-life-ep05",
    "series": "daily-life",
    "type": "episode",
@@ -753,6 +886,15 @@ window.CLAUDE_COURSE = {
    "no": 7,
    "title": "手機上的 Claude",
    "title_en": "Claude on Your Phone",
+   "status": "todo"
+  },
+  {
+   "id": "q09-daily-life-2",
+   "series": "daily-life",
+   "type": "quiz",
+   "no": 2,
+   "title": "生活應用測驗（二）",
+   "title_en": "Daily Life Checkpoint 2",
    "status": "todo"
   },
   {
@@ -801,6 +943,15 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   },
   {
+   "id": "q10-agents-1",
+   "series": "agents",
+   "type": "quiz",
+   "no": 1,
+   "title": "代理人測驗（一）",
+   "title_en": "AI Agents Checkpoint 1",
+   "status": "todo"
+  },
+  {
    "id": "048-agents-ep05",
    "series": "agents",
    "type": "episode",
@@ -835,8 +986,44 @@ window.CLAUDE_COURSE = {
    "title": "設計你的第一個代理工作流程",
    "title_en": "Design Your First Agent Workflow",
    "status": "todo"
+  },
+  {
+   "id": "q11-agents-2",
+   "series": "agents",
+   "type": "quiz",
+   "no": 2,
+   "title": "代理人測驗（二）",
+   "title_en": "AI Agents Checkpoint 2",
+   "status": "todo"
+  },
+  {
+   "id": "c01-mock-1",
+   "series": "certification",
+   "type": "quiz",
+   "no": 1,
+   "title": "模擬認證（一）：入門、個人工作、專案開發",
+   "title_en": "Mock Exam 1: Basics, Personal Work, Project Development",
+   "status": "todo"
+  },
+  {
+   "id": "c02-mock-2",
+   "series": "certification",
+   "type": "quiz",
+   "no": 2,
+   "title": "模擬認證（二）：教學、生活應用、代理人",
+   "title_en": "Mock Exam 2: Teaching, Daily Life, Agents",
+   "status": "todo"
+  },
+  {
+   "id": "c03-final-mock",
+   "series": "certification",
+   "type": "quiz",
+   "no": 3,
+   "title": "綜合模擬認證（結業測驗）",
+   "title_en": "Final Mock Certification Exam",
+   "status": "todo"
   }
  ],
- "live": 13,
- "total": 51
+ "live": 15,
+ "total": 65
 };

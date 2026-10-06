@@ -61,20 +61,24 @@
     document.getElementById('bar').style.width = (D.live/D.total*100) + '%';
     box.innerHTML = '';
     D.catalog.series.forEach(function(s){
-      var live = {}; (s.episodes||[]).forEach(function(e){ live[e.id]=e; }); if(s.overview) live[s.overview.id]=s.overview;
+      var live = {}; (s.episodes||[]).forEach(function(e){ live[e.id]=e; }); if(s.overview) live[s.overview.id]=s.overview; (s.quizzes||[]).forEach(function(e){ live[e.id]=e; });
       var sec = document.createElement('section'); sec.className='sec';
       sec.innerHTML = '<div class="series-head"><span class="ico" aria-hidden="true">'+(s.icon||'')+'</span><h2>'+esc(t(s.title))+'</h2></div><p class="series-desc">'+esc(t(s.description))+'</p>';
       var ul = document.createElement('ul'); ul.className='units';
       D.plan.filter(function(u){ return u.series===s.slug; }).forEach(function(u){
         var e = live[u.id], li = document.createElement('li');
-        var no = '<span class="no">'+(u.type==='overview' ? (LANG==='zh'?'總覽':'Intro') : String(u.no).padStart(2,'0'))+'</span>';
+        var no = '<span class="no">'+(u.type==='quiz' ? '🧪' : u.type==='overview' ? (LANG==='zh'?'總覽':'Intro') : String(u.no).padStart(2,'0'))+'</span>';
         var title = LANG==='zh' ? u.title : (u.title_en || u.title);
-        if(e){
+        if(e && u.type==='quiz'){
+          var bs=null; try{ bs=JSON.parse(localStorage.getItem('claude-quiz-'+u.id)||'null'); }catch(x){}
+          li.className='unit';
+          li.innerHTML = no+'<div class="t"><a href="'+e.path+(LANG==='en'?'?lang=en':'')+'">'+esc(t(e.title))+'</a><span class="sub">'+esc(t(e.sub))+'</span></div><span class="state '+(bs&&bs.passed?'live':'new')+'">'+(bs?(bs.passed?'✔ ':'')+bs.best+(LANG==='zh'?' 分':' pts'):(e.questions+(LANG==='zh'?' 題測驗':' questions')))+'</span>';
+        } else if(e){
           li.className='unit';
           li.innerHTML = no+'<div class="t"><a href="'+e.path+(LANG==='en'?'?lang=en':'')+'">'+esc(t(e.title))+'</a><span class="sub">'+esc(t(e.sub))+'</span></div><span class="state live">'+e.shots+(LANG==='zh'?' 分鏡 · ':' shots · ')+e.dur+(LANG==='zh'?' 秒':' s')+'</span>';
         } else {
           li.className='unit soon';
-          li.innerHTML = no+'<div class="t"><span class="name">'+esc(title)+'</span></div><span class="state soon">'+(LANG==='zh'?'製作中':'Coming soon')+'</span>';
+          li.innerHTML = no+'<div class="t"><span class="name">'+esc(title)+'</span></div><span class="state soon">'+(u.type==='quiz'?(LANG==='zh'?'測驗準備中':'Quiz coming soon'):(LANG==='zh'?'製作中':'Coming soon'))+'</span>';
         }
         ul.appendChild(li);
       });

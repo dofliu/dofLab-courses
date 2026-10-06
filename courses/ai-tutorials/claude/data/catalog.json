@@ -189,7 +189,30 @@
           "en"
         ],
         "asof": "2026-09"
-      }
+      },
+      "quizzes": [
+        {
+          "id": "q01-claude-basics",
+          "no": 1,
+          "file": "quiz1.html",
+          "path": "claude-basics/quiz1.html",
+          "title": {
+            "zh": "入門基礎測驗",
+            "en": "Claude Basics Checkpoint"
+          },
+          "sub": {
+            "zh": "涵蓋第 1–7 集：模型、提示詞、上下文、搜尋、Artifacts、隱私",
+            "en": "Covers lessons 1–7: models, prompting, context, search, Artifacts, privacy"
+          },
+          "questions": 10,
+          "pass": 80,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-10"
+        }
+      ]
     },
     {
       "slug": "personal-work",
@@ -309,7 +332,30 @@
           "en"
         ],
         "asof": "2026-09"
-      }
+      },
+      "quizzes": [
+        {
+          "id": "q02-personal-work-1",
+          "no": 1,
+          "file": "quiz1.html",
+          "path": "personal-work/quiz1.html",
+          "title": {
+            "zh": "個人工作測驗（一）",
+            "en": "Personal Work Checkpoint 1"
+          },
+          "sub": {
+            "zh": "涵蓋第 1–4 集：郵件、會議、文件、試算表",
+            "en": "Covers lessons 1–4: email, meetings, documents, spreadsheets"
+          },
+          "questions": 8,
+          "pass": 80,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-10"
+        }
+      ]
     },
     {
       "slug": "project-dev",
@@ -366,6 +412,21 @@
       "icon": "🤖",
       "color": "#1a4a6e",
       "episodes": []
+    },
+    {
+      "slug": "certification",
+      "title": {
+        "zh": "認證準備",
+        "en": "Certification Prep"
+      },
+      "description": {
+        "zh": "各系列的測驗關卡與綜合模擬認證，為未來取得 Claude 相關認證預作準備（課程自編練習，非官方考試）。",
+        "en": "Checkpoint quizzes and mock exams across the series, as preparation for future Claude certifications (self-authored practice, not an official exam)."
+      },
+      "icon": "🎓",
+      "color": "#6a4c93",
+      "episodes": [],
+      "quizzes": []
     }
   ],
   "updated": "2026-10-06",
