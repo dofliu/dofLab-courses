@@ -1,0 +1,864 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH8-G1] Combined Loadings - 組合載重探索：壓力儲槽與路標桿的應力疊加</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+</style>
+<style>
+@keyframes puff{0%,100%{transform:scale(1)}50%{transform:scale(1.06,1.12)}}
+.puff{transform-box:fill-box;transform-origin:center;animation:puff 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+.sway{transform-origin:60px 86px;animation:sway 2.6s ease-in-out infinite}
+@keyframes blow{0%{transform:translateX(-8px);opacity:0}40%{opacity:1}100%{transform:translateX(10px);opacity:0}}
+.blow{animation:blow 1.8s linear infinite}
+@keyframes push{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.push{animation:push 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH8-G1</span>組合載重探索：壓力儲槽與路標桿的應力疊加</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 8 · Combined Loadings · Game 1</span>
+      <h2>組合載重探索：壓力儲槽與路標桿的應力疊加</h2>
+      <p style="color:var(--muted);max-width:65ch">煮香腸時，外皮為什麼總是<b>沿著長度方向</b>裂開？單肩背一個很重的包，為什麼身體會往一邊歪？真實的結構很少只受一種力：壓力罐的罐壁同時被<b>環向</b>與<b>縱向</b>拉扯，偏心的柱子同時受<b>軸力</b>與<b>彎矩</b>，路標桿被風一吹就同時出現<b>彎曲、扭轉與剪力</b>。這一關你會學會<b>薄壁壓力容器公式 σ₁ = pr/t、σ₂ = pr/(2t)</b>，以及用<b>疊加原理</b>把各種載重產生的應力一個一個加起來。全程約 60 分鐘。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>組合載重的四個核心觀念</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="圓柱壓力容器的環向應力，香腸沿長度方向裂開">
+          <g class="puff"><rect x="40" y="26" width="120" height="40" rx="20" fill="#e9a07a" stroke="#1a3a5c" stroke-width="2"/></g>
+          <path d="M60 46 L140 46" stroke="#c62f2f" stroke-width="2.5" stroke-dasharray="6 3"/>
+          <line x1="100" y1="22" x2="100" y2="6" stroke="#e8640a" stroke-width="2.5"/><polygon points="100,2 95,10 105,10" fill="#e8640a"/>
+          <line x1="100" y1="70" x2="100" y2="84" stroke="#e8640a" stroke-width="2.5"/><polygon points="100,88 95,80 105,80" fill="#e8640a"/>
+          <text x="110" y="12" font-size="10" fill="#e8640a" font-weight="700">σ₁ 環向</text>
+          <text x="100" y="60" font-size="9" fill="#c62f2f" text-anchor="middle">縱向裂縫</text>
+        </svg>
+        <h3>環向應力 σ₁（最大）</h3><span class="formula">σ₁ = p r / t</span>
+        <p class="life">把圓筒沿長度「剖成兩半」，內壓 p 想把兩半撐開，只靠兩道長長的筒壁抵抗。煮香腸、冬天水管凍裂，裂縫都<b>沿長度方向</b>——因為環向應力最大。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="縱向應力與球形容器">
+          <rect x="18" y="28" width="86" height="36" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <ellipse cx="104" cy="46" rx="7" ry="18" fill="#fde9da" stroke="#e8640a" stroke-width="2"/>
+          <line x1="114" y1="46" x2="134" y2="46" stroke="#e8640a" stroke-width="2.5"/><polygon points="138,46 130,41 130,51" fill="#e8640a"/>
+          <text x="60" y="22" font-size="10" fill="#1a3a5c" text-anchor="middle" font-weight="700">σ₂ 縱向</text>
+          <circle cx="168" cy="46" r="22" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2" class="puff"/>
+          <text x="168" y="50" font-size="9" fill="#1a3a5c" text-anchor="middle">球形</text>
+          <text x="168" y="84" font-size="9" fill="#5b6b7e" text-anchor="middle">σ = pr/(2t)</text>
+        </svg>
+        <h3>縱向應力 σ₂ 與球形槽</h3><span class="formula">σ₂ = p r / (2t)</span>
+        <p class="life">把圓筒「橫著切一刀」，內壓推的是整個圓面積 πr²，抵抗的是一整圈筒壁 2πrt，所以只有環向的<b>一半</b>。球形槽各方向都一樣是 pr/(2t)——所以大型瓦斯槽常做成球形。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="偏心載重：軸力加彎矩">
+          <rect x="30" y="24" width="40" height="56" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <g class="push"><line x1="62" y1="2" x2="62" y2="18" stroke="#e8640a" stroke-width="3"/><polygon points="62,23 57,14 67,14" fill="#e8640a"/></g>
+          <line x1="50" y1="20" x2="50" y2="84" stroke="#5b6b7e" stroke-dasharray="3 2"/>
+          <text x="56" y="34" font-size="9" fill="#e8640a" font-weight="700">e</text>
+          <text x="96" y="30" font-size="12" fill="#1a3a5c" font-weight="700">P/A</text><text x="124" y="30" font-size="12" fill="#e8640a" font-weight="700">± Mc/I</text>
+          <polygon points="96,48 176,48 176,80 96,58" fill="#dbe4f0" stroke="#1a3a5c"/>
+          <text x="136" y="90" font-size="9" fill="#5b6b7e" text-anchor="middle">合成：梯形分布</text>
+        </svg>
+        <h3>疊加原理：軸力＋彎曲</h3><span class="formula">σ = N/A ± M c / I</span>
+        <p class="life">單肩背重包，肩膀不只被「往下壓」，身體還被「扳向一邊」。柱頂載重偏離形心 e，就等於一個軸力 P 加上一個彎矩 M = P·e，兩種應力<b>各算各的再相加</b>。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="路標桿受風：彎曲加扭轉">
+          <g class="sway"><rect x="56" y="14" width="8" height="72" fill="#8fa3ba" stroke="#1a3a5c"/>
+          <rect x="64" y="16" width="44" height="5" fill="#8fa3ba" stroke="#1a3a5c"/>
+          <rect x="96" y="10" width="54" height="30" rx="3" fill="#1f8a4c" stroke="#1a3a5c"/>
+          <text x="123" y="29" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">台中 12</text></g>
+          <g class="blow"><line x1="140" y1="50" x2="172" y2="50" stroke="#24507d" stroke-width="2"/><line x1="146" y1="60" x2="178" y2="60" stroke="#24507d" stroke-width="2"/></g>
+          <rect x="40" y="86" width="40" height="5" fill="#5b6b7e"/>
+          <text x="150" y="80" font-size="9" fill="#e8640a" text-anchor="middle" font-weight="700">M = FH、T = Fd</text>
+        </svg>
+        <h3>彎曲＋扭轉＋剪力</h3><span class="formula">τ = Tc/J + VQ/(It)</span>
+        <p class="life">風吹在偏出桿軸的路標牌上：牌子高 H → 桿根受<b>彎矩</b> F·H；牌子偏出 d → 桿身被<b>扭轉</b> F·d；再加上<b>剪力</b> V = F。每一點的 σ、τ 都由這幾項疊加而來。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：偏心壓在短柱上——什麼時候會出現拉應力？</h3>
+      <p class="note">調整壓力 P、偏心距 e 與矩形截面 b × h（e 沿 h 方向）。右邊三張小圖就是疊加原理：均勻的軸壓應力 ＋ 線性的彎曲應力 ＝ 柱底的實際應力分布（正值為拉、負值為壓）。</p>
+      <div class="grid2">
+        <svg viewBox="0 0 460 270" class="ndiag" id="eccFig" aria-label="偏心短柱應力疊加"></svg>
+        <div class="stack">
+          <div class="slider"><span>壓力 P</span><input type="range" id="sP1" min="20" max="400" step="5" value="150"><span class="mono" id="vP1">150 kN</span></div>
+          <div class="slider"><span>偏心距 e</span><input type="range" id="sE1" min="0" max="100" step="1" value="30"><span class="mono" id="vE1">30 mm</span></div>
+          <div class="slider"><span>截面深 h</span><input type="range" id="sH1" min="100" max="400" step="10" value="200"><span class="mono" id="vH1">200 mm</span></div>
+          <div class="slider"><span>截面寬 b</span><input type="range" id="sB1" min="100" max="400" step="10" value="150"><span class="mono" id="vB1">150 mm</span></div>
+          <div class="readout">
+            <div><small>載重側 σ（P/A + Mc/I）</small><b id="r1a">—</b></div>
+            <div><small>遠側 σ（P/A − Mc/I）</small><b id="r1b">—</b></div>
+            <div><small>e 與核心 h/6</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note">觀察：e 越大，彎曲那一項越大；當 e 超過 h/6（截面的「核心」或「中三分點」），遠側的壓應力會被彎曲抵銷到變成<b>拉應力</b>——對磚牆、混凝土這類不耐拉的材料特別危險。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：液化石油氣儲槽與高速公路路標桿</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：工廠的臥式液化石油氣（LPG）儲槽</h3>
+      <p style="color:var(--muted);margin-top:4px">工廠旁的臥式圓筒儲槽內半徑 r = 1,000 mm、鋼板厚 t = 12 mm，夏天槽內壓力可達 p = 1.8 MPa。鋼板容許應力 σ_allow = 160 MPa。求罐壁的環向與縱向應力、判斷是否安全，並比較若改成同半徑的球形槽，需要多厚的鋼板。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 290" class="ndiag" id="tankFig" aria-label="圓筒壓力儲槽的環向與縱向應力"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：調整壓力、半徑與壁厚</h3>
+        <div class="slider"><span>內壓 p</span><input type="range" id="sPa" min="0.2" max="3" step="0.05" value="1.8"><span class="mono" id="vPa">1.8 MPa</span></div>
+        <div class="slider"><span>內半徑 r</span><input type="range" id="sRa" min="200" max="2000" step="50" value="1000"><span class="mono" id="vRa">1000 mm</span></div>
+        <div class="slider"><span>壁厚 t</span><input type="range" id="sTa" min="4" max="40" step="1" value="12"><span class="mono" id="vTa">12 mm</span></div>
+        <div class="readout">
+          <div><small>環向 σ₁ = pr/t</small><b id="rA1">—</b></div>
+          <div><small>縱向 σ₂ = pr/(2t)</small><b id="rA2">—</b></div>
+          <div><small>r / t（≥ 10 才算薄壁）</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：σ₁ 永遠是 σ₂ 的兩倍，所以設計圓筒時由環向應力控制；壁厚減半、或半徑加倍，應力都變兩倍。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：颱風天的高速公路路標桿</h3>
+      <p style="color:var(--muted);margin-top:4px">路標牌固定在一根空心圓鋼管的懸臂上：牌面中心離地 H = 5 m、偏離桿軸 d = 1.2 m。颱風時牌面受風力 F = 2.5 kN（垂直牌面）。鋼管外半徑 r_o = 100 mm、壁厚 10 mm（內半徑 r_i = 90 mm）。求桿根部截面的內力，以及迎風點 A 與側面點 B 的應力。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 280" class="ndiag" id="postFig" aria-label="路標桿的彎曲與扭轉"></svg>
+          <div class="slider"><span>風力 F</span><input type="range" id="sFb" min="0.5" max="8" step="0.1" value="2.5"><span class="mono" id="vFb">2.5 kN</span></div>
+          <div class="slider"><span>牌高 H</span><input type="range" id="sHb" min="3" max="8" step="0.1" value="5"><span class="mono" id="vHb">5.0 m</span></div>
+          <div class="slider"><span>偏心 d</span><input type="range" id="sDb" min="0" max="2.5" step="0.05" value="1.2"><span class="mono" id="vDb">1.20 m</span></div>
+          <div class="slider"><span>外半徑 r_o</span><input type="range" id="sRb" min="60" max="160" step="5" value="100"><span class="mono" id="vRb">100 mm</span></div>
+          <div class="readout">
+            <div><small>A 點 σ = Mc/I</small><b id="rB1">—</b></div>
+            <div><small>A 點 τ = Tc/J</small><b id="rB2">—</b></div>
+            <div><small>B 點 τ = Tc/J + VQ/(It)</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">觀察：H 加倍只影響彎曲應力；d 加倍只影響扭轉剪應力；d = 0（牌子正對桿軸）時扭轉消失。路標桿的應力通常由<b>彎曲</b>主導，扭轉與剪力是「加料」。</p>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道組合載重題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差，依題目指定單位輸入數字即可（應力輸入大小即可）。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：儲槽與桿件的應力檢驗員</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH8-G1] Combined Loadings｜組合載重探索：壓力儲槽與路標桿的應力疊加</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-12 88 98)"><rect x="78" y="84" width="20" height="30" rx="9" fill="#dbe4f0" stroke="#1a3a5c" stroke-width="1.2"/><rect x="85" y="79" width="6" height="6" fill="#8a99ab" stroke="#1a3a5c" stroke-width=".8"/><line x1="80" y1="99" x2="96" y2="99" stroke="#e8640a" stroke-width="1.6"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+guide("#guide0","歡迎來到第 8 章！我手上這瓶小氣罐，罐壁同時被兩個方向拉著——這就是<b>組合載重</b>的入門。先填好資料吧！");
+guide("#guide1","前七章我們一次只看一種載重；今天把它們<b>疊加</b>起來。只要材料保持線彈性、變形很小，各載重造成的應力可以<b>分開算、再相加</b>。");
+guide("#guide2","A 是<b>薄壁壓力容器</b>：記住環向 pr/t、縱向 pr/(2t)。B 是<b>路標桿</b>：先把風力搬到桿根，拆成 V、M、T 三個內力，再到指定點把應力疊起來。每一步都可以點開看說明。");
+guide("#guide3","解題 SOP：① 確認薄壁 r/t ≥ 10 ② 偏心載重先換成「軸力 + 彎矩」③ 每項應力各自算出大小與拉/壓 ④ 同一點、同方向才相加。單位用 N、mm，應力直接是 MPa。");
+guide("#guide4","檢驗員上工！每位同學的儲槽與桿件都不一樣。圓筒別把環向、縱向搞反；偏心柱別忘了 P/A 那一項；路標桿的彎矩力臂是<b>高度 H</b>。加油！");
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+const sg=(x,d=2)=>Number.isFinite(x)?(x>0?"+":x<0?"−":"")+Math.abs(x).toFixed(d):"—";
+function near(val,ans,tol=0.02){return Number.isFinite(val)&&Math.abs(Math.abs(val)-Math.abs(ans))<=Math.max(Math.abs(ans)*tol,1e-9);}
+function yay(){const m=["太棒了！","完全正確！","疊加得漂亮！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+const fi=x=>Math.round(x).toLocaleString("en-US");
+const sci=x=>{if(!Number.isFinite(x)||x===0)return "0";const e=Math.floor(Math.log10(Math.abs(x)));return (x/Math.pow(10,e)).toFixed(3)+"×10"+String(e).split("").map(c=>"⁰¹²³⁴⁵⁶⁷⁸⁹"["0123456789".indexOf(c)]||"⁻").join("");};
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+
+/* ---------- mechanics ---------- */
+// thin-walled pressure vessel (p MPa, r & t mm) -> MPa
+const hoop=(p,r,t)=>p*r/t, longi=(p,r,t)=>p*r/(2*t);
+// eccentric compression P (kN) at e (mm) along h on b×h rectangle; tension +
+function ecc(PkN,e,b,h){
+  const P=PkN*1e3,A=b*h,I=b*Math.pow(h,3)/12,M=P*e,sa=P/A,sb=M*(h/2)/I;
+  return {P,A,I,M,sa,sb,near:-sa-sb,far:-sa+sb,kern:h/6};
+}
+// hollow circular post under wind F (kN) on sign at height H (m), offset d (m)
+function post(FkN,H,d,ro,ri){
+  const F=FkN*1e3,M=F*H*1e3,T=F*d*1e3,V=F;
+  const I=Math.PI/4*(Math.pow(ro,4)-Math.pow(ri,4)),J=2*I,Q=2/3*(Math.pow(ro,3)-Math.pow(ri,3)),t=2*(ro-ri);
+  const sA=M*ro/I,tT=T*ro/J,tV=V*Q/(I*t);
+  return {F,M,T,V,I,J,Q,t,sA,tT,tV,tB:tT+tV,ro,ri};
+}
+
+/* ---------- Phase 1: eccentric short column ---------- */
+function distPoly(x0,x1,s0,s1,base,k){
+  // linear stress from s0 (at x0) to s1 (at x1); tension (+) drawn up in orange, compression down in navy
+  const y=s=>base-s*k;let out="";
+  const part=(xa,xb,sa,sb)=>{const c=(sa+sb)>0?"#fde9da":"#dbe4f0",st=(sa+sb)>0?"#e8640a":"#1a3a5c";return `<polygon points="${xa},${base} ${xa},${y(sa)} ${xb},${y(sb)} ${xb},${base}" fill="${c}" stroke="${st}" stroke-width="1.5"/>`;};
+  if(s0*s1<0){const xz=x0+(x1-x0)*s0/(s0-s1);out+=part(x0,xz,s0,0)+part(xz,x1,0,s1);}
+  else out+=part(x0,x1,s0,s1);
+  out+=`<line x1="${x0-4}" y1="${base}" x2="${x1+4}" y2="${base}" stroke="#5b6b7e"/>`;
+  return out;
+}
+function drawEcc(){
+  const h=+$("#sH1").value;$("#sE1").max=Math.round(h/2);
+  const P=+$("#sP1").value,e=Math.min(+$("#sE1").value,h/2),b=+$("#sB1").value;
+  $("#vP1").textContent=P+" kN";$("#vE1").textContent=e+" mm";$("#vH1").textContent=h+" mm";$("#vB1").textContent=b+" mm";
+  const r=ecc(P,e,b,h);
+  let s=`<rect width="460" height="270" fill="#fbfcfe"/>`;
+  // column elevation (width represents h)
+  const cx=80,cw=80,ct=56,cb=196,xe=cx+e/h*cw;
+  s+=`<rect x="${cx-cw/2}" y="${ct}" width="${cw}" height="${cb-ct}" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<rect x="${cx-cw/2}" y="${ct-6}" width="${cw}" height="6" fill="#8a99ab" stroke="#1a3a5c"/>`;
+  const kx=cw/6;
+  s+=`<rect x="${cx-kx}" y="${ct}" width="${2*kx}" height="${cb-ct}" fill="#1f8a4c" opacity=".1"/>`;
+  s+=`<line x1="${cx-kx}" y1="${ct}" x2="${cx-kx}" y2="${cb}" stroke="#1f8a4c" stroke-dasharray="3 3"/><line x1="${cx+kx}" y1="${ct}" x2="${cx+kx}" y2="${cb}" stroke="#1f8a4c" stroke-dasharray="3 3"/>`;
+  s+=`<line x1="${cx}" y1="${ct-14}" x2="${cx}" y2="${cb+6}" stroke="#5b6b7e" stroke-dasharray="5 3"/>`;
+  s+=`<g class="push"><line x1="${xe}" y1="10" x2="${xe}" y2="${ct-14}" stroke="#e8640a" stroke-width="3.5"/><polygon points="${xe},${ct-7} ${xe-6},${ct-17} ${xe+6},${ct-17}" fill="#e8640a"/></g>`;
+  s+=`<text x="${xe+6}" y="20" font-size="11" fill="#e8640a" font-weight="700">P</text>`;
+  if(e>0){s+=`<line x1="${cx}" y1="${ct-24}" x2="${xe}" y2="${ct-24}" stroke="#1a3a5c"/><text x="${(cx+xe)/2}" y="${ct-28}" font-size="9.5" fill="#1a3a5c" text-anchor="middle">e</text>`;}
+  for(let k=0;k<6;k++)s+=`<line x1="${cx-cw/2-6+k*17}" y1="${cb+10}" x2="${cx-cw/2+4+k*17}" y2="${cb}" stroke="#5b6b7e"/>`;
+  s+=`<line x1="${cx-cw/2-8}" y1="${cb}" x2="${cx+cw/2+8}" y2="${cb}" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<text x="${cx}" y="${cb+26}" font-size="9.5" fill="#1f8a4c" text-anchor="middle">綠色區＝核心（|e| ≤ h/6）</text>`;
+  s+=`<text x="${cx-cw/2}" y="${cb+40}" font-size="9.5" fill="#5b6b7e">載重側</text><text x="${cx+cw/2}" y="${cb+40}" font-size="9.5" fill="#5b6b7e" text-anchor="end">遠側</text>`;
+  // three diagrams: x from "載重側"(left) to "遠側"(right), consistent with column picture
+  const mx=Math.max(Math.abs(r.near),Math.abs(r.far),r.sa,r.sb,1e-9),k=62/mx,base=128,w=72;
+  const xs=[170,268,366];
+  s+=distPoly(xs[0],xs[0]+w,-r.sa,-r.sa,base,k);
+  s+=distPoly(xs[1],xs[1]+w,-r.sb,r.sb,base,k);
+  s+=distPoly(xs[2],xs[2]+w,r.near,r.far,base,k);
+  s+=`<text x="${xs[0]+w+13}" y="${base+5}" font-size="16" fill="#1a3a5c" text-anchor="middle" font-weight="700">+</text>`;
+  s+=`<text x="${xs[1]+w+13}" y="${base+5}" font-size="16" fill="#1a3a5c" text-anchor="middle" font-weight="700">=</text>`;
+  s+=`<text x="${xs[0]+w/2}" y="40" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">軸力 −P/A</text>`;
+  s+=`<text x="${xs[1]+w/2}" y="40" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">彎曲 ∓Mc/I</text>`;
+  s+=`<text x="${xs[2]+w/2}" y="40" font-size="10.5" fill="#e8640a" text-anchor="middle" font-weight="700">柱底實際 σ</text>`;
+  s+=`<text x="${xs[0]+w/2}" y="214" font-size="10" fill="#5b6b7e" text-anchor="middle">${sg(-r.sa,2)}</text>`;
+  s+=`<text x="${xs[1]+w/2}" y="214" font-size="10" fill="#5b6b7e" text-anchor="middle">±${fmt(r.sb,2)}</text>`;
+  s+=`<text x="${xs[2]}" y="214" font-size="10" fill="#1a3a5c">${sg(r.near,2)}</text><text x="${xs[2]+w}" y="228" font-size="10" fill="${r.far>0?"#c62f2f":"#1a3a5c"}" text-anchor="end" font-weight="${r.far>0?700:400}">${sg(r.far,2)}</text>`;
+  s+=`<text x="12" y="262" font-size="10.5" fill="#5b6b7e">單位 MPa；橘色＝拉應力（向上）、藍色＝壓應力（向下）；M = P·e = ${fmt(r.M/1e6,2)} kN·m</text>`;
+  $("#eccFig").innerHTML=s;
+  $("#r1a").textContent=sg(r.near,2)+" MPa";
+  $("#r1b").textContent=sg(r.far,2)+" MPa";
+  $("#r1c").textContent=`${e} / ${fmt(r.kern,1)} mm`;
+  const inK=e<=r.kern+1e-9;
+  $("#r1d").innerHTML=`<p class="note mono">A = ${fi(r.A)} mm²，P/A = ${fmt(r.sa,3)} MPa；I = ${sci(r.I)} mm⁴，Mc/I = ${fmt(r.sb,3)} MPa</p><div class="row" style="justify-content:flex-end;margin-top:6px"><span class="badge ${inK?"ok":"no"}">${inK?"e 在核心內：整個截面受壓 ✓":"e 超出 h/6：遠側出現拉應力！"}</span></div>`;
+}
+["#sP1","#sE1","#sH1","#sB1"].forEach(k=>$(k).addEventListener("input",drawEcc));
+drawEcc();
+
+const P1Q=[
+  {q:"圓筒形壓力容器（例如瓦斯罐、香腸）在內壓下，罐壁哪個方向的應力比較大？",o:["縱向（沿長度方向）","環向（繞圓周方向），而且是縱向的 2 倍","兩個方向一樣大","視罐子長度而定"],a:1,why:"σ₁ = pr/t、σ₂ = pr/(2t)，環向是縱向的 2 倍，所以圓筒破裂時裂縫沿長度方向展開（環向應力把它撕開）。"},
+  {q:"柱頂承受一個偏離形心 e 的壓力 P，柱底截面的正應力分布為何？",o:["整個截面均勻受壓 P/A","只有彎曲應力，呈線性分布","均勻壓應力 P/A 與線性彎曲應力 Pe·c/I 疊加，靠載重側較大","只在載重正下方有應力"],a:2,why:"偏心載重等效於「通過形心的軸力 P」加上「彎矩 M = Pe」，兩者應力疊加：載重側 −P/A − Mc/I，遠側 −P/A + Mc/I，呈梯形（或三角形）分布。"},
+  {q:"用疊加原理把各載重的應力直接相加，需要滿足什麼條件？",o:["材料保持線彈性，且變形很小、不改變載重的作用位置","只要是鋼材就可以","材料必須已經降伏","載重必須都是靜止不動的集中力"],a:0,why:"疊加原理要求應力與載重成線性（線彈性、遵守虎克定律），而且變形小到不會改變幾何形狀與力臂；超過降伏或大變形就不能直接相加。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">🛢️✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 2A: LPG tank ---------- */
+const TANK_SA=160;
+function drawTank(){
+  const p=+$("#sPa").value,r=+$("#sRa").value,t=+$("#sTa").value;
+  $("#vPa").textContent=fmt(p,2)+" MPa";$("#vRa").textContent=r+" mm";$("#vTa").textContent=t+" mm";
+  const s1=hoop(p,r,t),s2=longi(p,r,t),rt=r/t,u=s1/TANK_SA;
+  let s=`<rect width="460" height="290" fill="#fbfcfe"/>`;
+  // tank side view
+  const x0=60,x1=300,yc=100,R=20+r/2000*34;
+  s+=`<rect x="${x0}" y="${yc-R}" width="${x1-x0}" height="${2*R}" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<path d="M${x0} ${yc-R} A ${R*0.6} ${R} 0 0 0 ${x0} ${yc+R}" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<path d="M${x1} ${yc-R} A ${R*0.6} ${R} 0 0 1 ${x1} ${yc+R}" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<rect x="${x0+30}" y="${yc+R}" width="14" height="${150-yc-R+8}" fill="#8a99ab"/><rect x="${x1-44}" y="${yc+R}" width="14" height="${150-yc-R+8}" fill="#8a99ab"/>`;
+  s+=`<line x1="30" y1="158" x2="330" y2="158" stroke="#5b6b7e" stroke-width="2"/>`;
+  s+=`<text x="${(x0+x1)/2}" y="16" font-size="10.5" fill="#1a3a5c" text-anchor="middle">LPG 儲槽 r = ${r} mm，t = ${t} mm，p = ${fmt(p,2)} MPa</text>`;
+  if(u>1)s+=`<path d="M${x0+40} ${yc} L${x0+80} ${yc-3} L${x0+120} ${yc+2} L${x0+160} ${yc-2} L${x0+200} ${yc+1}" stroke="#c62f2f" stroke-width="2.5" fill="none"/>`;
+  // stress element on wall
+  const ex=(x0+x1)/2,ey=yc,es=14,L1=Math.min(34,8+s1/TANK_SA*24),L2=Math.min(46,8+s2/TANK_SA*30);
+  s+=`<rect x="${ex-es}" y="${ey-es}" width="${2*es}" height="${2*es}" fill="#fff" stroke="#e8640a" stroke-width="2"/>`;
+  s+=`<line x1="${ex}" y1="${ey-es}" x2="${ex}" y2="${ey-es-L1}" stroke="#e8640a" stroke-width="3"/><polygon points="${ex},${ey-es-L1-6} ${ex-5},${ey-es-L1+2} ${ex+5},${ey-es-L1+2}" fill="#e8640a"/>`;
+  s+=`<line x1="${ex}" y1="${ey+es}" x2="${ex}" y2="${ey+es+L1}" stroke="#e8640a" stroke-width="3"/><polygon points="${ex},${ey+es+L1+6} ${ex-5},${ey+es+L1-2} ${ex+5},${ey+es+L1-2}" fill="#e8640a"/>`;
+  s+=`<line x1="${ex+es}" y1="${ey}" x2="${ex+es+L2}" y2="${ey}" stroke="#1a3a5c" stroke-width="3"/><polygon points="${ex+es+L2+6},${ey} ${ex+es+L2-2},${ey-5} ${ex+es+L2-2},${ey+5}" fill="#1a3a5c"/>`;
+  s+=`<line x1="${ex-es}" y1="${ey}" x2="${ex-es-L2}" y2="${ey}" stroke="#1a3a5c" stroke-width="3"/><polygon points="${ex-es-L2-6},${ey} ${ex-es-L2+2},${ey-5} ${ex-es-L2+2},${ey+5}" fill="#1a3a5c"/>`;
+  s+=`<text x="${ex+8}" y="${ey-es-L1+4}" font-size="10" fill="#e8640a" font-weight="700">σ₁</text><text x="${ex+es+L2+8}" y="${ey-6}" font-size="10" fill="#1a3a5c" font-weight="700">σ₂</text>`;
+  // bar comparison
+  const bx=40,bw=380,by=184,mx=Math.max(s1,TANK_SA)*1.1,sc=bw/mx;
+  const bar=(y,val,lab,col)=>`<text x="${bx}" y="${y-3}" font-size="10" fill="#1a3a5c">${lab}</text><rect x="${bx}" y="${y}" width="${Math.max(1,val*sc)}" height="12" fill="${col}" rx="2"/><text x="${bx+Math.min(val*sc,bw-60)+4}" y="${y+10}" font-size="10" fill="#1a3a5c" font-weight="700">${fmt(val,1)} MPa</text>`;
+  s+=bar(by,s1,"圓筒環向 σ₁ = pr/t",util(u));
+  s+=bar(by+30,s2,"圓筒縱向 σ₂ = pr/(2t)","#24507d");
+  s+=bar(by+60,s2,"同 r、t 的球形槽 σ = pr/(2t)","#8fa3ba");
+  s+=`<line x1="${bx+TANK_SA*sc}" y1="${by-12}" x2="${bx+TANK_SA*sc}" y2="${by+76}" stroke="#c62f2f" stroke-dasharray="4 3" stroke-width="1.5"/><text x="${bx+TANK_SA*sc}" y="${by+86}" font-size="9.5" fill="#c62f2f" text-anchor="middle">σ_allow = ${TANK_SA}</text>`;
+  $("#tankFig").innerHTML=s;
+  $("#rA1").textContent=fmt(s1,1)+" MPa";$("#rA2").textContent=fmt(s2,1)+" MPa";$("#rA3").textContent=fmt(rt,1);
+  const tReq=p*r/TANK_SA,tSph=p*r/(2*TANK_SA);
+  $("#rA4").innerHTML=gauge(`σ₁ / ${TANK_SA} MPa`,u)+`<div class="row" style="justify-content:space-between;margin-top:6px"><span class="note mono">需要壁厚：圓筒 t ≥ pr/σ_allow = ${fmt(tReq,2)} mm；球形 t ≥ pr/(2σ_allow) = ${fmt(tSph,2)} mm</span><span class="badge ${rt<10?"no":u<=1?"ok":"no"}">${rt<10?"r/t < 10：不是薄壁，公式不適用":u<=1?"罐壁安全 ✓":"環向應力超標！加厚鋼板"}</span></div>`;
+}
+["#sPa","#sRa","#sTa"].forEach(k=>$(k).addEventListener("input",drawTank));
+const tk={p:1.8,r:1000,t:12};tk.s1=hoop(tk.p,tk.r,tk.t);tk.s2=longi(tk.p,tk.r,tk.t);
+const STEPS_A=[
+  {t:"確認可用薄壁公式",d:`r / t = ${tk.r} / ${tk.t} = ${fmt(tk.r/tk.t,1)} ≥ 10 → 薄壁，應力沿壁厚可視為均勻`},
+  {t:"環向應力（沿長度剖開）",d:`自由體：2(σ₁ t L) = p(2r L) → σ₁ = pr/t = ${tk.p} × ${tk.r} / ${tk.t} = ${fmt(tk.s1,1)} MPa`},
+  {t:"縱向應力（橫向切開）",d:`σ₂(2πr t) = p(πr²) → σ₂ = pr/(2t) = ${tk.p} × ${tk.r} / (2 × ${tk.t}) = ${fmt(tk.s2,1)} MPa`},
+  {t:"與容許應力比較",d:`控制的是較大的 σ₁：${fmt(tk.s1,1)} / ${TANK_SA} = ${fmt(tk.s1/TANK_SA*100,0)}% → 安全；若破壞，裂縫會沿長度方向（被 σ₁ 撕開）`},
+  {t:"改成球形槽要多厚？",d:`球形 σ = pr/(2t) ≤ ${TANK_SA} → t ≥ ${tk.p} × ${tk.r} / (2 × ${TANK_SA}) = ${fmt(tk.p*tk.r/(2*TANK_SA),2)} mm，只要圓筒（${fmt(tk.p*tk.r/TANK_SA,2)} mm）的一半`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sPa").value=tk.p;$("#sRa").value=tk.r;$("#sTa").value=tk.t;drawTank();});
+drawTank();
+
+/* ---------- Phase 2B: highway sign post ---------- */
+const POST_WALL=10;
+function drawPost(){
+  const F=+$("#sFb").value,H=+$("#sHb").value,d=+$("#sDb").value,ro=+$("#sRb").value,ri=ro-POST_WALL;
+  $("#vFb").textContent=fmt(F,1)+" kN";$("#vHb").textContent=fmt(H,1)+" m";$("#vDb").textContent=fmt(d,2)+" m";$("#vRb").textContent=ro+" mm";
+  const r=post(F,H,d,ro,ri);
+  let s=`<rect width="460" height="280" fill="#fbfcfe"/>`;
+  // elevation
+  const gx=70,gy=250,pm=26,top=gy-H*pm,sx=gx+d*pm;
+  s+=`<line x1="20" y1="${gy}" x2="200" y2="${gy}" stroke="#5b6b7e" stroke-width="2"/>`;
+  s+=`<rect x="${gx-5}" y="${top-14}" width="10" height="${gy-top+14}" fill="#8fa3ba" stroke="#1a3a5c"/>`;
+  s+=`<rect x="${gx}" y="${top-14}" width="${Math.max(0,sx-gx)+4}" height="6" fill="#8fa3ba" stroke="#1a3a5c"/>`;
+  s+=`<rect x="${sx-34}" y="${top-18}" width="68" height="36" rx="3" fill="#1f8a4c" stroke="#1a3a5c" stroke-width="1.5"/>`;
+  s+=`<text x="${sx}" y="${top+4}" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">台中 12 km</text>`;
+    s+=`<g class="blow"><text x="${sx+40}" y="${top-6}" font-size="13" fill="#24507d">⊗ ⊗</text></g>`;
+  s+=`<text x="${sx+40}" y="${top+12}" font-size="10" fill="#24507d" font-weight="700">F = ${fmt(F,1)} kN（吹入紙面）</text>`;
+  s+=`<line x1="${gx-20}" y1="${gy}" x2="${gx-20}" y2="${top}" stroke="#1a3a5c"/><text x="${gx-24}" y="${(gy+top)/2}" font-size="10" fill="#1a3a5c" text-anchor="end">H</text>`;
+  if(d>0)s+=`<line x1="${gx}" y1="${top+24}" x2="${sx}" y2="${top+24}" stroke="#1a3a5c"/><text x="${(gx+sx)/2}" y="${top+36}" font-size="10" fill="#1a3a5c" text-anchor="middle">d</text>`;
+  s+=`<text x="${gx+10}" y="${gy-8}" font-size="10" fill="#e8640a" font-weight="700">桿根</text>`;
+  // base section (plan view): wind blows toward -y on page (down) => windward face at top = A (tension)
+  const cx=345,cy=150,R=48,Ri=R*ri/ro;
+  s+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="${Ri}" fill="#fbfcfe" stroke="#1a3a5c"/>`;
+  s+=`<line x1="${cx-R-14}" y1="${cy}" x2="${cx+R+14}" y2="${cy}" stroke="#5b6b7e" stroke-dasharray="4 3"/>`;
+  s+=`<text x="${cx}" y="${cy-R-32}" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">桿根截面（俯視）</text>`;
+  s+=`<line x1="${cx}" y1="${cy-R-24}" x2="${cx}" y2="${cy-R-8}" stroke="#24507d" stroke-width="2.5"/><polygon points="${cx},${cy-R-4} ${cx-5},${cy-R-12} ${cx+5},${cy-R-12}" fill="#24507d"/>`;
+  s+=`<text x="${cx+8}" y="${cy-R-12}" font-size="9.5" fill="#24507d">風向</text>`;
+  s+=`<circle cx="${cx}" cy="${cy-R}" r="5" fill="#e8640a" stroke="#fff"/><text x="${cx-8}" y="${cy-R+16}" font-size="11" fill="#e8640a" font-weight="700" text-anchor="end">A</text>`;
+  s+=`<circle cx="${cx+R}" cy="${cy}" r="5" fill="#1f8a4c" stroke="#fff"/><text x="${cx+R+8}" y="${cy-8}" font-size="11" fill="#1f8a4c" font-weight="700">B</text>`;
+  s+=`<path d="M${cx-24} ${cy+R+14} A 30 12 0 0 0 ${cx+24} ${cy+R+14}" fill="none" stroke="#e8640a" stroke-width="2"/><polygon points="${cx+28},${cy+R+10} ${cx+18},${cy+R+10} ${cx+24},${cy+R+20}" fill="#e8640a"/>`;
+  s+=`<text x="${cx}" y="${cy+R+40}" font-size="10" fill="#e8640a" text-anchor="middle">T = Fd = ${fmt(r.T/1e6,2)} kN·m</text>`;
+  s+=`<text x="${cx}" y="${cy+R+54}" font-size="10" fill="#1a3a5c" text-anchor="middle">M = FH = ${fmt(r.M/1e6,2)} kN·m，V = ${fmt(F,1)} kN</text>`;
+  s+=`<text x="240" y="24" font-size="9.5" fill="#5b6b7e">A：彎曲拉應力最大，Q = 0</text><text x="240" y="38" font-size="9.5" fill="#5b6b7e">B：在彎曲中性軸上，σ = 0</text>`;
+  $("#postFig").innerHTML=s;
+  $("#rB1").textContent=fmt(r.sA,2)+" MPa";$("#rB2").textContent=fmt(r.tT,2)+" MPa";$("#rB3").textContent=fmt(r.tB,2)+" MPa";
+  const u=r.sA/160;
+  $("#rB4").innerHTML=gauge("A 點 σ / 160 MPa",u)+`<p class="note mono" style="margin-top:6px">I = ${sci(r.I)} mm⁴，J = 2I = ${sci(r.J)} mm⁴；B 點 VQ/(It) = ${fmt(r.tV,3)} MPa（Q = ${fi(r.Q)} mm³，t = ${fmt(r.t,0)} mm）</p>`;
+}
+["#sFb","#sHb","#sDb","#sRb"].forEach(k=>$(k).addEventListener("input",drawPost));
+const pb=post(2.5,5,1.2,100,90);
+const STEPS_B=[
+  {t:"把風力搬到桿根：拆成三個內力",d:`V = F = 2.5 kN；M = F·H = 2.5 × 5 = ${fmt(pb.M/1e6,2)} kN·m；T = F·d = 2.5 × 1.2 = ${fmt(pb.T/1e6,2)} kN·m`},
+  {t:"空心圓管的截面性質",d:`I = π(r_o⁴ − r_i⁴)/4 = π(100⁴ − 90⁴)/4 = ${fi(pb.I)} mm⁴；J = 2I = ${fi(pb.J)} mm⁴`},
+  {t:"A 點（迎風面）：彎曲正應力",d:`σ_A = Mc/I = ${fi(pb.M)} × 100 / ${fi(pb.I)} = ${fmt(pb.sA,2)} MPa（拉）；A 點在最外緣 → Q = 0，橫向剪應力為零`},
+  {t:"扭轉剪應力（外表面各點相同）",d:`τ_T = Tc/J = ${fi(pb.T)} × 100 / ${fi(pb.J)} = ${fmt(pb.tT,2)} MPa`},
+  {t:"B 點（側面）：剪應力疊加",d:`Q = (2/3)(r_o³ − r_i³) = ${fi(pb.Q)} mm³，t = 2 × 10 = 20 mm；τ_V = VQ/(It) = ${fmt(pb.tV,3)} MPa；B 點 σ = 0，τ_B = ${fmt(pb.tT,2)} + ${fmt(pb.tV,3)} = ${fmt(pb.tB,2)} MPa`},
+  {t:"結論：誰在主導？",d:`彎曲 ${fmt(pb.sA,1)} MPa 遠大於扭轉 ${fmt(pb.tT,1)} MPa 與剪力 ${fmt(pb.tV,2)} MPa → 路標桿設計以彎曲為主，A 點是危險點（下一章會學如何把 σ 與 τ 合併判斷）`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sFb").value=2.5;$("#sHb").value=5;$("#sDb").value=1.2;$("#sRb").value=100;drawPost();});
+drawPost();
+
+/* ---------- Phase 3 practice ---------- */
+const P3a=hoop(1.5,400,8);
+const P3b=longi(0.6,5000,25);
+const P3c=ecc(120,40,150,200),P3cAns=Math.abs(P3c.near);
+const P3Q=[
+  {type:"num",q:"工廠空壓機的圓筒形儲氣桶內半徑 r = 400 mm、壁厚 t = 8 mm，內部空氣壓力 p = 1.5 MPa。求筒壁的環向應力 σ₁（MPa）。",ans:P3a,unit:"MPa",dp:2,
+   hint:"先確認 r/t ≥ 10；環向應力 σ₁ = pr/t。",
+   sol:["r/t = 400/8 = 50 ≥ 10 → 薄壁",`σ₁ = pr/t = 1.5 × 400 / 8 = ${fmt(P3a,2)} MPa`,`（縱向 σ₂ 只有一半 = ${fmt(P3a/2,2)} MPa）`]},
+  {type:"num",q:"直徑約 10 m 的球形天然氣儲槽，內半徑 r = 5,000 mm、鋼板厚 t = 25 mm，內壓 p = 0.6 MPa。求槽壁的正應力 σ（MPa）。",ans:P3b,unit:"MPa",dp:2,
+   hint:"球形容器各方向應力相同：σ = pr/(2t)。",
+   sol:["r/t = 5000/25 = 200 ≥ 10 → 薄壁","沿任一直徑切開：σ(2πr t) = p(πr²)",`σ = pr/(2t) = 0.6 × 5000 / (2 × 25) = ${fmt(P3b,2)} MPa`]},
+  {type:"num",q:"一根矩形短柱截面 b = 150 mm、h = 200 mm，柱頂受壓力 P = 120 kN，作用點沿 h 方向偏離形心 e = 40 mm。求柱底截面的最大壓應力大小（MPa）。",ans:P3cAns,unit:"MPa",dp:2,
+   hint:"偏心載重 = 軸力 P + 彎矩 M = Pe。載重側：σ = −P/A − Mc/I，其中 c = h/2、I = bh³/12。",
+   sol:[`A = 150 × 200 = ${fi(P3c.A)} mm² → P/A = ${fmt(P3c.sa,2)} MPa`,`M = Pe = 120,000 × 40 = ${fi(P3c.M)} N·mm；I = 150 × 200³/12 = ${sci(P3c.I)} mm⁴`,`Mc/I = ${fi(P3c.M)} × 100 / ${sci(P3c.I)} = ${fmt(P3c.sb,2)} MPa`,`載重側 σ = −${fmt(P3c.sa,2)} − ${fmt(P3c.sb,2)} = ${sg(P3c.near,2)} MPa → 最大壓應力 ${fmt(P3cAns,2)} MPa`,`（遠側 ${sg(P3c.far,2)} MPa，因 e = 40 > h/6 = 33.3 mm 而出現拉應力）`]},
+  {type:"mc",q:"風吹在偏離桿軸 d、離地高 H 的路標牌上（風力 F），桿根部截面承受哪些內力？",
+   o:["只有剪力 V = F","剪力 V = F、彎矩 M = F·H、扭矩 T = F·d","只有彎矩 M = F·H","軸力 N = F 與扭矩 T = F·H"],a:1,
+   hint:"把 F 平移到桿根：平移距離「垂直」方向產生彎矩，「水平偏心」方向產生繞桿軸的扭矩。",
+   sol:["F 本身 → 桿根剪力 V = F","F 作用在高度 H → 對桿根的彎矩 M = F·H","F 偏離桿軸 d → 繞桿軸的扭矩 T = F·d","三者同時存在 → 選 B（自重則會再加一個軸壓力）"]}
+];
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 1.25。";return;}
+  const ok=q.type==="num"?near(v,q.ans):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">🛢️</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+/* ---------- Phase 4 seeded test ---------- */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+83)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 cylinder hoop stress
+  {const p=vary(1.2,0.05),R=vary(600,10),t=vary(10,1),s1=hoop(p,R,t);
+   qs.push({type:"num",title:"圓筒儲槽的環向應力",q:`一個圓筒形熱水儲槽內半徑 r = ${R} mm、壁厚 t = ${t} mm，內壓 p = ${fmt(p,2)} MPa。求筒壁的環向應力 σ₁（MPa）。`,ans:s1,unit:"MPa",dp:2,
+    sol:`r/t = ${fmt(R/t,1)} ≥ 10（薄壁）；σ₁ = pr/t = ${fmt(p,2)} × ${R} / ${t} = ${fmt(s1,2)} MPa`});}
+  // Q2 sphere required thickness
+  {const p=vary(0.8,0.05),R=vary(4000,100),sa=vary(140,5),t=p*R/(2*sa);
+   qs.push({type:"num",title:"球形槽的最小壁厚",q:`設計一座球形儲氣槽，內半徑 r = ${fmt(R/1000,1)} m，最大內壓 p = ${fmt(p,2)} MPa，鋼板容許應力 σ_allow = ${sa} MPa。求所需最小壁厚 t（mm）。`,ans:t,unit:"mm",dp:2,
+    sol:`球形 σ = pr/(2t) ≤ σ_allow → t = pr/(2σ_allow) = ${fmt(p,2)} × ${fi(R)} / (2 × ${sa}) = ${fmt(t,2)} mm（r/t = ${fmt(R/t,0)} ≥ 10，薄壁假設成立）`});}
+  // Q3 eccentric short column
+  {const P=vary(180,5),b=vary(200,10),h=vary(300,10),e=vary(40,5),R=ecc(P,e,b,h),ans=Math.abs(R.near);
+   qs.push({type:"num",title:"偏心短柱的最大壓應力",q:`矩形短柱截面 b = ${b} mm、h = ${h} mm，柱頂壓力 P = ${P} kN 作用在沿 h 方向偏離形心 e = ${e} mm 處。求柱底截面最大壓應力的大小（MPa）。`,ans,unit:"MPa",dp:3,
+    sol:`P/A = ${fi(R.P)} / ${fi(R.A)} = ${fmt(R.sa,3)} MPa；M = Pe = ${fi(R.M)} N·mm，I = ${b}×${h}³/12 = ${sci(R.I)} mm⁴，Mc/I = ${fmt(R.sb,3)} MPa；最大壓應力 = ${fmt(R.sa,3)} + ${fmt(R.sb,3)} = ${fmt(ans,3)} MPa（載重側）`});}
+  // Q4 sign post bending stress at base
+  {const F=vary(3,0.1),H=vary(6,0.1),ro=vary(110,5),w=vary(10,1),ri=ro-w,d=vary(1.5,0.1),R=post(F,H,d,ro,ri);
+   qs.push({type:"num",title:"路標桿根部的彎曲應力",q:`空心圓鋼管路標桿外半徑 r_o = ${ro} mm、內半徑 r_i = ${ri} mm。路標牌中心離地 H = ${fmt(H,1)} m、偏離桿軸 d = ${fmt(d,1)} m，受風力 F = ${fmt(F,1)} kN。求桿根部迎風點 A 的彎曲正應力 σ（MPa）。`,ans:R.sA,unit:"MPa",dp:2,
+    sol:`M = F·H = ${fmt(F,1)} × ${fmt(H,1)} = ${fmt(R.M/1e6,3)} kN·m = ${fi(R.M)} N·mm；I = π(${ro}⁴ − ${ri}⁴)/4 = ${fi(R.I)} mm⁴；σ_A = Mc/I = ${fi(R.M)} × ${ro} / ${fi(R.I)} = ${fmt(R.sA,2)} MPa（偏心 d 只產生扭矩，不影響 σ）`});}
+  // Q5 concept
+  {const pool=[
+    {q:"薄壁圓筒壓力容器中，環向應力 σ₁ 與縱向應力 σ₂ 的比值 σ₁ : σ₂ 為何？",o:["2 : 1","1 : 2","1 : 1","4 : 1"],why:"σ₁ = pr/t、σ₂ = pr/(2t)，比值 2 : 1。所以圓筒的強度由環向應力控制。"},
+    {q:"香腸煮破或水管凍裂時，裂縫通常沿什麼方向？",o:["沿長度方向（縱向裂縫）","沿圓周方向（環向裂縫）","45° 斜向","沒有固定方向"],why:"最大的是環向應力 σ₁，它把管壁「沿圓周拉開」，所以裂縫垂直於 σ₁、沿著長度方向延伸。"},
+    {q:"矩形短柱承受偏心壓力，若要整個截面都不出現拉應力，偏心距 e（沿 h 方向）須滿足？",o:["e ≤ h/6","e ≤ h/2","e ≤ h/3","e ≤ h/12"],why:"遠側 σ = −P/A + 6Pe/(bh²) ≤ 0 → e ≤ h/6，這就是矩形截面的「核心」（中三分點原則）。"},
+    {q:"相同內壓、相同內半徑與相同鋼材，球形儲槽所需壁厚約為圓筒形儲槽的多少？",o:["1/2","2 倍","相同","1/4"],why:"圓筒由 σ₁ = pr/t 控制、球形 σ = pr/(2t)，同樣容許應力下球形只需一半厚度。"},
+    {q:"路標桿根部截面上，彎曲正應力最大的迎風點 A，由橫向剪力 V 產生的剪應力為何？",o:["零","最大","等於 V/A","等於 2V/A"],why:"A 點在截面最外緣，切口外側面積 A′ = 0 → Q = 0，所以 VQ/(It) = 0；A 點只有彎曲正應力與扭轉剪應力。"}
+   ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"組合載重觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q.ans):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"組合載重的地基打穩了！環向 pr/t、縱向 pr/(2t)、偏心 = 軸力 + 彎矩、路標桿拆成 V、M、T——你都能疊得清清楚楚。下一關我們來算更複雜的組合案例！",B:"很不錯！再留意圓筒是「環向」最大、偏心柱別漏掉 P/A，下次就是 A。",C:"方向對了！回到 Phase 2 把儲槽與路標桿的步驟卡再點一次，特別是「先求內力、再分點疊加應力」的順序。",D:"別灰心！先記住兩個畫面：香腸沿長度裂開（環向應力最大），單肩背包讓人歪一邊（偏心 = 壓 + 彎）。再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 8 章 Combined Loadings · 遊戲 1（MOM-CH8-G1）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以大小判定，容許 ±2% 誤差。</p>`;
+  S.summary=`[MOM-CH8-G1] Combined Loadings 組合載重探索 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
