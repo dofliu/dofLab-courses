@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：52（kit 1、總覽片 6、單集 45）　已完成：13
+總單元數：52（kit 1、總覽片 6、單集 45）　已完成：14
 
 ## 單元清單
 
@@ -24,7 +24,7 @@
 | 010-personal-work-ep01 | personal-work | 郵件與訊息草擬 | ✅ done | 2026-10-01 |
 | 011-personal-work-ep02 | personal-work | 會議全流程 | ✅ done | 2026-10-02 |
 | 012-personal-work-ep03 | personal-work | 文件寫作與改寫 | ✅ done | 2026-10-05 |
-| 013-personal-work-ep04 | personal-work | 試算表與資料分析 | 🔄 in_progress | — |
+| 013-personal-work-ep04 | personal-work | 試算表與資料分析 | ✅ done | 2026-10-06 |
 | 014-personal-work-ep05 | personal-work | 簡報製作 | todo | — |
 | 015-personal-work-ep06 | personal-work | 連接器：讓 Claude 讀到你的資料 | todo | — |
 | 016-personal-work-ep07 | personal-work | 排程工作：自動化例行事 | todo | — |
@@ -74,3 +74,4 @@
 - 2026-10-01 01:49 UTC｜010-personal-work-ep01｜✅ done｜personal-work/ep01.html、src/010-personal-work-ep01(.i18n).js｜6 分鏡 77 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-02 01:50 UTC｜011-personal-work-ep02｜✅ done｜personal-work/ep02.html、src/011-personal-work-ep02(.i18n).js｜6 分鏡 79 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-05 01:49 UTC｜012-personal-work-ep03｜✅ done｜personal-work/ep03.html、src/012-personal-work-ep03(.i18n).js｜6 分鏡 80 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
+- 2026-10-06 01:49 UTC｜013-personal-work-ep04｜✅ done｜personal-work/ep04.html、src/013-personal-work-ep04(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維

@@ -441,10 +441,14 @@
         "Claude in Excel",
         "把數字變成洞察"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-06T01:44:57Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-06T01:49:16Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/ep04.html",
+        "src": "courses/ai-tutorials/claude/src/013-personal-work-ep04.js",
+        "i18n": "courses/ai-tutorials/claude/src/013-personal-work-ep04.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒，圖解 6/6；查證：support.claude.com（Claude in Excel、分析工具與建立檔案），資訊截至 2026-10；情境：生活（水電費公式）＋智慧自動化（感測資料清理、稼動率樞紐）＋風能運維（SCADA 功率曲線、可利用率、故障碼）",
       "cases": {
         "life": "家庭記帳與水電費比較",
         "automation": "產線感測資料清理與稼動率樞紐分析",

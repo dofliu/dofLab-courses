@@ -268,6 +268,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "013-personal-work-ep04",
+      "no": 4,
+      "file": "ep04.html",
+      "path": "personal-work/ep04.html",
+      "title": {
+       "zh": "試算表與資料分析",
+       "en": "Spreadsheets & Data"
+      },
+      "sub": {
+       "zh": "清理雜亂資料、公式解說、樞紐分析與圖表、Claude in Excel、風機 SCADA 資料、把數字變成洞察",
+       "en": "Cleaning messy data, explaining formulas, pivot tables and charts, Claude in Excel, turbine SCADA data, turning numbers into insight"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -349,7 +370,7 @@ window.CLAUDE_COURSE = {
     "episodes": []
    }
   ],
-  "updated": "2026-10-05",
+  "updated": "2026-10-06",
   "languages": [
    "zh",
    "en"
@@ -471,7 +492,7 @@ window.CLAUDE_COURSE = {
    "no": 4,
    "title": "試算表與資料分析",
    "title_en": "Spreadsheets & Data",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "014-personal-work-ep05",
@@ -816,6 +837,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 12,
+ "live": 13,
  "total": 51
 };
