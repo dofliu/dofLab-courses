@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：17
+總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：18
 
 ## 單元清單
 
@@ -28,7 +28,7 @@
 | 013-personal-work-ep04 | personal-work | 試算表與資料分析 | ✅ done | 2026-10-06 |
 | q02-personal-work-1 | personal-work | 🧪 個人工作測驗（一） | ✅ done | 2026-10-06 |
 | 014-personal-work-ep05 | personal-work | 簡報製作 | ✅ done | 2026-10-07 |
-| 015-personal-work-ep06 | personal-work | 連接器：讓 Claude 讀到你的資料 | todo | — |
+| 015-personal-work-ep06 | personal-work | 連接器：讓 Claude 讀到你的資料 | ✅ done | 2026-10-07 |
 | 016-personal-work-ep07 | personal-work | 排程工作：自動化例行事 | todo | — |
 | 017-personal-work-ep08 | personal-work | Skills：把工作流程打包 | todo | — |
 | q03-personal-work-2 | personal-work | 🧪 個人工作測驗（二） | todo | — |
@@ -91,3 +91,4 @@
 - 2026-10-06 01:49 UTC｜013-personal-work-ep04｜✅ done｜personal-work/ep04.html、src/013-personal-work-ep04(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-06 03:54 UTC｜新增功能：測驗關卡｜✅ done｜_studio/scripts/build_quiz.py、_studio/engine/quiz_template.html、data/quizzes/*.json、claude-basics/quiz1.html、personal-work/quiz1.html｜依使用者要求每隔數集加入互動測驗單元（8 題上下、80 分通過、錯題解析、各主題答對率、瀏覽器記錄最佳成績），課綱新增 11 個測驗關卡與「認證準備」系列 3 個模擬認證；q01、q02 已完成
 - 2026-10-07 01:49 UTC｜014-personal-work-ep05｜✅ done｜personal-work/ep05.html、src/014-personal-work-ep05(.i18n).js｜6 分鏡 84 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
+- 2026-10-07 UTC｜015-personal-work-ep06｜✅ done｜personal-work/ep06.html、src/015-personal-work-ep06(.i18n).js｜6 分鏡 85 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維

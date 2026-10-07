@@ -333,6 +333,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "015-personal-work-ep06",
+      "no": 6,
+      "file": "ep06.html",
+      "path": "personal-work/ep06.html",
+      "title": {
+       "zh": "連接器：讓 Claude 讀到你的資料",
+       "en": "Connectors"
+      },
+      "sub": {
+       "zh": "連接器是什麼、在雲端硬碟找文件、在日曆找空檔、授權與權限、查設備手冊與維修紀錄、跨工具彙整",
+       "en": "What is a connector, finding files in Drive, finding time in Calendar, authorization and permissions, manuals and maintenance records, pulling it together"
+      },
+      "shots": 6,
+      "dur": 85,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -610,7 +631,7 @@ window.CLAUDE_COURSE = {
    "no": 6,
    "title": "連接器：讓 Claude 讀到你的資料",
    "title_en": "Connectors",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "016-personal-work-ep07",
@@ -1045,6 +1066,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 16,
+ "live": 17,
  "total": 65
 };
