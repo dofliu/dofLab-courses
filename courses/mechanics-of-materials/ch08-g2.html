@@ -1,0 +1,833 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH8-G2] Combined Loadings - 組合載重計算工坊：斜拉懸臂吊臂與傳動軸</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+</style>
+<style>
+@keyframes puff{0%,100%{transform:scale(1)}50%{transform:scale(1.06,1.12)}}
+.puff{transform-box:fill-box;transform-origin:center;animation:puff 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+.sway{transform-origin:60px 86px;animation:sway 2.6s ease-in-out infinite}
+@keyframes blow{0%{transform:translateX(-8px);opacity:0}40%{opacity:1}100%{transform:translateX(10px);opacity:0}}
+.blow{animation:blow 1.8s linear infinite}
+@keyframes push{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.push{animation:push 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH8-G2</span>組合載重計算工坊：斜拉懸臂吊臂與傳動軸</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 8 · Combined Loadings · Game 2</span>
+      <h2>組合載重計算工坊：斜拉懸臂吊臂與傳動軸</h2>
+      <p style="color:var(--muted);max-width:65ch">上一關學了疊加原理，這一關進入<b>實戰計算</b>。斜著拉的力不只「拉」，還會「剪」與「彎」；皮帶輪驅動的軸不只「彎」，還同時被「扭」。你要練習一套固定的解題 SOP：<b>① 切開截面 ② 求內力 N、V、M、T ③ 每個內力各算各的應力 ④ 在同一點把 σ 與 τ 疊加</b>，最後還會用一個預告版的莫爾圓公式算出傳動軸上的<b>主應力</b>與<b>最大剪應力</b>。全程約 60 分鐘。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>組合載重計算的四個核心觀念</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="斜拉的力分解成軸向與橫向分量">
+          <rect x="10" y="30" width="80" height="14" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <rect x="4" y="18" width="8" height="40" fill="#8a99ab"/>
+          <g class="push"><line x1="90" y1="37" x2="140" y2="74" stroke="#e8640a" stroke-width="3"/><polygon points="144,78 133,75 139,67" fill="#e8640a"/></g>
+          <line x1="90" y1="37" x2="130" y2="37" stroke="#24507d" stroke-width="2" stroke-dasharray="4 2"/><text x="132" y="34" font-size="9" fill="#24507d">N 軸向</text>
+          <line x1="90" y1="37" x2="90" y2="80" stroke="#1f8a4c" stroke-width="2" stroke-dasharray="4 2"/><text x="94" y="86" font-size="9" fill="#1f8a4c">V 橫向</text>
+          <text x="148" y="76" font-size="10" fill="#e8640a" font-weight="700">P</text>
+        </svg>
+        <h3>斜力 → 三個內力</h3><span class="formula">N = P sinθ、V = P cosθ、M = V·L</span>
+        <p class="life">吊車用繩子斜拉重物，繩拉力可以拆成「沿桿軸」與「垂直桿軸」兩個分量：前者在桿上產生<b>軸力 N</b>，後者產生<b>剪力 V</b>，並以力臂 L 在根部產生<b>彎矩 M</b>。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="同一點把軸向應力與彎曲應力相加">
+          <text x="22" y="14" font-size="9.5" fill="#5b6b7e">N/A</text><text x="84" y="14" font-size="9.5" fill="#5b6b7e">Mc/I</text><text x="148" y="14" font-size="9.5" fill="#e8640a" font-weight="700">合成</text>
+          <rect x="20" y="20" width="22" height="56" fill="#dbe4f0" stroke="#1a3a5c"/><rect x="82" y="20" width="4" height="56" fill="#fff" stroke="#1a3a5c"/>
+          <polygon points="84,20 112,20 84,48" fill="#fde9da" stroke="#e8640a"/><polygon points="84,76 56,76 84,48" fill="#dbe4f0" stroke="#1a3a5c"/>
+          <polygon points="148,20 188,20 148,76 140,76 140,20" fill="#fde9da" stroke="#e8640a"/>
+          <text x="58" y="52" font-size="16" fill="#1a3a5c" font-weight="700">+</text><text x="122" y="52" font-size="16" fill="#1a3a5c" font-weight="700">=</text>
+        </svg>
+        <h3>同一點、同方向才相加</h3><span class="formula">σ_上 = N/A + Mc/I，σ_下 = N/A − Mc/I</span>
+        <p class="life">像計算存款與提款：先決定每一項是「+（拉）」還是「−（壓）」，同一個位置的數字才能加減。拉力的軸力讓整個截面「往拉的方向平移」，所以中性軸不再在形心。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="彎曲加扭轉的軸">
+          <rect x="30" y="36" width="110" height="14" fill="#c8d3e0" stroke="#1a3a5c" stroke-width="2"/>
+          <rect x="14" y="26" width="10" height="34" fill="#8a99ab"/>
+          <g class="rot"><circle cx="120" cy="43" r="22" fill="#fde9da" stroke="#e8640a" stroke-width="2"/><line x1="120" y1="21" x2="120" y2="65" stroke="#e8640a"/><line x1="98" y1="43" x2="142" y2="43" stroke="#e8640a"/></g>
+          <line x1="142" y1="43" x2="142" y2="82" stroke="#c62f2f" stroke-width="3"/><polygon points="142,88 137,79 147,79" fill="#c62f2f"/>
+          <text x="148" y="70" font-size="10" fill="#c62f2f" font-weight="700">F</text>
+        </svg>
+        <h3>傳動軸：彎矩 M ＋ 扭矩 T</h3><span class="formula">σ = Mc/I，τ = Tc/J</span>
+        <p class="life">皮帶輪把力 F 作用在輪緣：軸承間的軸被 F 「壓彎」（M = F·L），同時被力偶 F·R 「扭轉」（T = F·R）。<b>表面最上緣的點</b>同時有 σ 與 τ，兩者不能直接相加，要合成為主應力。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="主應力與最大剪應力預告">
+          <circle cx="100" cy="46" r="30" fill="#fbfcfe" stroke="#1a3a5c" stroke-width="2"/>
+          <line x1="20" y1="46" x2="190" y2="46" stroke="#5b6b7e"/><line x1="100" y1="8" x2="100" y2="86" stroke="#5b6b7e"/>
+          <circle cx="76" cy="62" r="3.5" fill="#e8640a"/><circle cx="124" cy="30" r="3.5" fill="#e8640a"/><line x1="76" y1="62" x2="124" y2="30" stroke="#e8640a"/>
+          <text x="134" y="52" font-size="9" fill="#1a3a5c">σ₁</text><text x="62" y="42" font-size="9" fill="#1a3a5c">σ₂</text><text x="104" y="20" font-size="9" fill="#1f8a4c">τmax</text>
+        </svg>
+        <h3>σ 與 τ 合成：主應力預告</h3><span class="formula">σ₁,₂ = σ/2 ± √((σ/2)² + τ²)</span>
+        <p class="life">一點上同時有正應力 σ 與剪應力 τ（另一方向正應力為 0）時，最大／最小正應力是 σ/2 ± R，最大面內剪應力 τmax = R = √((σ/2)² + τ²)。這是第 9 章莫爾圓的預告！</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：斜拉的力與固定端的應力分布</h3>
+      <p class="note">鋼製懸臂吊臂（截面 b × h = 80 × 160 mm），自由端受斜向拉力 P，與鉛直線夾角 θ。右邊三張小圖就是疊加：軸向均勻應力 ＋ 彎曲線性應力 ＝ 固定端截面的實際應力（正值為拉、負值為壓）。</p>
+      <div class="grid2">
+        <svg viewBox="0 0 460 270" class="ndiag" id="slFig" aria-label="斜拉力懸臂的應力疊加"></svg>
+        <div class="stack">
+          <div class="slider"><span>拉力 P</span><input type="range" id="sP1" min="5" max="60" step="1" value="20"><span class="mono" id="vP1">20 kN</span></div>
+          <div class="slider"><span>夾角 θ</span><input type="range" id="sT1" min="0" max="80" step="1" value="30"><span class="mono" id="vT1">30°</span></div>
+          <div class="slider"><span>臂長 L</span><input type="range" id="sL1" min="0.4" max="2.4" step="0.1" value="1.2"><span class="mono" id="vL1">1.2 m</span></div>
+          <div class="readout">
+            <div><small>軸力 N = P sinθ</small><b id="r1a">—</b></div>
+            <div><small>剪力 V = P cosθ</small><b id="r1b">—</b></div>
+            <div><small>彎矩 M = V·L</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note">觀察：θ = 0° 時繩子垂直，N = 0，上下緣應力一拉一壓、大小相等；θ 越大，N 越大、V 越小，彎矩反而變小，但上緣被軸力額外「拉高」。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：廠房吊臂與皮帶輪傳動軸</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：廠房牆邊的懸臂吊臂</h3>
+      <p style="color:var(--muted);margin-top:4px">矩形截面鋼製吊臂（b = 80 mm、h = 160 mm）水平伸出牆面 L = 1.2 m，吊鉤以鋼索斜拉，鋼索拉力 P = 20 kN，與鉛直線夾角 θ = 30°（拉力方向「向下且離開牆面」）。求固定端截面的內力，以及上緣 A、下緣 B 的正應力，並判斷中性軸的位置。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 270" class="ndiag" id="jibFig" aria-label="懸臂吊臂應力"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：調整參數</h3>
+        <div class="slider"><span>拉力 P</span><input type="range" id="sPa" min="5" max="60" step="1" value="20"><span class="mono" id="vPa">20 kN</span></div>
+        <div class="slider"><span>夾角 θ</span><input type="range" id="sTa" min="0" max="80" step="1" value="30"><span class="mono" id="vTa">30°</span></div>
+        <div class="slider"><span>臂長 L</span><input type="range" id="sLa" min="0.4" max="2.4" step="0.1" value="1.2"><span class="mono" id="vLa">1.2 m</span></div>
+        <div class="slider"><span>截面深 h</span><input type="range" id="sHa" min="80" max="300" step="10" value="160"><span class="mono" id="vHa">160 mm</span></div>
+        <div class="readout">
+          <div><small>A（上緣）σ</small><b id="rA1">—</b></div>
+          <div><small>B（下緣）σ</small><b id="rA2">—</b></div>
+          <div><small>最大剪應力 1.5V/A（中性區）</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：把 h 加大，Mc/I 以 h² 下降，吊臂變得更耐彎——這就是為什麼樑要「立著用」。注意剪應力 1.5V/A 通常遠小於彎曲應力，細長吊臂由彎曲控制。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：皮帶輪傳動軸</h3>
+      <p style="color:var(--muted);margin-top:4px">實心圓鋼軸直徑 d = 50 mm，一端固定在軸承座（視為固定端），自由端 L = 0.4 m 處裝一個半徑 R = 0.15 m 的皮帶輪，皮帶把等效鉛直力 F = 4 kN 作用在輪緣最上方（下壓）。求軸根部最上緣點 A 的彎曲應力 σ、扭轉剪應力 τ，再合成主應力與最大面內剪應力。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 280" class="ndiag" id="shaftFig" aria-label="傳動軸的彎曲與扭轉"></svg>
+          <div class="slider"><span>皮帶力 F</span><input type="range" id="sFb" min="0.5" max="10" step="0.1" value="4"><span class="mono" id="vFb">4.0 kN</span></div>
+          <div class="slider"><span>力臂 L</span><input type="range" id="sLb" min="0.1" max="1" step="0.05" value="0.4"><span class="mono" id="vLb">0.40 m</span></div>
+          <div class="slider"><span>輪半徑 R</span><input type="range" id="sRb" min="0.05" max="0.4" step="0.01" value="0.15"><span class="mono" id="vRb">0.15 m</span></div>
+          <div class="slider"><span>軸直徑 d</span><input type="range" id="sDb" min="30" max="90" step="1" value="50"><span class="mono" id="vDb">50 mm</span></div>
+          <div class="readout">
+            <div><small>A 點 σ = Mc/I</small><b id="rB1">—</b></div>
+            <div><small>A 點 τ = Tc/J</small><b id="rB2">—</b></div>
+            <div><small>最大剪應力 τmax</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">觀察：d 變成 2 倍，σ 與 τ 都縮成 1/8（與 d³ 成反比）；R 越大扭矩越大，但彎矩不變；R = 0 時沒有扭轉，τ = 0、τmax = σ/2。</p>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道組合載重計算題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差，依題目指定單位輸入數字即可（應力輸入大小即可）。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：吊臂與傳動軸的應力檢驗員</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH8-G2] Combined Loadings｜組合載重計算工坊：斜拉懸臂吊臂與傳動軸</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-12 88 98)"><rect x="78" y="84" width="20" height="30" rx="9" fill="#dbe4f0" stroke="#1a3a5c" stroke-width="1.2"/><rect x="85" y="79" width="6" height="6" fill="#8a99ab" stroke="#1a3a5c" stroke-width=".8"/><line x1="80" y1="99" x2="96" y2="99" stroke="#e8640a" stroke-width="1.6"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+guide("#guide0","歡迎來到計算工坊！今天我們不只看觀念，要把<b>斜力、吊臂、傳動軸</b>的應力一步一步算出來。先填好資料吧！");
+guide("#guide1","斜著拉的力＝<b>軸力 + 剪力 + 彎矩</b>。把三種內力各自換成應力，再於同一點疊加。調調看夾角 θ，感受內力怎麼重新分配。");
+guide("#guide2","A 吊臂：先分解力、再求 N、V、M，上下緣用 N/A ± Mc/I。B 傳動軸：先求 M 與 T，再用 σ = Mc/I、τ = Tc/J，最後合成主應力。每一步都可以點開看說明。");
+guide("#guide3","解題 SOP：① 切開截面 ② 求內力 N、V、M、T ③ 各項應力分別計算並標明拉(+)／壓(−) ④ 同一點疊加。單位用 N、mm，應力直接是 MPa。");
+guide("#guide4","檢驗員上工！每位同學的吊臂與傳動軸都不一樣。斜力要分清 sin 與 cos；軸的 σ 與 τ 不能直接相加，要合成。加油！");
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+const sg=(x,d=2)=>Number.isFinite(x)?(x>0?"+":x<0?"−":"")+Math.abs(x).toFixed(d):"—";
+function near(val,ans,tol=0.02){return Number.isFinite(val)&&Math.abs(Math.abs(val)-Math.abs(ans))<=Math.max(Math.abs(ans)*tol,1e-9);}
+function yay(){const m=["太棒了！","完全正確！","疊加得漂亮！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+const fi=x=>Math.round(x).toLocaleString("en-US");
+const sci=x=>{if(!Number.isFinite(x)||x===0)return "0";const e=Math.floor(Math.log10(Math.abs(x)));return (x/Math.pow(10,e)).toFixed(3)+"×10"+String(e).split("").map(c=>"⁰¹²³⁴⁵⁶⁷⁸⁹"["0123456789".indexOf(c)]||"⁻").join("");};
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+
+/* ---------- mechanics ---------- */
+const SECB=80;
+// cantilever jib: P kN at angle th deg from vertical (pointing down & away from wall), arm L m, section b×h mm; tension +
+function jib(PkN,th,Lm,b,h){
+  const a=th*Math.PI/180,P=PkN*1e3,N=P*Math.sin(a),V=P*Math.cos(a),M=V*Lm*1e3;
+  const A=b*h,I=b*Math.pow(h,3)/12,sa=N/A,sb=M*(h/2)/I;
+  return {P,N,V,M,A,I,sa,sb,top:sa+sb,bot:sa-sb,tau:1.5*V/A};
+}
+// solid shaft: F kN at pulley radius R m, arm L m, diameter d mm
+function shaft(FkN,Lm,Rm,d){
+  const F=FkN*1e3,M=F*Lm*1e3,T=F*Rm*1e3,I=Math.PI*Math.pow(d,4)/64,J=2*I;
+  const s=M*(d/2)/I,t=T*(d/2)/J,avg=s/2,rad=Math.sqrt(avg*avg+t*t);
+  return {F,M,T,I,J,s,t,avg,rad,s1:avg+rad,s2:avg-rad,tmax:rad};
+}
+// eccentric tension (C-clamp frame): P kN, e mm from centroid, section b×h
+function clamp(PkN,e,b,h){
+  const P=PkN*1e3,A=b*h,I=b*Math.pow(h,3)/12,M=P*e,sa=P/A,sb=M*(h/2)/I;
+  return {P,A,I,M,sa,sb,inner:sa+sb,outer:sa-sb};
+}
+
+/* ---------- jib figure (shared by Phase 1 and 2A) ---------- */
+function profile(xb,y0,y1,s0,s1,k){
+  // vertical depth profile: stress s0 at y0 (top), s1 at y1 (bottom); tension (+) to the right in orange, compression to the left in navy
+  const x=s=>xb+s*k;let out="";
+  const part=(ya,yb,sa,sb)=>{const pos=(sa+sb)>0;return `<polygon points="${xb},${ya} ${x(sa)},${ya} ${x(sb)},${yb} ${xb},${yb}" fill="${pos?"#fde9da":"#dbe4f0"}" stroke="${pos?"#e8640a":"#1a3a5c"}" stroke-width="1.5"/>`;};
+  if(s0*s1<0){const yz=y0+(y1-y0)*s0/(s0-s1);out+=part(y0,yz,s0,0)+part(yz,y1,0,s1);}
+  else out+=part(y0,y1,s0,s1);
+  return out+`<line x1="${xb}" y1="${y0-4}" x2="${xb}" y2="${y1+4}" stroke="#5b6b7e"/>`;
+}
+function jibSVG(P,th,L,h){
+  const r=jib(P,th,L,SECB,h),a=th*Math.PI/180;
+  let s=`<rect width="460" height="270" fill="#fbfcfe"/>`;
+  const wx=22,bx1=168,by=96,bt=Math.max(14,Math.min(48,h/4));
+  s+=`<rect x="${wx-10}" y="${by-40}" width="12" height="${bt+80}" fill="#8a99ab" stroke="#1a3a5c"/>`;
+  s+=`<rect x="${wx+2}" y="${by}" width="${bx1-wx-2}" height="${bt}" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<text x="${wx+8}" y="${by-10}" font-size="10" fill="#e8640a" font-weight="700">固定端</text><text x="${wx+8}" y="${by-22}" font-size="10" fill="#e8640a" font-weight="700">A（上）</text>`;
+  s+=`<text x="${wx+8}" y="${by+bt+14}" font-size="10" fill="#1a3a5c" font-weight="700">B（下）</text>`;
+  // force arrow: down & away from wall
+  const ox=bx1,oy=by+bt/2,len=70,ex=ox+Math.sin(a)*len,ey=oy+Math.cos(a)*len;
+  s+=`<g class="push"><line x1="${ox}" y1="${oy}" x2="${ex}" y2="${ey}" stroke="#e8640a" stroke-width="3.5"/><polygon points="${ex},${ey} ${ex-Math.sin(a)*10-Math.cos(a)*6},${ey-Math.cos(a)*10+Math.sin(a)*6} ${ex-Math.sin(a)*10+Math.cos(a)*6},${ey-Math.cos(a)*10-Math.sin(a)*6}" fill="#e8640a"/></g>`;
+  s+=`<line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy+len}" stroke="#5b6b7e" stroke-dasharray="4 3"/>`;
+  s+=`<text x="${ex+6}" y="${ey+4}" font-size="11" fill="#e8640a" font-weight="700">P = ${P} kN</text>`;
+  s+=`<text x="${ox+6}" y="${oy+len*0.4}" font-size="9.5" fill="#5b6b7e">θ = ${th}°</text>`;
+  s+=`<line x1="${wx+2}" y1="${by+bt+34}" x2="${bx1}" y2="${by+bt+34}" stroke="#1a3a5c"/><text x="${(wx+bx1)/2}" y="${by+bt+48}" font-size="10" fill="#1a3a5c" text-anchor="middle">L = ${fmt(L,1)} m</text>`;
+  // three profiles
+  const mx=Math.max(Math.abs(r.top),Math.abs(r.bot),r.sa,r.sb,1e-9),k=32/mx,y0=60,y1=170;
+  const xs=[264,340,418];
+  s+=profile(xs[0],y0,y1,r.sa,r.sa,k);
+  s+=profile(xs[1],y0,y1,r.sb,-r.sb,k);
+  s+=profile(xs[2],y0,y1,r.top,r.bot,k);
+  s+=`<text x="${(xs[0]+xs[1])/2}" y="120" font-size="16" fill="#1a3a5c" text-anchor="middle" font-weight="700">+</text><text x="${(xs[1]+xs[2])/2}" y="120" font-size="16" fill="#1a3a5c" text-anchor="middle" font-weight="700">=</text>`;
+  s+=`<text x="${xs[0]}" y="40" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">軸力 N/A</text><text x="${xs[1]}" y="40" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">彎曲 ±Mc/I</text><text x="${xs[2]}" y="40" font-size="10.5" fill="#e8640a" text-anchor="middle" font-weight="700">合成 σ</text>`;
+  s+=`<text x="${xs[0]}" y="190" font-size="10" fill="#5b6b7e" text-anchor="middle">${sg(r.sa,2)}</text><text x="${xs[1]}" y="190" font-size="10" fill="#5b6b7e" text-anchor="middle">±${fmt(r.sb,2)}</text>`;
+  s+=`<text x="${xs[2]}" y="190" font-size="10" fill="#e8640a" text-anchor="middle" font-weight="700">上 ${sg(r.top,2)}</text><text x="${xs[2]}" y="204" font-size="10" fill="#1a3a5c" text-anchor="middle" font-weight="700">下 ${sg(r.bot,2)}</text>`;
+  s+=`<text x="12" y="262" font-size="10.5" fill="#5b6b7e">單位 MPa；橘＝拉（向右）、藍＝壓（向左）；h = ${h} mm，b = ${SECB} mm</text>`;
+  return {svg:s,r};
+}
+function drawP1(){
+  const P=+$("#sP1").value,th=+$("#sT1").value,L=+$("#sL1").value;
+  $("#vP1").textContent=P+" kN";$("#vT1").textContent=th+"°";$("#vL1").textContent=fmt(L,1)+" m";
+  const {svg,r}=jibSVG(P,th,L,160);
+  $("#slFig").innerHTML=svg;
+  $("#r1a").textContent=fmt(r.N/1e3,2)+" kN";$("#r1b").textContent=fmt(r.V/1e3,2)+" kN";$("#r1c").textContent=fmt(r.M/1e6,2)+" kN·m";
+  $("#r1d").innerHTML=`<p class="note mono">N/A = ${fmt(r.sa,3)} MPa；Mc/I = ${fmt(r.sb,2)} MPa；上緣 ${sg(r.top,2)}、下緣 ${sg(r.bot,2)} MPa</p>`;
+}
+["#sP1","#sT1","#sL1"].forEach(k=>$(k).addEventListener("input",drawP1));
+drawP1();
+
+const P1Q=[
+  {q:"鋼索拉力 P 與鉛直線夾角 θ，斜拉在水平懸臂的自由端。懸臂固定端的軸力 N 與剪力 V 各為？",o:["N = P cosθ，V = P sinθ","N = P sinθ，V = P cosθ","N = P，V = 0","N = 0，V = P"],a:1,why:"桿軸水平：沿桿軸（水平）的分量是 P sinθ（軸力），垂直桿軸的分量是 P cosθ（剪力）。θ = 0° 時繩子垂直，N = 0、V = P。"},
+  {q:"懸臂吊臂固定端的軸力是拉力，上緣是彎曲受拉側。上緣正應力應該怎麼算？",o:["σ = N/A − Mc/I","σ = N/A + Mc/I","σ = Mc/I（軸力不影響）","σ = N/A × Mc/I"],a:1,why:"上緣兩項都是拉應力，同方向 → 相加；下緣則是拉(N/A)與壓(Mc/I)抵銷：N/A − Mc/I。"},
+  {q:"實心圓軸同時承受彎矩 M 與扭矩 T，表面最上緣點的 σ 與 τ 該怎麼處理？",o:["直接相加成 σ + τ","σ 與 τ 方向不同，不能直接相加，要合成主應力與 τmax","只取較大者","兩者互相抵銷"],a:1,why:"σ 是正應力（垂直截面）、τ 是剪應力（平行截面），作用方向不同。要用 σ₁,₂ = σ/2 ± √((σ/2)²+τ²) 合成，τmax = √((σ/2)²+τ²)。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">🏗️✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 2A: jib ---------- */
+const JIB_SA=120;
+function drawJib(){
+  const P=+$("#sPa").value,th=+$("#sTa").value,L=+$("#sLa").value,h=+$("#sHa").value;
+  $("#vPa").textContent=P+" kN";$("#vTa").textContent=th+"°";$("#vLa").textContent=fmt(L,1)+" m";$("#vHa").textContent=h+" mm";
+  const {svg,r}=jibSVG(P,th,L,h);
+  $("#jibFig").innerHTML=svg;
+  $("#rA1").textContent=sg(r.top,2)+" MPa";$("#rA2").textContent=sg(r.bot,2)+" MPa";$("#rA3").textContent=fmt(r.tau,2)+" MPa";
+  const u=Math.max(Math.abs(r.top),Math.abs(r.bot))/JIB_SA;
+  let nz="";
+  if(r.top*r.bot<0){const yn=h/2*(1+r.sa/r.sb);nz=`中性軸在形心下方 ${fmt(r.sa/r.sb*h/2,1)} mm（距上緣 ${fmt(yn,1)} mm）`;}
+  else nz="整個截面同號，沒有中性軸";
+  $("#rA4").innerHTML=gauge(`|σ|max / ${JIB_SA} MPa`,u)+`<div class="row" style="justify-content:space-between;margin-top:6px"><span class="note mono">N = ${fmt(r.N/1e3,2)} kN，V = ${fmt(r.V/1e3,2)} kN，M = ${fmt(r.M/1e6,2)} kN·m；${nz}</span><span class="badge ${u<=1?"ok":"no"}">${u<=1?"吊臂安全 ✓":"超過容許應力 σ_allow = "+JIB_SA+" MPa！"}</span></div>`;
+}
+["#sPa","#sTa","#sLa","#sHa"].forEach(k=>$(k).addEventListener("input",drawJib));
+const jb=jib(20,30,1.2,80,160);
+const STEPS_A=[
+  {t:"分解鋼索拉力",d:`N = P sinθ = 20 × sin30° = ${fmt(jb.N/1e3,2)} kN（拉）；V = P cosθ = 20 × cos30° = ${fmt(jb.V/1e3,2)} kN`},
+  {t:"固定端彎矩",d:`M = V·L = ${fmt(jb.V/1e3,2)} × 1.2 = ${fmt(jb.M/1e6,2)} kN·m（軸力 N 通過形心，不產生彎矩）`},
+  {t:"截面性質",d:`A = 80 × 160 = ${fi(jb.A)} mm²；I = bh³/12 = 80 × 160³/12 = ${fi(jb.I)} mm⁴；c = h/2 = 80 mm`},
+  {t:"各項應力",d:`N/A = ${fi(jb.N)} / ${fi(jb.A)} = ${fmt(jb.sa,3)} MPa（拉）；Mc/I = ${fi(jb.M)} × 80 / ${fi(jb.I)} = ${fmt(jb.sb,2)} MPa`},
+  {t:"疊加：上緣 A、下緣 B",d:`σ_A = N/A + Mc/I = ${fmt(jb.sa,2)} + ${fmt(jb.sb,2)} = ${sg(jb.top,2)} MPa（拉）；σ_B = N/A − Mc/I = ${fmt(jb.sa,2)} − ${fmt(jb.sb,2)} = ${sg(jb.bot,2)} MPa（壓）`},
+  {t:"中性軸與剪應力",d:`σ = 0 的位置在形心下方 y = (N/A)/(Mc/I) × c = ${fmt(jb.sa/jb.sb*80,2)} mm；τmax = 1.5V/A = ${fmt(jb.tau,2)} MPa（遠小於彎曲應力）`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sPa").value=20;$("#sTa").value=30;$("#sLa").value=1.2;$("#sHa").value=160;drawJib();});
+drawJib();
+
+/* ---------- Phase 2B: shaft ---------- */
+const SHAFT_TA=100;
+function drawShaft(){
+  const F=+$("#sFb").value,L=+$("#sLb").value,R=+$("#sRb").value,d=+$("#sDb").value;
+  $("#vFb").textContent=fmt(F,1)+" kN";$("#vLb").textContent=fmt(L,2)+" m";$("#vRb").textContent=fmt(R,2)+" m";$("#vDb").textContent=d+" mm";
+  const r=shaft(F,L,R,d);
+  let s=`<rect width="460" height="280" fill="#fbfcfe"/>`;
+  const sx=24,ex=230,yc=70,sd=10+d/90*18,pr=18+R/0.4*28,px=200;
+  s+=`<rect x="${sx-14}" y="${yc-34}" width="14" height="68" fill="#8a99ab" stroke="#1a3a5c"/>`;
+  s+=`<rect x="${sx}" y="${yc-sd/2}" width="${ex-sx}" height="${sd}" fill="#c8d3e0" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<ellipse cx="${px}" cy="${yc}" rx="7" ry="${pr}" fill="#fde9da" stroke="#e8640a" stroke-width="2"/>`;
+  s+=`<g class="push"><line x1="${px}" y1="${yc-pr-26}" x2="${px}" y2="${yc-pr-2}" stroke="#c62f2f" stroke-width="3.5"/><polygon points="${px},${yc-pr+3} ${px-6},${yc-pr-8} ${px+6},${yc-pr-8}" fill="#c62f2f"/></g>`;
+  s+=`<text x="${px+10}" y="${yc-pr-12}" font-size="11" fill="#c62f2f" font-weight="700">F = ${fmt(F,1)} kN</text>`;
+  s+=`<line x1="${sx}" y1="${yc+pr+8}" x2="${px}" y2="${yc+pr+8}" stroke="#1a3a5c"/><text x="${(sx+px)/2}" y="${yc+pr+22}" font-size="10" fill="#1a3a5c" text-anchor="middle">L = ${fmt(L,2)} m</text>`;
+  s+=`<text x="${sx+6}" y="${yc-sd/2-6}" font-size="10" fill="#e8640a" font-weight="700">A 點（根部最上緣）</text>`;
+  s+=`<text x="${px+14}" y="${yc+4}" font-size="10" fill="#e8640a">R = ${fmt(R,2)} m</text>`;
+  // stress element at A
+  const cx=330,cy=190,es=22;
+  s+=`<text x="${cx}" y="116" font-size="10.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">A 點應力元素</text>`;
+  s+=`<rect x="${cx-es}" y="${cy-es}" width="${2*es}" height="${2*es}" fill="#fff" stroke="#e8640a" stroke-width="2"/>`;
+  const Ls=Math.min(48,10+Math.abs(r.s)/200*38),Lt=Math.min(30,8+r.t/80*22);
+  // sigma on right face (tension, bending axis horizontal)
+  s+=`<line x1="${cx+es}" y1="${cy}" x2="${cx+es+Ls}" y2="${cy}" stroke="#1a3a5c" stroke-width="3"/><polygon points="${cx+es+Ls+6},${cy} ${cx+es+Ls-2},${cy-5} ${cx+es+Ls-2},${cy+5}" fill="#1a3a5c"/>`;
+  s+=`<line x1="${cx-es}" y1="${cy}" x2="${cx-es-Ls}" y2="${cy}" stroke="#1a3a5c" stroke-width="3"/><polygon points="${cx-es-Ls-6},${cy} ${cx-es-Ls+2},${cy-5} ${cx-es-Ls+2},${cy+5}" fill="#1a3a5c"/>`;
+  // tau on four faces
+  s+=`<line x1="${cx+es+4}" y1="${cy+es}" x2="${cx+es+4}" y2="${cy+es-Lt}" stroke="#1f8a4c" stroke-width="2.5"/><polygon points="${cx+es+4},${cy+es-Lt-6} ${cx+es-1},${cy+es-Lt+2} ${cx+es+9},${cy+es-Lt+2}" fill="#1f8a4c"/>`;
+  s+=`<line x1="${cx-es-4}" y1="${cy-es}" x2="${cx-es-4}" y2="${cy-es+Lt}" stroke="#1f8a4c" stroke-width="2.5"/><polygon points="${cx-es-4},${cy-es+Lt+6} ${cx-es-9},${cy-es+Lt-2} ${cx-es+1},${cy-es+Lt-2}" fill="#1f8a4c"/>`;
+  s+=`<line x1="${cx-es}" y1="${cy-es-4}" x2="${cx-es+Lt}" y2="${cy-es-4}" stroke="#1f8a4c" stroke-width="2.5"/><polygon points="${cx-es+Lt+6},${cy-es-4} ${cx-es+Lt-2},${cy-es-9} ${cx-es+Lt-2},${cy-es+1}" fill="#1f8a4c"/>`;
+  s+=`<line x1="${cx+es}" y1="${cy+es+4}" x2="${cx+es-Lt}" y2="${cy+es+4}" stroke="#1f8a4c" stroke-width="2.5"/><polygon points="${cx+es-Lt-6},${cy+es+4} ${cx+es-Lt+2},${cy+es-1} ${cx+es-Lt+2},${cy+es+9}" fill="#1f8a4c"/>`;
+  s+=`<text x="${cx+es+Ls+10}" y="${cy-8}" font-size="10" fill="#1a3a5c" font-weight="700">σ = ${fmt(r.s,1)}</text><text x="${cx+es+14}" y="${cy+es+18}" font-size="10" fill="#1f8a4c" font-weight="700">τ = ${fmt(r.t,1)}</text>`;
+  s+=`<text x="12" y="244" font-size="10.5" fill="#5b6b7e">M = F·L = ${fmt(r.M/1e6,3)} kN·m；T = F·R = ${fmt(r.T/1e6,3)} kN·m</text>`;
+  s+=`<text x="12" y="260" font-size="10.5" fill="#5b6b7e">σ₁ = ${fmt(r.s1,1)} MPa，σ₂ = ${fmt(r.s2,1)} MPa，τmax = ${fmt(r.tmax,1)} MPa（單位 MPa）</text>`;
+  $("#shaftFig").innerHTML=s;
+  $("#rB1").textContent=fmt(r.s,2)+" MPa";$("#rB2").textContent=fmt(r.t,2)+" MPa";$("#rB3").textContent=fmt(r.tmax,2)+" MPa";
+  const u=r.tmax/SHAFT_TA;
+  $("#rB4").innerHTML=gauge(`τmax / ${SHAFT_TA} MPa`,u)+`<p class="note mono" style="margin-top:6px">I = πd⁴/64 = ${fi(r.I)} mm⁴，J = 2I = ${fi(r.J)} mm⁴；σ₁ = σ/2 + τmax，σ₂ = σ/2 − τmax</p><div class="row" style="justify-content:flex-end;margin-top:6px"><span class="badge ${u<=1?"ok":"no"}">${u<=1?"τmax 在容許範圍內 ✓":"τmax 超過容許剪應力 "+SHAFT_TA+" MPa！"}</span></div>`;
+}
+["#sFb","#sLb","#sRb","#sDb"].forEach(k=>$(k).addEventListener("input",drawShaft));
+const sh=shaft(4,0.4,0.15,50);
+const STEPS_B=[
+  {t:"根部截面的內力",d:`V = F = 4 kN；M = F·L = 4 × 0.4 = ${fmt(sh.M/1e6,2)} kN·m；T = F·R = 4 × 0.15 = ${fmt(sh.T/1e6,2)} kN·m`},
+  {t:"圓截面性質",d:`I = πd⁴/64 = π × 50⁴/64 = ${fi(sh.I)} mm⁴；J = 2I = ${fi(sh.J)} mm⁴；c = d/2 = 25 mm`},
+  {t:"A 點彎曲正應力",d:`σ = Mc/I = ${fi(sh.M)} × 25 / ${fi(sh.I)} = ${fmt(sh.s,2)} MPa（A 在受拉側）；A 點在最外緣，橫向剪力 V 產生的 τ = 0`},
+  {t:"A 點扭轉剪應力",d:`τ = Tc/J = ${fi(sh.T)} × 25 / ${fi(sh.J)} = ${fmt(sh.t,2)} MPa`},
+  {t:"σ 與 τ 同時存在：合成",d:`平均 σ/2 = ${fmt(sh.avg,2)} MPa；半徑 R = √(${fmt(sh.avg,2)}² + ${fmt(sh.t,2)}²) = ${fmt(sh.rad,2)} MPa`},
+  {t:"主應力與最大剪應力",d:`σ₁ = σ/2 + R = ${fmt(sh.s1,2)} MPa；σ₂ = σ/2 − R = ${fmt(sh.s2,2)} MPa；τmax = R = ${fmt(sh.tmax,2)} MPa ≤ 100 MPa → 安全`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sFb").value=4;$("#sLb").value=0.4;$("#sRb").value=0.15;$("#sDb").value=50;drawShaft();});
+drawShaft();
+
+/* ---------- Phase 3 practice ---------- */
+const P3a=jib(15,40,1.5,100,200),P3aAns=P3a.top;
+const P3b=shaft(3,0.5,0.1,40);
+const P3c=clamp(2,100,20,40);
+const P3Q=[
+  {type:"num",q:"懸臂吊臂截面 b = 100 mm、h = 200 mm，臂長 L = 1.5 m。自由端受鋼索拉力 P = 15 kN，與鉛直線夾角 θ = 40°（向下且離開牆面）。求固定端上緣的正應力（MPa，拉為正，輸入大小即可）。",ans:P3aAns,unit:"MPa",dp:2,
+   hint:"先分解：N = P sinθ，V = P cosθ，M = V·L；上緣 σ = N/A + Mc/I。",
+   sol:[`N = 15 sin40° = ${fmt(P3a.N/1e3,3)} kN；V = 15 cos40° = ${fmt(P3a.V/1e3,3)} kN`,`M = V·L = ${fmt(P3a.V/1e3,3)} × 1.5 = ${fmt(P3a.M/1e6,3)} kN·m`,`A = ${fi(P3a.A)} mm²，I = ${fi(P3a.I)} mm⁴；N/A = ${fmt(P3a.sa,3)} MPa，Mc/I = ${fmt(P3a.sb,3)} MPa`,`σ_上 = ${fmt(P3a.sa,3)} + ${fmt(P3a.sb,3)} = ${fmt(P3aAns,2)} MPa（拉）`]},
+  {type:"num",q:"實心圓軸直徑 d = 40 mm，在 L = 0.5 m 處裝一個半徑 R = 0.1 m 的皮帶輪，輪緣受鉛直力 F = 3 kN。求軸根部表面的扭轉剪應力 τ = Tc/J（MPa）。",ans:P3b.t,unit:"MPa",dp:2,
+   hint:"T = F·R；J = πd⁴/32；τ = T·(d/2)/J。",
+   sol:[`T = F·R = 3,000 × 100 = ${fi(P3b.T)} N·mm`,`J = πd⁴/32 = ${fi(P3b.J)} mm⁴`,`τ = Tc/J = ${fi(P3b.T)} × 20 / ${fi(P3b.J)} = ${fmt(P3b.t,2)} MPa`,`（附帶：M = F·L = ${fmt(P3b.M/1e6,2)} kN·m → σ = ${fmt(P3b.s,2)} MPa）`]},
+  {type:"num",q:"同一根軸（F = 3 kN、L = 0.5 m、R = 0.1 m、d = 40 mm）。求根部最上緣點的最大面內剪應力 τmax = √((σ/2)² + τ²)（MPa）。",ans:P3b.tmax,unit:"MPa",dp:2,
+   hint:"先求 σ = Mc/I = 32M/(πd³) 與 τ = Tc/J，再合成。",
+   sol:[`M = F·L = ${fi(P3b.M)} N·mm；σ = Mc/I = ${fi(P3b.M)} × 20 / ${fi(P3b.I)} = ${fmt(P3b.s,2)} MPa`,`τ = ${fmt(P3b.t,2)} MPa（上一題）`,`σ/2 = ${fmt(P3b.avg,2)} MPa`,`τmax = √(${fmt(P3b.avg,2)}² + ${fmt(P3b.t,2)}²) = ${fmt(P3b.tmax,2)} MPa`,`（主應力 σ₁ = ${fmt(P3b.s1,2)}、σ₂ = ${fmt(P3b.s2,2)} MPa）`]},
+  {type:"mc",q:"C 型夾具的框架受夾緊力 P = 2 kN，載重線偏離框架截面形心 e = 100 mm，截面 20 × 40 mm（e 沿 40 mm 方向）。內側（靠近載重線一側）的應力最大值為多少？",
+   o:[`${fmt(P3c.sa,1)} MPa`,`${fmt(P3c.inner,1)} MPa（拉）`,`${fmt(P3c.sb,1)} MPa`,`${fmt(Math.abs(P3c.outer),1)} MPa（壓）`],a:1,
+   hint:"偏心拉力 = 軸力 P（P/A）+ 彎矩 M = Pe（Mc/I）；內側兩項同號，直接相加。",
+   sol:[`A = 20 × 40 = ${fi(P3c.A)} mm²，P/A = ${fmt(P3c.sa,2)} MPa`,`M = Pe = 2,000 × 100 = ${fi(P3c.M)} N·mm；I = 20 × 40³/12 = ${fi(P3c.I)} mm⁴；Mc/I = ${fmt(P3c.sb,2)} MPa`,`內側 = ${fmt(P3c.sa,2)} + ${fmt(P3c.sb,2)} = ${fmt(P3c.inner,2)} MPa（拉）；外側 = ${fmt(P3c.sa,2)} − ${fmt(P3c.sb,2)} = ${sg(P3c.outer,2)} MPa`]}
+];
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 1.25。";return;}
+  const ok=q.type==="num"?near(v,q.ans):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">🏗️</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+/* ---------- Phase 4 seeded test ---------- */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+97)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 jib top stress
+  {const P=vary(18,1),th=vary(35,1),L=vary(1.4,0.1),b=vary(90,5),h=vary(180,10),R=jib(P,th,L,b,h);
+   qs.push({type:"num",title:"斜拉吊臂上緣正應力",q:`懸臂吊臂截面 b = ${b} mm、h = ${h} mm，臂長 L = ${fmt(L,1)} m。自由端鋼索拉力 P = ${P} kN，與鉛直線夾角 θ = ${th}°（向下且離開牆面）。求固定端上緣的正應力（MPa，拉為正）。`,ans:R.top,unit:"MPa",dp:2,
+    sol:`N = P sinθ = ${fmt(R.N/1e3,3)} kN，V = P cosθ = ${fmt(R.V/1e3,3)} kN，M = V·L = ${fmt(R.M/1e6,3)} kN·m；N/A = ${fmt(R.sa,3)} MPa，Mc/I = ${fmt(R.sb,3)} MPa；σ_上 = ${fmt(R.sa,3)} + ${fmt(R.sb,3)} = ${fmt(R.top,2)} MPa`});}
+  // Q2 jib bottom stress magnitude
+  {const P=vary(22,1),th=vary(25,1),L=vary(1.0,0.1),b=vary(80,5),h=vary(160,10),R=jib(P,th,L,b,h),ans=Math.abs(R.bot);
+   qs.push({type:"num",title:"斜拉吊臂下緣應力大小",q:`懸臂吊臂截面 b = ${b} mm、h = ${h} mm，臂長 L = ${fmt(L,1)} m，鋼索拉力 P = ${P} kN，夾角 θ = ${th}°（與鉛直線）。求固定端下緣正應力的大小（MPa）。`,ans,unit:"MPa",dp:2,
+    sol:`N/A = ${fmt(R.sa,3)} MPa，Mc/I = ${fmt(R.sb,3)} MPa；下緣：拉（N/A）與壓（Mc/I）抵銷，σ_下 = ${fmt(R.sa,3)} − ${fmt(R.sb,3)} = ${sg(R.bot,2)} MPa（壓），大小 ${fmt(ans,2)} MPa`});}
+  // Q3 shaft torsional shear
+  {const F=vary(3.5,0.1),L=vary(0.45,0.05),Rr=vary(0.12,0.01),d=vary(45,1),R=shaft(F,L,Rr,d);
+   qs.push({type:"num",title:"傳動軸的扭轉剪應力",q:`實心圓軸直徑 d = ${d} mm，皮帶輪半徑 R = ${fmt(Rr,2)} m，輪緣鉛直力 F = ${fmt(F,1)} kN，作用位置離固定端 L = ${fmt(L,2)} m。求根部表面的扭轉剪應力 τ（MPa）。`,ans:R.t,unit:"MPa",dp:2,
+    sol:`T = F·R = ${fmt(F,1)} × ${fmt(Rr,2)} = ${fmt(R.T/1e6,3)} kN·m；J = πd⁴/32 = ${fi(R.J)} mm⁴；τ = Tc/J = ${fi(R.T)} × ${fmt(d/2,1)} / ${fi(R.J)} = ${fmt(R.t,2)} MPa`});}
+  // Q4 shaft tau max
+  {const F=vary(3.0,0.1),L=vary(0.5,0.05),Rr=vary(0.10,0.01),d=vary(42,1),R=shaft(F,L,Rr,d);
+   qs.push({type:"num",title:"傳動軸最上緣的最大剪應力",q:`實心圓軸直徑 d = ${d} mm，皮帶輪半徑 R = ${fmt(Rr,2)} m，輪緣鉛直力 F = ${fmt(F,1)} kN，離固定端 L = ${fmt(L,2)} m。求根部最上緣點的最大面內剪應力 τmax = √((σ/2)² + τ²)（MPa）。`,ans:R.tmax,unit:"MPa",dp:2,
+    sol:`M = F·L = ${fi(R.M)} N·mm → σ = Mc/I = ${fmt(R.s,2)} MPa；T = F·R = ${fi(R.T)} N·mm → τ = ${fmt(R.t,2)} MPa；τmax = √((${fmt(R.avg,2)})² + ${fmt(R.t,2)}²) = ${fmt(R.tmax,2)} MPa`});}
+  // Q5 concept
+  {const pool=[
+    {q:"鋼索斜拉水平懸臂時，增大夾角 θ（從鉛直量起）會使固定端的內力如何變化？",o:["軸力 N 增加，剪力 V 與彎矩 M 減少","N 減少，V 與 M 增加","N、V、M 都增加","N、V、M 都不變"],why:"N = P sinθ 隨 θ 增加，V = P cosθ 與 M = V·L 隨 θ 增加而減少（θ 由 0° 變 90° 時 V、M → 0）。"},
+    {q:"偏心拉力作用在矩形截面桿件上，載重側的應力（相對遠側）是？",o:["N/A + Mc/I，較大","N/A − Mc/I，較小","只有 N/A","只有 Mc/I"],why:"載重側的軸向拉應力與彎曲拉應力同號，直接相加得 N/A + Mc/I；遠側則是相減。"},
+    {q:"傳動軸表面一點同時有彎曲正應力 σ 與扭轉剪應力 τ，最大面內剪應力的公式是？",o:["τmax = √((σ/2)² + τ²)","τmax = σ + τ","τmax = σ/2 + τ","τmax = √(σ² + τ²)"],why:"莫爾圓半徑 R = √((σ/2)² + τ²) 就是最大面內剪應力；而主應力 σ₁,₂ = σ/2 ± R。"},
+    {q:"實心圓軸直徑加倍（其他條件不變），表面的彎曲應力與扭轉剪應力各變成原來的？",o:["1/8","1/4","1/2","1/16"],why:"σ = 32M/(πd³)、τ = 16T/(πd³)，兩者都與 d³ 成反比，d 加倍 → 應力變 1/8。"},
+    {q:"圓軸只受扭矩、不受彎矩時，表面的主應力與最大剪應力關係為？",o:["σ₁ = τ、σ₂ = −τ（純剪），τmax = τ","σ₁ = 2τ","σ₁ = τ/2","主應力為 0"],why:"σ = 0 時 σ/2 = 0，R = τ，所以 σ₁ = +τ、σ₂ = −τ，τmax = τ（純剪的主應力在 45° 方向）。"}
+   ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"組合載重觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q.ans):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"計算工坊全破！斜力分解、N/A ± Mc/I 疊加、σ 與 τ 合成主應力——你的 SOP 非常紮實。下一關是綜合挑戰，準備好設計情境了嗎？",B:"很不錯！再留意斜力的 sin／cos 別搞反、軸的 σ 與 τ 要合成而不是直接相加，下次就是 A。",C:"方向對了！回到 Phase 2 把吊臂與傳動軸的步驟卡再點一次，記得流程：切開 → 內力 → 分項應力 → 同點疊加。",D:"別灰心！先記住：斜拉＝軸力＋剪力＋彎矩；軸上有彎又有扭，σ 與 τ 要用 √((σ/2)²+τ²) 合成。再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 8 章 Combined Loadings · 遊戲 2（MOM-CH8-G2）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以大小判定，容許 ±2% 誤差。</p>`;
+  S.summary=`[MOM-CH8-G2] Combined Loadings 組合載重計算工坊 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

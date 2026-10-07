@@ -199,7 +199,16 @@
       "full_title": "[MOM-CH8-G1] Combined Loadings - 組合載重探索：壓力儲槽與路標桿的應力疊加",
       "file": "ch08-g1.html",
       "published": "2026-10-07T03:53+08:00"
+    },
+    {
+      "ch": 8,
+      "game": 2,
+      "code": "MOM-CH8-G2",
+      "title": "組合載重計算工坊：斜拉懸臂吊臂與傳動軸",
+      "full_title": "[MOM-CH8-G2] Combined Loadings - 組合載重計算工坊：斜拉懸臂吊臂與傳動軸",
+      "file": "ch08-g2.html",
+      "published": "2026-10-08T01:24+08:00"
     }
   ],
-  "updated": "2026-10-07T03:53+08:00"
+  "updated": "2026-10-08T01:24+08:00"
 }
