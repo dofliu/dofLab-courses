@@ -312,6 +312,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "014-personal-work-ep05",
+      "no": 5,
+      "file": "ep05.html",
+      "path": "personal-work/ep05.html",
+      "title": {
+       "zh": "簡報製作",
+       "en": "Building Presentations"
+      },
+      "sub": {
+       "zh": "先有故事線、一頁一重點、Slides 與 PowerPoint、講者備忘稿、預演問答、交付前把關",
+       "en": "Storyline first, one point per slide, Slides and PowerPoint, speaker notes, rehearsing Q&A, final checks before delivery"
+      },
+      "shots": 6,
+      "dur": 84,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -431,7 +452,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-06",
+  "updated": "2026-10-07",
   "languages": [
    "zh",
    "en"
@@ -580,7 +601,7 @@ window.CLAUDE_COURSE = {
    "no": 5,
    "title": "簡報製作",
    "title_en": "Building Presentations",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "015-personal-work-ep06",
@@ -1024,6 +1045,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 15,
+ "live": 16,
  "total": 65
 };

@@ -532,10 +532,14 @@
         "講者備忘稿",
         "預演問答"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-07T01:45:30Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-07T01:49:05Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/ep05.html",
+        "src": "courses/ai-tutorials/claude/src/014-personal-work-ep05.js",
+        "i18n": "courses/ai-tutorials/claude/src/014-personal-work-ep05.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 84 秒；圖解 6/6；查證：claude.com/docs/office-agents/powerpoint（Claude for PowerPoint：Pro/Max/Team/Enterprise、範本感知、單頁編輯、條列轉圖表、最終客戶版需人工審閱）、support.claude.com 建立與編輯檔案（.pptx、程式碼執行與檔案建立設定），資訊截至 2026-10；情境：生活（旅遊分享）＋智慧自動化（產線導入前後對照）＋風能運維（季度檢討預演問答，數據為示意）",
       "cases": {
         "life": "旅遊分享與社團成果簡報",
         "automation": "智慧產線導入成果簡報（前後對照）",
