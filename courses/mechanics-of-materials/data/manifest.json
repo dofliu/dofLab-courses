@@ -208,7 +208,16 @@
       "full_title": "[MOM-CH8-G2] Combined Loadings - 組合載重計算工坊：斜拉懸臂吊臂與傳動軸",
       "file": "ch08-g2.html",
       "published": "2026-10-08T01:24+08:00"
+    },
+    {
+      "ch": 8,
+      "game": 3,
+      "code": "MOM-CH8-G3",
+      "title": "綜合挑戰：偏心立柱與齒輪軸的設計",
+      "full_title": "[MOM-CH8-G3] Combined Loadings - 綜合挑戰：偏心立柱與齒輪軸的設計",
+      "file": "ch08-g3.html",
+      "published": "2026-10-08T02:30+08:00"
     }
   ],
-  "updated": "2026-10-08T01:24+08:00"
+  "updated": "2026-10-08T02:30+08:00"
 }
