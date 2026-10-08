@@ -354,6 +354,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "016-personal-work-ep07",
+      "no": 7,
+      "file": "ep07.html",
+      "path": "personal-work/ep07.html",
+      "title": {
+       "zh": "排程工作：自動化例行事",
+       "en": "Scheduled Tasks"
+      },
+      "sub": {
+       "zh": "盤點例行事務、描述任務與頻率、每日簡報、每週報告、在 Scheduled 頁面檢查與調整、本課程網站的排程做法",
+       "en": "Listing routines, describing task and frequency, daily briefing, weekly report, reviewing on the Scheduled page, how this course site uses a schedule"
+      },
+      "shots": 6,
+      "dur": 85,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -473,7 +494,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-07",
+  "updated": "2026-10-08T01:47:19Z",
   "languages": [
    "zh",
    "en"
@@ -640,7 +661,7 @@ window.CLAUDE_COURSE = {
    "no": 7,
    "title": "排程工作：自動化例行事",
    "title_en": "Scheduled Tasks",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "017-personal-work-ep08",
@@ -1066,6 +1087,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 17,
+ "live": 18,
  "total": 65
 };

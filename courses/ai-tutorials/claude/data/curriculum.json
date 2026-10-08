@@ -588,10 +588,14 @@
         "每週報告範例",
         "檢查與調整（本動畫館就是這樣做的）"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-08T01:42:16Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-08T01:47:19Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/ep07.html",
+        "src": "courses/ai-tutorials/claude/src/016-personal-work-ep07.js",
+        "i18n": "courses/ai-tutorials/claude/src/016-personal-work-ep07.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 85 秒；圖解（盤點例行事務、設定排程、檢查與調整、流程）約 1/2；查證：support.claude.com「Schedule recurring tasks in Claude Cowork」（資訊截至 2026-10）；情境：生活（天氣與行程提醒）＋智慧自動化（產線警報週報）＋風能運維（風場日報）",
       "cases": {
         "life": "每日天氣與行程提醒",
         "automation": "每班自動彙整產線警報摘要",
