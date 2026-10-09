@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：19
+總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：20
 
 ## 單元清單
 
@@ -30,7 +30,7 @@
 | 014-personal-work-ep05 | personal-work | 簡報製作 | ✅ done | 2026-10-07 |
 | 015-personal-work-ep06 | personal-work | 連接器：讓 Claude 讀到你的資料 | ✅ done | 2026-10-07 |
 | 016-personal-work-ep07 | personal-work | 排程工作：自動化例行事 | ✅ done | 2026-10-08 |
-| 017-personal-work-ep08 | personal-work | Skills：把工作流程打包 | todo | — |
+| 017-personal-work-ep08 | personal-work | Skills：把工作流程打包 | ✅ done | 2026-10-09 |
 | q03-personal-work-2 | personal-work | 🧪 個人工作測驗（二） | todo | — |
 | 018-project-dev-overview | project-dev | 從想法到上線：用 Claude 開發一個專案 | todo | — |
 | 019-project-dev-ep01 | project-dev | 從想法到規格 | todo | — |
@@ -93,3 +93,4 @@
 - 2026-10-07 01:49 UTC｜014-personal-work-ep05｜✅ done｜personal-work/ep05.html、src/014-personal-work-ep05(.i18n).js｜6 分鏡 84 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-07 UTC｜015-personal-work-ep06｜✅ done｜personal-work/ep06.html、src/015-personal-work-ep06(.i18n).js｜6 分鏡 85 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-08 UTC｜016-personal-work-ep07｜✅ done｜personal-work/ep07.html、src/016-personal-work-ep07(.i18n).js｜6 分鏡 85 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
+- 2026-10-09 UTC｜017-personal-work-ep08｜✅ done｜personal-work/ep08.html、src/017-personal-work-ep08(.i18n).js｜6 分鏡 85 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維

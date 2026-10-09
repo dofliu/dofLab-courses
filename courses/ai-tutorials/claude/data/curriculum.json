@@ -616,10 +616,14 @@
         "建立自己的技能",
         "團隊共享"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-09T01:42:11Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-09T01:46:17Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/ep08.html",
+        "src": "courses/ai-tutorials/claude/src/017-personal-work-ep08.js",
+        "i18n": "courses/ai-tutorials/claude/src/017-personal-work-ep08.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 85 秒；圖解 3/6（SKILL.md 結構、觸發與載入、團隊共享）；查證：support.claude.com What are Skills／How to create custom Skills、platform.claude.com Agent Skills（資訊截至 2026-10）；情境：生活（家庭採買清單）＋智慧自動化（設備異常 8D 報告）＋風能運維（風機巡檢報告）",
       "cases": {
         "life": "把固定格式的家庭採買清單做成技能",
         "automation": "把設備異常 8D 報告流程做成技能",

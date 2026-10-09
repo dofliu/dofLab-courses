@@ -373,6 +373,27 @@
             "en"
           ],
           "asof": "2026-10"
+        },
+        {
+          "id": "017-personal-work-ep08",
+          "no": 8,
+          "file": "ep08.html",
+          "path": "personal-work/ep08.html",
+          "title": {
+            "zh": "Skills：把工作流程打包",
+            "en": "Skills"
+          },
+          "sub": {
+            "zh": "什麼是 Skill、SKILL.md 的結構、觸發與分層載入、建立並上傳自己的技能、巡檢報告技能、團隊共享",
+            "en": "What a Skill is, SKILL.md anatomy, triggering and layered loading, building and uploading your own Skill, an inspection-report Skill, sharing with a team"
+          },
+          "shots": 6,
+          "dur": 85,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-10"
         }
       ],
       "overview": {
@@ -492,7 +513,7 @@
       "quizzes": []
     }
   ],
-  "updated": "2026-10-08T01:47:19Z",
+  "updated": "2026-10-09T01:46:17Z",
   "languages": [
     "zh",
     "en"
