@@ -226,7 +226,16 @@
       "full_title": "[MOM-CH9-G1] Stress Transformation - 應力轉換探索：粉筆扭斷與斜面上的應力",
       "file": "ch09-g1.html",
       "published": "2026-10-09T02:31+08:00"
+    },
+    {
+      "ch": 9,
+      "game": 2,
+      "code": "MOM-CH9-G2",
+      "title": "應力轉換計算工坊：壓力容器焊縫與梁內一點的主應力",
+      "full_title": "[MOM-CH9-G2] Stress Transformation - 應力轉換計算工坊：壓力容器焊縫與梁內一點的主應力",
+      "file": "ch09-g2.html",
+      "published": "2026-10-12T02:29+08:00"
     }
   ],
-  "updated": "2026-10-09T02:31+08:00"
+  "updated": "2026-10-12T02:29+08:00"
 }
