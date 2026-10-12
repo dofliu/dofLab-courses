@@ -1,0 +1,304 @@
+{
+ "id": "q03-personal-work-2",
+ "series": "personal-work",
+ "type": "quiz",
+ "no": 2,
+ "title": {
+  "zh": "個人工作測驗（二）",
+  "en": "Personal Work Checkpoint 2"
+ },
+ "intro": {
+  "zh": "涵蓋簡報、連接器、排程工作與 Skills：檢查你是否知道什麼要先交代、哪些權限要收緊、哪些決定要留給人。80 分通過；本測驗為課程自編練習，非 Anthropic 官方認證。",
+  "en": "Covers slides, connectors, scheduled tasks and Skills: do you know what to state up front, which permissions to tighten and which decisions stay with people? Pass at 80. A course-made practice quiz, not an official Anthropic certification."
+ },
+ "pass": 80,
+ "asof": "2026-10",
+ "covers": [
+  "014-personal-work-ep05",
+  "015-personal-work-ep06",
+  "016-personal-work-ep07",
+  "017-personal-work-ep08"
+ ],
+ "questions": [
+  {
+   "id": "p01",
+   "topic": {
+    "zh": "簡報製作",
+    "en": "Slides"
+   },
+   "ref": "014-personal-work-ep05",
+   "q": {
+    "zh": "社團要你 10 分鐘分享花蓮三日遊，請 Claude 做簡報前，最該先告訴它什麼？",
+    "en": "You must give a 10-minute talk on a Hualien trip. What should you tell Claude before it builds slides?"
+   },
+   "opts": [
+    {
+     "zh": "直接要求「做十頁，越多字越好」",
+     "en": "Just ask for ten text-heavy slides"
+    },
+    {
+     "zh": "先指定每頁的字型與顏色",
+     "en": "Fonts and colours for every slide first"
+    },
+    {
+     "zh": "聽眾、時間與聽完希望他們做什麼",
+     "en": "Audience, time and what you want them to do afterward"
+    },
+    {
+     "zh": "先請它隨機挑選主題",
+     "en": "Let it pick a random topic"
+    }
+   ],
+   "ans": 2,
+   "why": {
+    "zh": "先定聽眾、時間與目的，再讓 Claude 列故事線，比直接要求頁數更不容易失焦。",
+    "en": "Audience, time and goal come first; a storyline then keeps the deck focused better than a page count."
+   }
+  },
+  {
+   "id": "p02",
+   "topic": {
+    "zh": "簡報製作",
+    "en": "Slides"
+   },
+   "ref": "014-personal-work-ep05",
+   "q": {
+    "zh": "風場季度運維檢討簡報，交出前 Claude 提供的預演問答（如可利用率為何下降）該如何使用？",
+    "en": "Before a wind-farm quarterly review, Claude drafts rehearsal questions such as why availability dropped. How should you use them?"
+   },
+   "opts": [
+    {
+     "zh": "當作預演方向，答案用真實紀錄補上",
+     "en": "As rehearsal prompts; fill answers from real records"
+    },
+    {
+     "zh": "直接當成正式答案報告",
+     "en": "Present them as the official answers"
+    },
+    {
+     "zh": "省略資料核對，因為 Claude 已讀過簡報",
+     "en": "Skip checking since Claude read the deck"
+    },
+    {
+     "zh": "改問 Claude 要不要停機",
+     "en": "Ask Claude to decide on shutdown"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "Claude 給的是預演題與方向；數字要回到資料核對，停機與上鎖掛牌由人員確認。",
+    "en": "Claude gives practice questions and directions; check numbers against data, and people confirm shutdown and lockout/tagout."
+   }
+  },
+  {
+   "id": "p03",
+   "topic": {
+    "zh": "連接器",
+    "en": "Connectors"
+   },
+   "ref": "015-personal-work-ep06",
+   "q": {
+    "zh": "連接器對 Claude 的作用，下列哪一項描述最正確？",
+    "en": "Which best describes what a connector does for Claude?"
+   },
+   "opts": [
+    {
+     "zh": "讓 Claude 自動看到你電腦所有檔案",
+     "en": "It lets Claude see every file on your computer"
+    },
+    {
+     "zh": "讓 Claude 不需要登入就能使用任何服務",
+     "en": "It lets Claude use any service without signing in"
+    },
+    {
+     "zh": "只是把對話內容備份到雲端",
+     "en": "It only backs up your chats"
+    },
+    {
+     "zh": "你授權後，Claude 才能到外部服務查資料或代辦",
+     "en": "After you authorize, Claude can look up data or act in an external service"
+    }
+   ],
+   "ans": 3,
+   "why": {
+    "zh": "連接器是你登入並授權後的橋，每個連接器各接一個服務，由你決定開不開。",
+    "en": "A connector is a bridge you authorize by signing in; each connects one service and you decide whether it is on."
+   }
+  },
+  {
+   "id": "p04",
+   "topic": {
+    "zh": "連接器",
+    "en": "Connectors"
+   },
+   "ref": "015-personal-work-ep06",
+   "q": {
+    "zh": "你想讓 Claude 查設備手冊與工單，但不想讓它隨意改動資料。連接器的權限可以怎麼設？",
+    "en": "You want Claude to search manuals and work orders but not change data. How can you set connector permissions?"
+   },
+   "opts": [
+    {
+     "zh": "全部設成一律允許，事後再檢查",
+     "en": "Set everything to Always allow and review later"
+    },
+    {
+     "zh": "把寫入類工具設為「需要核准」或「封鎖」",
+     "en": "Set write tools to Needs approval or Blocked"
+    },
+    {
+     "zh": "權限無法調整，只能整個刪掉",
+     "en": "Permissions cannot be adjusted, only removed"
+    },
+    {
+     "zh": "改成每次把手冊貼進對話",
+     "en": "Paste the manual into every chat"
+    }
+   ],
+   "ans": 1,
+   "why": {
+    "zh": "每組工具可設「一律允許」、「需要核准」或「封鎖」；讀取與寫入可分開管理。",
+    "en": "Each tool group can be Always allow, Needs approval or Blocked, so reading and writing can be managed separately."
+   }
+  },
+  {
+   "id": "p05",
+   "topic": {
+    "zh": "排程工作",
+    "en": "Scheduled tasks"
+   },
+   "ref": "016-personal-work-ep07",
+   "q": {
+    "zh": "下列哪一件事最適合交給排程工作？",
+    "en": "Which task suits a scheduled task best?"
+   },
+   "opts": [
+    {
+     "zh": "決定風機是否緊急停機",
+     "en": "Deciding whether to shut down a turbine"
+    },
+    {
+     "zh": "對外承諾客戶交期",
+     "en": "Committing a delivery date to a client"
+    },
+    {
+     "zh": "每個工作日早上整理天氣與行程提醒",
+     "en": "A weekday-morning weather and agenda reminder"
+    },
+    {
+     "zh": "需要現場判斷的設備上鎖掛牌",
+     "en": "On-site lockout/tagout judgement"
+    }
+   ],
+   "ans": 2,
+   "why": {
+    "zh": "固定時間、格式固定的整理適合排程；高風險或需判斷的決定留給人。",
+    "en": "Recurring, fixed-format summaries suit scheduling; high-risk or judgement calls stay with people."
+   }
+  },
+  {
+   "id": "p06",
+   "topic": {
+    "zh": "排程工作",
+    "en": "Scheduled tasks"
+   },
+   "ref": "016-personal-work-ep07",
+   "q": {
+    "zh": "產線每班的警報摘要排程跑完後，較妥當的做法是？",
+    "en": "After a scheduled alarm summary for each shift runs, what is the sound practice?"
+   },
+   "opts": [
+    {
+     "zh": "直接依摘要讓 PLC 自動停機",
+     "en": "Let the PLC stop the line from the summary"
+    },
+    {
+     "zh": "不必看，因為每次都一樣",
+     "en": "Skip it because it is always the same"
+    },
+    {
+     "zh": "改成每小時各跑十次提高準確",
+     "en": "Run it ten times an hour for accuracy"
+    },
+    {
+     "zh": "到 Scheduled 頁面檢查成果，處置由人員決定",
+     "en": "Check the result on the Scheduled page; people decide the response"
+    }
+   ],
+   "ans": 3,
+   "why": {
+    "zh": "排程只負責整理；成果可打開檢查，也能修改、暫停或手動執行，決定由人。",
+    "en": "Scheduling only prepares summaries; you can inspect, edit, pause or run it manually, and people decide."
+   }
+  },
+  {
+   "id": "p07",
+   "topic": {
+    "zh": "Skills",
+    "en": "Skills"
+   },
+   "ref": "017-personal-work-ep08",
+   "q": {
+    "zh": "每週都要重新交代的「家庭採買清單」做法，寫成 Skill 有什麼好處？",
+    "en": "What is the benefit of turning your weekly grocery-list routine into a Skill?"
+   },
+   "opts": [
+    {
+     "zh": "相關任務出現時 Claude 自動照做，不必每次貼說明",
+     "en": "Claude follows it automatically on related tasks, no re-pasting"
+    },
+    {
+     "zh": "Claude 從此不再需要你確認清單",
+     "en": "Claude no longer needs you to confirm the list"
+    },
+    {
+     "zh": "清單會自動公開給所有使用者",
+     "en": "The list is published to all users"
+    },
+    {
+     "zh": "可以取代所有提示詞",
+     "en": "It replaces every prompt"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "Skill 是放進資料夾的工作說明書，省去重複交代；清單內容仍由你出門前確認。",
+    "en": "A Skill is a work manual in a folder that saves repeating yourself; you still confirm the list."
+   }
+  },
+  {
+   "id": "p08",
+   "topic": {
+    "zh": "Skills",
+    "en": "Skills"
+   },
+   "ref": "017-personal-work-ep08",
+   "q": {
+    "zh": "要讓 Claude 在對的時候用上你的 8D 報告技能，SKILL.md 開頭的描述應如何寫？",
+    "en": "For Claude to use your 8D-report Skill at the right time, how should the description at the top of SKILL.md be written?"
+   },
+   "opts": [
+    {
+     "zh": "越簡短越好，只寫一個字",
+     "en": "As short as possible, a single word"
+    },
+    {
+     "zh": "寫得具體，說明什麼情境該使用",
+     "en": "Specific, saying what situations should trigger it"
+    },
+    {
+     "zh": "留空，讓 Claude 自己猜",
+     "en": "Leave it blank and let Claude guess"
+    },
+    {
+     "zh": "把整份 8D 範本全貼進描述",
+     "en": "Paste the whole 8D template into it"
+    }
+   ],
+   "ans": 1,
+   "why": {
+    "zh": "平常只帶名稱與描述，Claude 靠描述判斷何時載入正文；描述越具體越容易被正確觸發。",
+    "en": "Normally only the name and description are loaded; Claude uses them to decide when to load the body, so specific wording triggers better."
+   }
+  }
+ ]
+}

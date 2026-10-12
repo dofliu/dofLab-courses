@@ -644,10 +644,13 @@
         "017-personal-work-ep08"
       ],
       "questions": 8,
-      "status": "in_progress",
-      "updated": "2026-10-12T01:42:08Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-12T01:44:00Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/personal-work/quiz2.html",
+        "data": "courses/ai-tutorials/claude/data/quizzes/q03-personal-work-2.json"
+      },
+      "notes": "build_quiz.py 建置，Playwright 實測作答（7/8 通過畫面、中英切換）無錯誤；8 題每集 2 題，正解位置已錯開；情境：生活（花蓮旅遊簡報、家庭採買 Skill）、智慧自動化（設備手冊權限、警報摘要排程、8D 技能）、風能運維（季度運維檢討簡報）；查證 support.claude.com（Skills ZIP 上傳、連接器權限三級、排程頻率），資訊截至 2026-10",
       "cases": {
         "life": "題目情境至少一題為生活案例",
         "automation": "至少一題為智慧自動化案例",

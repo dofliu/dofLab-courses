@@ -440,6 +440,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "q03-personal-work-2",
+      "no": 2,
+      "file": "quiz2.html",
+      "path": "personal-work/quiz2.html",
+      "title": {
+       "zh": "個人工作測驗（二）",
+       "en": "Personal Work Checkpoint 2"
+      },
+      "sub": {
+       "zh": "涵蓋第 5–8 集：簡報、連接器、排程工作、Skills",
+       "en": "Covers lessons 5–8: slides, connectors, scheduled tasks, Skills"
+      },
+      "questions": 8,
+      "pass": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ]
    },
@@ -515,7 +536,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-09T01:46:17Z",
+  "updated": "2026-10-12",
   "languages": [
    "zh",
    "en"
@@ -700,7 +721,7 @@ window.CLAUDE_COURSE = {
    "no": 2,
    "title": "個人工作測驗（二）",
    "title_en": "Personal Work Checkpoint 2",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "018-project-dev-overview",
@@ -1108,6 +1129,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 19,
+ "live": 20,
  "total": 65
 };
