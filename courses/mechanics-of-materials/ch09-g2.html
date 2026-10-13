@@ -435,6 +435,7 @@ guide("#guide3","解題 SOP：① 寫下 σx、σy、τxy 與正負號 ② σavg
 guide("#guide4","鑑識員上工！每位同學的數值都不一樣。若 σ₁、σ₂ 同號，絕對最大剪應力要把 σ₃ = 0 算進去！小心正負號，加油！");
 function go(id){
   if(id==="report"&&!S.p4done)return;
+  if(S.p4done&&(id==="p3"||id==="p4"))id="report"; // 交卷後 Phase 3/4 已鎖定，僅能看成績報告
   document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
   document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
   S.visited[id]=1;
@@ -812,7 +813,9 @@ $("#submitTest").addEventListener("click",()=>{
 });
 function submit(timeout){
   if(S.p4done)return;
-  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  clearInterval(tick);S.p4done=true;
+  document.querySelectorAll("#p4list input,#p4list .opt,#p3list input,#p3list .opt,#p3list [data-chk],#submitTest").forEach(el=>{el.disabled=true;});
+  S.p4.timeout=timeout;S.end=new Date();
   S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q):a===q.a;});
   document.querySelector('.tab[data-go="report"]').disabled=false;
   document.querySelector('.tab[data-go="p4"]').disabled=true;
