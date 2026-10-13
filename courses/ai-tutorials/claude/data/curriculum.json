@@ -674,10 +674,14 @@
         "部署上線：GitHub Pages",
         "用 API 打造 AI 應用"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-13T01:41:56Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-13T01:48:22Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/overview.html",
+        "src": "courses/ai-tutorials/claude/src/018-project-dev-overview.js",
+        "i18n": "courses/ai-tutorials/claude/src/018-project-dev-overview.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；7 分鏡 87 秒，圖解約 4/7；查證：code.claude.com（Claude Code 擴充功能概觀）、platform.claude.com，資訊截至 2026-10；情境：生活（家庭記帳網站）＋智慧自動化（OEE 看板）＋風能運維（風機警報與工單工具）",
       "cases": {
         "life": "做一個家庭記帳小網站",
         "automation": "做一個產線看板（OEE 儀表板）",

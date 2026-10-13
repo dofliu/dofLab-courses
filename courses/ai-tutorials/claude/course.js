@@ -476,7 +476,28 @@ window.CLAUDE_COURSE = {
     },
     "icon": "⚙️",
     "color": "#5c3a7a",
-    "episodes": []
+    "episodes": [],
+    "overview": {
+     "id": "018-project-dev-overview",
+     "no": 0,
+     "file": "overview.html",
+     "path": "project-dev/overview.html",
+     "title": {
+      "zh": "從想法到上線：用 Claude 開發一個專案",
+      "en": "Project Development: Overview"
+     },
+     "sub": {
+      "zh": "規格、Claude Code 迴圈、審查與 Git、擴充、部署與 API",
+      "en": "Spec, the Claude Code loop, review and Git, extensions, deployment and the API"
+     },
+     "shots": 7,
+     "dur": 87,
+     "langs": [
+      "zh",
+      "en"
+     ],
+     "asof": "2026-10"
+    }
    },
    {
     "slug": "teaching",
@@ -536,7 +557,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-12",
+  "updated": "2026-10-13",
   "languages": [
    "zh",
    "en"
@@ -730,7 +751,7 @@ window.CLAUDE_COURSE = {
    "no": 0,
    "title": "從想法到上線：用 Claude 開發一個專案",
    "title_en": "Project Development: Overview",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "019-project-dev-ep01",
@@ -1129,6 +1150,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 20,
+ "live": 21,
  "total": 65
 };
