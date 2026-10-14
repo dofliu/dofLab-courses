@@ -702,10 +702,14 @@
         "範圍與優先順序",
         "驗收條件"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-14T01:41:55Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-14T01:44:37Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/ep01.html",
+        "src": "courses/ai-tutorials/claude/src/019-project-dev-ep01.js",
+        "i18n": "courses/ai-tutorials/claude/src/019-project-dev-ep01.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒，圖解 3/6（PRD 結構、範圍與優先順序、規格交給 Claude Code）；查證：code.claude.com Best practices、Permission modes（計畫模式唯讀探索、核准後才實作），資訊截至 2026-10；情境：生活（社區活動報名網站）＋智慧自動化（產線異常通報）＋風能運維（風場運維 App 角色）；數據皆為示意",
       "cases": {
         "life": "社區活動報名網站的需求",
         "automation": "產線異常通報系統的使用者故事",

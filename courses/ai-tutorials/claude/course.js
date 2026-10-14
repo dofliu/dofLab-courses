@@ -476,7 +476,29 @@ window.CLAUDE_COURSE = {
     },
     "icon": "⚙️",
     "color": "#5c3a7a",
-    "episodes": [],
+    "episodes": [
+     {
+      "id": "019-project-dev-ep01",
+      "no": 1,
+      "file": "ep01.html",
+      "path": "project-dev/ep01.html",
+      "title": {
+       "zh": "從想法到規格",
+       "en": "From Idea to Spec"
+      },
+      "sub": {
+       "zh": "訪談提問、使用者故事、PRD、範圍與驗收條件",
+       "en": "Interview questions, user stories, PRD, scope and acceptance criteria"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
+     }
+    ],
     "overview": {
      "id": "018-project-dev-overview",
      "no": 0,
@@ -557,7 +579,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-13",
+  "updated": "2026-10-14",
   "languages": [
    "zh",
    "en"
@@ -760,7 +782,7 @@ window.CLAUDE_COURSE = {
    "no": 1,
    "title": "從想法到規格",
    "title_en": "From Idea to Spec",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "020-project-dev-ep02",
@@ -1150,6 +1172,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 21,
+ "live": 22,
  "total": 65
 };
