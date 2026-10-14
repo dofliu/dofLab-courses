@@ -1,0 +1,862 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH10-G2] Strain Transformation - 應變轉換計算工坊：機翼蒙皮與三角應變花</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+</style>
+<style>
+@keyframes puff{0%,100%{transform:scale(1)}50%{transform:scale(1.06,1.12)}}
+.puff{transform-box:fill-box;transform-origin:center;animation:puff 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+.sway{transform-origin:60px 86px;animation:sway 2.6s ease-in-out infinite}
+@keyframes blow{0%{transform:translateX(-8px);opacity:0}40%{opacity:1}100%{transform:translateX(10px);opacity:0}}
+.blow{animation:blow 1.8s linear infinite}
+@keyframes push{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.push{animation:push 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH10-G2</span>應變轉換計算工坊：機翼蒙皮與三角應變花</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 10 · Strain Transformation · Game 2</span>
+      <h2>應變轉換計算工坊：機翼蒙皮與三角應變花</h2>
+      <p style="color:var(--muted);max-width:65ch">飛機機翼蒙皮在飛行中同時被拉、被壓、被剪。工程師在蒙皮上貼一組<b>應變規</b>，就能算出任意方向的應變、<b>主應變</b>與<b>最大剪應變</b>。這一關是公式計算工坊：用<b>應變轉換方程式</b>轉角度、用<b>莫爾圓</b>求 ε₁、ε₂、θp、γmax，再用<b>0°/60°/120° 三角應變花</b>反推全部應變，最後以<b>廣義胡克定律</b>回頭算出應力。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>計算前先備齊四個工具</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="斜向應變規">
+          <rect x="30" y="18" width="140" height="56" rx="6" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <g class="tilt"><rect x="70" y="40" width="64" height="9" rx="2" fill="#e8640a"/><path d="M76 40v9M84 40v9M92 40v9M100 40v9M108 40v9M116 40v9M124 40v9" stroke="#fff" stroke-width="1.2"/></g>
+          <text x="100" y="88" font-size="9.5" fill="#e8640a" text-anchor="middle">斜向應變規讀到 εθ</text>
+        </svg>
+        <h3>任意方向的應變</h3><span class="formula">εx′ = εavg + d·cos2θ + (γxy/2)·sin2θ</span>
+        <p class="life">先算 εavg = (εx+εy)/2、d = (εx−εy)/2，再代入 <b>2θ</b>。剪應變部分：γx′y′/2 = −d·sin2θ + (γxy/2)·cos2θ。口訣：應力公式的 σ → ε、τ → <b>γ/2</b>。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="主應變與最大剪應變">
+          <line x1="12" y1="46" x2="188" y2="46" stroke="#5b6b7e"/><line x1="100" y1="6" x2="100" y2="88" stroke="#5b6b7e"/>
+          <circle cx="112" cy="46" r="40" fill="#fde9da" fill-opacity=".5" stroke="#e8640a" stroke-width="2"/>
+          <circle cx="152" cy="46" r="4" fill="#1f8a4c"/><circle cx="72" cy="46" r="4" fill="#1f8a4c"/><circle cx="112" cy="86" r="4" fill="#c62f2f"/>
+          <text x="152" y="38" font-size="9.5" fill="#1f8a4c" font-weight="700" text-anchor="middle">ε₁</text>
+          <text x="72" y="38" font-size="9.5" fill="#1f8a4c" font-weight="700" text-anchor="middle">ε₂</text>
+          <text x="118" y="82" font-size="9.5" fill="#c62f2f" font-weight="700">γmax/2 = R</text>
+        </svg>
+        <h3>主應變與最大剪應變</h3><span class="formula">R = √(d² + (γxy/2)²)　γmax = 2R</span>
+        <p class="life">圓心 εavg、半徑 R：ε₁,₂ = εavg ± R。方向 tan2θp = γxy/(εx−εy)。最容易錯的是 <b>γmax = 2R</b>，因為縱軸畫的是 γ/2。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="三角應變花">
+          <circle cx="100" cy="46" r="38" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <g class="spin" style="transform-origin:100px 46px"><rect x="64" y="42" width="72" height="8" rx="2" fill="#e8640a"/></g>
+          <g transform="rotate(-60 100 46)"><rect x="64" y="42" width="72" height="8" rx="2" fill="#24507d" opacity=".85"/></g>
+          <g transform="rotate(60 100 46)"><rect x="64" y="42" width="72" height="8" rx="2" fill="#24507d" opacity=".85"/></g>
+          <text x="172" y="50" font-size="9.5" fill="#e8640a" font-weight="700">ε0</text>
+          <text x="140" y="14" font-size="9.5" fill="#24507d" font-weight="700">ε60</text>
+          <text x="140" y="86" font-size="9.5" fill="#24507d" font-weight="700">ε120</text>
+        </svg>
+        <h3>0°/60°/120° 三角應變花</h3><span class="formula">εx = ε0　εy = [2(ε60+ε120) − ε0]/3</span>
+        <p class="life">三枚規、三個方向，解出三個未知數。剪應變 γxy = 2(ε60 − ε120)/√3。三枚規互成 60°，常用在不知道主方向的圓形區域。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="平面應力下的厚度方向應變">
+          <rect x="40" y="34" width="120" height="24" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <g class="puff"><rect x="40" y="34" width="120" height="24" fill="none" stroke="#e8640a" stroke-width="2" stroke-dasharray="5 3"/></g>
+          <line x1="20" y1="46" x2="38" y2="46" stroke="#1a3a5c" stroke-width="3"/><line x1="162" y1="46" x2="180" y2="46" stroke="#1a3a5c" stroke-width="3"/>
+          <text x="100" y="78" font-size="9.5" fill="#5b6b7e" text-anchor="middle">拉長 → 變薄：εz ≠ 0</text>
+          <text x="100" y="18" font-size="9.5" fill="#e8640a" text-anchor="middle" font-weight="700">εz = −ν(εx+εy)/(1−ν)</text>
+        </svg>
+        <h3>平面應力的 εz 與 γabs</h3><span class="formula">σz = 0 ⇒ εz = −ν(εx+εy)/(1−ν)</span>
+        <p class="life">σz = 0 並不代表 εz = 0：板被拉長就會變薄。三個主應變 ε₁、ε₂、εz 都要比，<b>γabs = εmax − εmin</b>，有時比面內 γmax 還大。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：轉動應變元素，看莫爾圓怎麼動</h3>
+      <p class="note">設定 εx、εy、γxy（伸長為正，單位 με = 10⁻⁶），再拖動 θ，左邊元素逆時針轉動，右邊莫爾圓上的深藍直徑轉 2θ。</p>
+      <div class="grid2">
+        <svg viewBox="0 0 460 300" class="ndiag" id="elFig1" aria-label="轉動後的應變元素"></svg>
+        <svg viewBox="0 0 460 300" class="ndiag" id="mohrFig1" aria-label="應變莫爾圓"></svg>
+      </div>
+      <div class="grid2">
+        <div class="stack">
+          <div class="slider"><span>εx</span><input type="range" id="s1x" min="-800" max="1000" step="20" value="600"><span class="mono" id="v1x">600 με</span></div>
+          <div class="slider"><span>εy</span><input type="range" id="s1y" min="-800" max="1000" step="20" value="-200"><span class="mono" id="v1y">−200 με</span></div>
+          <div class="slider"><span>γxy</span><input type="range" id="s1t" min="-800" max="800" step="20" value="400"><span class="mono" id="v1t">400 με</span></div>
+          <div class="slider"><span>旋轉角 θ</span><input type="range" id="s1a" min="-90" max="90" step="1" value="30"><span class="mono" id="v1a">30°</span></div>
+        </div>
+        <div class="stack">
+          <div class="readout">
+            <div><small>εx′</small><b id="r1a">—</b></div>
+            <div><small>γx′y′</small><b id="r1b">—</b></div>
+            <div><small>εy′</small><b id="r1c">—</b></div>
+          </div>
+          <div class="readout">
+            <div><small>ε₁（最大主應變）</small><b id="r1d">—</b></div>
+            <div><small>ε₂（最小主應變）</small><b id="r1e">—</b></div>
+            <div><small>γmax（面內）</small><b id="r1f">—</b></div>
+          </div>
+          <p class="note mono" id="r1g"></p>
+        </div>
+      </div>
+      <p class="note">試試看：把 γxy 拉到 0，主應變就是 εx 與 εy 本身（θp = 0°）；把 θ 轉到 θp，γx′y′ 會變成 0——主應變方向只伸縮、不歪斜。</p>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：機翼蒙皮與渦輪機殼</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：飛機機翼蒙皮上的一個點</h3>
+      <p style="color:var(--muted);margin-top:4px">鋁合金機翼蒙皮在飛行負荷下，某點的應變為 εx = +600 με、εy = −200 με、γxy = +400 με。求與 x 軸成 θ = 30°（逆時針）方向的 εx′、εy′、γx′y′，以及主應變、主方向與最大面內剪應變，並檢查容許值（|ε| ≤ 800 με、γ ≤ 1000 με）。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 300" class="ndiag" id="wingFig" aria-label="蒙皮上的應變元素"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：調整三個應變與轉角</h3>
+        <div class="slider"><span>εx</span><input type="range" id="sAx" min="-800" max="1000" step="20" value="600"><span class="mono" id="vAx">600 με</span></div>
+        <div class="slider"><span>εy</span><input type="range" id="sAy" min="-800" max="1000" step="20" value="-200"><span class="mono" id="vAy">−200 με</span></div>
+        <div class="slider"><span>γxy</span><input type="range" id="sAg" min="-800" max="800" step="20" value="400"><span class="mono" id="vAg">400 με</span></div>
+        <div class="slider"><span>轉角 θ</span><input type="range" id="sAa" min="-90" max="90" step="1" value="30"><span class="mono" id="vAa">30°</span></div>
+        <div class="readout">
+          <div><small>εx′</small><b id="rA1">—</b></div>
+          <div><small>γx′y′</small><b id="rA2">—</b></div>
+          <div><small>εy′</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：不論 θ 怎麼轉，εx′ + εy′ 永遠等於 εx + εy（= 2εavg）；θ = θp 時 γx′y′ = 0；θ = θp ± 45° 時 |γx′y′| 最大。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：渦輪機殼上的三角應變花</h3>
+      <p style="color:var(--muted);margin-top:4px">鋼製渦輪機殼（E = 200 GPa、ν = 0.3）表面貼一組 0°/60°/120° 三角應變花，讀數 ε0 = +400 με、ε60 = +200 με、ε120 = −100 με。求 εx、εy、γxy，再求主應變、γmax，以平面應力假設計算主應力，並比較絕對最大剪應變。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 300" class="ndiag" id="deltaFig" aria-label="三角應變花"></svg>
+          <svg viewBox="0 0 460 300" class="ndiag" id="mohrFig2" aria-label="應變莫爾圓"></svg>
+        </div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：改變三枚規的讀數</h3>
+        <div class="slider"><span>ε0（0°）</span><input type="range" id="sB0" min="-500" max="800" step="10" value="400"><span class="mono" id="vB0">400 με</span></div>
+        <div class="slider"><span>ε60（60°）</span><input type="range" id="sB1" min="-500" max="800" step="10" value="200"><span class="mono" id="vB1">200 με</span></div>
+        <div class="slider"><span>ε120（120°）</span><input type="range" id="sB2" min="-500" max="800" step="10" value="-100"><span class="mono" id="vB2">−100 με</span></div>
+        <div class="readout">
+          <div><small>εx / εy</small><b id="rB0">—</b></div>
+          <div><small>γxy</small><b id="rB1">—</b></div>
+          <div><small>ε₁ / ε₂</small><b id="rB2">—</b></div>
+        </div>
+        <div class="readout">
+          <div><small>σ₁</small><b id="rB3">—</b></div>
+          <div><small>σ₂</small><b id="rB4">—</b></div>
+          <div><small>γabs</small><b id="rB5">—</b></div>
+        </div>
+        <div id="rB6"></div>
+        <p class="note">觀察：三個讀數相同（ε0 = ε60 = ε120）時是等向應變，莫爾圓縮成一點；γabs 一定 ≥ 面內 γmax，因為多了 εz 這個主應變可以比。</p>
+      </div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道計算工坊練習</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差，<b>請依伸長為正、縮短為負輸入（含負號）</b>；應變單位 με，角度單位為度。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：應變轉換的結構檢測員</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH10-G2] Strain Transformation｜應變轉換計算工坊：機翼蒙皮與三角應變花</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-12 88 98)"><rect x="76" y="92" width="24" height="12" rx="2" fill="#fff" stroke="#8a99ab" stroke-width="1.2"/><path d="M79 95 H97 M79 98 H97 M79 101 H97" stroke="#e8640a" stroke-width="1.2" stroke-dasharray="3 1.5"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+guide("#guide0","歡迎來到計算工坊！這次的主角是<b>機翼蒙皮</b>與<b>三角應變花</b>。記得：應變轉換的剪應變要用 <b>γ/2</b>，角度要代 <b>2θ</b>。先填資料吧！");
+guide("#guide1","備好四把工具：<b>斜面轉換公式</b>、<b>主應變與 γmax = 2R</b>、<b>三角應變花</b>、<b>平面應力的 εz</b>。拖動下面的 θ，看莫爾圓上的點怎麼轉。");
+guide("#guide2","A 是蒙皮上的一個點：先算 εavg 與 d，再轉 2θ。B 是三角應變花：先解出 εx、εy、γxy，再求主應變、應力與 γabs。每一步都可以點開看數字。");
+guide("#guide3","解題 SOP：① 整理 εx、εy、γxy 與正負號 ② εavg、d ③ R = √(d²+(γ/2)²) ④ 代 2θ。三角應變花先解 εx、εy、γxy。單位 με，角度用度。");
+guide("#guide4","檢測員上工！每位同學的數值都不一樣。小心：剪應變公式用 γ/2、γmax = 2R、平面應力的 εz 不為零。加油！");
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  if(S.p4done&&(id==="p3"||id==="p4"))id="report";
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+const sg=(x,d=2)=>Number.isFinite(x)?(x>0?"+":x<0?"−":"")+Math.abs(x).toFixed(d):"—";
+function near(val,q){return Number.isFinite(val)&&Math.abs(val-q.ans)<=Math.max(Math.abs(q.ans)*0.02,q.atol||0.05);}
+function yay(){const m=["太棒了！","完全正確！","轉得漂亮！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+const RAD=Math.PI/180;
+const neg=v=>v<0?"−"+(-v):""+v;
+
+/* ---------- mechanics (microstrain, degrees; elongation +, theta CCW from x) ----------
+   Same algebra as stress transformation with  sigma -> eps  and  tau -> gamma/2.
+   "h" below always means gamma/2.                                                         */
+function trans(ex,ey,h,th){
+  const c=Math.cos(2*th*RAD),s=Math.sin(2*th*RAD),a=(ex+ey)/2,d=(ex-ey)/2;
+  return {exp:a+d*c+h*s,eyp:a-d*c-h*s,hp:-d*s+h*c,gp:2*(-d*s+h*c),a,d};
+}
+function princ(ex,ey,h){
+  const a=(ex+ey)/2,d=(ex-ey)/2,R=Math.sqrt(d*d+h*h);
+  const thp=0.5*Math.atan2(h,d)/RAD;
+  return {a,d,R,e1:a+R,e2:a-R,thp,ths:thp-45,gmax:2*R};
+}
+const E_STEEL=200e3,NU=0.3; // MPa
+
+/* ---------- drawing helpers ---------- */
+function arrow(x1,y1,x2,y2,col,w=3){
+  const ang=Math.atan2(y2-y1,x2-x1),L=7,hx=x2-L*Math.cos(ang),hy=y2-L*Math.sin(ang);
+  const nx=-Math.sin(ang)*4,ny=Math.cos(ang)*4;
+  return `<line x1="${x1}" y1="${y1}" x2="${hx}" y2="${hy}" stroke="${col}" stroke-width="${w}"/><polygon points="${x2},${y2} ${hx+nx},${hy+ny} ${hx-nx},${hy-ny}" fill="${col}"/>`;
+}
+// deformed element (exaggerated) in a frame rotated CCW by th; strains in microstrain
+function strainFig(sel,ex,ey,g,th){
+  const T=trans(ex,ey,g/2,th),P=princ(ex,ey,g/2);
+  const M=Math.max(Math.abs(P.a)+P.R,1),k=0.32/M,s=48;
+  const pts=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([X,Y])=>{
+    const x=s*(X*(1+k*T.exp)-k*T.hp*Y),y=s*(Y*(1+k*T.eyp)-k*T.hp*X);
+    return `${x.toFixed(2)},${(-y).toFixed(2)}`;}).join(" ");
+  const cx=230,cy=150;
+  let o=`<rect width="460" height="300" fill="#fbfcfe"/>`;
+  o+=`<rect x="${cx-s}" y="${cy-s}" width="${2*s}" height="${2*s}" fill="none" stroke="#8fa3ba" stroke-dasharray="4 3"/>`;
+  o+=arrow(150,150,176,150,"#8fa3ba",1.5)+`<text x="178" y="145" font-size="10" fill="#8fa3ba">x</text>`;
+  o+=arrow(150,150,150,124,"#8fa3ba",1.5)+`<text x="154" y="124" font-size="10" fill="#8fa3ba">y</text>`;
+  o+=`<g transform="translate(${cx} ${cy}) rotate(${-th})">`;
+  o+=`<rect x="${-s}" y="${-s}" width="${2*s}" height="${2*s}" fill="none" stroke="#c9d3e0" stroke-dasharray="3 3"/>`;
+  o+=`<polygon points="${pts}" fill="#fde9da" fill-opacity=".75" stroke="#e8640a" stroke-width="2.2"/>`;
+  o+=arrow(0,0,s+34,0,"#1a3a5c",2)+`<text x="${s+38}" y="4" font-size="12" fill="#1a3a5c" font-weight="700">x′</text>`;
+  o+=arrow(0,0,0,-(s+34),"#24507d",2)+`<text x="-4" y="${-(s+40)}" font-size="12" fill="#24507d" font-weight="700">y′</text>`;
+  o+=`</g>`;
+  o+=`<text x="12" y="20" font-size="10.5" fill="#1a3a5c" font-weight="700">轉 θ = ${th}°（逆時針）後的元素</text>`;
+  o+=`<text x="12" y="262" font-size="10" fill="#5b6b7e">灰虛線＝變形前　橘色＝變形後（變形已大幅放大）</text>`;
+  o+=`<text x="12" y="278" font-size="10" fill="#5b6b7e">邊長改變＝正應變；直角改變＝剪應變</text>`;
+  o+=`<text x="12" y="294" font-size="10" fill="#1a3a5c" class="mono">εx′ = ${sg(T.exp,1)}　εy′ = ${sg(T.eyp,1)}　γx′y′ = ${sg(T.gp,1)} με</text>`;
+  $(sel).innerHTML=o;
+}
+// Mohr circle for strain: horizontal = eps, vertical = gamma/2 (positive downward)
+function mohrFig(sel,ex,ey,g,th){
+  const h=g/2,P=princ(ex,ey,h),T=trans(ex,ey,h,th);
+  const lo=Math.min(0,P.e2)-0.06*(P.R+Math.abs(P.a)+10),hi=Math.max(0,P.e1)+0.06*(P.R+Math.abs(P.a)+10),mid=(lo+hi)/2;
+  const k=Math.min(380/(hi-lo),104/Math.max(P.R,1));
+  const X=v=>230+(v-mid)*k,Y=v=>150+v*k;
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`;
+  s+=`<line x1="14" y1="${Y(0)}" x2="446" y2="${Y(0)}" stroke="#5b6b7e"/><polygon points="448,${Y(0)} 440,${Y(0)-4} 440,${Y(0)+4}" fill="#5b6b7e"/><text x="432" y="${Y(0)-8}" font-size="11" fill="#5b6b7e">ε</text>`;
+  if(X(0)>14&&X(0)<446)s+=`<line x1="${X(0)}" y1="14" x2="${X(0)}" y2="288" stroke="#5b6b7e"/><text x="${X(0)+6}" y="24" font-size="11" fill="#5b6b7e">γ/2（＋向下）</text>`;
+  s+=`<circle cx="${X(P.a)}" cy="${Y(0)}" r="${P.R*k}" fill="#fde9da" fill-opacity=".45" stroke="#e8640a" stroke-width="2"/>`;
+  s+=`<line x1="${X(ex)}" y1="${Y(h)}" x2="${X(ey)}" y2="${Y(-h)}" stroke="#8fa3ba" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+  s+=`<circle cx="${X(ex)}" cy="${Y(h)}" r="4" fill="#8fa3ba"/><circle cx="${X(ey)}" cy="${Y(-h)}" r="4" fill="#8fa3ba"/>`;
+  s+=`<text x="${X(ex)+6}" y="${Y(h)+(h>=0?14:-6)}" font-size="10" fill="#5b6b7e">A(εx, γxy/2)</text>`;
+  s+=`<line x1="${X(T.exp)}" y1="${Y(T.hp)}" x2="${X(T.eyp)}" y2="${Y(-T.hp)}" stroke="#1a3a5c" stroke-width="2.2"/>`;
+  s+=`<circle cx="${X(T.exp)}" cy="${Y(T.hp)}" r="5" fill="#1a3a5c"/><circle cx="${X(T.eyp)}" cy="${Y(-T.hp)}" r="5" fill="#24507d"/>`;
+  s+=`<text x="${X(T.exp)+(T.exp>=P.a?8:-8)}" y="${Y(T.hp)+(T.hp>=0?16:-8)}" font-size="11" fill="#1a3a5c" font-weight="700" text-anchor="${T.exp>=P.a?"start":"end"}">x′</text>`;
+  s+=`<text x="${X(T.eyp)+(T.eyp>=P.a?8:-8)}" y="${Y(-T.hp)+(T.hp>=0?-8:16)}" font-size="11" fill="#24507d" font-weight="700" text-anchor="${T.eyp>=P.a?"start":"end"}">y′</text>`;
+  s+=`<circle cx="${X(P.a)}" cy="${Y(0)}" r="3" fill="#e8640a"/><text x="${X(P.a)}" y="${Y(0)+16}" font-size="10" fill="#e8640a" text-anchor="middle">C = ${fmt(P.a,0)}</text>`;
+  s+=`<circle cx="${X(P.e1)}" cy="${Y(0)}" r="4" fill="#1f8a4c"/><text x="${X(P.e1)+2}" y="${Y(0)-9}" font-size="10.5" fill="#1f8a4c" font-weight="700" text-anchor="middle">ε₁ ${fmt(P.e1,0)}</text>`;
+  s+=`<circle cx="${X(P.e2)}" cy="${Y(0)}" r="4" fill="#1f8a4c"/><text x="${X(P.e2)-2}" y="${Y(0)-9}" font-size="10.5" fill="#1f8a4c" font-weight="700" text-anchor="middle">ε₂ ${fmt(P.e2,0)}</text>`;
+  s+=`<circle cx="${X(P.a)}" cy="${Y(P.R)}" r="3.5" fill="#c62f2f"/><circle cx="${X(P.a)}" cy="${Y(-P.R)}" r="3.5" fill="#c62f2f"/>`;
+  s+=`<text x="${X(P.a)+7}" y="${Y(-P.R)-4}" font-size="10" fill="#c62f2f">γmax/2 = R = ${fmt(P.R,0)}</text>`;
+  s+=`<text x="12" y="20" font-size="10.5" fill="#1a3a5c" font-weight="700">應變莫爾圓（單位 με）</text>`;
+  s+=`<text x="12" y="292" font-size="10" fill="#5b6b7e">灰虛線＝θ = 0°；深藍線＝θ = ${th}°（圓上轉 2θ = ${2*th}°）</text>`;
+  $(sel).innerHTML=s;
+}
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 1 ---------- */
+function draw1(){
+  const ex=+$("#s1x").value,ey=+$("#s1y").value,g=+$("#s1t").value,th=+$("#s1a").value;
+  $("#v1x").textContent=neg(ex)+" με";$("#v1y").textContent=neg(ey)+" με";$("#v1t").textContent=neg(g)+" με";$("#v1a").textContent=th+"°";
+  const T=trans(ex,ey,g/2,th),P=princ(ex,ey,g/2);
+  strainFig("#elFig1",ex,ey,g,th);mohrFig("#mohrFig1",ex,ey,g,th);
+  $("#r1a").textContent=sg(T.exp,1)+" με";$("#r1b").textContent=sg(T.gp,1)+" με";$("#r1c").textContent=sg(T.eyp,1)+" με";
+  $("#r1d").textContent=sg(P.e1,1)+" με";$("#r1e").textContent=sg(P.e2,1)+" με";$("#r1f").textContent=fmt(P.gmax,1)+" με";
+  $("#r1g").textContent=P.R<1e-9?"等向應變狀態（圓縮成一個點），任何角度都一樣。":`ε₁ 的方向 θp = ${fmt(P.thp,2)}°；γmax 面的方向 θs = ${fmt(P.ths,2)}°（θp − 45°）；εavg = ${fmt(P.a,1)} με；γmax = 2R = ${fmt(P.gmax,1)} με。`;
+}
+["#s1x","#s1y","#s1t","#s1a"].forEach(k=>$(k).addEventListener("input",draw1));
+draw1();
+
+const P1Q=[
+  {q:"求主應變方向時，tan2θp 應該用哪一個式子？",o:["tan2θp = γxy/(εx − εy)","tan2θp = 2γxy/(εx − εy)","tan2θp = (εx − εy)/γxy","tan2θp = γxy/(εx + εy)"],a:0,why:"主方向由莫爾圓決定：tan2θp = (γxy/2)/[(εx−εy)/2] = γxy/(εx−εy)。分子分母同時除以 2，所以直接用 γxy 與 (εx−εy) 即可，但絕不能漏掉 2θ 的「2」。"},
+  {q:"鋼板在平面應力（σz = 0）下被拉伸、εx + εy > 0。板厚方向的應變 εz 如何？",o:["εz = 0，因為 σz = 0","εz = −ν(εx+εy)/(1−ν)，為負（變薄）","εz = +ν(εx+εy)，為正","εz = εx + εy"],a:1,why:"由廣義胡克定律 εz = (1/E)[σz − ν(σx+σy)] 與 σz = 0，並用 εx、εy 消去應力，得 εz = −ν(εx+εy)/(1−ν)。σz = 0 不代表 εz = 0，板拉長就會變薄。"},
+  {q:"0°/60°/120° 三角應變花的讀數是 ε0、ε60、ε120，其中哪個量不必計算就能直接得到？",o:["γxy","εy","εx（等於 ε0）","ε₁"],a:2,why:"0° 方向就是 x 軸，所以 εx = ε0 直接得到。其餘 εy = [2(ε60+ε120)−ε0]/3、γxy = 2(ε60−ε120)/√3 要再解聯立方程式。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">📏✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+
+/* ---------- shared mechanics for Phase 2-4 ---------- */
+const SQ3=Math.sqrt(3);
+// 0/60/120 delta rosette -> (ex, ey, gamma)
+function delta(e0,e60,e120){return {ex:e0,ey:(2*(e60+e120)-e0)/3,g:2*(e60-e120)/SQ3};}
+// plane-stress Hooke (strain in microstrain, E in MPa) -> MPa
+function hooke(e1,e2,E,nu){return {s1:E/(1-nu*nu)*(e1+nu*e2)*1e-6,s2:E/(1-nu*nu)*(e2+nu*e1)*1e-6};}
+function ezOf(ex,ey,nu){return -nu*(ex+ey)/(1-nu);}
+function gAbs(e1,e2,ez){return Math.max(e1,e2,ez)-Math.min(e1,e2,ez);}
+const E_AL=70e3,E_ST=200e3,NU_ST=0.3;
+const EA_LIM=800,GA_LIM=1000;
+
+/* ---------- Phase 2A: wing skin ---------- */
+function drawWing(){
+  const ex=+$("#sAx").value,ey=+$("#sAy").value,g=+$("#sAg").value,th=+$("#sAa").value;
+  $("#vAx").textContent=neg(ex)+" με";$("#vAy").textContent=neg(ey)+" με";$("#vAg").textContent=neg(g)+" με";$("#vAa").textContent=th+"°";
+  const T=trans(ex,ey,g/2,th),P=princ(ex,ey,g/2);
+  strainFig("#wingFig",ex,ey,g,th);
+  $("#rA1").textContent=sg(T.exp,1)+" με";$("#rA2").textContent=sg(T.gp,1)+" με";$("#rA3").textContent=sg(T.eyp,1)+" με";
+  const uE=Math.max(Math.abs(P.e1),Math.abs(P.e2))/EA_LIM,uG=P.gmax/GA_LIM,ok=uE<=1&&uG<=1;
+  $("#rA4").innerHTML=gauge(`|ε|max / ${EA_LIM} με`,uE)+gauge(`γmax / ${GA_LIM} με`,uG)+
+    `<p class="note mono" style="margin-top:6px">ε₁ = ${sg(P.e1,1)}、ε₂ = ${sg(P.e2,1)} με；θp = ${fmt(P.thp,2)}°；γmax = ${fmt(P.gmax,1)} με</p>`+
+    `<div class="row" style="justify-content:flex-end;margin-top:6px"><span class="badge ${ok?"ok":"no"}">${ok?"蒙皮應變在容許範圍內 ✓":"應變超標！需要加強肋或加厚蒙皮"}</span></div>`;
+}
+["#sAx","#sAy","#sAg","#sAa"].forEach(k=>$(k).addEventListener("input",drawWing));
+const tA=trans(600,-200,200,30),pA=princ(600,-200,200);
+const STEPS_A=[
+  {t:"整理已知量",d:`εx = +600、εy = −200、γxy = +400 με → γxy/2 = 200 με；θ = 30° → 2θ = 60°`},
+  {t:"兩個固定組合",d:`εavg = (600 + (−200))/2 = ${fmt(tA.a,1)} με；d = (600 − (−200))/2 = ${fmt(tA.d,1)} με`},
+  {t:"代入轉角 2θ = 60°",d:`cos60° = ${fmt(Math.cos(60*RAD),4)}，sin60° = ${fmt(Math.sin(60*RAD),4)}`},
+  {t:"x′ 方向正應變 εx′",d:`εx′ = εavg + d·cos2θ + (γxy/2)·sin2θ = ${fmt(tA.a,1)} + ${fmt(tA.d,1)}×${fmt(Math.cos(60*RAD),4)} + 200×${fmt(Math.sin(60*RAD),4)} = ${fmt(tA.exp,2)} με`},
+  {t:"剪應變 γx′y′ 與 εy′",d:`γx′y′/2 = −d·sin2θ + (γxy/2)·cos2θ = −${fmt(tA.d,1)}×${fmt(Math.sin(60*RAD),4)} + 200×${fmt(Math.cos(60*RAD),4)} = ${fmt(tA.hp,2)} → γx′y′ = ${fmt(tA.gp,2)} με；εy′ = 2εavg − εx′ = ${fmt(tA.eyp,2)} με`},
+  {t:"主應變、方向與 γmax",d:`R = √(${fmt(pA.d,1)}² + 200²) = ${fmt(pA.R,2)}；ε₁ = ${fmt(pA.e1,2)}、ε₂ = ${fmt(pA.e2,2)} με；tan2θp = 400/800 → θp = ${fmt(pA.thp,2)}°；γmax = 2R = ${fmt(pA.gmax,2)} με（容許：|ε| ≤ 800 → ${Math.max(Math.abs(pA.e1),Math.abs(pA.e2))<=EA_LIM?"✓":"✗"}，γ ≤ 1000 → ${pA.gmax<=GA_LIM?"✓":"✗"}）`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sAx").value=600;$("#sAy").value=-200;$("#sAg").value=400;$("#sAa").value=30;drawWing();});
+drawWing();
+
+/* ---------- Phase 2B: delta rosette ---------- */
+function drawDelta(){
+  const e0=+$("#sB0").value,e60=+$("#sB1").value,e120=+$("#sB2").value;
+  $("#vB0").textContent=neg(e0)+" με";$("#vB1").textContent=neg(e60)+" με";$("#vB2").textContent=neg(e120)+" με";
+  const D=delta(e0,e60,e120),P=princ(D.ex,D.ey,D.g/2),ez=ezOf(D.ex,D.ey,NU_ST),ga=gAbs(P.e1,P.e2,ez),st=hooke(P.e1,P.e2,E_ST,NU_ST);
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`;
+  s+=`<circle cx="230" cy="150" r="104" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>`;
+  [[0,"#e8640a","ε0（0°）",e0],[60,"#24507d","ε60（60°）",e60],[120,"#24507d","ε120（120°）",e120]].forEach(([a,c,lab,v])=>{
+    s+=`<g transform="translate(230 150) rotate(${-a})"><rect x="-80" y="-6" width="160" height="12" rx="2" fill="${c}" opacity=".9"/><path d="M-60 -6v12M-46 -6v12M-32 -6v12M-18 -6v12M-4 -6v12M10 -6v12M24 -6v12M38 -6v12M52 -6v12" stroke="#fff" stroke-width="1.4"/></g>`;
+    const r=124,x=230+r*Math.cos(a*RAD),y=150-r*Math.sin(a*RAD);
+    s+=`<text x="${x}" y="${y+4}" font-size="11" fill="${c}" font-weight="700" text-anchor="${a===0?"start":a===60?"start":"end"}">${lab} = ${neg(v)}</text>`;
+  });
+  s+=arrow(230,150,330,150,"#8fa3ba",1.5)+arrow(230,150,230,60,"#8fa3ba",1.5)+`<text x="334" y="170" font-size="10" fill="#8fa3ba">x</text><text x="236" y="58" font-size="10" fill="#8fa3ba">y</text>`;
+  s+=`<text x="12" y="20" font-size="10.5" fill="#1a3a5c" font-weight="700">三角應變花（讀數單位 με）</text>`;
+  $("#deltaFig").innerHTML=s;
+  mohrFig("#mohrFig2",D.ex,D.ey,D.g,0);
+  $("#rB0").textContent=fmt(D.ex,1)+" / "+fmt(D.ey,1);$("#rB1").textContent=sg(D.g,1)+" με";$("#rB2").textContent=fmt(P.e1,1)+" / "+fmt(P.e2,1);
+  $("#rB3").textContent=sg(st.s1,1)+" MPa";$("#rB4").textContent=sg(st.s2,1)+" MPa";$("#rB5").textContent=fmt(ga,1)+" με";
+  $("#rB6").innerHTML=`<p class="note mono">θp = ${fmt(P.thp,2)}°；γmax（面內）= ${fmt(P.gmax,1)} με；εz = ${sg(ez,1)} με；γabs = ${fmt(ga,1)} με${ga>P.gmax+1e-9?"（比面內 γmax 大）":""}</p>`;
+}
+["#sB0","#sB1","#sB2"].forEach(k=>$(k).addEventListener("input",drawDelta));
+const dB=delta(400,200,-100),pB=princ(dB.ex,dB.ey,dB.g/2),ezB=ezOf(dB.ex,dB.ey,NU_ST),stB=hooke(pB.e1,pB.e2,E_ST,NU_ST),gaB=gAbs(pB.e1,pB.e2,ezB);
+const STEPS_B=[
+  {t:"三枚規的聯立方程式",d:`εθ = εx·cos²θ + εy·sin²θ + γxy·sinθ·cosθ；θ = 0°、60°、120° 分別得 ε0 = εx；ε60 = 0.25εx + 0.75εy + 0.433γxy；ε120 = 0.25εx + 0.75εy − 0.433γxy`},
+  {t:"解出 εx、εy、γxy",d:`εx = ε0 = ${fmt(dB.ex,1)} με；εy = [2(200 + (−100)) − 400]/3 = ${fmt(dB.ey,2)} με；γxy = 2(200 − (−100))/√3 = ${fmt(dB.g,2)} με`},
+  {t:"圓心與半徑",d:`εavg = ${fmt(pB.a,2)}；d = ${fmt(pB.d,2)}；γxy/2 = ${fmt(dB.g/2,2)}；R = √(${fmt(pB.d,2)}² + ${fmt(dB.g/2,2)}²) = ${fmt(pB.R,2)} με`},
+  {t:"主應變、方向、γmax",d:`ε₁ = ${fmt(pB.e1,2)}、ε₂ = ${fmt(pB.e2,2)} με；tan2θp = γxy/(εx−εy) → θp = ${fmt(pB.thp,2)}°；γmax = 2R = ${fmt(pB.gmax,2)} με`},
+  {t:"平面應力：主應力",d:`σ₁ = E/(1−ν²)·(ε₁ + νε₂) = 200000/0.91×(${fmt(pB.e1,2)} + 0.3×(${fmt(pB.e2,2)}))×10⁻⁶ = ${fmt(stB.s1,2)} MPa；σ₂ = E/(1−ν²)·(ε₂ + νε₁) = ${fmt(stB.s2,2)} MPa`},
+  {t:"εz 與絕對最大剪應變",d:`εz = −ν(εx+εy)/(1−ν) = −0.3×${fmt(dB.ex+dB.ey,2)}/0.7 = ${fmt(ezB,2)} με；三個主應變 ${fmt(pB.e1,1)}、${fmt(pB.e2,1)}、${fmt(ezB,1)} → γabs = εmax − εmin = ${fmt(gaB,2)} με（比面內 γmax = ${fmt(pB.gmax,1)} 大）`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sB0").value=400;$("#sB1").value=200;$("#sB2").value=-100;drawDelta();});
+drawDelta();
+
+/* ---------- Phase 3 practice ---------- */
+const q1=trans(500,-300,-120,25);
+const q2=delta(300,-150,420);
+const q3=princ(-400,200,180);
+const q4z=ezOf(800,200,0.3);
+const P3Q=[
+  {type:"num",q:"某點應變 εx = +500 με、εy = −300 με、γxy = −240 με。求與 x 軸夾 θ = 25°（逆時針）方向的正應變 εx′（με，請帶正負號）。",ans:q1.exp,unit:"με",dp:2,atol:1.5,
+   hint:"εx′ = εavg + d·cos2θ + (γxy/2)·sin2θ，其中 γxy/2 = −120，2θ = 50°。",
+   sol:[`εavg = ${fmt(q1.a,1)}、d = ${fmt(q1.d,1)} με；γxy/2 = −120 με`,`cos50° = ${fmt(Math.cos(50*RAD),4)}、sin50° = ${fmt(Math.sin(50*RAD),4)}`,`εx′ = ${fmt(q1.a,1)} + ${fmt(q1.d,1)}×${fmt(Math.cos(50*RAD),4)} + (−120)×${fmt(Math.sin(50*RAD),4)} = ${fmt(q1.exp,2)} με`]},
+  {type:"num",q:"0°/60°/120° 三角應變花的讀數為 ε0 = +300 με、ε60 = −150 με、ε120 = +420 με。求剪應變 γxy（με，請帶正負號）。",ans:q2.g,unit:"με",dp:2,atol:1.5,
+   hint:"γxy = 2(ε60 − ε120)/√3；注意 ε60 比 ε120 小，結果是負值。",
+   sol:[`εx = ε0 = 300 με`,`εy = [2(−150 + 420) − 300]/3 = ${fmt(q2.ey,2)} με`,`γxy = 2(−150 − 420)/√3 = ${fmt(q2.g,2)} με`]},
+  {type:"num",q:"某點應變為 εx = −400 με、εy = +200 με、γxy = +180 με。求最大主應變 ε₁ 的方向角 θp（度，由 x 軸逆時針量起）。",ans:q3.thp,unit:"度",dp:2,atol:0.3,
+   hint:"tan2θp = γxy/(εx−εy)；分母是負數，2θp 落在第二象限（用 atan2）。",
+   sol:[`εx − εy = −600 με，γxy = 180 με → d = ${fmt(q3.d,1)}、γxy/2 = 90`,`tan2θp = 180/(−600) → 2θp = ${fmt(2*q3.thp,2)}°（第二象限）`,`θp = ${fmt(q3.thp,2)}°；ε₁ = ${fmt(q3.e1,2)} με、ε₂ = ${fmt(q3.e2,2)} με`]},
+  {type:"mc",q:"鋼板（ν = 0.3）在平面應力（σz = 0）下，量得 εx = +800 με、εy = +200 με。板厚方向的應變 εz 是多少？",
+   o:[`${fmt(q4z,1)} με`,"−300 με","0 με","−150 με"],a:0,
+   hint:"εz = −ν(εx+εy)/(1−ν)，不是 −ν(εx+εy)，也不是 0。",
+   sol:["σz = 0 並不代表 εz = 0","εz = −ν(εx+εy)/(1−ν) = −0.3×1000/0.7",`εz = ${fmt(q4z,1)} με（−300 是漏除 (1−ν) 的常見錯誤）`]}
+];
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 −125.5。";return;}
+  const ok=q.type==="num"?near(v,q):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">📏</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+/* ---------- Phase 4 seeded test ---------- */
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+97)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 transformation of normal strain
+  {const ex=vary(600,10),ey=-vary(250,10),g=vary(300,10),th=pick([20,25,30,35,40],r),T=trans(ex,ey,g/2,th);
+   qs.push({type:"num",title:"斜向正應變",q:`機翼蒙皮某點 εx = ${neg(ex)} με、εy = ${neg(ey)} με、γxy = ${neg(g)} με。求與 x 軸夾 θ = ${th}°（逆時針）方向的正應變 εx′（με）。`,ans:T.exp,unit:"με",dp:2,atol:1.5,
+    sol:`εavg = ${fmt(T.a,2)}、d = ${fmt(T.d,2)}、γxy/2 = ${fmt(g/2,1)}；εx′ = ${fmt(T.a,2)} + ${fmt(T.d,2)}×cos${2*th}° + ${fmt(g/2,1)}×sin${2*th}° = ${fmt(T.exp,2)} με（γx′y′ = ${fmt(T.gp,2)} με）`});}
+  // Q2 delta rosette -> principal strain
+  {const e0=vary(450,10),e60=vary(150,10),e120=-vary(120,10),D=delta(e0,e60,e120),P=princ(D.ex,D.ey,D.g/2);
+   qs.push({type:"num",title:"三角應變花的最大主應變",q:`渦輪機殼表面貼 0°/60°/120° 三角應變花，讀數 ε0 = ${neg(e0)} με、ε60 = ${neg(e60)} με、ε120 = ${neg(e120)} με。求最大主應變 ε₁（με）。`,ans:P.e1,unit:"με",dp:2,atol:1.5,
+    sol:`εx = ${neg(e0)}；εy = [2(${neg(e60)} + (${neg(e120)})) − ${neg(e0)}]/3 = ${fmt(D.ey,2)}；γxy = 2(${neg(e60)} − (${neg(e120)}))/√3 = ${fmt(D.g,2)}；R = ${fmt(P.R,2)}；ε₁ = εavg + R = ${fmt(P.a,2)} + ${fmt(P.R,2)} = ${fmt(P.e1,2)} με`});}
+  // Q3 in-plane max shear strain
+  {const ex=vary(500,10),ey=-vary(200,10),g=vary(360,10),P=princ(ex,ey,g/2);
+   qs.push({type:"num",title:"最大面內剪應變",q:`某點應變 εx = ${neg(ex)} με、εy = ${neg(ey)} με、γxy = ${neg(g)} με。求最大面內剪應變 γmax（με）。`,ans:P.gmax,unit:"με",dp:2,atol:1.5,
+    sol:`d = ${fmt(P.d,2)}、γxy/2 = ${fmt(g/2,1)}；R = √(${fmt(P.d,2)}² + ${fmt(g/2,1)}²) = ${fmt(P.R,2)}；γmax = 2R = ${fmt(P.gmax,2)} με（ε₁ = ${fmt(P.e1,2)}、ε₂ = ${fmt(P.e2,2)}）`});}
+  // Q4 principal direction
+  {const ex=-vary(420,10),ey=vary(180,10),g=vary(200,10),P=princ(ex,ey,g/2);
+   qs.push({type:"num",title:"主應變方向",q:`某點應變 εx = ${neg(ex)} με、εy = ${neg(ey)} με、γxy = ${neg(g)} με。求最大主應變 ε₁ 的方向角 θp（度，由 x 軸逆時針量起）。`,ans:P.thp,unit:"度",dp:2,atol:0.3,
+    sol:`d = ${fmt(P.d,2)}；tan2θp = γxy/(εx−εy) = ${g}/${fmt(ex-ey,1)} → 2θp = ${fmt(2*P.thp,2)}°（第二象限）→ θp = ${fmt(P.thp,2)}°（ε₁ = ${fmt(P.e1,2)} με）`});}
+  // Q5 concept
+  {const ex=vary(700,10),ey=vary(250,10),ez=ezOf(ex,ey,0.3);
+   const pool=[
+    {q:`鋼板（ν = 0.3）在平面應力下量得 εx = ${ex} με、εy = ${ey} με，板厚方向的應變 εz 最接近？`,o:[`${fmt(ez,0)} με`,`${fmt(-0.3*(ex+ey),0)} με`,"0 με",`${fmt(0.3*(ex+ey),0)} με`],why:`εz = −ν(εx+εy)/(1−ν) = −0.3×${ex+ey}/0.7 = ${fmt(ez,1)} με（漏除 1−ν 會得到 ${fmt(-0.3*(ex+ey),0)}）。`},
+    {q:"應變莫爾圓縱軸畫的是什麼？最大面內剪應變 γmax 與圓半徑 R 的關係為何？",o:["縱軸為 γ/2，γmax = 2R","縱軸為 γ，γmax = R","縱軸為 γ/2，γmax = R","縱軸為 2γ，γmax = R/2"],why:"應變莫爾圓的縱軸是 γ/2（對應應力圓的 τ），所以圓的最高點縱座標 R = γmax/2，即 γmax = 2R。"},
+    {q:"元素從 x 軸逆時針轉 θ，在應變莫爾圓上對應的直徑要轉多少？",o:["逆時針 2θ（同方向）","θ（同方向）","順時針 2θ","逆時針 θ/2"],why:"莫爾圓上的角度是實際角度的 2 倍，且方向與實際轉動方向相同（同為逆時針）。所以公式裡出現的是 cos2θ、sin2θ。"},
+    {q:"三角應變花在 0°/60°/120° 的讀數相同（ε0 = ε60 = ε120 = ε）時，該點的應變狀態是？",o:["等向應變：εx = εy = ε、γxy = 0，莫爾圓縮成一點","純剪：εx = εy = 0","單軸拉伸","γxy 最大"],why:"代入 εy = [2(ε60+ε120)−ε0]/3 = ε、γxy = 2(ε60−ε120)/√3 = 0，所以 εx = εy = ε、R = 0，各方向應變都相同。"}
+   ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值（含正負號）"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;
+  document.querySelectorAll("#p4list input,#p4list .opt,#p3list input,#p3list .opt,#p3list [data-chk],#submitTest").forEach(el=>{el.disabled=true;});
+  S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"計算很扎實！轉換公式、莫爾圓、三角應變花、εz 與 γabs 你都掌握了。下一關是綜合挑戰，一起用應變規做結構檢測！",B:"很不錯！再留意剪應變要用 γ/2、角度要代 2θ、γmax = 2R，下次就是 A。",C:"方向對了！回到 Phase 2 把蒙皮與三角應變花的步驟卡再點一次，特別是「先算 εavg 與 d、再算 R、最後 ε₁,₂ = εavg ± R」的順序。",D:"別灰心！先記住：剪應變用 γ/2、角度代 2θ、主應變 = εavg ± R、γmax = 2R。再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 10 章 Strain Transformation · 遊戲 2（MOM-CH10-G2）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以 ±2% 誤差判定（含正負號）。</p>`;
+  S.summary=`[MOM-CH10-G2] Strain Transformation 應變轉換計算工坊 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
