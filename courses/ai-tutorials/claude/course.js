@@ -497,6 +497,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "020-project-dev-ep02",
+      "no": 2,
+      "file": "ep02.html",
+      "path": "project-dev/ep02.html",
+      "title": {
+       "zh": "Claude Code 入門",
+       "en": "Getting Started with Claude Code"
+      },
+      "sub": {
+       "zh": "入口、讀懂既有專案、權限模式、第一個修改與回復",
+       "en": "Entry points, understanding a project, permission modes, first change and undo"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -579,7 +600,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-14",
+  "updated": "2026-10-15",
   "languages": [
    "zh",
    "en"
@@ -791,7 +812,7 @@ window.CLAUDE_COURSE = {
    "no": 2,
    "title": "Claude Code 入門",
    "title_en": "Getting Started with Claude Code",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "021-project-dev-ep03",
@@ -1172,6 +1193,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 22,
+ "live": 23,
  "total": 65
 };

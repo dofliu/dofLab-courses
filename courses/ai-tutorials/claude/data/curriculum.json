@@ -730,10 +730,14 @@
         "第一個修改",
         "回復變更"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-15T01:42:14Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-15T01:44:39Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/ep02.html",
+        "src": "courses/ai-tutorials/claude/src/020-project-dev-ep02.js",
+        "i18n": "courses/ai-tutorials/claude/src/020-project-dev-ep02.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒，圖解 3/6（PLC 腳本流程、權限模式、回復變更）；查證：code.claude.com Overview、Permission modes（Manual/default、acceptEdits、plan、auto，Shift+Tab 切換）、Checkpointing（/rewind、連按兩次 Esc、Bash 指令變更不追蹤、不取代 Git），資訊截至 2026-10；情境：生活（待辦清單小專案）＋智慧自動化（PLC 資料收集腳本，只讀不寫入）＋風能運維（SCADA 匯入程式）；數據與程式碼皆為示意",
       "cases": {
         "life": "讀懂一個待辦清單小專案",
         "automation": "讀懂 PLC 資料收集的 Python 腳本",
