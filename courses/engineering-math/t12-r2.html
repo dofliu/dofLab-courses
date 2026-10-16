@@ -1,0 +1,353 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>工程數學 | 拉普拉斯轉換(V)：摺積定理（第 2 輪）</title>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b; --bg:#f3f5fb; --surface:#ffffff; --ink:#151936;
+  --muted:#586080; --line:#dde1ef; --tint:#e8eaf8; --tealtint:#e0f2ef;
+  --ok:#2e7d32; --oktint:#e6f4e7; --bad:#c62828; --badtint:#fbe9e9; --gold:#f2a900;
+  --accent:var(--navy); --accent2:var(--teal);
+  --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+    --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+    --accent:#9fa8ff; --accent2:#4fc3b4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+  --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+  --accent:#9fa8ff; --accent2:#4fc3b4;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;margin:0}
+.wrap{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+header.top{background:var(--navy);color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top .in{max-width:880px;margin:0 auto;padding:14px 16px 12px}
+.course{font-size:12px;letter-spacing:.14em;opacity:.8}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(20px,4.2vw,28px);line-height:1.3;margin:2px 0 10px;text-wrap:balance}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.steps button{font:inherit;font-size:13px;border:0;border-radius:6px;padding:6px 4px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.steps button[aria-current="true"]{background:#00897b;font-weight:700}
+.steps button:disabled{opacity:.45;cursor:not-allowed}
+.bar{height:5px;background:rgba(255,255,255,.18);border-radius:3px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:#4fe0c8;transition:width .4s}
+section.stage{padding-top:24px}
+h2{font-family:var(--serif);font-size:24px;margin:8px 0 12px;color:var(--accent);text-wrap:balance}
+h3{font-size:18px;margin:26px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+.def{border:1px solid var(--line);border-left:5px solid var(--teal);background:var(--tealtint);border-radius:8px;padding:12px 16px;margin:14px 0}
+.def b.lab{display:block;font-size:12px;letter-spacing:.12em;color:var(--accent2)}
+.md{overflow-x:auto;padding:4px 0;text-align:center}
+.md math{font-size:1.15em}
+table.cases{border-collapse:collapse;width:100%;font-size:15px}
+.tbl{overflow-x:auto;margin:12px 0}
+table.cases th,table.cases td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:middle}
+table.cases th{font-size:13px;color:var(--muted);font-weight:500}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 20px}
+.ctrls label{font-size:14px;color:var(--muted);display:flex;justify-content:space-between}
+.ctrls output{font-family:var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.readout{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{font-size:13px;padding:3px 10px;border-radius:999px;background:var(--tint);color:var(--accent)}
+.chip.k{background:var(--teal);color:#fff;font-weight:700}
+svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 18px;background:var(--teal);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:focus-visible,.steps button:focus-visible,.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 8px}
+.note{font-size:14px;color:var(--muted)}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ex .tag{font-size:12px;letter-spacing:.1em;color:var(--accent2);font-weight:700}
+.sol{border-top:1px dashed var(--line);margin-top:12px;padding-top:6px}
+.sol ol{padding-left:22px;margin:6px 0}
+.sol li{margin:8px 0}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.q .n{font-family:var(--mono);color:var(--accent2);font-size:13px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{font:inherit;text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;overflow-x:auto}
+.opt.right{border-color:var(--ok);background:var(--oktint)}
+.opt.wrong{border-color:var(--bad);background:var(--badtint)}
+.fb{margin-top:8px;font-size:15px;padding:8px 12px;border-radius:8px}
+.fb.ok{background:var(--oktint)} .fb.no{background:var(--badtint)}
+.score{font-weight:700;font-size:18px}
+.hint{background:var(--tint);border-radius:8px;padding:10px 14px;margin:10px 0}
+.hint b{color:var(--accent)}
+.done{text-align:center;padding:24px 12px}
+.badge{width:150px;height:150px;margin:8px auto 16px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(from 0deg,#00897b,#1a237e,#00897b);animation:spin 6s linear infinite;box-shadow:0 0 0 6px var(--tealtint)}
+.badge span{width:122px;height:122px;border-radius:50%;background:var(--surface);display:grid;place-items:center;animation:spin 6s linear infinite reverse;
+  font-family:var(--serif);font-weight:900;color:var(--accent);font-size:15px;line-height:1.3}
+.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.badge,.badge span,.pop{animation:none}}
+input.num{font:inherit;font-family:var(--mono);width:110px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+footer{text-align:center;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding:18px 16px;margin-top:20px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<header class="top"><div class="in">
+  <div class="course">工程數學互動學習 · 第 13 講 · 第 2 輪</div>
+  <h1>拉普拉斯轉換(V)：摺積定理（第 2 輪）</h1>
+  <nav class="steps" aria-label="關卡">
+    <button id="nav0" aria-current="true" data-go="0">📚 學習</button>
+    <button id="nav1" data-go="1" disabled>🔍 理解</button>
+    <button id="nav2" data-go="2" disabled>✏️ 測驗</button>
+    <button id="nav3" data-go="3" disabled>🏆 挑戰</button>
+  </nav>
+  <div class="bar"><i id="prog"></i></div>
+</div></header>
+
+<main class="wrap">
+
+<section class="stage" id="s0">
+  <h2>關卡 1 · 摺積與摺積定理</h2>
+  <p>逆轉換時常遇到兩個函數轉換式的<b>乘積</b> <span class="m">F(s)G(s)</span>，它的逆轉換<b>不是</b> <span class="m">f(t)g(t)</span>，而是兩者的「摺積」。</p>
+  <div class="def"><b class="lab">重點定義 · 摺積</b>
+    <div class="md" data-tex="(f*g)(t)=\int_0^t f(\tau)\,g(t-\tau)\,d\tau"></div>
+  </div>
+  <div class="def"><b class="lab">摺積定理</b>
+    若 <span class="m">\mathcal{L}\{f\}=F(s)</span>、<span class="m">\mathcal{L}\{g\}=G(s)</span>，則
+    <div class="md" data-tex="\mathcal{L}\{f*g\}=F(s)\,G(s)\quad\Longleftrightarrow\quad \mathcal{L}^{-1}\{F(s)G(s)\}=(f*g)(t)"></div>
+  </div>
+  <h3>摺積的代數性質</h3>
+  <p>交換律 <span class="m">f*g=g*f</span>、結合律 <span class="m">(f*g)*h=f*(g*h)</span>、分配律 <span class="m">f*(g+h)=f*g+f*h</span>。注意 <span class="m">1*f=\int_0^t f(\tau)d\tau\neq f</span>，即乘以 <span class="m">1/s</span> 對應「積分」。</p>
+  <h3>工程意義</h3>
+  <p>線性非時變系統的輸入 <span class="m">u(t)</span> 與輸出 <span class="m">y(t)</span> 在零初值下滿足 <span class="m">Y(s)=H(s)U(s)</span>，因此 <span class="m">y=h*u</span>，其中 <span class="m">h=\mathcal{L}^{-1}\{H\}</span> 是<b>脈衝響應</b>。</p>
+
+  <h3>互動圖：看摺積如何「翻轉、平移、相乘、積分」</h3>
+  <p>取 <span class="m">f(\tau)=e^{-a\tau}</span>、<span class="m">g(\tau)=e^{-b\tau}</span>。圖中綠線為翻轉平移後的 <span class="m">g(t-\tau)</span>，陰影面積即 <span class="m">(f*g)(t)</span>。</p>
+  <div class="panel">
+    <div class="ctrls">
+      <div><label for="sa">a <output id="oa">1.0</output></label><input id="sa" type="range" min="0.2" max="3" step="0.1" value="1"></div>
+      <div><label for="sbb">b <output id="obb">2.0</output></label><input id="sbb" type="range" min="0.2" max="3" step="0.1" value="2"></div>
+      <div><label for="st">t <output id="ot">2.0</output></label><input id="st" type="range" min="0" max="6" step="0.1" value="2"></div>
+    </div>
+    <div class="readout" id="readout"></div>
+    <div style="overflow-x:auto">
+    <svg id="plot" viewBox="0 0 640 240" width="100%" role="img" aria-label="摺積積分示意圖">
+      <g id="grid"></g>
+      <path id="area" fill="var(--teal)" opacity=".28"/>
+      <path id="cf" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+      <path id="cg" fill="none" stroke="var(--accent2)" stroke-width="2.4"/>
+      <line id="tline" y1="20" y2="210" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="630" y="226" text-anchor="end">τ</text>
+    </svg></div>
+    <div style="overflow-x:auto">
+    <svg id="plot2" viewBox="0 0 640 150" width="100%" role="img" aria-label="(f*g)(t) 曲線">
+      <g id="grid2"></g>
+      <path id="cc" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+      <circle id="dot" r="5" fill="var(--gold)"/>
+      <text x="630" y="146" text-anchor="end">t</text>
+    </svg></div>
+    <p class="note">下圖是 <span class="m">(f*g)(t)</span> 隨 t 的變化，金色點為目前的 t。當 a=b 時結果是 <span class="m">te^{-at}</span>。</p>
+  </div>
+  <div class="actions"><button class="btn" id="to1">我已了解 → 前往例題</button></div>
+</section>
+
+<section class="stage" id="s1" hidden>
+  <h2>關卡 2 · 例題解析</h2>
+  <div class="ex">
+    <div class="tag">例題 1 · 基礎</div>
+    <p>用摺積定理求 <span class="m">\mathcal{L}^{-1}\left\{\dfrac{1}{s(s+3)}\right\}</span>。</p>
+    <button class="btn ghost" data-sol="e1" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e1" hidden><ol>
+      <li>拆成 <span class="m">F(s)=\dfrac1s,\ G(s)=\dfrac1{s+3}</span>，故 <span class="m">f=1,\ g=e^{-3t}</span>。</li>
+      <li>摺積：<span class="m">(f*g)(t)=\displaystyle\int_0^t 1\cdot e^{-3(t-\tau)}d\tau</span>，或利用交換律改算 <span class="m">\int_0^t e^{-3\tau}d\tau</span>。</li>
+      <li><span class="m">\displaystyle\int_0^t e^{-3\tau}d\tau=\left[-\tfrac13e^{-3\tau}\right]_0^t=\tfrac13\left(1-e^{-3t}\right)</span>。</li>
+      <li>答案：<span class="m">\dfrac13\left(1-e^{-3t}\right)</span>。（以部分分式 <span class="m">\tfrac13\left(\tfrac1s-\tfrac1{s+3}\right)</span> 驗算相同 ✓）</li>
+    </ol></div>
+  </div>
+  <div class="ex">
+    <div class="tag">例題 2 · 進階（部分分式不易處理）</div>
+    <p>求 <span class="m">\mathcal{L}^{-1}\left\{\dfrac{1}{(s^2+4)^2}\right\}</span>。</p>
+    <button class="btn ghost" data-sol="e2" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e2" hidden><ol>
+      <li>因 <span class="m">\mathcal{L}^{-1}\left\{\dfrac{2}{s^2+4}\right\}=\sin2t</span>，故 <span class="m">\dfrac1{(s^2+4)^2}=\dfrac14\cdot\dfrac2{s^2+4}\cdot\dfrac2{s^2+4}</span>，逆轉換為 <span class="m">\tfrac14(\sin2t*\sin2t)</span>。</li>
+      <li>積化和差：<span class="m">\sin2\tau\sin2(t-\tau)=\tfrac12\left[\cos(4\tau-2t)-\cos2t\right]</span>。</li>
+      <li>積分：<span class="m">\displaystyle\int_0^t=\tfrac12\left[\tfrac{\sin(4\tau-2t)}{4}\Big|_0^t-t\cos2t\right]=\tfrac12\left[\tfrac{\sin2t}{2}-t\cos2t\right]</span>。</li>
+      <li>乘上 <span class="m">\tfrac14</span>：<span class="m">\dfrac{\sin2t-2t\cos2t}{16}</span>。與公式 <span class="m">\dfrac{\sin at-at\cos at}{2a^3}\ (a=2)</span> 吻合 ✓</li>
+    </ol></div>
+  </div>
+  <div class="actions"><button class="btn" id="to2" disabled>前往測驗</button><span class="note" id="n2">請至少展開 1 個例題的解題步驟</span></div>
+</section>
+
+<section class="stage" id="s2" hidden>
+  <h2>關卡 3 · 小測驗</h2>
+  <p class="note">共 5 題，每題作答一次即顯示解析。答對 4 題以上解鎖挑戰關。</p>
+  <div id="quiz"></div>
+  <div class="panel" id="result" hidden>
+    <div class="score" id="scoreTxt"></div>
+    <div class="actions"><button class="btn" id="to3" hidden>前往挑戰關</button><button class="btn ghost" id="retry" hidden>再試一次</button></div>
+  </div>
+</section>
+
+<section class="stage" id="s3" hidden>
+  <h2>關卡 4 · 挑戰：RC 低通濾波器對斜坡輸入的響應</h2>
+  <div class="ex">
+    <div class="tag">工程情境</div>
+    <p>RC 低通電路 <span class="m">R=1\ \text{k}\Omega,\ C=500\ \mu\text{F}</span>，故 <span class="m">RC=0.5\ \text{s}</span>。輸出電壓滿足 <span class="m">RC\,v_o'+v_o=v_{in}</span>，<span class="m">v_o(0)=0</span>。輸入為斜坡 <span class="m">v_{in}(t)=3t\ \text{V}</span>。</p>
+    <p>(a) 求脈衝響應 <span class="m">h(t)</span>。<br>(b) 以摺積 <span class="m">v_o=h*v_{in}</span> 求 <span class="m">v_o(t)</span>。<br>(c) 求 <span class="m">v_o(1)</span>（V）。</p>
+  </div>
+  <div id="hints"></div>
+  <div class="actions">
+    <button class="btn ghost" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn ghost" id="fullBtn">查看完整解答</button>
+  </div>
+  <div class="panel">
+    <label for="ansR"><b>作答 (c)：</b><span class="m">v_o(1)</span> ≈ </label>
+    <input class="num" id="ansR" inputmode="decimal" placeholder="例如 1.234"> V
+    <button class="btn" id="checkR">檢查答案</button>
+    <div class="fb" id="rfb" hidden></div>
+  </div>
+  <div class="ex" id="full" hidden>
+    <div class="tag">完整解答</div>
+    <ol>
+      <li>轉換：<span class="m">0.5sV+V=V_{in}\Rightarrow H(s)=\dfrac{1}{0.5s+1}=\dfrac{2}{s+2}</span>。</li>
+      <li>(a) <span class="m">h(t)=2e^{-2t}\ \text{V/V·s}</span>。</li>
+      <li>(b) <span class="m">v_o(t)=\displaystyle\int_0^t 2e^{-2(t-\tau)}\,3\tau\,d\tau</span>；或 <span class="m">V_o=\dfrac{6}{s^2(s+2)}=-\dfrac{3/2}{s}+\dfrac{3}{s^2}+\dfrac{3/2}{s+2}</span>。</li>
+      <li>逆轉換：<span class="m">v_o(t)=3t-\tfrac32+\tfrac32e^{-2t}\ \text{V}</span>。</li>
+      <li>(c) <span class="m">v_o(1)=1.5+1.5e^{-2}\approx1.703\ \text{V}</span>。穩態時輸出追隨輸入但落後 <span class="m">RC=0.5\,\text{s}</span>（<span class="m">3t-1.5=3(t-0.5)</span>）。</li>
+    </ol>
+  </div>
+  <div class="panel done" id="doneBox" hidden>
+    <div class="badge pop"><span>摺積<br>定理<br>★ 達成</span></div>
+    <div class="score">🎉 恭喜！你已掌握【拉普拉斯轉換(V)：摺積定理】！</div>
+    <p class="note" id="hintUsed"></p>
+  </div>
+</section>
+</main>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script>
+(function(){
+const T=(s,disp)=>{try{return katex.renderToString(s,{throwOnError:false,displayMode:!!disp,output:'mathml'})}catch(e){return s}};
+function renderMath(root){
+  (root||document).querySelectorAll('span.m').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.textContent,false);el.dataset.done=1}});
+  (root||document).querySelectorAll('.md[data-tex]').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.dataset.tex,true);el.dataset.done=1}});
+}
+let unlocked=0;
+function go(i){
+  for(let k=0;k<4;k++){document.getElementById('s'+k).hidden=k!==i;document.getElementById('nav'+k).setAttribute('aria-current',k===i?'true':'false')}
+  document.getElementById('prog').style.width=((i+1)*25)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function unlock(i){unlocked=Math.max(unlocked,i);for(let k=0;k<=unlocked;k++)document.getElementById('nav'+k).disabled=false}
+document.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+document.getElementById('to1').onclick=()=>{unlock(1);go(1)};
+
+/* ---------- interactive convolution plot ---------- */
+const sa=document.getElementById('sa'),sb=document.getElementById('sbb'),st=document.getElementById('st');
+const X0=44,X1=628,TM=6;
+const px=t=>X0+(X1-X0)*t/TM, py=v=>210-v*160;
+(function grid(){
+  let g='';for(let t=0;t<=TM;t++){g+=`<line x1="${px(t)}" y1="20" x2="${px(t)}" y2="210" stroke="var(--line)"/><text x="${px(t)}" y="226" text-anchor="middle">${t}</text>`}
+  [0,0.5,1].forEach(v=>{g+=`<line x1="${X0}" y1="${py(v)}" x2="${X1}" y2="${py(v)}" stroke="var(--line)"/><text x="38" y="${py(v)+4}" text-anchor="end">${v}</text>`});
+  document.getElementById('grid').innerHTML=g;
+  let g2='';for(let t=0;t<=TM;t++){g2+=`<line x1="${px(t)}" y1="10" x2="${px(t)}" y2="120" stroke="var(--line)"/><text x="${px(t)}" y="136" text-anchor="middle">${t}</text>`}
+  document.getElementById('grid2').innerHTML=g2;
+})();
+function conv(a,b,t){return Math.abs(a-b)<1e-9?t*Math.exp(-a*t):(Math.exp(-b*t)-Math.exp(-a*t))/(a-b)}
+function draw(){
+  const a=+sa.value,b=+sb.value,t=+st.value;
+  document.getElementById('oa').textContent=a.toFixed(1);document.getElementById('obb').textContent=b.toFixed(1);document.getElementById('ot').textContent=t.toFixed(1);
+  let df='',dg='',da='',n=300,num=0,h=t/n;
+  for(let i=0;i<=300;i++){const x=TM*i/300;df+=(i?'L':'M')+px(x).toFixed(1)+','+py(Math.exp(-a*x)).toFixed(1)}
+  if(t>0){
+    da=`M${px(0)},${py(0)}`;
+    for(let i=0;i<=n;i++){const x=t*i/n,p=Math.exp(-a*x)*Math.exp(-b*(t-x));da+=`L${px(x).toFixed(1)},${py(p).toFixed(1)}`;
+      dg+=(i?'L':'M')+px(x).toFixed(1)+','+py(Math.exp(-b*(t-x))).toFixed(1);num+=(i===0||i===n?0.5:1)*p*h}
+    da+=`L${px(t)},${py(0)}Z`;
+  }
+  document.getElementById('cf').setAttribute('d',df);document.getElementById('cg').setAttribute('d',dg);document.getElementById('area').setAttribute('d',da);
+  const tl=document.getElementById('tline');tl.setAttribute('x1',px(t));tl.setAttribute('x2',px(t));
+  let dc='';for(let i=0;i<=200;i++){const x=TM*i/200;dc+=(i?'L':'M')+px(x).toFixed(1)+','+(110-conv(a,b,x)*90/Math.max(0.5,maxC(a,b))).toFixed(1)}
+  document.getElementById('cc').setAttribute('d',dc);
+  const dot=document.getElementById('dot');dot.setAttribute('cx',px(t));dot.setAttribute('cy',110-conv(a,b,t)*90/Math.max(0.5,maxC(a,b)));
+  const cf=conv(a,b,t);
+  document.getElementById('readout').innerHTML=`<span class="chip k">${T('(f*g)(t)\\approx'+num.toFixed(4))}</span><span class="chip">${T(Math.abs(a-b)<1e-9?'te^{-at}='+cf.toFixed(4):'\\tfrac{e^{-bt}-e^{-at}}{a-b}='+cf.toFixed(4))}</span><span class="chip">${T('F(s)G(s)=\\tfrac{1}{(s+'+a.toFixed(1)+')(s+'+b.toFixed(1)+')}')}</span>`;
+}
+function maxC(a,b){let m=0;for(let x=0;x<=TM;x+=0.05)m=Math.max(m,conv(a,b,x));return m}
+sa.oninput=sb.oninput=st.oninput=draw;
+
+let opened=0;
+document.querySelectorAll('[data-sol]').forEach(btn=>btn.onclick=()=>{
+  const el=document.getElementById(btn.dataset.sol);el.hidden=!el.hidden;btn.setAttribute('aria-expanded',!el.hidden);
+  btn.textContent=el.hidden?'顯示解題步驟':'收合解題步驟';
+  if(!el.hidden){opened++;document.getElementById('to2').disabled=false;document.getElementById('n2').hidden=true}
+});
+document.getElementById('to2').onclick=()=>{unlock(2);go(2)};
+
+const Q=[
+ {q:String.raw`\mathcal{L}^{-1}\{F(s)G(s)\}\text{ 等於？}`,o:[String.raw`f(t)\,g(t)`,String.raw`\int_0^t f(\tau)g(t-\tau)\,d\tau`,String.raw`f(t)+g(t)`,String.raw`f'(t)\,g'(t)`],a:1,
+  e:String.raw`\text{摺積定理：轉換式相乘對應時域摺積，而非逐點相乘。}`},
+ {q:String.raw`\mathcal{L}^{-1}\left\{\dfrac{1}{s(s^2+1)}\right\}\text{ 為？}`,o:[String.raw`\sin t`,String.raw`1-\cos t`,String.raw`\cos t-1`,String.raw`t-\sin t`],a:1,
+  e:String.raw`1*\sin t=\int_0^t\sin\tau\,d\tau=1-\cos t\text{。}`},
+ {q:String.raw`t*t=\int_0^t\tau(t-\tau)\,d\tau=?`,o:[String.raw`\dfrac{t^2}{2}`,String.raw`\dfrac{t^3}{3}`,String.raw`\dfrac{t^3}{6}`,String.raw`t^2`],a:2,
+  e:String.raw`\dfrac{t\cdot t^2}{2}-\dfrac{t^3}{3}=\dfrac{t^3}{6}\text{；亦可由 }\mathcal{L}^{-1}\{1/s^4\}=t^3/6\text{ 驗證。}`},
+ {q:String.raw`\mathcal{L}^{-1}\left\{\dfrac{1}{(s+1)(s+2)}\right\}\text{ 為？}`,o:[String.raw`e^{-t}+e^{-2t}`,String.raw`e^{-2t}-e^{-t}`,String.raw`e^{-t}-e^{-2t}`,String.raw`e^{-3t}`],a:2,
+  e:String.raw`e^{-t}*e^{-2t}=e^{-2t}\int_0^te^{\tau}d\tau=e^{-t}-e^{-2t}\text{。}`},
+ {q:String.raw`\text{下列關於摺積的敘述，哪一個是錯誤的？}`,o:[String.raw`f*g=g*f`,String.raw`f*(g+h)=f*g+f*h`,String.raw`1*f=f`,String.raw`(f*g)*h=f*(g*h)`],a:2,
+  e:String.raw`1*f=\int_0^tf(\tau)\,d\tau\text{（積分），不等於 }f\text{；單位元素是脈衝函數 }\delta(t)\text{。}`}
+];
+let answered=0,correct=0;
+function buildQuiz(){
+  answered=0;correct=0;document.getElementById('result').hidden=true;
+  const box=document.getElementById('quiz');box.innerHTML='';
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="n">第 ${i+1} 題</div><div>${T(it.q)}</div><div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${T(o)}</button>`).join('')}</div><div class="fb" hidden></div>`;
+    d.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(d.dataset.done)return;d.dataset.done=1;answered++;const j=+b.dataset.j,ok=j===it.a;if(ok)correct++;
+      d.querySelectorAll('.opt').forEach((x,k)=>{x.disabled=true;if(k===it.a)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+      const fb=d.querySelector('.fb');fb.hidden=false;fb.className='fb '+(ok?'ok':'no');fb.innerHTML=(ok?'✔ 答對了！':'✘ 答錯了，正確答案是 '+String.fromCharCode(65+it.a)+'。')+' '+T(it.e);
+      if(answered===Q.length)finish();
+    });
+    box.appendChild(d);
+  });
+}
+function finish(){
+  const r=document.getElementById('result');r.hidden=false;const pass=correct>=4;
+  document.getElementById('scoreTxt').textContent=`得分：${correct} / 5 　${pass?'通過！挑戰關已解鎖。':'需答對 4 題以上才能解鎖挑戰關。'}`;
+  document.getElementById('to3').hidden=!pass;document.getElementById('retry').hidden=pass;if(pass)unlock(3);
+  r.scrollIntoView({behavior:'smooth',block:'center'});
+}
+document.getElementById('retry').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'})};
+document.getElementById('to3').onclick=()=>go(3);
+
+const H=[
+ String.raw`不必直接解微分方程：兩邊取拉氏轉換（零初值）得 <span class="m">V_o=H(s)V_{in}</span>，先求 <span class="m">H(s)=\dfrac{1}{0.5s+1}=\dfrac{2}{s+2}</span>，逆轉換即 <span class="m">h(t)</span>。`,
+ String.raw`輸入 <span class="m">v_{in}=3t</span> 的轉換為 <span class="m">3/s^2</span>，所以 <span class="m">V_o=\dfrac{6}{s^2(s+2)}</span>；或直接算 <span class="m">\int_0^t2e^{-2(t-\tau)}\,3\tau\,d\tau</span>。`,
+ String.raw`部分分式 <span class="m">\dfrac{6}{s^2(s+2)}=\dfrac{A}{s}+\dfrac{B}{s^2}+\dfrac{C}{s+2}</span>，得 <span class="m">B=3,\ C=\tfrac32,\ A=-\tfrac32</span>，逆轉換後代入 <span class="m">t=1</span>。`
+];
+let used=0,finished=false;
+const hb=document.getElementById('hintBtn');
+hb.onclick=()=>{if(used>=3)return;const d=document.createElement('div');d.className='hint';d.innerHTML=`<b>提示 ${used+1}：</b>${H[used]}`;document.getElementById('hints').appendChild(d);renderMath(d);used++;
+  hb.textContent=used<3?`取得提示（剩 ${3-used} 個）`:'提示已用完';hb.disabled=used>=3};
+document.getElementById('fullBtn').onclick=()=>{document.getElementById('full').hidden=false;complete(true)};
+document.getElementById('checkR').onclick=()=>{
+  const v=parseFloat(document.getElementById('ansR').value),fb=document.getElementById('rfb');fb.hidden=false;
+  if(isNaN(v)){fb.className='fb no';fb.textContent='請輸入數值，例如 1.703。';return}
+  if(Math.abs(v-(1.5+1.5*Math.exp(-2)))<0.01){fb.className='fb ok';fb.innerHTML='✔ 正確！'+T('v_o(1)=1.5+1.5e^{-2}\\approx1.703\\ \\text{V}');complete(false)}
+  else{fb.className='fb no';fb.textContent='還不對。提示：v_o(t)=3t−3/2+(3/2)e^{−2t}，再代入 t=1。'}
+};
+function complete(viewed){
+  if(finished)return;finished=true;const b=document.getElementById('doneBox');b.hidden=false;
+  document.getElementById('hintUsed').textContent=`本次使用提示數：${used} / 3${viewed?'（已查看完整解答）':''}`;
+  document.getElementById('prog').style.width='100%';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'center'}),100);
+}
+function init(){renderMath();draw();buildQuiz()}
+if(window.katex)init();else window.addEventListener('load',init);
+})();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
