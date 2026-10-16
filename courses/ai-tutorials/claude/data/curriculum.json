@@ -758,10 +758,14 @@
         "跑測試並修錯",
         "除錯：從錯誤訊息到根因"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-16T01:42:23Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-16T01:53:05Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/ep03.html",
+        "src": "courses/ai-tutorials/claude/src/021-project-dev-ep03.js",
+        "i18n": "courses/ai-tutorials/claude/src/021-project-dev-ep03.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 82 秒，圖解 3/6（小步提交、除錯流程、總結迴圈）；查證：code.claude.com Best practices（探索→計畫→實作→提交、提供測試讓 Claude 自行驗證）、Permission modes（Plan 模式）、Checkpointing，資訊截至 2026-10；情境：生活（記帳月總額）＋智慧自動化（4–20 mA 換算測試）＋風能運維（風速—功率曲線與警報除錯）；數據為示意，AI 只提供分析建議，設備相關動作由人員確認。",
       "cases": {
         "life": "為記帳計算函式寫測試",
         "automation": "為感測器數值單位換算寫測試",

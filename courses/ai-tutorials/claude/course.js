@@ -518,6 +518,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "021-project-dev-ep03",
+      "no": 3,
+      "file": "ep03.html",
+      "path": "project-dev/ep03.html",
+      "title": {
+       "zh": "計畫→實作→測試迴圈",
+       "en": "Plan–Build–Test Loop"
+      },
+      "sub": {
+       "zh": "先要計畫、小步提交、撰寫測試、跑測試修錯與除錯",
+       "en": "Plan first, small commits, writing tests, running and fixing, debugging"
+      },
+      "shots": 6,
+      "dur": 82,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -600,7 +621,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-15",
+  "updated": "2026-10-16",
   "languages": [
    "zh",
    "en"
@@ -821,7 +842,7 @@ window.CLAUDE_COURSE = {
    "no": 3,
    "title": "計畫→實作→測試迴圈",
    "title_en": "Plan–Build–Test Loop",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "022-project-dev-ep04",
@@ -1193,6 +1214,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 23,
+ "live": 24,
  "total": 65
 };
