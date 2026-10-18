@@ -271,7 +271,16 @@
       "full_title": "[MOM-CH10-G3] Strain Transformation - 綜合挑戰：壓力容器與直角應變花的結構檢測",
       "file": "ch10-g3.html",
       "published": "2026-10-16T02:30+08:00"
+    },
+    {
+      "ch": 11,
+      "game": 1,
+      "code": "MOM-CH11-G1",
+      "title": "梁與軸的設計探索：斷面係數與傳動軸尺寸",
+      "full_title": "[MOM-CH11-G1] Design of Beams &amp; Shafts - 梁與軸的設計探索：斷面係數與傳動軸尺寸",
+      "file": "ch11-g1.html",
+      "published": "2026-10-19T02:30+08:00"
     }
   ],
-  "updated": "2026-10-16T02:30+08:00"
+  "updated": "2026-10-19T02:30+08:00"
 }
