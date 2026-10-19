@@ -153,7 +153,15 @@
       "title": "拉普拉斯轉換(V)：摺積定理",
       "file": "t12-r2.html",
       "published": "2026-10-16T12:00+08:00"
+    },
+    {
+      "slot": 48,
+      "index": 18,
+      "round": 2,
+      "title": "矩陣代數(II)：逆矩陣與Gauss-Jordan消去法",
+      "file": "t18-r2.html",
+      "published": "2026-10-19T12:00+08:00"
     }
   ],
-  "updated": "2026-10-16T09:35+08:00"
+  "updated": "2026-10-19T09:35+08:00"
 }

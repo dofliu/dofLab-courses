@@ -1,0 +1,350 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>工程數學 | 矩陣代數(II)：逆矩陣與Gauss-Jordan消去法（第 2 輪）</title>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b; --bg:#f3f5fb; --surface:#ffffff; --ink:#151936;
+  --muted:#586080; --line:#dde1ef; --tint:#e8eaf8; --tealtint:#e0f2ef;
+  --ok:#2e7d32; --oktint:#e6f4e7; --bad:#c62828; --badtint:#fbe9e9; --gold:#f2a900;
+  --accent:var(--navy); --accent2:var(--teal);
+  --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+    --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+    --accent:#9fa8ff; --accent2:#4fc3b4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+  --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+  --accent:#9fa8ff; --accent2:#4fc3b4;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;margin:0}
+.wrap{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+header.top{background:var(--navy);color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top .in{max-width:880px;margin:0 auto;padding:14px 16px 12px}
+.course{font-size:12px;letter-spacing:.14em;opacity:.8}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(20px,4.2vw,28px);line-height:1.3;margin:2px 0 10px;text-wrap:balance}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.steps button{font:inherit;font-size:13px;border:0;border-radius:6px;padding:6px 4px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.steps button[aria-current="true"]{background:#00897b;font-weight:700}
+.steps button:disabled{opacity:.45;cursor:not-allowed}
+.bar{height:5px;background:rgba(255,255,255,.18);border-radius:3px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:#4fe0c8;transition:width .4s}
+section.stage{padding-top:24px}
+h2{font-family:var(--serif);font-size:24px;margin:8px 0 12px;color:var(--accent);text-wrap:balance}
+h3{font-size:18px;margin:26px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+.def{border:1px solid var(--line);border-left:5px solid var(--teal);background:var(--tealtint);border-radius:8px;padding:12px 16px;margin:14px 0}
+.def b.lab{display:block;font-size:12px;letter-spacing:.12em;color:var(--accent2)}
+.md{overflow-x:auto;padding:4px 0;text-align:center}
+.md math{font-size:1.15em}
+table.cases{border-collapse:collapse;width:100%;font-size:15px}
+.tbl{overflow-x:auto;margin:12px 0}
+table.cases th,table.cases td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:middle}
+table.cases th{font-size:13px;color:var(--muted);font-weight:500}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 20px}
+.ctrls label{font-size:14px;color:var(--muted);display:flex;justify-content:space-between}
+.ctrls output{font-family:var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.readout{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{font-size:13px;padding:3px 10px;border-radius:999px;background:var(--tint);color:var(--accent)}
+.chip.k{background:var(--teal);color:#fff;font-weight:700}
+svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 18px;background:var(--teal);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:focus-visible,.steps button:focus-visible,.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 8px}
+.note{font-size:14px;color:var(--muted)}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ex .tag{font-size:12px;letter-spacing:.1em;color:var(--accent2);font-weight:700}
+.sol{border-top:1px dashed var(--line);margin-top:12px;padding-top:6px}
+.sol ol{padding-left:22px;margin:6px 0}
+.sol li{margin:8px 0}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.q .n{font-family:var(--mono);color:var(--accent2);font-size:13px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{font:inherit;text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;overflow-x:auto}
+.opt.right{border-color:var(--ok);background:var(--oktint)}
+.opt.wrong{border-color:var(--bad);background:var(--badtint)}
+.fb{margin-top:8px;font-size:15px;padding:8px 12px;border-radius:8px}
+.fb.ok{background:var(--oktint)} .fb.no{background:var(--badtint)}
+.score{font-weight:700;font-size:18px}
+.hint{background:var(--tint);border-radius:8px;padding:10px 14px;margin:10px 0}
+.hint b{color:var(--accent)}
+.done{text-align:center;padding:24px 12px}
+.badge{width:150px;height:150px;margin:8px auto 16px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(from 0deg,#00897b,#1a237e,#00897b);animation:spin 6s linear infinite;box-shadow:0 0 0 6px var(--tealtint)}
+.badge span{width:122px;height:122px;border-radius:50%;background:var(--surface);display:grid;place-items:center;animation:spin 6s linear infinite reverse;
+  font-family:var(--serif);font-weight:900;color:var(--accent);font-size:15px;line-height:1.3}
+.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.badge,.badge span,.pop{animation:none}}
+input.num{font:inherit;font-family:var(--mono);width:110px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+footer{text-align:center;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding:18px 16px;margin-top:20px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<header class="top"><div class="in">
+  <div class="course">工程數學互動學習 · 第 19 講 · 第 2 輪</div>
+  <h1>矩陣代數(II)：逆矩陣與Gauss-Jordan消去法（第 2 輪）</h1>
+  <nav class="steps" aria-label="關卡">
+    <button id="nav0" aria-current="true" data-go="0">📚 學習</button>
+    <button id="nav1" data-go="1" disabled>🔍 理解</button>
+    <button id="nav2" data-go="2" disabled>✏️ 測驗</button>
+    <button id="nav3" data-go="3" disabled>🏆 挑戰</button>
+  </nav>
+  <div class="bar"><i id="prog"></i></div>
+</div></header>
+
+<main class="wrap">
+
+<section class="stage" id="s0">
+  <h2>關卡 1 · 逆矩陣與 Gauss-Jordan 消去法</h2>
+  <p>線性方程組 <span class="m">A\mathbf{x}=\mathbf{b}</span> 若 <span class="m">A</span> 為方陣且「可逆」，解就是 <span class="m">\mathbf{x}=A^{-1}\mathbf{b}</span>。本單元學兩件事：何時可逆、怎麼把 <span class="m">A^{-1}</span> 算出來。</p>
+  <div class="def"><b class="lab">重點定義 · 逆矩陣</b>
+    對 <span class="m">n\times n</span> 方陣 <span class="m">A</span>，若存在 <span class="m">B</span> 使
+    <div class="md" data-tex="AB=BA=I_n"></div>
+    則稱 <span class="m">A</span> 可逆，記 <span class="m">B=A^{-1}</span>。可逆 <span class="m">\iff \det A\neq0</span>（亦即 <span class="m">A</span> 滿秩）。
+  </div>
+  <div class="def"><b class="lab">2×2 公式</b>
+    <div class="md" data-tex="A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\;\Rightarrow\; A^{-1}=\frac{1}{ad-bc}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}"></div>
+  </div>
+  <h3>Gauss-Jordan 消去法</h3>
+  <p>把 <span class="m">A</span> 與單位矩陣並排成增廣矩陣 <span class="m">[A\mid I]</span>，只用三種<b>基本列運算</b>（列交換、某列乘非零常數、某列加上另一列的倍數），化成 <span class="m">[I\mid A^{-1}]</span>。</p>
+  <div class="md" data-tex="[A\mid I]\xrightarrow{\text{列運算}}[I\mid A^{-1}]"></div>
+  <p>若消去過程中左側出現「全零列」，表示 <span class="m">\det A=0</span>，<b>不可逆</b>。</p>
+  <h3>重要性質</h3>
+  <div class="md" data-tex="(AB)^{-1}=B^{-1}A^{-1},\qquad (A^{-1})^{-1}=A,\qquad \det(A^{-1})=\frac{1}{\det A}"></div>
+  <p>幾何上，<span class="m">A</span> 把單位正方形變成平行四邊形，其面積為 <span class="m">|\det A|</span>；<span class="m">\det A=0</span> 時圖形被壓扁成線段，無法復原。</p>
+
+  <h3>互動圖：調整矩陣，觀察行列式與逆矩陣</h3>
+  <div class="panel">
+    <div class="ctrls">
+      <div><label for="ma">a <output id="oma">1.0</output></label><input id="ma" type="range" min="-2" max="2" step="0.1" value="1"></div>
+      <div><label for="mb">b <output id="omb">0.5</output></label><input id="mb" type="range" min="-2" max="2" step="0.1" value="0.5"></div>
+      <div><label for="mc">c <output id="omc">0.0</output></label><input id="mc" type="range" min="-2" max="2" step="0.1" value="0"></div>
+      <div><label for="md">d <output id="omd">1.0</output></label><input id="md" type="range" min="-2" max="2" step="0.1" value="1"></div>
+    </div>
+    <div class="readout" id="readout"></div>
+    <div style="overflow-x:auto">
+    <svg id="plot" viewBox="0 0 400 300" width="100%" role="img" aria-label="單位正方形經矩陣變換後的平行四邊形">
+      <g id="grid"></g>
+      <path id="sq" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <path id="img" fill="var(--teal)" fill-opacity=".3" stroke="var(--accent2)" stroke-width="2.4"/>
+      <line id="v1" stroke="var(--accent)" stroke-width="2.6"/>
+      <line id="v2" stroke="var(--gold)" stroke-width="2.6"/>
+      <text x="394" y="296" text-anchor="end">藍＝A·e₁　金＝A·e₂</text>
+    </svg></div>
+    <p class="note">虛線為單位正方形，綠色為變換後的平行四邊形。把 <span class="m">ad-bc</span> 調到 0（例如 a=d=1、b=c=1）看看——面積消失，逆矩陣不存在。</p>
+  </div>
+  <div class="actions"><button class="btn" id="to1">我已了解 → 前往例題</button></div>
+</section>
+
+<section class="stage" id="s1" hidden>
+  <h2>關卡 2 · 例題解析</h2>
+  <div class="ex">
+    <div class="tag">例題 1 · 基礎（2×2）</div>
+    <p>設 <span class="m">A=\begin{bmatrix}2&1\\5&3\end{bmatrix}</span>，求 <span class="m">A^{-1}</span>，並解 <span class="m">A\mathbf{x}=\begin{bmatrix}1\\2\end{bmatrix}</span>。</p>
+    <button class="btn ghost" data-sol="e1" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e1" hidden><ol>
+      <li>行列式：<span class="m">\det A=2\cdot3-1\cdot5=1\neq0</span>，可逆。</li>
+      <li>代入公式：<span class="m">A^{-1}=\dfrac11\begin{bmatrix}3&-1\\-5&2\end{bmatrix}=\begin{bmatrix}3&-1\\-5&2\end{bmatrix}</span>。</li>
+      <li>檢驗：<span class="m">AA^{-1}=\begin{bmatrix}6-5&-2+2\\15-15&-5+6\end{bmatrix}=I</span> ✓</li>
+      <li>求解：<span class="m">\mathbf{x}=A^{-1}\mathbf{b}=\begin{bmatrix}3-2\\-5+4\end{bmatrix}=\begin{bmatrix}1\\-1\end{bmatrix}</span>。代回 <span class="m">2(1)+(-1)=1,\ 5(1)+3(-1)=2</span> ✓</li>
+    </ol></div>
+  </div>
+  <div class="ex">
+    <div class="tag">例題 2 · 進階（3×3 Gauss-Jordan）</div>
+    <p>用 Gauss-Jordan 消去法求 <span class="m">A=\begin{bmatrix}1&1&0\\1&2&1\\0&1&2\end{bmatrix}</span> 的逆矩陣。</p>
+    <button class="btn ghost" data-sol="e2" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e2" hidden><ol>
+      <li>建立 <span class="m">[A\mid I]=\left[\begin{array}{ccc|ccc}1&1&0&1&0&0\\1&2&1&0&1&0\\0&1&2&0&0&1\end{array}\right]</span>。</li>
+      <li><span class="m">R_2\leftarrow R_2-R_1</span>：第二列變為 <span class="m">[0\ 1\ 1\mid -1\ 1\ 0]</span>。</li>
+      <li><span class="m">R_3\leftarrow R_3-R_2</span>：第三列變為 <span class="m">[0\ 0\ 1\mid 1\ -1\ 1]</span>。</li>
+      <li><span class="m">R_2\leftarrow R_2-R_3</span>：第二列變為 <span class="m">[0\ 1\ 0\mid -2\ 2\ -1]</span>。</li>
+      <li><span class="m">R_1\leftarrow R_1-R_2</span>：第一列變為 <span class="m">[1\ 0\ 0\mid 3\ -2\ 1]</span>。左側已是 <span class="m">I</span>。</li>
+      <li>答案：<span class="m">A^{-1}=\begin{bmatrix}3&-2&1\\-2&2&-1\\1&-1&1\end{bmatrix}</span>。（可驗算第一列乘 <span class="m">A</span> 的第一行：<span class="m">3-2+0=1</span> ✓，且 <span class="m">\det A=1</span> 與全為整數的逆矩陣吻合）</li>
+    </ol></div>
+  </div>
+  <div class="actions"><button class="btn" id="to2" disabled>前往測驗</button><span class="note" id="n2">請至少展開 1 個例題的解題步驟</span></div>
+</section>
+
+<section class="stage" id="s2" hidden>
+  <h2>關卡 3 · 小測驗</h2>
+  <p class="note">共 5 題，每題作答一次即顯示解析。答對 4 題以上解鎖挑戰關。</p>
+  <div id="quiz"></div>
+  <div class="panel" id="result" hidden>
+    <div class="score" id="scoreTxt"></div>
+    <div class="actions"><button class="btn" id="to3" hidden>前往挑戰關</button><button class="btn ghost" id="retry" hidden>再試一次</button></div>
+  </div>
+</section>
+
+<section class="stage" id="s3" hidden>
+  <h2>關卡 4 · 挑戰：三質量彈簧鏈的柔度矩陣</h2>
+  <div class="ex">
+    <div class="tag">工程情境</div>
+    <p>三個質量塊以四根相同彈簧串接，兩端固定於牆，彈簧常數 <span class="m">k=100\ \text{N/m}</span>。靜力平衡方程為 <span class="m">K\mathbf{x}=\mathbf{F}</span>，其中
+    <span class="m">K=k\begin{bmatrix}2&-1&0\\-1&2&-1\\0&-1&2\end{bmatrix}</span>。外力 <span class="m">\mathbf{F}=[10,\ 0,\ 20]^T\ \text{N}</span>。</p>
+    <p>(a) 求 <span class="m">\det\!\left(K/k\right)</span>。<br>(b) 以 Gauss-Jordan 求柔度矩陣 <span class="m">K^{-1}</span>。<br>(c) 求中間質量塊的位移 <span class="m">x_2</span>（單位 m）。</p>
+  </div>
+  <div id="hints"></div>
+  <div class="actions">
+    <button class="btn ghost" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn ghost" id="fullBtn">查看完整解答</button>
+  </div>
+  <div class="panel">
+    <label for="ansR"><b>作答 (c)：</b><span class="m">x_2</span> ≈ </label>
+    <input class="num" id="ansR" inputmode="decimal" placeholder="例如 0.123"> m
+    <button class="btn" id="checkR">檢查答案</button>
+    <div class="fb" id="rfb" hidden></div>
+  </div>
+  <div class="ex" id="full" hidden>
+    <div class="tag">完整解答</div>
+    <ol>
+      <li>(a) 沿第一列展開：<span class="m">\det=2(4-1)-(-1)(-2-0)=6-2=4</span>，不為零，可逆。</li>
+      <li>(b) 對 <span class="m">[K/k\mid I]</span> 做 Gauss-Jordan，得 <span class="m">(K/k)^{-1}=\dfrac14\begin{bmatrix}3&2&1\\2&4&2\\1&2&3\end{bmatrix}</span>，故 <span class="m">K^{-1}=\dfrac{1}{4k}\begin{bmatrix}3&2&1\\2&4&2\\1&2&3\end{bmatrix}=\dfrac1{400}\begin{bmatrix}3&2&1\\2&4&2\\1&2&3\end{bmatrix}</span>。</li>
+      <li>(c) <span class="m">\mathbf{x}=K^{-1}\mathbf{F}=\dfrac1{400}\begin{bmatrix}30+0+20\\20+0+40\\10+0+60\end{bmatrix}=\begin{bmatrix}0.125\\0.150\\0.175\end{bmatrix}\ \text{m}</span>。</li>
+      <li>所以 <span class="m">x_2=0.15\ \text{m}</span>。檢驗第二個方程：<span class="m">100(-0.125+2(0.15)-0.175)=100(0)=0</span> ✓（第二質量無外力）。</li>
+    </ol>
+  </div>
+  <div class="panel done" id="doneBox" hidden>
+    <div class="badge pop"><span>逆矩陣<br>Gauss-Jordan<br>★ 達成</span></div>
+    <div class="score">🎉 恭喜！你已掌握【矩陣代數(II)：逆矩陣與Gauss-Jordan消去法】！</div>
+    <p class="note" id="hintUsed"></p>
+  </div>
+</section>
+</main>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script>
+(function(){
+const T=(s,disp)=>{try{return katex.renderToString(s,{throwOnError:false,displayMode:!!disp,output:'mathml'})}catch(e){return s}};
+function renderMath(root){
+  (root||document).querySelectorAll('span.m').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.textContent,false);el.dataset.done=1}});
+  (root||document).querySelectorAll('.md[data-tex]').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.dataset.tex,true);el.dataset.done=1}});
+}
+let unlocked=0;
+function go(i){
+  for(let k=0;k<4;k++){document.getElementById('s'+k).hidden=k!==i;document.getElementById('nav'+k).setAttribute('aria-current',k===i?'true':'false')}
+  document.getElementById('prog').style.width=((i+1)*25)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function unlock(i){unlocked=Math.max(unlocked,i);for(let k=0;k<=unlocked;k++)document.getElementById('nav'+k).disabled=false}
+document.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+document.getElementById('to1').onclick=()=>{unlock(1);go(1)};
+
+/* ---------- interactive 2x2 plot ---------- */
+const sl={a:document.getElementById('ma'),b:document.getElementById('mb'),c:document.getElementById('mc'),d:document.getElementById('md')};
+const OX=200,OY=150,S=44;
+const P=(x,y)=>[OX+S*x,OY-S*y];
+(function grid(){
+  let g='';
+  for(let i=-4;i<=4;i++){g+=`<line x1="${OX+S*i}" y1="10" x2="${OX+S*i}" y2="290" stroke="var(--line)"/>`}
+  for(let j=-3;j<=3;j++){g+=`<line x1="10" y1="${OY-S*j}" x2="390" y2="${OY-S*j}" stroke="var(--line)"/>`}
+  g+=`<line x1="10" y1="${OY}" x2="390" y2="${OY}" stroke="var(--muted)"/><line x1="${OX}" y1="10" x2="${OX}" y2="290" stroke="var(--muted)"/>`;
+  document.getElementById('grid').innerHTML=g;
+})();
+const f2=x=>(Math.round(x*100)/100).toString();
+function draw(){
+  const a=+sl.a.value,b=+sl.b.value,c=+sl.c.value,d=+sl.d.value;
+  document.getElementById('oma').textContent=a.toFixed(1);document.getElementById('omb').textContent=b.toFixed(1);
+  document.getElementById('omc').textContent=c.toFixed(1);document.getElementById('omd').textContent=d.toFixed(1);
+  const pts=[[0,0],[a,c],[a+b,c+d],[b,d]].map(p=>P(p[0],p[1]));
+  document.getElementById('img').setAttribute('d','M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L')+'Z');
+  const q=[[0,0],[1,0],[1,1],[0,1]].map(p=>P(p[0],p[1]));
+  document.getElementById('sq').setAttribute('d','M'+q.map(p=>p.join(',')).join('L')+'Z');
+  const o=P(0,0),e1=P(a,c),e2=P(b,d);
+  const v1=document.getElementById('v1'),v2=document.getElementById('v2');
+  v1.setAttribute('x1',o[0]);v1.setAttribute('y1',o[1]);v1.setAttribute('x2',e1[0]);v1.setAttribute('y2',e1[1]);
+  v2.setAttribute('x1',o[0]);v2.setAttribute('y1',o[1]);v2.setAttribute('x2',e2[0]);v2.setAttribute('y2',e2[1]);
+  const det=a*d-b*c;const singular=Math.abs(det)<0.005;
+  let html=`<span class="chip k">${T('\\det A='+f2(det))}</span>`;
+  if(singular)html+=`<span class="chip">不可逆（奇異矩陣）</span>`;
+  else html+=`<span class="chip">${T('A^{-1}=\\begin{bmatrix}'+f2(d/det)+'&'+f2(-b/det)+'\\\\'+f2(-c/det)+'&'+f2(a/det)+'\\end{bmatrix}')}</span>`;
+  html+=`<span class="chip">面積 = |det| = ${f2(Math.abs(det))}</span>`;
+  document.getElementById('readout').innerHTML=html;
+}
+Object.values(sl).forEach(s=>s.oninput=draw);
+
+document.querySelectorAll('[data-sol]').forEach(btn=>btn.onclick=()=>{
+  const el=document.getElementById(btn.dataset.sol);el.hidden=!el.hidden;btn.setAttribute('aria-expanded',!el.hidden);
+  btn.textContent=el.hidden?'顯示解題步驟':'收合解題步驟';
+  if(!el.hidden){document.getElementById('to2').disabled=false;document.getElementById('n2').hidden=true}
+});
+document.getElementById('to2').onclick=()=>{unlock(2);go(2)};
+
+const Q=[
+ {q:String.raw`\text{方陣 }A\text{ 可逆的充要條件是？}`,o:[String.raw`\det A=0`,String.raw`\det A\neq0`,String.raw`A\text{ 為對稱矩陣}`,String.raw`A\text{ 的所有元素皆非零}`],a:1,
+  e:String.raw`\text{可逆}\iff\det A\neq0\text{（滿秩）。}`},
+ {q:String.raw`A=\begin{bmatrix}4&3\\1&1\end{bmatrix}\text{，則 }A^{-1}=?`,o:[String.raw`\begin{bmatrix}1&-3\\-1&4\end{bmatrix}`,String.raw`\begin{bmatrix}1&3\\1&4\end{bmatrix}`,String.raw`\begin{bmatrix}-1&3\\1&-4\end{bmatrix}`,String.raw`\begin{bmatrix}4&-3\\-1&1\end{bmatrix}`],a:0,
+  e:String.raw`\det A=4-3=1\text{，故 }A^{-1}=\begin{bmatrix}1&-3\\-1&4\end{bmatrix}\text{。}`},
+ {q:String.raw`A,B\text{ 皆為 }n\times n\text{ 可逆矩陣，則 }(AB)^{-1}=?`,o:[String.raw`A^{-1}B^{-1}`,String.raw`B^{-1}A^{-1}`,String.raw`A^{-1}+B^{-1}`,String.raw`(BA)^{-1}\text{ 且必等於 }A^{-1}B^{-1}`],a:1,
+  e:String.raw`(AB)(B^{-1}A^{-1})=A(BB^{-1})A^{-1}=I\text{，順序要反轉。}`},
+ {q:String.raw`\begin{bmatrix}1&2\\3&k\end{bmatrix}\text{ 不可逆時，}k=?`,o:[String.raw`2`,String.raw`3`,String.raw`6`,String.raw`-6`],a:2,
+  e:String.raw`\det=k-6=0\Rightarrow k=6\text{（此時第二列是第一列的 3 倍）。}`},
+ {q:String.raw`A=\begin{bmatrix}2&1\\5&3\end{bmatrix}\text{，解 }A\mathbf{x}=\begin{bmatrix}1\\2\end{bmatrix}\text{ 得 }\mathbf{x}=?`,o:[String.raw`\begin{bmatrix}1\\1\end{bmatrix}`,String.raw`\begin{bmatrix}-1\\1\end{bmatrix}`,String.raw`\begin{bmatrix}1\\-1\end{bmatrix}`,String.raw`\begin{bmatrix}3\\-5\end{bmatrix}`],a:2,
+  e:String.raw`A^{-1}=\begin{bmatrix}3&-1\\-5&2\end{bmatrix}\text{，}\mathbf{x}=A^{-1}\mathbf{b}=[3-2,\,-5+4]^T=[1,-1]^T\text{。}`}
+];
+let answered=0,correct=0;
+function buildQuiz(){
+  answered=0;correct=0;document.getElementById('result').hidden=true;
+  const box=document.getElementById('quiz');box.innerHTML='';
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="n">第 ${i+1} 題</div><div>${T(it.q)}</div><div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${T(o)}</button>`).join('')}</div><div class="fb" hidden></div>`;
+    d.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(d.dataset.done)return;d.dataset.done=1;answered++;const j=+b.dataset.j,ok=j===it.a;if(ok)correct++;
+      d.querySelectorAll('.opt').forEach((x,k)=>{x.disabled=true;if(k===it.a)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+      const fb=d.querySelector('.fb');fb.hidden=false;fb.className='fb '+(ok?'ok':'no');fb.innerHTML=(ok?'✔ 答對了！':'✘ 答錯了，正確答案是 '+String.fromCharCode(65+it.a)+'。')+' '+T(it.e);
+      if(answered===Q.length)finish();
+    });
+    box.appendChild(d);
+  });
+}
+function finish(){
+  const r=document.getElementById('result');r.hidden=false;const pass=correct>=4;
+  document.getElementById('scoreTxt').textContent=`得分：${correct} / 5 　${pass?'通過！挑戰關已解鎖。':'需答對 4 題以上才能解鎖挑戰關。'}`;
+  document.getElementById('to3').hidden=!pass;document.getElementById('retry').hidden=pass;if(pass)unlock(3);
+  r.scrollIntoView({behavior:'smooth',block:'center'});
+}
+document.getElementById('retry').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'})};
+document.getElementById('to3').onclick=()=>go(3);
+
+const H=[
+ String.raw`先把 <span class="m">k</span> 提出：<span class="m">K=kK_0</span>，<span class="m">K_0=\begin{bmatrix}2&-1&0\\-1&2&-1\\0&-1&2\end{bmatrix}</span>，且 <span class="m">K^{-1}=\dfrac1kK_0^{-1}</span>。對 <span class="m">K_0</span> 沿第一列展開即得行列式 4。`,
+ String.raw`對 <span class="m">[K_0\mid I]</span> 做列運算，過程中會出現 <span class="m">\tfrac32</span> 與 <span class="m">\tfrac43</span>。結果的特徵：對稱，且 <span class="m">K_0^{-1}=\dfrac14\begin{bmatrix}3&2&1\\2&4&2\\1&2&3\end{bmatrix}</span>（可用 <span class="m">K_0K_0^{-1}=I</span> 檢查）。`,
+ String.raw`<span class="m">\mathbf{x}=K^{-1}\mathbf{F}=\dfrac1{400}K_0'\mathbf{F}</span>，其中 <span class="m">K_0'</span> 為上面的整數矩陣。取第二列：<span class="m">x_2=\dfrac{2\cdot10+4\cdot0+2\cdot20}{400}</span>。`
+];
+let used=0,finished=false;
+const hb=document.getElementById('hintBtn');
+hb.onclick=()=>{if(used>=3)return;const d=document.createElement('div');d.className='hint';d.innerHTML=`<b>提示 ${used+1}：</b>${H[used]}`;document.getElementById('hints').appendChild(d);renderMath(d);used++;
+  hb.textContent=used<3?`取得提示（剩 ${3-used} 個）`:'提示已用完';hb.disabled=used>=3};
+document.getElementById('fullBtn').onclick=()=>{document.getElementById('full').hidden=false;renderMath(document.getElementById('full'));complete(true)};
+document.getElementById('checkR').onclick=()=>{
+  const v=parseFloat(document.getElementById('ansR').value),fb=document.getElementById('rfb');fb.hidden=false;
+  if(isNaN(v)){fb.className='fb no';fb.textContent='請輸入數值，例如 0.123。';return}
+  if(Math.abs(v-0.15)<0.002){fb.className='fb ok';fb.innerHTML='✔ 正確！'+T('x_2=\\dfrac{20+40}{400}=0.15\\ \\text{m}');complete(false)}
+  else{fb.className='fb no';fb.textContent='還不對。提示：x = K⁻¹F，K⁻¹ = (1/400)·[[3,2,1],[2,4,2],[1,2,3]]，取第二列與 F 內積。'}
+};
+function complete(viewed){
+  if(finished)return;finished=true;const b=document.getElementById('doneBox');b.hidden=false;
+  document.getElementById('hintUsed').textContent=`本次使用提示數：${used} / 3${viewed?'（已查看完整解答）':''}`;
+  document.getElementById('prog').style.width='100%';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'center'}),100);
+}
+function init(){renderMath();draw();buildQuiz()}
+if(window.katex)init();else window.addEventListener('load',init);
+})();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
