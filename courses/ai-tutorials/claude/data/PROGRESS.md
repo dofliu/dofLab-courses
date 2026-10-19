@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：25
+總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：26
 
 ## 單元清單
 
@@ -36,7 +36,7 @@
 | 019-project-dev-ep01 | project-dev | 從想法到規格 | ✅ done | 2026-10-14 |
 | 020-project-dev-ep02 | project-dev | Claude Code 入門 | ✅ done | 2026-10-15 |
 | 021-project-dev-ep03 | project-dev | 計畫→實作→測試迴圈 | ✅ done | 2026-10-16 |
-| 022-project-dev-ep04 | project-dev | 程式碼審查與重構 | todo | — |
+| 022-project-dev-ep04 | project-dev | 程式碼審查與重構 | ✅ done | 2026-10-19 |
 | q04-project-dev-1 | project-dev | 🧪 專案開發測驗（一） | todo | — |
 | 023-project-dev-ep05 | project-dev | Git 與 GitHub 工作流程 | todo | — |
 | 024-project-dev-ep06 | project-dev | 擴充 Claude Code | todo | — |
@@ -99,3 +99,4 @@
 - 2026-10-14 01:44 UTC｜019-project-dev-ep01｜✅ done｜project-dev/ep01.html、src/019-project-dev-ep01(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-15 01:44 UTC｜020-project-dev-ep02｜✅ done｜project-dev/ep02.html、src/020-project-dev-ep02(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-16 UTC｜021-project-dev-ep03｜✅ done｜project-dev/ep03.html、src/021-project-dev-ep03(.i18n).js｜6 分鏡 82 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
+- 2026-10-19 UTC｜022-project-dev-ep04｜✅ done｜project-dev/ep04.html、src/022-project-dev-ep04(.i18n).js｜6 分鏡 81 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維

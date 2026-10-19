@@ -537,6 +537,27 @@
             "en"
           ],
           "asof": "2026-10"
+        },
+        {
+          "id": "022-project-dev-ep04",
+          "no": 4,
+          "file": "ep04.html",
+          "path": "project-dev/ep04.html",
+          "title": {
+            "zh": "程式碼審查與重構",
+            "en": "Code Review & Refactoring"
+          },
+          "sub": {
+            "zh": "審查清單、找出壞味道、安全重構、效能分析與補齊文件",
+            "en": "Review checklist, code smells, safe refactoring, performance analysis, docs"
+          },
+          "shots": 6,
+          "dur": 81,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-10"
         }
       ],
       "overview": {
@@ -619,7 +640,7 @@
       "quizzes": []
     }
   ],
-  "updated": "2026-10-16",
+  "updated": "2026-10-19",
   "languages": [
     "zh",
     "en"

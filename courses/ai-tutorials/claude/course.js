@@ -539,6 +539,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "022-project-dev-ep04",
+      "no": 4,
+      "file": "ep04.html",
+      "path": "project-dev/ep04.html",
+      "title": {
+       "zh": "程式碼審查與重構",
+       "en": "Code Review & Refactoring"
+      },
+      "sub": {
+       "zh": "審查清單、找出壞味道、安全重構、效能分析與補齊文件",
+       "en": "Review checklist, code smells, safe refactoring, performance analysis, docs"
+      },
+      "shots": 6,
+      "dur": 81,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -621,7 +642,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-16",
+  "updated": "2026-10-19",
   "languages": [
    "zh",
    "en"
@@ -851,7 +872,7 @@ window.CLAUDE_COURSE = {
    "no": 4,
    "title": "程式碼審查與重構",
    "title_en": "Code Review & Refactoring",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "q04-project-dev-1",
@@ -1214,6 +1235,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 24,
+ "live": 25,
  "total": 65
 };

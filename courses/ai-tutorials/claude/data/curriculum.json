@@ -786,10 +786,14 @@
         "效能分析",
         "補齊說明文件"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-19T01:42:12Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-19T01:46:27Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/ep04.html",
+        "src": "courses/ai-tutorials/claude/src/022-project-dev-ep04.js",
+        "i18n": "courses/ai-tutorials/claude/src/022-project-dev-ep04.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors: none、untranslated: none）；6 分鏡 81 秒，圖解 3/6（壞味道、效能、文件）加總結共 4/6；查證：support.claude.com Automated Security Reviews in Claude Code（/security-review、GitHub Actions、輔助人工審查）、Claude Code 最佳實務（提供測試自行驗證），資訊截至 2026-10；未查到官方 /review 文件，故不寫；情境：生活（購物車審查、說明文件）＋智慧自動化（重複 Modbus 讀取、批次讀取）＋風能運維（警報分級查表重構）",
       "cases": {
         "life": "重構一段重複的網頁程式",
         "automation": "整理重複的 Modbus／OPC UA 讀取程式",
