@@ -289,7 +289,16 @@
       "full_title": "[MOM-CH11-G2] Design of Beams &amp; Shafts - 梁與軸的設計計算工坊：鋼梁選型與空心軸設計",
       "file": "ch11-g2.html",
       "published": "2026-10-20T02:30+08:00"
+    },
+    {
+      "ch": 11,
+      "game": 3,
+      "code": "MOM-CH11-G3",
+      "title": "綜合挑戰：懸臂吊車梁與齒輪軸的聯合設計",
+      "full_title": "[MOM-CH11-G3] Design of Beams &amp; Shafts - 綜合挑戰：懸臂吊車梁與齒輪軸的聯合設計",
+      "file": "ch11-g3.html",
+      "published": "2026-10-21T02:30+08:00"
     }
   ],
-  "updated": "2026-10-20T02:30+08:00"
+  "updated": "2026-10-21T02:30+08:00"
 }
