@@ -580,7 +580,30 @@
           "en"
         ],
         "asof": "2026-10"
-      }
+      },
+      "quizzes": [
+        {
+          "id": "q04-project-dev-1",
+          "no": 1,
+          "file": "quiz1.html",
+          "path": "project-dev/quiz1.html",
+          "title": {
+            "zh": "專案開發測驗（一）",
+            "en": "Project Development Checkpoint 1"
+          },
+          "sub": {
+            "zh": "涵蓋第 1–4 集：需求規格、Claude Code 入門、計畫實作測試、審查重構",
+            "en": "Covers lessons 1–4: specs, Claude Code basics, plan–build–test, review and refactor"
+          },
+          "questions": 8,
+          "pass": 80,
+          "langs": [
+            "zh",
+            "en"
+          ],
+          "asof": "2026-10"
+        }
+      ]
     },
     {
       "slug": "teaching",
@@ -640,7 +663,7 @@
       "quizzes": []
     }
   ],
-  "updated": "2026-10-19",
+  "updated": "2026-10-20",
   "languages": [
     "zh",
     "en"

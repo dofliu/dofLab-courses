@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>專案開發測驗（一）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../../../assets/site.css">
+<style>
+.hero .lang{margin-left:auto}
+.hero .seg{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+.hero .seg button{color:#c5cbf0}
+.hero .seg button[aria-pressed="true"]{background:#4dd0c0;color:#0d1026}
+.qwrap{padding-block:28px 56px;display:grid;gap:16px}
+.prog{display:flex;justify-content:space-between;font:600 14px var(--f-mono);color:var(--muted)}
+.track{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.track i{display:block;height:100%;background:var(--accent-2);width:0;transition:width .3s}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.topic{font:600 12px var(--f-mono);letter-spacing:.08em;color:var(--accent-2)}
+.qtext{font-size:18px;font-weight:700;margin:0;line-height:1.6}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit;color:var(--fg);cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt .k{font:700 14px var(--f-mono);color:var(--accent);min-width:20px}
+.opt.ok{border-color:var(--live);background:var(--accent-2-soft)}
+.opt.bad{border-color:#d9534f;background:rgba(217,83,79,.12)}
+.opt[disabled]{cursor:default}
+.why{border-left:4px solid var(--accent-2);background:var(--surface-2);padding:12px 14px;border-radius:0 8px 8px 0;font-size:15px}
+.why b{display:block;margin-bottom:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.score{font:900 56px/1 var(--f-display);color:var(--accent)}
+.pass{color:var(--live)} .fail{color:#d9534f}
+.topics{display:grid;gap:8px}
+.tp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;font-size:15px;align-items:center}
+.tp .bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;grid-column:1/-1}
+.tp .bar i{display:block;height:100%;background:var(--accent-2)}
+.disc{font-size:13px;color:var(--muted)}
+.rev{display:grid;gap:10px}
+.rev .qcard{padding:14px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="../../../../"><i></i>dofLab courses</a>
+      <span class="org" data-zh="國立勤益科技大學 · 智慧自動化工程系" data-en="NCUT · Dept. of Intelligent Automation Engineering">國立勤益科技大學 · 智慧自動化工程系</span>
+      <div class="seg lang" role="group" aria-label="語言 Language"><button data-lang="zh" aria-pressed="true">中文</button><button data-lang="en" aria-pressed="false">EN</button></div>
+    </div>
+    <div class="hero-body">
+      <nav class="crumb"><a href="../" data-zh="← 課程目錄" data-en="← Course index">← 課程目錄</a></nav>
+      <div class="eyebrow" data-zh="CHECKPOINT · 測驗關卡" data-en="CHECKPOINT QUIZ">CHECKPOINT · 測驗關卡</div>
+      <h1 id="ttl">專案開發測驗（一）</h1>
+      <p class="lead" id="intro"></p>
+    </div>
+  </div>
+</header>
+<main class="wrap qwrap" id="main"></main>
+<footer data-zh="© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室" data-en="© Dr. Jui-Hung Liu Lab, Dept. of Intelligent Automation Engineering, NCUT">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script>
+(function(){
+  var Q = {"id": "q04-project-dev-1", "series": "project-dev", "type": "quiz", "no": 1, "title": {"zh": "專案開發測驗（一）", "en": "Project Development Checkpoint 1"}, "intro": {"zh": "涵蓋需求規格、Claude Code 入門、計畫—實作—測試迴圈與程式碼審查：檢查你是否知道先問再做、小步驗證、哪些決定要留給人。80 分通過；本測驗為課程自編練習，非 Anthropic 官方認證。", "en": "Covers specs, Claude Code basics, the plan–build–test loop and code review: do you know to ask first, verify in small steps and leave key decisions to people? Pass at 80. A course-made practice quiz, not an official Anthropic certification."}, "pass": 80, "asof": "2026-10", "covers": ["019-project-dev-ep01", "020-project-dev-ep02", "021-project-dev-ep03", "022-project-dev-ep04"], "questions": [{"id": "d01", "topic": {"zh": "從想法到規格", "en": "Idea to spec"}, "ref": "019-project-dev-ep01", "q": {"zh": "社區要辦活動，你只有「做報名網站」一句話。想讓 Claude 做出你要的東西，第一步最好怎麼做？", "en": "Your community needs an event sign-up site and all you have is that one sentence. What is the best first step with Claude?"}, "opts": [{"zh": "請它先一次問你一個問題：場次、名額、收費、候補", "en": "Ask it to interview you one question at a time: sessions, seats, fees, waitlist"}, {"zh": "直接叫它寫完整網站，不滿意再重來", "en": "Tell it to write the whole site and redo it if you dislike it"}, {"zh": "先挑好字型與配色，再叫它寫程式", "en": "Pick fonts and colours first, then have it code"}, {"zh": "請它自己決定所有功能，你只負責驗收", "en": "Let it decide every feature while you only accept the result"}], "ans": 0, "why": {"zh": "先讓 Claude 反問，需求才會從猜測變成具體；規格再交給它實作。", "en": "Having Claude ask first turns guesses into concrete needs; the spec then guides implementation."}}, {"id": "d02", "topic": {"zh": "從想法到規格", "en": "Idea to spec"}, "ref": "019-project-dev-ep01", "q": {"zh": "風場運維 App 的功能清單太長，下列哪種處理最符合規格的做法？", "en": "The wind O&M app's feature list is far too long. Which handling fits good spec practice?"}, "opts": [{"zh": "全部列為必做，讓 Claude 一次做完", "en": "Mark everything as must-do and have Claude build it all at once"}, {"zh": "分成這次必做、有空再做、這次不做，並為必做項目寫驗收條件", "en": "Split into must-do, nice-to-have and not-now, and write acceptance criteria for the must-dos"}, {"zh": "只寫功能名稱，細節交給 Claude 自行發揮", "en": "Write only feature names and let Claude improvise the details"}, {"zh": "等程式做完再補驗收條件", "en": "Add acceptance criteria after the code is finished"}], "ans": 1, "why": {"zh": "先分範圍做最小可用版本，再用「給定、當、則」寫出可檢查的驗收條件；停機與工單決策仍由人員確認。", "en": "Scope a minimum usable version, then write checkable given/when/then criteria; shutdown and work-order decisions stay with people."}}, {"id": "d03", "topic": {"zh": "Claude Code 入門", "en": "Claude Code basics"}, "ref": "020-project-dev-ep02", "q": {"zh": "拿到前人留下、每隔幾秒讀 PLC 暫存器的 Python 腳本，第一次用 Claude Code 最穩妥的做法是？", "en": "You inherit a Python script that reads PLC registers every few seconds. What is the safest first use of Claude Code?"}, "opts": [{"zh": "直接連上 PLC，請它順便改暫存器的值", "en": "Connect to the PLC and have it change register values too"}, {"zh": "請它在 Plan 模式讀懂並說明腳本，先不改檔、不連線設備", "en": "Have it read and explain the script in Plan mode, without edits or connecting to equipment"}, {"zh": "開啟自動接受所有動作，讓它跑完", "en": "Let it run with every action auto-approved"}, {"zh": "請它直接重寫整支腳本再部署到產線", "en": "Have it rewrite the whole script and deploy it to the line"}], "ans": 1, "why": {"zh": "先讀懂再改；Plan 模式只讀取與規劃。對 PLC 寫入或下指令一律由現場人員確認。", "en": "Understand before editing; Plan mode only reads and plans. Writing or sending commands to a PLC is always confirmed by on-site staff."}}, {"id": "d04", "topic": {"zh": "Claude Code 入門", "en": "Claude Code basics"}, "ref": "020-project-dev-ep02", "q": {"zh": "Claude Code 在待辦清單專案改壞了檔案。關於「還原」，下列哪一項正確？", "en": "Claude Code broke a to-do project's files. Which statement about undoing is correct?"}, "opts": [{"zh": "可用 /rewind 或連按兩次 Esc 還原程式與對話，但用指令刪除或搬移的檔案不會被追蹤", "en": "/rewind or double Esc restores code and conversation, but files deleted or moved by commands are not tracked"}, {"zh": "檢查點會記錄所有操作，所以不需要 Git", "en": "Checkpoints record everything, so Git is unnecessary"}, {"zh": "只能還原對話，無法還原程式碼", "en": "Only the conversation can be restored, never the code"}, {"zh": "必須重新安裝 Claude Code 才能還原", "en": "You must reinstall Claude Code to restore"}], "ans": 0, "why": {"zh": "檢查點是工作階段內的快速還原，不追蹤指令造成的刪除與搬移，長久紀錄仍靠 Git。", "en": "Checkpoints are quick session-level undo; they skip deletes and moves made by commands, so Git remains the lasting record."}}, {"id": "d05", "topic": {"zh": "計畫→實作→測試", "en": "Plan, build, test"}, "ref": "021-project-dev-ep03", "q": {"zh": "4–20 mA 對應 0–10 bar 的換算函式，請 Claude 寫測試時，哪組測試最完整？", "en": "For a 4–20 mA to 0–10 bar conversion, which test set is most complete when asking Claude?"}, "opts": [{"zh": "只測 12 mA 一個點", "en": "Only the 12 mA point"}, {"zh": "4、12、20 mA 與超出範圍報錯，並由你核對預期值是否符合規格", "en": "4, 12 and 20 mA plus out-of-range errors, with you checking expected values against the spec"}, {"zh": "隨機取三個數字，結果交給 Claude 判斷對錯", "en": "Three random numbers, with Claude judging pass or fail"}, {"zh": "不寫測試，直接看程式碼像不像對", "en": "No tests; just judge whether the code looks right"}], "ans": 1, "why": {"zh": "邊界值與異常值要涵蓋，預期值由人依規格確認，測試才是可靠的驗證方法。", "en": "Cover boundary and invalid values, and have a person confirm expected values against the spec so tests give real verification."}}, {"id": "d06", "topic": {"zh": "計畫→實作→測試", "en": "Plan, build, test"}, "ref": "021-project-dev-ep03", "q": {"zh": "風速警報規則報錯「字串不能和數字比大小」。把問題交給 Claude 時，哪種做法最好？", "en": "A wind-speed alarm rule fails with “cannot compare string with number”. What is the best way to hand it to Claude?"}, "opts": [{"zh": "只說「壞掉了，幫我修」", "en": "Say only “it’s broken, fix it”"}, {"zh": "把警告全部隱藏，讓畫面看起來正常", "en": "Suppress all warnings so it looks fine"}, {"zh": "改掉門檻數字，看看會不會過", "en": "Change the threshold numbers and see if it passes"}, {"zh": "貼上完整錯誤訊息，找出風速仍是文字的根因，修正後補回歸測試", "en": "Paste the full error, find that wind speed is still text, fix it and add a regression test"}], "ans": 3, "why": {"zh": "完整錯誤訊息加根因分析，最小修正再補回歸測試；警報門檻與停機判斷由人員確認。", "en": "Full error plus root cause, a minimal fix and a regression test; alarm thresholds and shutdown decisions are confirmed by people."}}, {"id": "d07", "topic": {"zh": "程式碼審查與重構", "en": "Review and refactor"}, "ref": "022-project-dev-ep04", "q": {"zh": "請 Claude 審查購物車網頁程式，哪個請求最能得到有用的結果？", "en": "You ask Claude to review a shopping-cart page. Which request gets the most useful result?"}, "opts": [{"zh": "「幫我看看」", "en": "“Take a look”"}, {"zh": "「告訴我這段程式好不好」", "en": "“Tell me if this code is good”"}, {"zh": "列出正確性、安全、可讀性、測試、效能五項，先列問題與建議、不要改檔", "en": "List correctness, security, readability, tests and performance; list problems and suggestions without editing files"}, {"zh": "「全部重寫成最新框架」", "en": "“Rewrite everything in the newest framework”"}], "ans": 2, "why": {"zh": "具體的審查清單加「先列建議、不改檔」，由你決定採用哪些；/security-review 輔助但不取代人工審查。", "en": "A concrete checklist plus “suggest, don’t edit” lets you decide what to adopt; /security-review assists but does not replace human review."}}, {"id": "d08", "topic": {"zh": "程式碼審查與重構", "en": "Review and refactor"}, "ref": "022-project-dev-ep04", "q": {"zh": "讀取 200 個感測點覺得很慢。依本課，下一步應該是什麼？", "en": "Reading 200 sensor points feels slow. By this lesson, what is the next step?"}, "opts": [{"zh": "憑感覺把所有函式都改成非同步", "en": "Make every function asynchronous on instinct"}, {"zh": "先量測時間花在哪裡，只改瓶頸（例如改批次讀取），再量一次", "en": "Measure where the time goes, change only the bottleneck (e.g. batched reads), then measure again"}, {"zh": "先把感測點數量減半", "en": "Halve the number of sensor points first"}, {"zh": "直接換更快的電腦", "en": "Just buy a faster computer"}], "ans": 1, "why": {"zh": "有量測才知道瓶頸，也才能證明改善；通訊設定由現場人員確認。", "en": "Measurements reveal the bottleneck and prove the gain; on-site staff confirm communication settings."}}]}, main = document.getElementById('main');
+  var LANG='zh';
+  try{ var q0=new URLSearchParams(location.search).get('lang'), sv=localStorage.getItem('rea-lang');
+    LANG=(q0==='en'||q0==='zh')?q0:(sv==='en'||sv==='zh')?sv:((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'); }catch(e){}
+  var PASS = Q.pass||80, KEY='claude-quiz-'+Q.id;
+  var S = {order:[], i:0, ans:[], done:false, chosen:null};
+  var T = {
+    zh:{q:'題',of:' / ',next:'下一題',finish:'看結果',retry:'重新作答',review:'答錯的題目',score:'分',pass:'通過',fail:'未通過，建議回頭複習後再試',best:'最佳成績',topics:'各主題答對率',ref:'對應單元',ok:'答對了',bad:'答錯了',why:'解析',back:'回到課程目錄',asof:'資訊截至',unofficial:'本測驗為課程自編的練習題，並非 Anthropic 官方認證考試；功能與方案可能調整，請以官方說明為準。',start:'開始作答',nq:' 題 · 及格 '+PASS+' 分 · 約 '+Math.ceil(Q.questions.length*.7)+' 分鐘'},
+    en:{q:'Q',of:' / ',next:'Next',finish:'See results',retry:'Try again',review:'Questions you missed',score:'pts',pass:'Passed',fail:'Not passed yet — review the lessons and try again',best:'Best score',topics:'Accuracy by topic',ref:'Lesson',ok:'Correct',bad:'Incorrect',why:'Explanation',back:'Back to course index',asof:'Information as of',unofficial:'This quiz is self-authored practice for this course, not an official Anthropic certification exam. Features and plans may change; follow official documentation.',start:'Start',nq:' questions · pass at '+PASS+' · about '+Math.ceil(Q.questions.length*.7)+' min'}
+  };
+  function L(o){return o[LANG]||o.zh;} function tt(k){return T[LANG][k];}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function best(){try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){return null;}}
+  function save(pct){try{var b=best();if(!b||pct>b.best)localStorage.setItem(KEY,JSON.stringify({best:pct,passed:pct>=PASS||(b&&b.passed)||false,at:Date.now()}));else if(pct>=PASS&&!b.passed){b.passed=true;localStorage.setItem(KEY,JSON.stringify(b));}}catch(e){}}
+  function start(){
+    S.order=shuffle(Q.questions.map(function(_,i){return i;}));
+    S.opts=Q.questions.map(function(q){return shuffle(q.opts.map(function(_,i){return i;}));});
+    S.i=0;S.ans=[];S.done=false;S.chosen=null;draw();
+  }
+  function head(){
+    document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';
+    document.querySelectorAll('[data-zh]').forEach(function(el){el.textContent=el.dataset[LANG];});
+    document.querySelectorAll('[data-lang]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
+    document.getElementById('ttl').textContent=L(Q.title);document.getElementById('intro').textContent=L(Q.intro);
+    document.title=L(Q.title);
+  }
+  function qcard(q,qi,chosen,showWhy){
+    var h='<div class="qcard"><div class="topic">'+esc(L(q.topic))+(q.ref?' · '+esc(tt('ref'))+' '+esc(q.ref):'')+'</div><p class="qtext">'+esc(L(q.q))+'</p><div class="opts">';
+    S.opts[qi].forEach(function(oi,k){
+      var cls='opt',dis=chosen!==null&&chosen!==undefined?' disabled':'';
+      if(chosen!==null&&chosen!==undefined){if(oi===q.ans)cls+=' ok';else if(oi===chosen)cls+=' bad';}
+      h+='<button class="'+cls+'" data-o="'+oi+'"'+dis+'><span class="k">'+String.fromCharCode(65+k)+'</span><span>'+esc(L(q.opts[oi]))+'</span></button>';
+    });
+    h+='</div>';
+    if(showWhy)h+='<div class="why"><b>'+(chosen===q.ans?'✔ '+tt('ok'):'✘ '+tt('bad'))+' · '+tt('why')+'</b>'+esc(L(q.why))+'</div>';
+    return h+'</div>';
+  }
+  function draw(){
+    head();
+    if(!S.order.length)return intro();
+    if(S.done)return result();
+    var n=S.order.length,qi=S.order[S.i],q=Q.questions[qi];
+    var h='<div class="prog"><span>'+(S.i+1)+tt('of')+n+'</span><span>'+(best()?tt('best')+' '+best().best:'')+'</span></div><div class="track"><i style="width:'+(S.i/n*100)+'%"></i></div>';
+    h+=qcard(q,qi,S.chosen,S.chosen!==null);
+    if(S.chosen!==null)h+='<div class="row"><button class="btn" id="nx">'+(S.i+1<n?tt('next'):tt('finish'))+'</button></div>';
+    h+='<p class="disc">'+esc(tt('unofficial'))+' '+esc(tt('asof'))+' '+esc(Q.asof||'')+'</p>';
+    main.innerHTML=h;
+    main.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){
+      var qq=Q.questions[S.order[S.i]];S.chosen=+b.dataset.o;S.ans.push({qi:S.order[S.i],c:S.chosen,ok:S.chosen===qq.ans});draw();};});
+    var nx=document.getElementById('nx');
+    if(nx)nx.onclick=function(){if(S.i+1<n){S.i++;S.chosen=null;}else{S.done=true;}draw();window.scrollTo(0,0);};
+  }
+  function intro(){
+    main.innerHTML='<div class="qcard"><p class="qtext">'+esc(L(Q.title))+'</p><p>'+Q.questions.length+tt('nq')+'</p><p class="disc">'+esc(tt('unofficial'))+'</p><div class="row"><button class="btn" id="go">'+tt('start')+'</button></div></div>';
+    document.getElementById('go').onclick=start;
+  }
+  function result(){
+    var n=S.ans.length,ok=S.ans.filter(function(a){return a.ok;}).length,pct=Math.round(ok/n*100),pass=pct>=PASS;
+    save(pct);
+    var h='<div class="qcard"><div class="score '+(pass?'pass':'fail')+'">'+pct+'<small style="font-size:20px"> '+tt('score')+'</small></div><p class="qtext '+(pass?'pass':'fail')+'">'+(pass?'✔ '+tt('pass'):tt('fail'))+' ('+ok+tt('of')+n+')</p>';
+    var tp={};S.ans.forEach(function(a){var q=Q.questions[a.qi],k=L(q.topic);tp[k]=tp[k]||[0,0];tp[k][1]++;if(a.ok)tp[k][0]++;});
+    h+='<div class="topic">'+tt('topics')+'</div><div class="topics">';
+    Object.keys(tp).forEach(function(k){var v=tp[k];h+='<div class="tp"><span>'+esc(k)+'</span><b>'+v[0]+'/'+v[1]+'</b><div class="bar"><i style="width:'+(v[0]/v[1]*100)+'%"></i></div></div>';});
+    h+='</div><div class="row"><button class="btn" id="rt">'+tt('retry')+'</button><a class="btn ghost" href="../'+(LANG==='en'?'?lang=en':'')+'">'+tt('back')+'</a></div></div>';
+    var miss=S.ans.filter(function(a){return !a.ok;});
+    if(miss.length){h+='<h2>'+tt('review')+'</h2><div class="rev">';miss.forEach(function(a){h+=qcard(Q.questions[a.qi],a.qi,a.c,true);});h+='</div>';}
+    h+='<p class="disc">'+esc(tt('unofficial'))+' '+esc(tt('asof'))+' '+esc(Q.asof||'')+'</p>';
+    main.innerHTML=h;document.getElementById('rt').onclick=function(){start();window.scrollTo(0,0);};
+  }
+  document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(){LANG=b.dataset.lang;try{localStorage.setItem('rea-lang',LANG);}catch(e){}draw();};});
+  draw();
+})();
+</script>
+</body>
+</html>

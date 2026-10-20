@@ -582,7 +582,30 @@ window.CLAUDE_COURSE = {
       "en"
      ],
      "asof": "2026-10"
-    }
+    },
+    "quizzes": [
+     {
+      "id": "q04-project-dev-1",
+      "no": 1,
+      "file": "quiz1.html",
+      "path": "project-dev/quiz1.html",
+      "title": {
+       "zh": "專案開發測驗（一）",
+       "en": "Project Development Checkpoint 1"
+      },
+      "sub": {
+       "zh": "涵蓋第 1–4 集：需求規格、Claude Code 入門、計畫實作測試、審查重構",
+       "en": "Covers lessons 1–4: specs, Claude Code basics, plan–build–test, review and refactor"
+      },
+      "questions": 8,
+      "pass": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
+     }
+    ]
    },
    {
     "slug": "teaching",
@@ -642,7 +665,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-19",
+  "updated": "2026-10-20",
   "languages": [
    "zh",
    "en"
@@ -881,7 +904,7 @@ window.CLAUDE_COURSE = {
    "no": 1,
    "title": "專案開發測驗（一）",
    "title_en": "Project Development Checkpoint 1",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "023-project-dev-ep05",
@@ -1235,6 +1258,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 25,
+ "live": 26,
  "total": 65
 };
