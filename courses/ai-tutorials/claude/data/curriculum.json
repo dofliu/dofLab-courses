@@ -841,10 +841,14 @@
         "回應審查意見",
         "解決衝突"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-21T01:41:41Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-21T01:47:25Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/ep05.html",
+        "src": "courses/ai-tutorials/claude/src/023-project-dev-ep05.js",
+        "i18n": "courses/ai-tutorials/claude/src/023-project-dev-ep05.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors: none、untranslated: none）；6 分鏡 82 秒，圖解 5/6（分支、PR 描述、審查意見、衝突、總結）；查證：code.claude.com Common workflows（請 Claude 建立 PR、補強 PR 描述、送出前審查）、Claude Code GitHub Actions（PR／issue 留言 @claude、/install-github-app、觸發者需寫入權限、合併前審查 Claude 變更、CLAUDE.md 定義規範），資訊截至 2026-10；commit 訊息格式與衝突解法為一般 Git 實務，未宣稱為官方功能；情境：生活（社團網站分支協作）＋智慧自動化（產線掃描週期 commit、設定檔衝突）＋風能運維（振動警報門檻 PR 與審查）",
       "cases": {
         "life": "多人合作更新社團網站",
         "automation": "產線程式版本控管與變更紀錄",

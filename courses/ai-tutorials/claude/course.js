@@ -560,6 +560,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "023-project-dev-ep05",
+      "no": 5,
+      "file": "ep05.html",
+      "path": "project-dev/ep05.html",
+      "title": {
+       "zh": "Git 與 GitHub 工作流程",
+       "en": "Git & GitHub Workflow"
+      },
+      "sub": {
+       "zh": "分支策略、commit 訊息、PR 描述、回應審查意見與解決衝突",
+       "en": "Branching, commit messages, PR descriptions, review comments, resolving conflicts"
+      },
+      "shots": 6,
+      "dur": 82,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -665,7 +686,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-20",
+  "updated": "2026-10-21",
   "languages": [
    "zh",
    "en"
@@ -913,7 +934,7 @@ window.CLAUDE_COURSE = {
    "no": 5,
    "title": "Git 與 GitHub 工作流程",
    "title_en": "Git & GitHub Workflow",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "024-project-dev-ep06",
@@ -1258,6 +1279,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 26,
+ "live": 27,
  "total": 65
 };
