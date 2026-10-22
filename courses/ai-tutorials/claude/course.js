@@ -581,6 +581,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "024-project-dev-ep06",
+      "no": 6,
+      "file": "ep06.html",
+      "path": "project-dev/ep06.html",
+      "title": {
+       "zh": "擴充 Claude Code",
+       "en": "Extending Claude Code"
+      },
+      "sub": {
+       "zh": "CLAUDE.md、斜線指令、子代理、MCP 與 hooks",
+       "en": "CLAUDE.md, slash commands, subagents, MCP and hooks"
+      },
+      "shots": 6,
+      "dur": 82,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -686,7 +707,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-21",
+  "updated": "2026-10-22",
   "languages": [
    "zh",
    "en"
@@ -943,7 +964,7 @@ window.CLAUDE_COURSE = {
    "no": 6,
    "title": "擴充 Claude Code",
    "title_en": "Extending Claude Code",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "025-project-dev-ep07",
@@ -1279,6 +1300,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 27,
+ "live": 28,
  "total": 65
 };

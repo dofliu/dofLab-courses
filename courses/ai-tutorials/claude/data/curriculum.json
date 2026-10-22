@@ -869,10 +869,14 @@
         "MCP 伺服器",
         "Hooks"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-22T01:42:09Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-22T01:47:16Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/ep06.html",
+        "src": "courses/ai-tutorials/claude/src/024-project-dev-ep06.js",
+        "i18n": "courses/ai-tutorials/claude/src/024-project-dev-ep06.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors: none、untranslated: none）；6 分鏡 82 秒，全部為圖解；查證：code.claude.com 文件（Memory、Subagents、Slash commands、MCP、Hooks guide），資訊截至 2026-10；情境：生活（社團網站寫作風格與 /weekly 指令）＋智慧自動化（產線命名規則、line-reviewer 子代理、PreToolUse 保護 PLC 參數檔）＋風能運維（唯讀工單 MCP）；示意資料已於 note 註明，設備動作由人員確認",
       "cases": {
         "life": "CLAUDE.md 記錄網站的寫作風格",
         "automation": "CLAUDE.md 記錄設備命名與單位規則",
