@@ -602,6 +602,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "025-project-dev-ep07",
+      "no": 7,
+      "file": "ep07.html",
+      "path": "project-dev/ep07.html",
+      "title": {
+       "zh": "部署上線：GitHub Pages",
+       "en": "Deploying to GitHub Pages"
+      },
+      "sub": {
+       "zh": "靜態網站、資料驅動、push 自動部署、自訂網域與上線檢查",
+       "en": "Static sites, data-driven pages, deploy on push, custom domains and pre-launch checks"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -707,7 +728,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-22",
+  "updated": "2026-10-23",
   "languages": [
    "zh",
    "en"
@@ -973,7 +994,7 @@ window.CLAUDE_COURSE = {
    "no": 7,
    "title": "部署上線：GitHub Pages",
    "title_en": "Deploying to GitHub Pages",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "026-project-dev-ep08",
@@ -1300,6 +1321,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 28,
+ "live": 29,
  "total": 65
 };

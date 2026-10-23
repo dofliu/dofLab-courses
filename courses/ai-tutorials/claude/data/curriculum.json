@@ -897,10 +897,14 @@
         "自訂網域",
         "上線檢查"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-23T01:42:05Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-23T01:45:34Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/ep07.html",
+        "src": "courses/ai-tutorials/claude/src/025-project-dev-ep07.js",
+        "i18n": "courses/ai-tutorials/claude/src/025-project-dev-ep07.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors: none、untranslated: none）；6 分鏡 83 秒，6 分鏡皆為圖解；查證：GitHub Docs（Pages 發佈來源、自訂網域 DNS 記錄、Enforce HTTPS、Actions 發佈不建立 CNAME 檔），資訊截至 2026-10；情境：生活（作品集網站）＋智慧自動化（產線成果頁 catalog.json）＋風能運維（運維知識庫、自訂網域）",
       "cases": {
         "life": "發佈個人作品集網站",
         "automation": "發佈產線改善成果展示頁",
