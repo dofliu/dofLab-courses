@@ -1,0 +1,357 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>工程數學 | Z轉換(I)：定義、性質與反Z轉換（第 2 輪）</title>
+<style>
+:root{
+  --navy:#1a237e; --teal:#00897b; --bg:#f3f5fb; --surface:#ffffff; --ink:#151936;
+  --muted:#586080; --line:#dde1ef; --tint:#e8eaf8; --tealtint:#e0f2ef;
+  --ok:#2e7d32; --oktint:#e6f4e7; --bad:#c62828; --badtint:#fbe9e9; --gold:#f2a900;
+  --accent:var(--navy); --accent2:var(--teal);
+  --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+    --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+    --accent:#9fa8ff; --accent2:#4fc3b4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1124; --surface:#171b35; --ink:#e6e8f6; --muted:#9aa1c4; --line:#2a3056;
+  --tint:#1f2550; --tealtint:#123a37; --ok:#66bb6a; --oktint:#15311a; --bad:#ef6f6f; --badtint:#3a1a1d;
+  --accent:#9fa8ff; --accent2:#4fc3b4;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;margin:0}
+.wrap{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+header.top{background:var(--navy);color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top .in{max-width:880px;margin:0 auto;padding:14px 16px 12px}
+.course{font-size:12px;letter-spacing:.14em;opacity:.8}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(20px,4.2vw,28px);line-height:1.3;margin:2px 0 10px;text-wrap:balance}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.steps button{font:inherit;font-size:13px;border:0;border-radius:6px;padding:6px 4px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.steps button[aria-current="true"]{background:#00897b;font-weight:700}
+.steps button:disabled{opacity:.45;cursor:not-allowed}
+.bar{height:5px;background:rgba(255,255,255,.18);border-radius:3px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:#4fe0c8;transition:width .4s}
+section.stage{padding-top:24px}
+h2{font-family:var(--serif);font-size:24px;margin:8px 0 12px;color:var(--accent);text-wrap:balance}
+h3{font-size:18px;margin:26px 0 8px;color:var(--accent)}
+p{margin:10px 0}
+.def{border:1px solid var(--line);border-left:5px solid var(--teal);background:var(--tealtint);border-radius:8px;padding:12px 16px;margin:14px 0}
+.def b.lab{display:block;font-size:12px;letter-spacing:.12em;color:var(--accent2)}
+.md{overflow-x:auto;padding:4px 0;text-align:center}
+.md math{font-size:1.15em}
+table.cases{border-collapse:collapse;width:100%;font-size:15px}
+.tbl{overflow-x:auto;margin:12px 0}
+table.cases th,table.cases td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:middle}
+table.cases th{font-size:13px;color:var(--muted);font-weight:500}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 20px}
+.ctrls label{font-size:14px;color:var(--muted);display:flex;justify-content:space-between}
+.ctrls output{font-family:var(--mono);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.readout{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{font-size:13px;padding:3px 10px;border-radius:999px;background:var(--tint);color:var(--accent)}
+.chip.k{background:var(--teal);color:#fff;font-weight:700}
+svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 18px;background:var(--teal);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:focus-visible,.steps button:focus-visible,.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 8px}
+.note{font-size:14px;color:var(--muted)}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.ex .tag{font-size:12px;letter-spacing:.1em;color:var(--accent2);font-weight:700}
+.sol{border-top:1px dashed var(--line);margin-top:12px;padding-top:6px}
+.sol ol{padding-left:22px;margin:6px 0}
+.sol li{margin:8px 0}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.q .n{font-family:var(--mono);color:var(--accent2);font-size:13px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media (max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{font:inherit;text-align:left;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;overflow-x:auto}
+.opt.right{border-color:var(--ok);background:var(--oktint)}
+.opt.wrong{border-color:var(--bad);background:var(--badtint)}
+.fb{margin-top:8px;font-size:15px;padding:8px 12px;border-radius:8px}
+.fb.ok{background:var(--oktint)} .fb.no{background:var(--badtint)}
+.score{font-weight:700;font-size:18px}
+.hint{background:var(--tint);border-radius:8px;padding:10px 14px;margin:10px 0}
+.hint b{color:var(--accent)}
+.done{text-align:center;padding:24px 12px}
+.badge{width:150px;height:150px;margin:8px auto 16px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(from 0deg,#00897b,#1a237e,#00897b);animation:spin 6s linear infinite;box-shadow:0 0 0 6px var(--tealtint)}
+.badge span{width:122px;height:122px;border-radius:50%;background:var(--surface);display:grid;place-items:center;animation:spin 6s linear infinite reverse;
+  font-family:var(--serif);font-weight:900;color:var(--accent);font-size:15px;line-height:1.3}
+.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.badge,.badge span,.pop{animation:none}}
+input.num{font:inherit;font-family:var(--mono);width:110px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+footer{text-align:center;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding:18px 16px;margin-top:20px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<header class="top"><div class="in">
+  <div class="course">工程數學互動學習 · 第 27 講 · 第 2 輪</div>
+  <h1>Z轉換(I)：定義、性質與反Z轉換（第 2 輪）</h1>
+  <nav class="steps" aria-label="關卡">
+    <button id="nav0" aria-current="true" data-go="0">📚 學習</button>
+    <button id="nav1" data-go="1" disabled>🔍 理解</button>
+    <button id="nav2" data-go="2" disabled>✏️ 測驗</button>
+    <button id="nav3" data-go="3" disabled>🏆 挑戰</button>
+  </nav>
+  <div class="bar"><i id="prog"></i></div>
+</div></header>
+
+<main class="wrap">
+
+<section class="stage" id="s0">
+  <h2>關卡 1 · 離散訊號的「拉氏轉換」</h2>
+  <p>拉氏轉換處理連續時間訊號 <span class="m">f(t)</span>；數位控制、數位濾波處理的是取樣後的<b>序列</b> <span class="m">x[n]</span>。Z 轉換把序列變成複變數 <span class="m">z</span> 的函數，讓差分方程變成代數方程。</p>
+  <div class="def"><b class="lab">重點定義 · 單邊 Z 轉換</b>
+    <div class="md" data-tex="X(z)=\mathcal{Z}\{x[n]\}=\sum_{n=0}^{\infty}x[n]\,z^{-n}"></div>
+    級數在收斂域（ROC）內才有意義。例如 <span class="m">x[n]=a^n</span> 時為等比級數，需 <span class="m">|z|>|a|</span>。
+  </div>
+  <div class="def"><b class="lab">核心公式 · 指數序列</b>
+    <div class="md" data-tex="\mathcal{Z}\{a^n\}=\sum_{n=0}^{\infty}\left(\frac{a}{z}\right)^n=\frac{1}{1-az^{-1}}=\frac{z}{z-a},\quad |z|>|a|"></div>
+  </div>
+  <h3>常用轉換對</h3>
+  <div class="tbl"><table class="cases">
+    <tr><th>x[n]（n ≥ 0）</th><th>X(z)</th></tr>
+    <tr><td><span class="m">\delta[n]</span></td><td><span class="m">1</span></td></tr>
+    <tr><td><span class="m">u[n]=1</span></td><td><span class="m">\dfrac{z}{z-1}</span></td></tr>
+    <tr><td><span class="m">a^n</span></td><td><span class="m">\dfrac{z}{z-a}</span></td></tr>
+    <tr><td><span class="m">n</span></td><td><span class="m">\dfrac{z}{(z-1)^2}</span></td></tr>
+    <tr><td><span class="m">n\,a^n</span></td><td><span class="m">\dfrac{az}{(z-a)^2}</span></td></tr>
+  </table></div>
+  <h3>重要性質</h3>
+  <ul>
+    <li><b>線性：</b><span class="m">\mathcal{Z}\{\alpha x+\beta y\}=\alpha X+\beta Y</span></li>
+    <li><b>右移（延遲）：</b>若 <span class="m">x[n]=0\ (n<0)</span>，則 <span class="m">\mathcal{Z}\{x[n-k]\}=z^{-k}X(z)</span></li>
+    <li><b>指數加權：</b><span class="m">\mathcal{Z}\{a^nx[n]\}=X(z/a)</span></li>
+    <li><b>初值定理：</b><span class="m">x[0]=\lim_{z\to\infty}X(z)</span>　<b>終值定理：</b><span class="m">x[\infty]=\lim_{z\to1}(z-1)X(z)</span>（極點須在單位圓內，至多 z=1 一個單根）</li>
+  </ul>
+  <h3>反 Z 轉換</h3>
+  <p>步驟：先把 <span class="m">X(z)/z</span> 做部分分式，再把每項乘回 <span class="m">z</span>，查表即得 <span class="m">x[n]</span>。極點 <span class="m">z=a</span> 對應 <span class="m">a^n</span>：<b>極點在單位圓內（|a|&lt;1）→ 衰減；在圓外 → 發散</b>。</p>
+
+  <h3>互動圖：極點位置決定序列行為</h3>
+  <p>調整 <span class="m">a</span>，觀察 <span class="m">x[n]=a^n</span> 的火柴棒圖與極點在 z 平面的位置。</p>
+  <div class="panel">
+    <div class="ctrls">
+      <div><label for="sa">a <output id="oa">0.80</output></label><input id="sa" type="range" min="-1.3" max="1.3" step="0.05" value="0.8"></div>
+    </div>
+    <div class="readout" id="readout"></div>
+    <div style="overflow-x:auto">
+    <svg id="plot" viewBox="0 0 640 230" width="100%" role="img" aria-label="序列 a^n 的火柴棒圖">
+      <g id="grid"></g><g id="stems"></g>
+      <text x="632" y="222" text-anchor="end">n</text>
+    </svg></div>
+    <div style="overflow-x:auto">
+    <svg id="zp" viewBox="0 0 300 180" width="100%" style="max-width:340px;display:block;margin:6px auto" role="img" aria-label="z 平面極點圖">
+      <circle cx="150" cy="90" r="60" fill="none" stroke="var(--accent2)" stroke-width="1.8" stroke-dasharray="5 3"/>
+      <line x1="20" y1="90" x2="280" y2="90" stroke="var(--line)"/><line x1="150" y1="10" x2="150" y2="170" stroke="var(--line)"/>
+      <circle cx="150" cy="90" r="3" fill="var(--muted)"/>
+      <text x="216" y="84">1</text><text x="86" y="84">-1</text><text x="276" y="106" text-anchor="end">Re z</text>
+      <path id="x1" stroke="var(--bad)" stroke-width="3" d="M0,0"/><path id="x2" stroke="var(--bad)" stroke-width="3" d="M0,0"/>
+    </svg></div>
+    <p class="note">虛線是單位圓，× 是極點 <span class="m">z=a</span>。極點在圓內序列衰減；負的 a 會使序列正負交錯。</p>
+  </div>
+  <div class="actions"><button class="btn" id="to1">我已了解 → 前往例題</button></div>
+</section>
+
+<section class="stage" id="s1" hidden>
+  <h2>關卡 2 · 例題解析</h2>
+  <div class="ex">
+    <div class="tag">例題 1 · 基礎（正轉換）</div>
+    <p>求 <span class="m">x[n]=3(0.5)^n+2u[n]</span>（<span class="m">n\ge0</span>）的 Z 轉換。</p>
+    <button class="btn ghost" data-sol="e1" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e1" hidden><ol>
+      <li>用線性：<span class="m">X(z)=3\,\mathcal{Z}\{(0.5)^n\}+2\,\mathcal{Z}\{u[n]\}</span>。</li>
+      <li>查表：<span class="m">\mathcal{Z}\{(0.5)^n\}=\dfrac{z}{z-0.5}</span>，<span class="m">\mathcal{Z}\{u[n]\}=\dfrac{z}{z-1}</span>。</li>
+      <li>合併：<span class="m">X(z)=\dfrac{3z}{z-0.5}+\dfrac{2z}{z-1}</span>。</li>
+      <li>通分：<span class="m">X(z)=\dfrac{3z(z-1)+2z(z-0.5)}{(z-0.5)(z-1)}=\dfrac{5z^2-4z}{(z-0.5)(z-1)}</span>。檢查初值：<span class="m">\lim_{z\to\infty}X=5=3+2=x[0]</span> ✓</li>
+    </ol></div>
+  </div>
+  <div class="ex">
+    <div class="tag">例題 2 · 進階（反轉換）</div>
+    <p>求 <span class="m">X(z)=\dfrac{z}{(z-1)(z-0.5)}</span> 的反 Z 轉換 <span class="m">x[n]</span>，並用終值定理驗算。</p>
+    <button class="btn ghost" data-sol="e2" aria-expanded="false">顯示解題步驟</button>
+    <div class="sol" id="e2" hidden><ol>
+      <li>除以 z：<span class="m">\dfrac{X(z)}{z}=\dfrac{1}{(z-1)(z-0.5)}=\dfrac{A}{z-1}+\dfrac{B}{z-0.5}</span>。</li>
+      <li>遮蓋法：<span class="m">A=\dfrac{1}{1-0.5}=2</span>，<span class="m">B=\dfrac{1}{0.5-1}=-2</span>。</li>
+      <li>乘回 z：<span class="m">X(z)=\dfrac{2z}{z-1}-\dfrac{2z}{z-0.5}</span>。</li>
+      <li>查表：<span class="m">x[n]=2-2(0.5)^n=2\left(1-0.5^n\right)</span>。前幾項 <span class="m">0,\ 1,\ 1.5,\ 1.75,\dots</span>（與長除法 <span class="m">X=z^{-1}+1.5z^{-2}+1.75z^{-3}+\cdots</span> 一致 ✓）</li>
+      <li>終值定理：<span class="m">\lim_{z\to1}(z-1)X(z)=\dfrac{1}{1-0.5}=2</span>，與 <span class="m">x[\infty]=2</span> 吻合 ✓</li>
+    </ol></div>
+  </div>
+  <div class="actions"><button class="btn" id="to2" disabled>前往測驗</button><span class="note" id="n2">請至少展開 1 個例題的解題步驟</span></div>
+</section>
+
+<section class="stage" id="s2" hidden>
+  <h2>關卡 3 · 小測驗</h2>
+  <p class="note">共 5 題，每題作答一次即顯示解析。答對 4 題以上解鎖挑戰關。</p>
+  <div id="quiz"></div>
+  <div class="panel" id="result" hidden>
+    <div class="score" id="scoreTxt"></div>
+    <div class="actions"><button class="btn" id="to3" hidden>前往挑戰關</button><button class="btn ghost" id="retry" hidden>再試一次</button></div>
+  </div>
+</section>
+
+<section class="stage" id="s3" hidden>
+  <h2>關卡 4 · 挑戰：數位低通濾波器的步階響應</h2>
+  <div class="ex">
+    <div class="tag">工程情境</div>
+    <p>感測器訊號經一階數位低通濾波器處理，其脈衝響應為 <span class="m">h[n]=0.2\,(0.8)^n,\ n\ge0</span>。輸入單位步階 <span class="m">x[n]=u[n]</span>。</p>
+    <p>(a) 求轉移函數 <span class="m">H(z)</span>。<br>(b) 求步階響應 <span class="m">Y(z)=H(z)\dfrac{z}{z-1}</span> 的反轉換 <span class="m">y[n]</span>。<br>(c) 求 <span class="m">y[5]</span>，並用終值定理求穩態值。</p>
+  </div>
+  <div id="hints"></div>
+  <div class="actions">
+    <button class="btn ghost" id="hintBtn">取得提示（剩 3 個）</button>
+    <button class="btn ghost" id="fullBtn">查看完整解答</button>
+  </div>
+  <div class="panel">
+    <label for="ansR"><b>作答 (c)：</b><span class="m">y[5]</span> ≈ </label>
+    <input class="num" id="ansR" inputmode="decimal" placeholder="例如 0.123">
+    <button class="btn" id="checkR">檢查答案</button>
+    <div class="fb" id="rfb" hidden></div>
+  </div>
+  <div class="ex" id="full" hidden>
+    <div class="tag">完整解答</div>
+    <ol>
+      <li>(a) <span class="m">H(z)=0.2\dfrac{z}{z-0.8}</span>。</li>
+      <li>(b) <span class="m">Y(z)=\dfrac{0.2z^2}{(z-0.8)(z-1)}</span>，故 <span class="m">\dfrac{Y}{z}=\dfrac{0.2z}{(z-0.8)(z-1)}=\dfrac{1}{z-1}-\dfrac{0.8}{z-0.8}</span>。</li>
+      <li>乘回 z 並查表：<span class="m">y[n]=1-0.8\,(0.8)^n=1-0.8^{n+1}</span>。檢查 <span class="m">y[0]=0.2=h[0]</span> ✓</li>
+      <li>(c) <span class="m">y[5]=1-0.8^6=1-0.262144\approx0.7379</span>。</li>
+      <li>終值：<span class="m">\lim_{z\to1}(z-1)Y(z)=\dfrac{0.2}{1-0.8}=1</span>，極點 0.8 在單位圓內故定理適用；濾波器直流增益為 1，輸出最終追上輸入。</li>
+    </ol>
+  </div>
+  <div class="panel done" id="doneBox" hidden>
+    <div class="badge pop"><span>Z轉換<br>★ 達成</span></div>
+    <div class="score">🎉 恭喜！你已掌握【Z轉換(I)：定義、性質與反Z轉換】！</div>
+    <p class="note" id="hintUsed"></p>
+  </div>
+</section>
+</main>
+
+<footer>© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script>
+(function(){
+const T=(s,disp)=>{try{return katex.renderToString(s,{throwOnError:false,displayMode:!!disp,output:'mathml'})}catch(e){return s}};
+function renderMath(root){
+  (root||document).querySelectorAll('span.m').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.textContent,false);el.dataset.done=1}});
+  (root||document).querySelectorAll('.md[data-tex]').forEach(el=>{if(!el.dataset.done){el.innerHTML=T(el.dataset.tex,true);el.dataset.done=1}});
+}
+let unlocked=0;
+function go(i){
+  for(let k=0;k<4;k++){document.getElementById('s'+k).hidden=k!==i;document.getElementById('nav'+k).setAttribute('aria-current',k===i?'true':'false')}
+  document.getElementById('prog').style.width=((i+1)*25)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function unlock(i){unlocked=Math.max(unlocked,i);for(let k=0;k<=unlocked;k++)document.getElementById('nav'+k).disabled=false}
+document.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+document.getElementById('to1').onclick=()=>{unlock(1);go(1)};
+
+/* ---------- stem plot of a^n ---------- */
+const sa=document.getElementById('sa');
+const N=16,X0=44,X1=628,Y0=115,SC=70;
+const px=n=>X0+(X1-X0)*n/N;
+(function grid(){
+  let g='';
+  for(let n=0;n<=N;n+=2)g+=`<text x="${px(n)}" y="222" text-anchor="middle">${n}</text>`;
+  [-1.5,-1,-0.5,0,0.5,1,1.5].forEach(v=>{const y=Y0-v*SC*0.9;g+=`<line x1="${X0}" y1="${y}" x2="${X1}" y2="${y}" stroke="${v===0?'var(--muted)':'var(--line)'}"/><text x="38" y="${y+4}" text-anchor="end">${v}</text>`});
+  document.getElementById('grid').innerHTML=g;
+})();
+function draw(){
+  const a=+sa.value;
+  document.getElementById('oa').textContent=a.toFixed(2);
+  let s='';
+  for(let n=0;n<=N;n++){
+    let v=Math.pow(a,n);if(!isFinite(v))v=0;
+    let c=Math.max(-1.7,Math.min(1.7,v));
+    const y=Y0-c*SC*0.9;
+    s+=`<line x1="${px(n)}" y1="${Y0}" x2="${px(n)}" y2="${y}" stroke="var(--accent)" stroke-width="2.2"/><circle cx="${px(n)}" cy="${y}" r="4.5" fill="var(--teal)"/>`;
+  }
+  document.getElementById('stems').innerHTML=s;
+  const cx=150+60*a,cy=90,r=6;
+  document.getElementById('x1').setAttribute('d',`M${cx-r},${cy-r}L${cx+r},${cy+r}`);
+  document.getElementById('x2').setAttribute('d',`M${cx-r},${cy+r}L${cx+r},${cy-r}`);
+  const beh=Math.abs(a)<1?'衰減（穩定）':(Math.abs(a)===1?'臨界（等幅）':'發散（不穩定）');
+  document.getElementById('readout').innerHTML=`<span class="chip k">${T('X(z)=\\dfrac{z}{z-'+(a<0?'('+a.toFixed(2)+')':a.toFixed(2))+'}')}</span><span class="chip">${T('|z|>'+Math.abs(a).toFixed(2))}</span><span class="chip">${beh}</span>${a<0?'<span class="chip">正負交錯</span>':''}`;
+}
+sa.oninput=draw;
+
+document.querySelectorAll('[data-sol]').forEach(btn=>btn.onclick=()=>{
+  const el=document.getElementById(btn.dataset.sol);el.hidden=!el.hidden;btn.setAttribute('aria-expanded',!el.hidden);
+  btn.textContent=el.hidden?'顯示解題步驟':'收合解題步驟';
+  if(!el.hidden){document.getElementById('to2').disabled=false;document.getElementById('n2').hidden=true}
+});
+document.getElementById('to2').onclick=()=>{unlock(2);go(2)};
+
+const Q=[
+ {q:String.raw`\mathcal{Z}\{(-2)^n\}\ (n\ge0)\text{ 為？}`,o:[String.raw`\dfrac{z}{z-2}`,String.raw`\dfrac{z}{z+2}`,String.raw`\dfrac{z}{z-1}`,String.raw`\dfrac{1}{z+2}`],a:1,
+  e:String.raw`a=-2\Rightarrow \dfrac{z}{z-a}=\dfrac{z}{z+2}\ (|z|>2)\text{。}`},
+ {q:String.raw`\mathcal{Z}\{u[n-1]\}\text{ 為？}`,o:[String.raw`\dfrac{z}{z-1}`,String.raw`\dfrac{1}{z-1}`,String.raw`\dfrac{z^2}{z-1}`,String.raw`\dfrac{1}{z}`],a:1,
+  e:String.raw`\text{右移一格乘 }z^{-1}\text{：}z^{-1}\cdot\dfrac{z}{z-1}=\dfrac{1}{z-1}\text{。}`},
+ {q:String.raw`\mathcal{Z}^{-1}\left\{\dfrac{3z}{z+0.5}\right\}\text{ 為？}`,o:[String.raw`3(0.5)^n`,String.raw`-3(0.5)^n`,String.raw`3(-0.5)^n`,String.raw`0.5(-3)^n`],a:2,
+  e:String.raw`\dfrac{z}{z-a}\leftrightarrow a^n,\ a=-0.5\text{，故 }3(-0.5)^n\text{（正負交錯並衰減）。}`},
+ {q:String.raw`\text{序列 }x[n]=(1.2)^n\text{ 的極點與行為為？}`,o:[String.raw`z=1.2\text{，發散}`,String.raw`z=1.2\text{，衰減}`,String.raw`z=0.8\text{，發散}`,String.raw`z=-1.2\text{，衰減}`],a:0,
+  e:String.raw`\text{極點 }z=a=1.2\text{ 在單位圓外，序列發散。}`},
+ {q:String.raw`X(z)=\dfrac{2z}{(z-1)(z-0.5)}\text{ 的終值 }x[\infty]\text{ 為？}`,o:[String.raw`2`,String.raw`0`,String.raw`4`,String.raw`\infty`],a:2,
+  e:String.raw`\lim_{z\to1}(z-1)X(z)=\dfrac{2}{1-0.5}=4\text{（極點 1 為單根、0.5 在圓內，定理適用）。}`}
+];
+let answered=0,correct=0;
+function buildQuiz(){
+  answered=0;correct=0;document.getElementById('result').hidden=true;
+  const box=document.getElementById('quiz');box.innerHTML='';
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="n">第 ${i+1} 題</div><div>${T(it.q)}</div><div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}">${String.fromCharCode(65+j)}. ${T(o)}</button>`).join('')}</div><div class="fb" hidden></div>`;
+    d.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(d.dataset.done)return;d.dataset.done=1;answered++;const j=+b.dataset.j,ok=j===it.a;if(ok)correct++;
+      d.querySelectorAll('.opt').forEach((x,k)=>{x.disabled=true;if(k===it.a)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+      const fb=d.querySelector('.fb');fb.hidden=false;fb.className='fb '+(ok?'ok':'no');fb.innerHTML=(ok?'✔ 答對了！':'✘ 答錯了，正確答案是 '+String.fromCharCode(65+it.a)+'。')+' '+T(it.e);
+      if(answered===Q.length)finish();
+    });
+    box.appendChild(d);
+  });
+}
+function finish(){
+  const r=document.getElementById('result');r.hidden=false;const pass=correct>=4;
+  document.getElementById('scoreTxt').textContent=`得分：${correct} / 5 　${pass?'通過！挑戰關已解鎖。':'需答對 4 題以上才能解鎖挑戰關。'}`;
+  document.getElementById('to3').hidden=!pass;document.getElementById('retry').hidden=pass;if(pass)unlock(3);
+  r.scrollIntoView({behavior:'smooth',block:'center'});
+}
+document.getElementById('retry').onclick=()=>{buildQuiz();window.scrollTo({top:0,behavior:'smooth'})};
+document.getElementById('to3').onclick=()=>go(3);
+
+const H=[
+ String.raw`對 <span class="m">h[n]=0.2(0.8)^n</span> 直接用指數序列公式 <span class="m">\dfrac{z}{z-a}</span>（a=0.8），再乘常數 0.2。`,
+ String.raw`步階輸入 <span class="m">U(z)=\dfrac{z}{z-1}</span>，所以 <span class="m">Y=\dfrac{0.2z^2}{(z-0.8)(z-1)}</span>。先除以 z 再做部分分式：<span class="m">\dfrac{Y}{z}=\dfrac{A}{z-1}+\dfrac{B}{z-0.8}</span>。`,
+ String.raw`遮蓋法得 <span class="m">A=\dfrac{0.2\cdot1}{1-0.8}=1,\ B=\dfrac{0.2\cdot0.8}{0.8-1}=-0.8</span>，故 <span class="m">y[n]=1-0.8(0.8)^n</span>，再代入 n=5。`
+];
+let used=0,finished=false;
+const hb=document.getElementById('hintBtn');
+hb.onclick=()=>{if(used>=3)return;const d=document.createElement('div');d.className='hint';d.innerHTML=`<b>提示 ${used+1}：</b>${H[used]}`;document.getElementById('hints').appendChild(d);renderMath(d);used++;
+  hb.textContent=used<3?`取得提示（剩 ${3-used} 個）`:'提示已用完';hb.disabled=used>=3};
+document.getElementById('fullBtn').onclick=()=>{document.getElementById('full').hidden=false;renderMath(document.getElementById('full'));complete(true)};
+document.getElementById('checkR').onclick=()=>{
+  const v=parseFloat(document.getElementById('ansR').value),fb=document.getElementById('rfb');fb.hidden=false;
+  if(isNaN(v)){fb.className='fb no';fb.textContent='請輸入數值，例如 0.738。';return}
+  if(Math.abs(v-(1-Math.pow(0.8,6)))<0.005){fb.className='fb ok';fb.innerHTML='✔ 正確！'+T('y[5]=1-0.8^6\\approx0.7379');complete(false)}
+  else{fb.className='fb no';fb.textContent='還不對。提示：y[n]=1−0.8^(n+1)，代入 n=5。'}
+};
+function complete(viewed){
+  if(finished)return;finished=true;const b=document.getElementById('doneBox');b.hidden=false;
+  document.getElementById('hintUsed').textContent=`本次使用提示數：${used} / 3${viewed?'（已查看完整解答）':''}`;
+  document.getElementById('prog').style.width='100%';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'center'}),100);
+}
+function init(){renderMath();draw();buildQuiz()}
+if(window.katex)init();else window.addEventListener('load',init);
+})();
+</script>
+
+
+<!-- dofLab:back --><a href="./" aria-label="回到工程數學課程目錄" style="position:fixed;z-index:9999;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a237e;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

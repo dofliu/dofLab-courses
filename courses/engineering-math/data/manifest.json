@@ -161,7 +161,15 @@
       "title": "矩陣代數(II)：逆矩陣與Gauss-Jordan消去法",
       "file": "t18-r2.html",
       "published": "2026-10-19T12:00+08:00"
+    },
+    {
+      "slot": 56,
+      "index": 26,
+      "round": 2,
+      "title": "Z轉換(I)：定義、性質與反Z轉換",
+      "file": "t26-r2.html",
+      "published": "2026-10-23T12:00+08:00"
     }
   ],
-  "updated": "2026-10-19T09:35+08:00"
+  "updated": "2026-10-23T09:35+08:00"
 }
