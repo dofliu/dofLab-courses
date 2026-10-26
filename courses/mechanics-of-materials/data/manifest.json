@@ -316,7 +316,16 @@
       "full_title": "[MOM-CH12-G2] Deflection of Beams &amp; Shafts - 撓度計算工坊：疊加法與撓度限制",
       "file": "ch12-g2.html",
       "published": "2026-10-23T02:30+08:00"
+    },
+    {
+      "ch": 12,
+      "game": 3,
+      "code": "MOM-CH12-G3",
+      "title": "綜合挑戰：夾層鋼梁與齒輪軸的雙控設計",
+      "full_title": "[MOM-CH12-G3] Deflection of Beams &amp; Shafts - 綜合挑戰：夾層鋼梁與齒輪軸的雙控設計",
+      "file": "ch12-g3.html",
+      "published": "2026-10-26T21:24+08:00"
     }
   ],
-  "updated": "2026-10-23T02:30+08:00"
+  "updated": "2026-10-26T21:24+08:00"
 }
