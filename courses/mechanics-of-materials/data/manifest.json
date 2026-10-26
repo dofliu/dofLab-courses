@@ -325,7 +325,16 @@
       "full_title": "[MOM-CH12-G3] Deflection of Beams &amp; Shafts - 綜合挑戰：夾層鋼梁與齒輪軸的雙控設計",
       "file": "ch12-g3.html",
       "published": "2026-10-26T21:24+08:00"
+    },
+    {
+      "ch": 13,
+      "game": 1,
+      "code": "MOM-CH13-G1",
+      "title": "挫曲探索：直尺、鋼管支撐與臨界載重",
+      "full_title": "[MOM-CH13-G1] Buckling of Columns - 挫曲探索：直尺、鋼管支撐與臨界載重",
+      "file": "ch13-g1.html",
+      "published": "2026-10-27T02:30+08:00"
     }
   ],
-  "updated": "2026-10-26T21:24+08:00"
+  "updated": "2026-10-27T02:30+08:00"
 }

@@ -1,0 +1,786 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH13-G1] Buckling of Columns - 挫曲探索：直尺、鋼管支撐與臨界載重</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+</style>
+<style>
+@keyframes puff{0%,100%{transform:scale(1)}50%{transform:scale(1.06,1.12)}}
+.puff{transform-box:fill-box;transform-origin:center;animation:puff 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+.sway{transform-origin:60px 86px;animation:sway 2.6s ease-in-out infinite}
+@keyframes blow{0%{transform:translateX(-8px);opacity:0}40%{opacity:1}100%{transform:translateX(10px);opacity:0}}
+.blow{animation:blow 1.8s linear infinite}
+@keyframes push{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.push{animation:push 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH13-G1</span>挫曲探索：直尺、鋼管支撐與臨界載重</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 13 · Buckling of Columns · Game 1</span>
+      <h2>挫曲探索：直尺、鋼管支撐與臨界載重</h2>
+      <p style="color:var(--muted);max-width:65ch">用手壓一支塑膠直尺，壓到某個力量時它會突然「彈」彎——這不是材料壓碎，而是<b>失去穩定</b>，叫做<b>挫曲</b>。細長的柱子在遠低於降伏強度的載重下就可能挫曲。這一關我們認識 <b>Euler 臨界載重 Pcr = π²EI/(KL)²</b>、有效長度係數 K、細長比 KL/r，以及 Euler 公式什麼時候才能用。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>柱挫曲的四個核心觀念</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="直尺挫曲">
+          <path d="M100 8 V20" stroke="#e8640a" stroke-width="3"/><polygon points="100,26 95,16 105,16" fill="#e8640a"/>
+          <path d="M100 28 Q124 52 100 84" fill="none" stroke="#1a3a5c" stroke-width="6" class="spread"/>
+          <rect x="84" y="84" width="32" height="5" fill="#cfd9e6" stroke="#1a3a5c"/>
+          <text x="140" y="56" font-size="10" fill="#e8640a">突然側彎！</text>
+        </svg>
+        <h3>挫曲是「穩定性」問題</h3><span class="formula">P &lt; Pcr 穩定；P = Pcr 臨界</span>
+        <p class="life">壓直尺時，力量小於臨界值，放手它會彈回直線；到達<b>臨界載重 Pcr</b>，尺突然側彎。重點：挫曲是<b>失穩</b>，不是材料壓壞，所以和降伏強度無關。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="Euler 公式">
+          <line x1="100" y1="10" x2="100" y2="80" stroke="#1a3a5c" stroke-width="5"/>
+          <text x="100" y="90" font-size="9.5" fill="#e8640a" text-anchor="middle">Pcr = π²EI / (KL)²</text>
+          <text x="118" y="36" font-size="9" fill="#5b6b7e">E：材料硬度</text><text x="118" y="52" font-size="9" fill="#5b6b7e">I：斷面慣性矩</text><text x="118" y="68" font-size="9" fill="#5b6b7e">L：柱長</text>
+        </svg>
+        <h3>Euler 臨界載重</h3><span class="formula">Pcr = π²EI/(KL)²</span>
+        <p class="life">Pcr 與 <b>EI 成正比</b>、與<b>有效長度 KL 的平方成反比</b>。長度加倍，Pcr 只剩 1/4；斷面取最小的 I（會朝最弱的方向彎）。注意：公式裡<b>沒有</b>降伏強度 σy。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="端點約束">
+          <path d="M20 80 V20" stroke="#1a3a5c" stroke-width="3"/><text x="20" y="90" font-size="9" fill="#5b6b7e" text-anchor="middle">固定-自由 K=2</text>
+          <path d="M80 80 Q92 50 80 20" fill="none" stroke="#e8640a" stroke-width="3" class="spread"/><text x="80" y="90" font-size="9" fill="#5b6b7e" text-anchor="middle">鉸接 K=1</text>
+          <path d="M140 80 Q152 50 140 20" fill="none" stroke="#1a3a5c" stroke-width="3" class="spread"/><text x="146" y="90" font-size="9" fill="#5b6b7e" text-anchor="middle">固定-鉸 0.7</text>
+          <path d="M184 80 Q194 50 184 20" fill="none" stroke="#e8640a" stroke-width="3" class="spread"/><text x="180" y="12" font-size="9" fill="#5b6b7e" text-anchor="middle">固定 0.5</text>
+        </svg>
+        <h3>有效長度係數 K</h3><span class="formula">兩端鉸 1.0／固-自 2.0／兩端固 0.5／固-鉸 0.7</span>
+        <p class="life">兩端被抓得越緊，柱越不容易彎。<b>KL</b> 就是「等效成兩端鉸接的長度」。同一根柱，兩端固定的 Pcr 是兩端鉸接的 <b>4 倍</b>，是一端固定一端自由的 <b>16 倍</b>。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="細長比">
+          <line x1="36" y1="18" x2="36" y2="76" stroke="#1a3a5c" stroke-width="10"/><line x1="100" y1="10" x2="100" y2="76" stroke="#1a3a5c" stroke-width="4"/>
+          <text x="36" y="88" font-size="9" fill="#5b6b7e" text-anchor="middle">短粗：先壓壞</text><text x="108" y="88" font-size="9" fill="#e8640a">細長：先挫曲</text>
+          <text x="140" y="34" font-size="10" fill="#1a3a5c">λ = KL/r</text><text x="140" y="50" font-size="9" fill="#5b6b7e">r = √(I/A)</text>
+        </svg>
+        <h3>細長比與適用範圍</h3><span class="formula">σcr = π²E/(KL/r)² ≤ σy 才適用</span>
+        <p class="life"><b>細長比 KL/r</b> 越大越容易挫曲。若算出的 σcr 超過降伏強度，代表柱還沒挫曲就先壓降伏——這時 Euler 公式<b>不適用</b>，要用其他經驗公式。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：調整條件，看柱怎麼彎</h3>
+      <p class="note">選端點約束與材料，調整柱長與圓桿直徑。左圖為挫曲後的撓曲形狀（側向位移已放大顯示），右圖顯示 σcr 相對於降伏強度 σy 的比例。</p>
+      <div class="row">
+        <label>端點約束 <select id="s1type"><option value="pp" selected>兩端鉸接（K = 1.0）</option><option value="cf">一端固定一端自由（K = 2.0）</option><option value="ff">兩端固定（K = 0.5）</option><option value="fp">一端固定一端鉸接（K = 0.7）</option></select></label>
+        <label>材料 <select id="s1mat"><option value="0">鋼 E = 200 GPa，σy = 250 MPa</option><option value="1">鋁 E = 70 GPa，σy = 240 MPa</option><option value="2">木材 E = 11 GPa，σ壓 = 30 MPa</option></select></label>
+      </div>
+      <div class="grid2">
+        <svg viewBox="0 0 460 300" class="ndiag" id="colFig1" aria-label="柱的挫曲形狀"></svg>
+        <div class="stack">
+          <div class="slider"><span>柱長 L</span><input type="range" id="s1L" min="0.3" max="5" step="0.1" value="2"><span class="mono" id="v1L">2.0 m</span></div>
+          <div class="slider"><span>圓桿直徑 d</span><input type="range" id="s1d" min="10" max="100" step="5" value="40"><span class="mono" id="v1d">40 mm</span></div>
+          <div class="readout">
+            <div><small>細長比 KL/r</small><b id="r1a">—</b></div>
+            <div><small>Pcr</small><b id="r1b">—</b></div>
+            <div><small>σcr</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note mono" id="r1e"></p>
+        </div>
+      </div>
+      <p class="note">觀察：把 L 加倍，Pcr 變 1/4；把端點由鉸接改成兩端固定，Pcr 變 4 倍；把鋼換成高強度鋼，E 不變，Pcr 也不變。</p>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：鋼管支撐桿與木製看板柱</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：工地鋼管支撐桿會不會挫曲？</h3>
+      <p style="color:var(--muted);margin-top:4px">臨時支撐用鋼管，外徑 OD = 100 mm、壁厚 t = 6 mm，鋼材 E = 200 GPa、σy = 250 MPa，兩端鉸接，長度 L = 3.5 m。求臨界載重 Pcr、臨界應力 σcr，並判斷 Euler 公式是否適用。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 300" class="ndiag" id="colFigA" aria-label="鋼管支撐桿挫曲形狀"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：調整條件，看 Pcr 怎麼變</h3>
+        <div class="row"><label>端點約束 <select id="sAK"><option value="pp" selected>兩端鉸接（K = 1.0）</option><option value="cf">固定-自由（K = 2.0）</option><option value="ff">兩端固定（K = 0.5）</option><option value="fp">固定-鉸接（K = 0.7）</option></select></label></div>
+        <div class="slider"><span>柱長 L</span><input type="range" id="sAL" min="0.5" max="6" step="0.1" value="3.5"><span class="mono" id="vAL">3.5 m</span></div>
+        <div class="slider"><span>壁厚 t</span><input type="range" id="sAt" min="3" max="12" step="1" value="6"><span class="mono" id="vAt">6 mm</span></div>
+        <div class="readout">
+          <div><small>細長比 KL/r</small><b id="rA1">—</b></div>
+          <div><small>Pcr</small><b id="rA2">—</b></div>
+          <div><small>σcr</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：把 L 縮短到 1 m，KL/r 很小，算出來的 σcr 遠超過 250 MPa——柱子會先壓降伏，Euler 公式失效。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：木製看板柱，安全係數夠不夠？</h3>
+      <p style="color:var(--muted);margin-top:4px">矩形木柱斷面 100 × 150 mm，E = 11 GPa，一端固定一端自由（K = 2.0），長 L = 2 m，頂端承受 P = 40 kN。木柱會朝<b>較弱的方向</b>（慣性矩較小的軸）挫曲。求 Pcr 與安全係數 F.S. = Pcr/P。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 300" class="ndiag" id="colFigB" aria-label="木柱挫曲形狀"></svg>
+          <div class="slider"><span>柱長 L</span><input type="range" id="sBL" min="1" max="4" step="0.1" value="2"><span class="mono" id="vBL">2.0 m</span></div>
+          <div class="slider"><span>短邊 b</span><input type="range" id="sBb" min="60" max="150" step="10" value="100"><span class="mono" id="vBb">100 mm</span></div>
+          <div class="slider"><span>載重 P</span><input type="range" id="sBP" min="5" max="120" step="5" value="40"><span class="mono" id="vBP">40 kN</span></div>
+          <div class="readout">
+            <div><small>最小 I</small><b id="rB1">—</b></div>
+            <div><small>Pcr</small><b id="rB2">—</b></div>
+            <div><small>F.S. = Pcr/P</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">觀察：短邊 b 從 100 加到 150，I 增加 3.4 倍；b 是三次方的影響，所以「加寬弱軸那一邊」最有效。</p>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道挫曲題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差；長度用 mm、E 用 MPa（1 GPa = 1000 MPa），圓形斷面 I = πd⁴/64、A = πd²/4、r = d/4。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：柱穩定性檢核師認證</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH13-G1] Buckling of Columns｜挫曲探索：直尺、鋼管支撐與臨界載重</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-12 88 98)"><rect x="76" y="90" width="26" height="8" fill="#fff" stroke="#8a99ab" stroke-width="1.2"/><rect x="76" y="98" width="26" height="6" fill="#e8640a" opacity=".7"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+function near(val,q){return Number.isFinite(val)&&Math.abs(val-q.ans)<=Math.max(Math.abs(q.ans)*0.02,q.atol||0.05);}
+function yay(){const m=["太棒了！","完全正確！","設計得漂亮！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+
+guide("#guide0","歡迎來到第 13 章！前面我們擔心「會不會壓壞」，現在要擔心「會不會突然彎掉」。先填好資料，從壓直尺開始吧！");
+guide("#guide1","記住：Pcr = π²EI/(KL)²。<b>L 加倍、Pcr 剩 1/4</b>；K 越小越安全；而且 Pcr 跟降伏強度完全無關，只跟 E 與 I 有關。");
+guide("#guide2","A 是<b>鋼管支撐桿</b>（先算 r 與 KL/r），B 是<b>木製看板柱</b>（要找弱軸）。每一步都能點開，單位全部換成 N、mm、MPa。");
+guide("#guide3","挫曲 SOP：① 找端點約束得 K ② 算最小的 I（弱軸）與 A ③ Pcr = π²EI/(KL)² ④ 換算 σcr = Pcr/A，並和 σy 比較看 Euler 能不能用。");
+guide("#guide4","柱穩定性檢核師認證開始！數值每人不同。小心：E 的 GPa 要乘 1000 變 MPa、柱長 m 要乘 1000 變 mm，矩形斷面要用較小的慣性矩。加油！");
+
+/* ---------- mechanics (N, mm, MPa; E given in GPa) ---------- */
+const KS={pp:1,cf:2,ff:0.5,fp:0.7};
+const NAMES={pp:"兩端鉸接",cf:"一端固定一端自由",ff:"兩端固定",fp:"一端固定一端鉸接"};
+const MATS=[{n:"鋼",E:200,sy:250},{n:"鋁",E:70,sy:240},{n:"木材",E:11,sy:30}];
+function pcr(K,L,E,I){return Math.PI**2*E*1000*I/(K*L)**2;} // N ; L mm, E GPa, I mm^4
+const Icirc=d=>Math.PI*d**4/64, Acirc=d=>Math.PI*d*d/4;
+function tube(OD,t){const ID=OD-2*t;return {A:Math.PI/4*(OD*OD-ID*ID),I:Math.PI/64*(OD**4-ID**4)};}
+function colShape(type,t){ // lateral mode shape, base t=0 -> top t=1, normalised to max |w|=1
+  const f=x=>{
+    switch(type){
+      case "pp":return Math.sin(Math.PI*x);
+      case "ff":return (1-Math.cos(2*Math.PI*x))/2;
+      case "cf":return 1-Math.cos(Math.PI*x/2);
+      default:{const c=4.4934094579,B=-(1-Math.cos(c))/(Math.sin(c)-c);return (1-Math.cos(c*x))+B*(Math.sin(c*x)-c*x);}
+    }
+  };
+  let m=0;for(let i=0;i<=200;i++)m=Math.max(m,Math.abs(f(i/200)));
+  return f(t)/m;
+}
+
+/* ---------- drawing ---------- */
+function arrow(x1,y1,x2,y2,col,w=3){
+  const ang=Math.atan2(y2-y1,x2-x1),L=7,hx=x2-L*Math.cos(ang),hy=y2-L*Math.sin(ang);
+  const nx=-Math.sin(ang)*4,ny=Math.cos(ang)*4;
+  return `<line x1="${x1}" y1="${y1}" x2="${hx}" y2="${hy}" stroke="${col}" stroke-width="${w}"/><polygon points="${x2},${y2} ${hx+nx},${hy+ny} ${hx-nx},${hy-ny}" fill="${col}"/>`;
+}
+function hatch(x,y,w){let s=`<rect x="${x}" y="${y}" width="${w}" height="10" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2"/>`;for(let i=0;i<w;i+=8)s+=`<line x1="${x+i}" y1="${y+10}" x2="${x+i-6}" y2="${y+18}" stroke="#1a3a5c"/>`;return s;}
+function colFig(sel,type,lines){
+  const cx=230,yb=250,yt=52,amp=48;
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`;
+  s+=`<text x="12" y="20" font-size="10.5" fill="#1a3a5c" font-weight="700">${NAMES[type]}（K = ${KS[type]}）</text>`;
+  s+=`<line x1="${cx}" y1="${yt}" x2="${cx}" y2="${yb}" stroke="#9aa8ba" stroke-dasharray="5 4"/>`;
+  let d="";
+  for(let i=0;i<=60;i++){const t=i/60;d+=(i?" L":"M")+(cx+amp*colShape(type,t)).toFixed(1)+" "+(yb-(yb-yt)*t).toFixed(1);}
+  s+=`<path d="${d}" fill="none" stroke="#1a3a5c" stroke-width="7" stroke-linecap="round" class="spread" style="animation-duration:3s"/>`;
+  const tx=cx+amp*colShape(type,1);
+  // bottom support
+  if(type==="pp"){s+=`<polygon points="${cx},${yb+6} ${cx-14},${yb+24} ${cx+14},${yb+24}" fill="#5b6b7e"/>`;}
+  else{s+=hatch(cx-30,yb+4,60);}
+  // top condition
+  s+=arrow(tx,yt-38,tx,yt-6,"#e8640a",4)+`<text x="${tx+10}" y="${yt-18}" font-size="12" fill="#e8640a" font-weight="700">P</text>`;
+  if(type==="pp"||type==="fp"){s+=`<polygon points="${cx},${yt-4} ${cx-9},${yt-16} ${cx+9},${yt-16}" fill="#5b6b7e" opacity=".5"/>`;}
+  if(type==="ff"){s+=`<rect x="${cx-16}" y="${yt-8}" width="32" height="8" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2"/>`;}
+  lines.forEach((t,i)=>{s+=`<text x="12" y="${250+i*17}" font-size="10" fill="${i?"#1a3a5c":"#5b6b7e"}" ${i?'class="mono"':""}>${t}</text>`;});
+  $(sel).innerHTML=s;
+}
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 1 ---------- */
+function draw1(){
+  const type=$("#s1type").value,m=MATS[+$("#s1mat").value],L=+$("#s1L").value,dm=+$("#s1d").value,K=KS[type];
+  $("#v1L").textContent=L.toFixed(1)+" m";$("#v1d").textContent=dm+" mm";
+  const I=Icirc(dm),A=Acirc(dm),r=dm/4,Lmm=L*1000,lam=K*Lmm/r,P=pcr(K,Lmm,m.E,I),sc=P/A,u=sc/m.sy;
+  colFig("#colFig1",type,["Pcr = π²EI/(KL)²（側向位移已放大顯示）",`KL = ${fmt(K*Lmm,0)} mm；r = ${fmt(r,2)} mm`,`Pcr = ${fmt(P/1000,2)} kN；σcr = ${fmt(sc,1)} MPa`]);
+  $("#r1a").textContent=fmt(lam,1);$("#r1b").textContent=fmt(P/1000,2)+" kN";$("#r1c").textContent=fmt(sc,1)+" MPa";
+  const ok=u<=1;
+  $("#r1d").innerHTML=gauge("σcr / σy",Math.min(u,9.99))+`<p style="margin-top:8px"><span class="badge ${ok?"ok":"no"}">${ok?"細長柱：先挫曲，Euler 適用 ✓":"短粗柱：先降伏，Euler 不適用 ✗"}</span></p>`;
+  $("#r1e").textContent=ok?`${m.n}：E = ${m.E} GPa，σy = ${m.sy} MPa。實際承載力就是 Pcr = ${fmt(P/1000,2)} kN。`:`${m.n}：σcr 已超過 σy = ${m.sy} MPa，實際承載力約由降伏控制：σy·A = ${fmt(m.sy*A/1000,2)} kN（遠小於 Pcr 的 ${fmt(P/1000,0)} kN）。`;
+}
+["#s1type","#s1L","#s1d","#s1mat"].forEach(k=>$(k).addEventListener("input",draw1));
+draw1();
+
+const P1Q=[
+  {q:"兩端鉸接的細長柱，其他條件不變，柱長 L 加倍，臨界載重 Pcr 變成多少？",o:["1/2","1/4","1/8","不變"],a:1,why:"Pcr = π²EI/L² 與 L² 成反比，L 加倍 → Pcr 變為 1/4。"},
+  {q:"把一般鋼柱換成降伏強度高很多的高強度鋼（E 仍為 200 GPa），尺寸與端點條件相同。細長柱的 Pcr 會？",o:["大幅提高","幾乎不變","大幅下降","變成 2 倍"],a:1,why:"Euler 公式裡只有 E 與 I，沒有降伏強度。高強度鋼的 E 和一般鋼幾乎一樣，所以細長柱的 Pcr 幾乎沒變。"},
+  {q:"同一根柱，「兩端固定（K = 0.5）」的臨界載重是「一端固定一端自由（K = 2）」的幾倍？",o:["4 倍","8 倍","16 倍","2 倍"],a:2,why:"Pcr ∝ 1/K²。(2/0.5)² = 4² = 16 倍。端點約束對挫曲影響極大。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">📏✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+
+/* ---------- Phase 2A: steel tube strut ---------- */
+function drawA(){
+  const type=$("#sAK").value,K=KS[type],L=+$("#sAL").value,t=+$("#sAt").value;
+  $("#vAL").textContent=L.toFixed(1)+" m";$("#vAt").textContent=t+" mm";
+  const g=tube(100,t),r=Math.sqrt(g.I/g.A),Lmm=L*1000,lam=K*Lmm/r,P=pcr(K,Lmm,200,g.I),sc=P/g.A,u=sc/250;
+  colFig("#colFigA",type,["鋼管 OD = 100 mm（E = 200 GPa，σy = 250 MPa）",`I = ${fmt(g.I/1e6,3)}×10⁶ mm⁴；A = ${fmt(g.A,0)} mm²；r = ${fmt(r,2)} mm`,`Pcr = ${fmt(P/1000,1)} kN；σcr = ${fmt(sc,1)} MPa`]);
+  $("#rA1").textContent=fmt(lam,1);$("#rA2").textContent=fmt(P/1000,1)+" kN";$("#rA3").textContent=fmt(sc,1)+" MPa";
+  const ok=u<=1;
+  $("#rA4").innerHTML=gauge("σcr / σy",Math.min(u,9.99))+`<p style="margin-top:8px"><span class="badge ${ok?"ok":"no"}">${ok?"σcr ≤ σy：Euler 適用 ✓":"σcr > σy：Euler 不適用，會先降伏 ✗"}</span></p>`+(ok?"":`<p class="note mono">實際承載力約 σy·A = ${fmt(250*g.A/1000,1)} kN</p>`);
+}
+["#sAK","#sAL","#sAt"].forEach(k=>$(k).addEventListener("input",drawA));
+const gA=tube(100,6),rrA=Math.sqrt(gA.I/gA.A),PA=pcr(1,3500,200,gA.I);
+const STEPS_A=[
+  {t:"端點約束與 K",d:`兩端鉸接 → K = 1.0；有效長度 KL = 1.0×3500 = 3500 mm`},
+  {t:"算斷面性質 A、I、r",d:`ID = 100−2×6 = 88 mm；A = π/4(100²−88²) = ${fmt(gA.A,1)} mm²；I = π/64(100⁴−88⁴) = ${fmt(gA.I,0)} mm⁴；r = √(I/A) = ${fmt(rrA,2)} mm`},
+  {t:"細長比",d:`KL/r = 3500/${fmt(rrA,2)} = ${fmt(3500/rrA,1)}`},
+  {t:"臨界載重 Pcr",d:`Pcr = π²EI/(KL)² = π²×200000×${fmt(gA.I,0)}/3500² = ${fmt(PA,0)} N = ${fmt(PA/1000,1)} kN`},
+  {t:"臨界應力與適用性檢查",d:`σcr = Pcr/A = ${fmt(PA/gA.A,1)} MPa < σy = 250 MPa → Euler 公式適用，管子是先挫曲。若兩端改成固定，KL 減半，Pcr 變成 ${fmt(pcr(0.5,3500,200,gA.I)/1000,1)} kN，但 σcr 會逼近 σy`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sAK").value="pp";$("#sAL").value=3.5;$("#sAt").value=6;drawA();});
+drawA();
+
+/* ---------- Phase 2B: wood sign post ---------- */
+function drawB(){
+  const L=+$("#sBL").value,b=+$("#sBb").value,Pk=+$("#sBP").value;
+  $("#vBL").textContent=L.toFixed(1)+" m";$("#vBb").textContent=b+" mm";$("#vBP").textContent=Pk+" kN";
+  const I=Math.min(150*b**3,b*150**3)/12,Lmm=L*1000,P=pcr(2,Lmm,11,I),fs=P/(Pk*1000),sc=P/(150*b);
+  colFig("#colFigB","cf",[`木柱 ${b}×150 mm，E = 11 GPa，L = ${fmt(L,1)} m`,`弱軸 I = ${fmt(I/1e6,2)}×10⁶ mm⁴`,`Pcr = ${fmt(P/1000,1)} kN；σcr = ${fmt(sc,2)} MPa`]);
+  $("#rB1").textContent=fmt(I/1e6,2)+"×10⁶";$("#rB2").textContent=fmt(P/1000,1)+" kN";$("#rB3").textContent=fmt(fs,2);
+  $("#rB4").innerHTML=gauge("P / Pcr",Pk*1000/P)+`<p style="margin-top:8px"><span class="badge ${fs>=2?"ok":"no"}">${fs>=2?"F.S. ≥ 2：合格 ✓":"安全係數不足 ✗"}</span></p>`;
+}
+["#sBL","#sBb","#sBP"].forEach(k=>$(k).addEventListener("input",drawB));
+const IB=150*100**3/12,PB=pcr(2,2000,11,IB);
+const STEPS_B=[
+  {t:"找弱軸",d:`矩形 100×150：繞短邊方向 I = 150×100³/12 = ${fmt(IB,0)} mm⁴；繞長邊 I = 100×150³/12 = ${fmt(100*150**3/12,0)} mm⁴。取較小者 → 弱軸 I = ${fmt(IB,0)} mm⁴`},
+  {t:"端點約束與有效長度",d:`一端固定一端自由 → K = 2.0；KL = 2.0×2000 = 4000 mm`},
+  {t:"臨界載重 Pcr",d:`Pcr = π²EI/(KL)² = π²×11000×${fmt(IB,0)}/4000² = ${fmt(PB,0)} N = ${fmt(PB/1000,1)} kN`},
+  {t:"安全係數",d:`F.S. = Pcr/P = ${fmt(PB/1000,1)}/40 = ${fmt(PB/40000,2)} ≥ 2 → 合格`},
+  {t:"檢查應力與延伸",d:`σcr = Pcr/A = ${fmt(PB,0)}/15000 = ${fmt(PB/15000,2)} MPa，遠小於木材抗壓 30 MPa → Euler 適用。若柱長改 3 m，Pcr 變 ${fmt(pcr(2,3000,11,IB)/1000,1)} kN，F.S. 只剩 ${fmt(pcr(2,3000,11,IB)/40000,2)}`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sBL").value=2;$("#sBb").value=100;$("#sBP").value=40;drawB();});
+drawB();
+
+/* ---------- Phase 3 practice ---------- */
+const c1I=Icirc(40),c1=pcr(1,1500,200,c1I);
+const c2=2*1200/(30/4);
+const c3=Math.PI**2*200000/120**2;
+const P3Q=[
+  {type:"num",q:"鋼製實心圓桿（E = 200 GPa）直徑 d = 40 mm，長 L = 1.5 m，兩端鉸接。求臨界載重 Pcr（kN）。",ans:c1/1000,unit:"kN",dp:1,
+   hint:"兩端鉸接 K = 1；I = πd⁴/64；Pcr = π²EI/(KL)²，L 用 mm、E 用 MPa。",
+   sol:[`I = π×40⁴/64 = ${fmt(c1I,0)} mm⁴；E = 200000 MPa；KL = 1500 mm`,`Pcr = π²×200000×${fmt(c1I,0)}/1500² = ${fmt(c1,0)} N`,`= ${fmt(c1/1000,1)} kN`]},
+  {type:"num",q:"直徑 d = 30 mm 的圓桿，長 L = 1.2 m，一端固定一端自由。求細長比 KL/r（無單位）。",ans:c2,unit:"",dp:1,
+   hint:"固定-自由 K = 2；實心圓 r = √(I/A) = d/4。",
+   sol:[`K = 2.0；KL = 2.0×1200 = 2400 mm`,`r = d/4 = 30/4 = 7.5 mm`,`KL/r = 2400/7.5 = ${fmt(c2,1)}`]},
+  {type:"num",q:"鋼柱（E = 200 GPa）的細長比 KL/r = 120。求 Euler 臨界應力 σcr（MPa）。",ans:c3,unit:"MPa",dp:1,
+   hint:"σcr = π²E/(KL/r)²，E 用 MPa。",
+   sol:[`σcr = π²E/(KL/r)² = π²×200000/120²`,`= ${fmt(Math.PI**2*200000,0)}/14400`,`= ${fmt(c3,1)} MPa（低於 σy = 250 MPa，Euler 適用）`]},
+  {type:"mc",q:"同一根柱，其他條件完全相同。端點由「兩端鉸接」改成「兩端固定」，臨界載重 Pcr 變為幾倍？",
+   o:["2 倍","4 倍","8 倍","不變"],a:1,
+   hint:"Pcr ∝ 1/K²，鉸接 K = 1，固定 K = 0.5。",
+   sol:["Pcr = π²EI/(KL)² ∝ 1/K²","兩端鉸接 K = 1，兩端固定 K = 0.5","Pcr 比值 = (1/0.5)² = 4 倍"]}
+];
+
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 110.2。";return;}
+  const ok=q.type==="num"?near(v,q):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">🏗️</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+97)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 pinned-pinned solid round column
+  {const d=vary(40,2),L=vary(1.5,0.1),E=pick([200,70],r),I=Icirc(d),Lmm=L*1000,P=pcr(1,Lmm,E,I)/1000;
+   qs.push({type:"num",title:"圓桿柱的臨界載重",q:`實心圓桿（E = ${E} GPa）直徑 d = ${d} mm，長 L = ${fmt(L,1)} m，兩端鉸接。求臨界載重 Pcr（kN）。`,ans:P,unit:"kN",dp:2,
+    sol:`I = π×${d}⁴/64 = ${fmt(I,0)} mm⁴；Pcr = π²×${E*1000}×${fmt(I,0)}/${fmt(Lmm,0)}² = ${fmt(P,2)} kN`});}
+  // Q2 rectangular wood, cantilever column, weak axis
+  {const b=vary(80,5),h=Math.max(vary(150,10),b+20),L=vary(2,0.1),I=h*b**3/12,Lmm=L*1000,P=pcr(2,Lmm,11,I)/1000;
+   qs.push({type:"num",title:"木柱沿弱軸挫曲",q:`矩形木柱斷面 ${b} × ${h} mm（E = 11 GPa），長 L = ${fmt(L,1)} m，一端固定一端自由。柱會朝弱軸方向挫曲，求 Pcr（kN）。`,ans:P,unit:"kN",dp:2,
+    sol:`弱軸 I = ${h}×${b}³/12 = ${fmt(I,0)} mm⁴；K = 2，KL = ${fmt(2*Lmm,0)} mm；Pcr = π²×11000×${fmt(I,0)}/${fmt(2*Lmm,0)}² = ${fmt(P,2)} kN`});}
+  // Q3 slenderness ratio with various end conditions
+  {const ends=[{k:0.5,n:"兩端固定"},{k:0.7,n:"一端固定一端鉸接"},{k:1,n:"兩端鉸接"},{k:2,n:"一端固定一端自由"}],e=pick(ends,r),d=vary(30,2),L=vary(1.0,0.1),Lmm=L*1000,lam=e.k*Lmm/(d/4);
+   qs.push({type:"num",title:"細長比 KL/r",q:`實心圓桿直徑 d = ${d} mm，長 L = ${fmt(L,1)} m，端點為「${e.n}」。求細長比 KL/r（無單位）。`,ans:lam,unit:"",dp:1,
+    sol:`K = ${e.k}；r = d/4 = ${fmt(d/4,2)} mm；KL/r = ${e.k}×${fmt(Lmm,0)}/${fmt(d/4,2)} = ${fmt(lam,1)}`});}
+  // Q4 critical stress from slenderness
+  {const lam=vary(100,5),E=pick([200,70],r),sc=Math.PI**2*E*1000/lam**2;
+   qs.push({type:"num",title:"Euler 臨界應力",q:`某柱材料 E = ${E} GPa，細長比 KL/r = ${lam}。求 Euler 臨界應力 σcr（MPa）。`,ans:sc,unit:"MPa",dp:1,
+    sol:`σcr = π²E/(KL/r)² = π²×${E*1000}/${lam}² = ${fmt(sc,1)} MPa`});}
+  // Q5 concept
+  {const pool=[
+    {q:"細長柱的 Euler 臨界載重 Pcr，與下列哪一項無關？",o:["材料降伏強度 σy","彈性模數 E","慣性矩 I","柱長 L"],why:"Pcr = π²EI/(KL)²，只含 E、I、K、L，沒有降伏強度。挫曲是失穩而非材料破壞。"},
+    {q:"同一根柱，下列哪一種端點約束的臨界載重最大？",o:["兩端固定","兩端鉸接","一端固定一端鉸接","一端固定一端自由"],why:"K 越小越安全：兩端固定 K = 0.5（最小），所以 Pcr 最大；固定-自由 K = 2 最小。"},
+    {q:"矩形斷面柱兩個方向的慣性矩不同，Euler 公式應採用？",o:["較小的 I（弱軸）","較大的 I（強軸）","兩者平均","兩者相加"],why:"柱會往最容易彎的方向挫曲，所以要用最小的慣性矩。"},
+    {q:"若算出的 σcr 比材料降伏強度 σy 還大，代表？",o:["柱會先降伏，Euler 公式不適用","柱非常安全","柱一定會挫曲","可以直接把 σcr 當作容許應力"],why:"σcr > σy 表示短粗柱，在挫曲之前材料就先降伏，Euler 公式高估承載力，不適用。"},
+    {q:"柱長加倍（其他條件不變）的細長柱，其 Pcr 與細長比 KL/r 的變化為？",o:["Pcr 變 1/4、KL/r 變 2 倍","Pcr 變 1/2、KL/r 變 2 倍","Pcr 變 1/8、KL/r 變 2 倍","Pcr 變 1/4、KL/r 不變"],why:"Pcr ∝ 1/L² → 1/4；KL/r 與 L 成正比 → 2 倍。"}
+  ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"挫曲觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"挫曲觀念非常穩！K、I、KL/r 與 Euler 適用範圍都掌握了。下一關我們會做更多挫曲公式的計算應用。",B:"很不錯！再留意 E 的 GPa→MPa、m→mm 換算，以及矩形斷面要取弱軸 I，下次就是 A。",C:"方向對了！回到 Phase 2 把鋼管與木柱的步驟卡再點一次，記住 Pcr = π²EI/(KL)² 與各種 K 值。",D:"別灰心！先記住：Pcr 與 L² 成反比、K 越小越安全、要用最小的 I，再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 13 章 Buckling of Columns · 遊戲 1（MOM-CH13-G1）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以 ±2% 誤差判定。</p>`;
+  S.summary=`[MOM-CH13-G1] Buckling of Columns 挫曲探索 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
