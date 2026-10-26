@@ -623,6 +623,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "026-project-dev-ep08",
+      "no": 8,
+      "file": "ep08.html",
+      "path": "project-dev/ep08.html",
+      "title": {
+       "zh": "用 API 打造 AI 應用",
+       "en": "Building Apps with the API"
+      },
+      "sub": {
+       "zh": "API 呼叫結構、系統提示詞、工具使用、串流與成本、Artifact 內呼叫 Claude",
+       "en": "API call anatomy, system prompts, tool use, streaming and cost, calling Claude in Artifacts"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -728,7 +749,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-23",
+  "updated": "2026-10-26",
   "languages": [
    "zh",
    "en"
@@ -1003,7 +1024,7 @@ window.CLAUDE_COURSE = {
    "no": 8,
    "title": "用 API 打造 AI 應用",
    "title_en": "Building Apps with the API",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "q05-project-dev-2",
@@ -1321,6 +1342,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 29,
+ "live": 30,
  "total": 65
 };
