@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：31
+總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：32
 
 ## 單元清單
 
@@ -42,7 +42,7 @@
 | 024-project-dev-ep06 | project-dev | 擴充 Claude Code | ✅ done | 2026-10-22 |
 | 025-project-dev-ep07 | project-dev | 部署上線：GitHub Pages | ✅ done | 2026-10-23 |
 | 026-project-dev-ep08 | project-dev | 用 API 打造 AI 應用 | ✅ done | 2026-10-26 |
-| q05-project-dev-2 | project-dev | 🧪 專案開發測驗（二） | todo | — |
+| q05-project-dev-2 | project-dev | 🧪 專案開發測驗（二） | ✅ done | 2026-10-27 |
 | 027-teaching-overview | teaching | AI 時代的備課與教學 | todo | — |
 | 028-teaching-ep01 | teaching | 逆向課程設計 | todo | — |
 | 029-teaching-ep02 | teaching | 教材製作 | todo | — |
@@ -105,3 +105,4 @@
 - 2026-10-22 UTC｜024-project-dev-ep06｜✅ done｜project-dev/ep06.html、src/024-project-dev-ep06(.i18n).js｜6 分鏡 82 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-23 UTC｜025-project-dev-ep07｜✅ done｜project-dev/ep07.html、src/025-project-dev-ep07(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-26 UTC｜026-project-dev-ep08｜✅ done｜project-dev/ep08.html、src/026-project-dev-ep08(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
+- 2026-10-27 UTC｜q05-project-dev-2｜✅ done｜project-dev/quiz2.html、data/quizzes/q05-project-dev-2.json｜8 題（第 5–8 集各 2 題）、80 分通過，Playwright 實測無錯誤；情境：生活＋智慧自動化＋風能運維

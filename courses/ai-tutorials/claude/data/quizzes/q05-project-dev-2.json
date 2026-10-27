@@ -1,0 +1,301 @@
+{
+  "id": "q05-project-dev-2",
+  "title": {
+    "zh": "專案開發測驗（二）",
+    "en": "Project Development Checkpoint 2"
+  },
+  "intro": {
+    "zh": "涵蓋 Git 與 GitHub 流程、擴充 Claude Code、部署上線與 API：檢查你知道哪些保護要靠機制而非提示、金鑰與資料放哪裡。80 分通過；本測驗為課程自編練習，非 Anthropic 官方認證。",
+    "en": "Covers Git and GitHub, extending Claude Code, deployment and the API: do you know which safeguards need mechanisms rather than prompts, and where keys and data belong? Pass at 80. A course-made practice quiz, not an official Anthropic certification."
+  },
+  "pass": 80,
+  "asof": "2026-10",
+  "covers": [
+    "023-project-dev-ep05",
+    "024-project-dev-ep06",
+    "025-project-dev-ep07",
+    "026-project-dev-ep08"
+  ],
+  "questions": [
+    {
+      "id": "e01",
+      "topic": {
+        "zh": "Git 與 GitHub 流程",
+        "en": "Git and GitHub workflow"
+      },
+      "ref": "023-project-dev-ep05",
+      "q": {
+        "zh": "你請 Claude Code 把修好的家用記帳小工具建立 PR。送出前，最合理的一步是什麼？",
+        "en": "You asked Claude Code to open a PR for your fixed home budgeting tool. What is the most sensible step before submitting?"
+      },
+      "opts": [
+        {
+          "zh": "先讀過 Claude 產生的 PR 描述與變更內容，必要時請它補強",
+          "en": "Read the PR description and changes Claude produced, and ask it to improve them if needed"
+        },
+        {
+          "zh": "因為是 Claude 寫的，直接合併",
+          "en": "Merge straight away because Claude wrote it"
+        },
+        {
+          "zh": "刪掉描述，讓審查者自己猜",
+          "en": "Delete the description and let reviewers guess"
+        },
+        {
+          "zh": "把所有變更壓成一個無說明的 commit",
+          "en": "Squash everything into one commit with no message"
+        }
+      ],
+      "ans": 0,
+      "why": {
+        "zh": "Claude 能建立 PR，但送出前仍要由人審查，描述不足可再請它補強。",
+        "en": "Claude can open a PR, but a person reviews it before submission; weak descriptions can be improved on request."
+      }
+    },
+    {
+      "id": "e02",
+      "topic": {
+        "zh": "Git 與 GitHub 流程",
+        "en": "Git and GitHub workflow"
+      },
+      "ref": "023-project-dev-ep05",
+      "q": {
+        "zh": "團隊想在 PR 留言 @claude 讓它分析並修改，關於權限與合併，下列哪項正確？",
+        "en": "Your team wants to comment @claude on a PR so it analyzes and edits. Which statement about permissions and merging is correct?"
+      },
+      "opts": [
+        {
+          "zh": "任何訪客留言都能觸發，且 Claude 的變更可免審查合併",
+          "en": "Any visitor's comment can trigger it, and its changes can merge without review"
+        },
+        {
+          "zh": "只有 CLAUDE.md 寫了名字的人能觸發",
+          "en": "Only people named in CLAUDE.md can trigger it"
+        },
+        {
+          "zh": "觸發者需有儲存庫寫入權限，且合併前仍要審查 Claude 的變更",
+          "en": "The trigger needs repository write access, and Claude's changes are still reviewed before merging"
+        },
+        {
+          "zh": "必須先關閉所有 CI 檢查",
+          "en": "All CI checks must be turned off first"
+        }
+      ],
+      "ans": 2,
+      "why": {
+        "zh": "GitHub Actions 整合要求觸發者具寫入權限；Claude 的變更和人寫的一樣要審查後才合併。",
+        "en": "The GitHub Actions integration requires write access from the trigger, and Claude's changes get reviewed like anyone's before merging."
+      }
+    },
+    {
+      "id": "e03",
+      "topic": {
+        "zh": "擴充 Claude Code",
+        "en": "Extending Claude Code"
+      },
+      "ref": "024-project-dev-ep06",
+      "q": {
+        "zh": "風場運維專案的 CLAUDE.md 寫了「不得修改 /scada/config」。要真正擋下這類動作，應該怎麼做？",
+        "en": "A wind O&M project's CLAUDE.md says 'never edit /scada/config'. To actually block such an action, what should you do?"
+      },
+      "opts": [
+        {
+          "zh": "把這句話重複寫三遍",
+          "en": "Repeat the sentence three times"
+        },
+        {
+          "zh": "加上 PreToolUse hook，以 exit code 2 擋下動作",
+          "en": "Add a PreToolUse hook that blocks the action with exit code 2"
+        },
+        {
+          "zh": "改用更長的 CLAUDE.md",
+          "en": "Make the CLAUDE.md longer"
+        },
+        {
+          "zh": "請 Claude 保證不會違反",
+          "en": "Ask Claude to promise it will comply"
+        }
+      ],
+      "ans": 1,
+      "why": {
+        "zh": "CLAUDE.md 是上下文而非強制設定；hook 才能以 exit code 2 真正阻擋工具動作。",
+        "en": "CLAUDE.md is context, not enforcement; a hook can truly block a tool action with exit code 2."
+      }
+    },
+    {
+      "id": "e04",
+      "topic": {
+        "zh": "擴充 Claude Code",
+        "en": "Extending Claude Code"
+      },
+      "ref": "024-project-dev-ep06",
+      "q": {
+        "zh": "同事分享一個專案的 .mcp.json，裡面有你不認識的 MCP 伺服器。最安全的做法是？",
+        "en": "A colleague shares a project .mcp.json listing an MCP server you don't recognise. What is the safest approach?"
+      },
+      "opts": [
+        {
+          "zh": "連線後再看有沒有問題",
+          "en": "Connect first and see if anything breaks"
+        },
+        {
+          "zh": "先確認來源可信再核准；只連線可信的伺服器，避免提示注入",
+          "en": "Verify the source is trustworthy before approving; connect only to trusted servers to avoid prompt injection"
+        },
+        {
+          "zh": "因為在專案裡，所以一定安全",
+          "en": "It is in the project, so it must be safe"
+        },
+        {
+          "zh": "把伺服器權限全部開到最大",
+          "en": "Grant the server maximum permissions"
+        }
+      ],
+      "ans": 1,
+      "why": {
+        "zh": "專案範圍的伺服器首次使用需核准；不明來源的伺服器可能帶來提示注入風險。",
+        "en": "Project-scope servers need approval on first use; unknown servers can bring prompt-injection risk."
+      }
+    },
+    {
+      "id": "e05",
+      "topic": {
+        "zh": "部署上線",
+        "en": "Deploying"
+      },
+      "ref": "025-project-dev-ep07",
+      "q": {
+        "zh": "你的課程動畫要放上 GitHub Pages。下列哪種內容最適合這種服務？",
+        "en": "You want to host course animations on GitHub Pages. What kind of content fits this service best?"
+      },
+      "opts": [
+        {
+          "zh": "需要資料庫與伺服器端程式的會員系統",
+          "en": "A member system needing a database and server-side code"
+        },
+        {
+          "zh": "存放客戶個資的內部報表",
+          "en": "Internal reports holding customer personal data"
+        },
+        {
+          "zh": "含 PLC 連線密碼的設定檔",
+          "en": "Config files containing PLC passwords"
+        },
+        {
+          "zh": "由 HTML、CSS、JavaScript 組成的靜態網站",
+          "en": "A static site made of HTML, CSS and JavaScript"
+        }
+      ],
+      "ans": 3,
+      "why": {
+        "zh": "GitHub Pages 適合靜態網站；公開網站也不應放入內部或個資資料。",
+        "en": "GitHub Pages suits static sites, and a public site should never hold internal or personal data."
+      }
+    },
+    {
+      "id": "e06",
+      "topic": {
+        "zh": "部署上線",
+        "en": "Deploying"
+      },
+      "ref": "025-project-dev-ep07",
+      "q": {
+        "zh": "要把自訂網域 example.tw（頂級網域）與 www.example.tw 指向 Pages，DNS 該怎麼設？",
+        "en": "To point custom domain example.tw (apex) and www.example.tw at Pages, how should DNS be set?"
+      },
+      "opts": [
+        {
+          "zh": "頂級網域用 A、ALIAS 或 ANAME 記錄，www 子網域用 CNAME 記錄",
+          "en": "Apex uses A, ALIAS or ANAME records; the www subdomain uses a CNAME record"
+        },
+        {
+          "zh": "兩者都只能用 CNAME",
+          "en": "Both must use CNAME only"
+        },
+        {
+          "zh": "兩者都只能用 TXT 記錄",
+          "en": "Both must use TXT records only"
+        },
+        {
+          "zh": "不需設定 DNS，GitHub 會自動搶下網域",
+          "en": "No DNS needed; GitHub claims the domain automatically"
+        }
+      ],
+      "ans": 0,
+      "why": {
+        "zh": "頂級網域用 A／ALIAS／ANAME，www 子網域用 CNAME；HTTPS 選項在設定網域後可能需等待。",
+        "en": "Apex domains use A/ALIAS/ANAME, www uses CNAME; the HTTPS option may take time to appear after setup."
+      }
+    },
+    {
+      "id": "e07",
+      "topic": {
+        "zh": "用 API 打造 AI 應用",
+        "en": "Building with the API"
+      },
+      "ref": "026-project-dev-ep08",
+      "q": {
+        "zh": "為風機手冊問答 App 呼叫 Messages API，下列哪項描述正確？",
+        "en": "You call the Messages API for a turbine-manual Q&A app. Which description is correct?"
+      },
+      "opts": [
+        {
+          "zh": "model、max_tokens、messages 為必填，system 是頂層選填參數",
+          "en": "model, max_tokens and messages are required; system is an optional top-level parameter"
+        },
+        {
+          "zh": "system 必須放在 messages 陣列的最後一項",
+          "en": "system must be the last item of the messages array"
+        },
+        {
+          "zh": "只需提供 messages，其餘由伺服器猜",
+          "en": "Only messages is needed; the server guesses the rest"
+        },
+        {
+          "zh": "金鑰要寫在前端網頁讓使用者自行填入",
+          "en": "Put the key in the front-end page for users to fill in"
+        }
+      ],
+      "ans": 0,
+      "why": {
+        "zh": "必填欄位是 model、max_tokens、messages；金鑰放在 x-api-key 標頭，且應只存在伺服器端。",
+        "en": "Required fields are model, max_tokens and messages; the key goes in the x-api-key header and stays server-side."
+      }
+    },
+    {
+      "id": "e08",
+      "topic": {
+        "zh": "用 API 打造 AI 應用",
+        "en": "Building with the API"
+      },
+      "ref": "026-project-dev-ep08",
+      "q": {
+        "zh": "Claude 回傳 stop_reason 為 tool_use，要查家裡電費的自訂工具。接下來誰做什麼？",
+        "en": "Claude returns stop_reason tool_use for a custom tool that looks up a home's power bill. Who does what next?"
+      },
+      "opts": [
+        {
+          "zh": "Claude 在 Anthropic 伺服器上直接執行你的函式",
+          "en": "Claude runs your function directly on Anthropic's servers"
+        },
+        {
+          "zh": "你的應用程式執行工具，再用 tool_result 把結果送回",
+          "en": "Your application runs the tool, then sends the result back as tool_result"
+        },
+        {
+          "zh": "停止對話，tool_use 代表錯誤",
+          "en": "Stop the conversation; tool_use signals an error"
+        },
+        {
+          "zh": "使用者手動複製結果貼進新對話",
+          "en": "The user manually pastes the result into a new chat"
+        }
+      ],
+      "ans": 1,
+      "why": {
+        "zh": "自訂工具由你的應用程式執行，結果以 tool_result 送回，Claude 再接著回答。",
+        "en": "Custom tools are executed by your app; the result returns as tool_result and Claude continues."
+      }
+    }
+  ]
+}

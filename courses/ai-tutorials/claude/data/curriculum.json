@@ -953,10 +953,13 @@
         "026-project-dev-ep08"
       ],
       "questions": 8,
-      "status": "todo",
-      "updated": null,
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-27T01:42:49Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/project-dev/quiz2.html",
+        "quiz": "courses/ai-tutorials/claude/data/quizzes/q05-project-dev-2.json"
+      },
+      "notes": "8 題（第 5–8 集各 2 題）、80 分通過，Playwright 實測載入、作答與中英切換無錯誤；題目內容依第 5–8 集當次查證（資訊截至 2026-10）；情境：生活（家用記帳 PR、家庭電費查詢工具）＋智慧自動化（課程動畫部署、手冊問答 App）＋風能運維（SCADA 設定 CLAUDE.md 與 hook）",
       "cases": {
         "life": "題目情境至少一題為生活案例",
         "automation": "至少一題為智慧自動化案例",

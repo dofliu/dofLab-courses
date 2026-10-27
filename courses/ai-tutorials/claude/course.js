@@ -688,6 +688,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "q05-project-dev-2",
+      "no": 2,
+      "file": "quiz2.html",
+      "path": "project-dev/quiz2.html",
+      "title": {
+       "zh": "專案開發測驗（二）",
+       "en": "Project Development Checkpoint 2"
+      },
+      "sub": {
+       "zh": "涵蓋第 5–8 集：Git 與 GitHub、擴充 Claude Code、部署上線、API",
+       "en": "Covers lessons 5–8: Git and GitHub, extending Claude Code, deployment, the API"
+      },
+      "questions": 8,
+      "pass": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ]
    },
@@ -749,7 +770,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-26",
+  "updated": "2026-10-27",
   "languages": [
    "zh",
    "en"
@@ -1033,7 +1054,7 @@ window.CLAUDE_COURSE = {
    "no": 2,
    "title": "專案開發測驗（二）",
    "title_en": "Project Development Checkpoint 2",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "027-teaching-overview",
@@ -1342,6 +1363,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 30,
+ "live": 31,
  "total": 65
 };
