@@ -724,7 +724,28 @@ window.CLAUDE_COURSE = {
     },
     "icon": "🎓",
     "color": "#7a3a1e",
-    "episodes": []
+    "episodes": [],
+    "overview": {
+     "id": "027-teaching-overview",
+     "no": 0,
+     "file": "overview.html",
+     "path": "teaching/overview.html",
+     "title": {
+      "zh": "AI 時代的備課與教學",
+      "en": "Teaching: Overview"
+     },
+     "sub": {
+      "zh": "逆向設計、教材、評量規準、差異化、AI 家教、學術誠信與回饋",
+      "en": "Backward design, materials, rubrics, differentiation, AI tutor, integrity and feedback"
+     },
+     "shots": 7,
+     "dur": 88,
+     "langs": [
+      "zh",
+      "en"
+     ],
+     "asof": "2026-10"
+    }
    },
    {
     "slug": "daily-life",
@@ -770,7 +791,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-27",
+  "updated": "2026-10-28",
   "languages": [
    "zh",
    "en"
@@ -1063,7 +1084,7 @@ window.CLAUDE_COURSE = {
    "no": 0,
    "title": "AI 時代的備課與教學",
    "title_en": "Teaching: Overview",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "028-teaching-ep01",
@@ -1363,6 +1384,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 31,
+ "live": 32,
  "total": 65
 };

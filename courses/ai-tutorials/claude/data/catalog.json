@@ -722,7 +722,28 @@
       },
       "icon": "🎓",
       "color": "#7a3a1e",
-      "episodes": []
+      "episodes": [],
+      "overview": {
+        "id": "027-teaching-overview",
+        "no": 0,
+        "file": "overview.html",
+        "path": "teaching/overview.html",
+        "title": {
+          "zh": "AI 時代的備課與教學",
+          "en": "Teaching: Overview"
+        },
+        "sub": {
+          "zh": "逆向設計、教材、評量規準、差異化、AI 家教、學術誠信與回饋",
+          "en": "Backward design, materials, rubrics, differentiation, AI tutor, integrity and feedback"
+        },
+        "shots": 7,
+        "dur": 88,
+        "langs": [
+          "zh",
+          "en"
+        ],
+        "asof": "2026-10"
+      }
     },
     {
       "slug": "daily-life",
@@ -768,7 +789,7 @@
       "quizzes": []
     }
   ],
-  "updated": "2026-10-27",
+  "updated": "2026-10-28",
   "languages": [
     "zh",
     "en"

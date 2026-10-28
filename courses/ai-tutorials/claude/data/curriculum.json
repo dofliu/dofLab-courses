@@ -982,10 +982,14 @@
         "AI 素養與學術誠信",
         "回饋與學習分析"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-28T01:42:15Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-28T01:46:51Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/overview.html",
+        "src": "courses/ai-tutorials/claude/src/027-teaching-overview.js",
+        "i18n": "courses/ai-tutorials/claude/src/027-teaching-overview.i18n.js"
+      },
+      "notes": "QA zh/en 通過（runtime errors none、untranslated none）；7 分鏡 88 秒，圖解 7/7；查證：Anthropic 教育頁與媒體報導（學習模式、Claude for Education；support.claude.com 頁面未取得，僅寫公開描述的功能），資訊截至 2026-10；情境：生活（紙橋生活科技課）＋智慧自動化（PLC 實習）＋風能運維（風機維護入門課）",
       "cases": {
         "life": "國中小生活科技課",
         "automation": "智慧自動化課程（PLC、感測、機器人）",
