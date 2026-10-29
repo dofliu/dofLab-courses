@@ -724,7 +724,29 @@ window.CLAUDE_COURSE = {
     },
     "icon": "🎓",
     "color": "#7a3a1e",
-    "episodes": [],
+    "episodes": [
+     {
+      "id": "028-teaching-ep01",
+      "no": 1,
+      "file": "ep01.html",
+      "path": "teaching/ep01.html",
+      "title": {
+       "zh": "逆向課程設計",
+       "en": "Backward Course Design"
+      },
+      "sub": {
+       "zh": "學習目標、評量先行、單元拆解、教案草案、課程地圖",
+       "en": "Objectives, assessment first, unit breakdown, lesson plan drafts, course map"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
+     }
+    ],
     "overview": {
      "id": "027-teaching-overview",
      "no": 0,
@@ -791,7 +813,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-28",
+  "updated": "2026-10-29",
   "languages": [
    "zh",
    "en"
@@ -1093,7 +1115,7 @@ window.CLAUDE_COURSE = {
    "no": 1,
    "title": "逆向課程設計",
    "title_en": "Backward Course Design",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "029-teaching-ep02",
@@ -1384,6 +1406,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 32,
+ "live": 33,
  "total": 65
 };

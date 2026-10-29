@@ -1010,10 +1010,14 @@
         "產出教案",
         "課程地圖"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-29T01:42:03Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-29T01:46:52Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/ep01.html",
+        "src": "courses/ai-tutorials/claude/src/028-teaching-ep01.js",
+        "i18n": "courses/ai-tutorials/claude/src/028-teaching-ep01.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors: none、untranslated: none）；6 分鏡 83 秒，圖解 6/6；查證：Wiggins & McTighe《Understanding by Design》逆向設計、Bloom 認知分類（通用教學框架）、support.claude.com（Projects 知識庫、專案指示為付費方案功能），資訊截至 2026-10；情境：生活（生活科技專題）＋智慧自動化（產線自動化課）＋風能運維（風機維護課，含上鎖掛牌安全評量）；數據皆為示意",
       "cases": {
         "life": "生活議題專題課",
         "automation": "以「產線自動化」為題的逆向課程設計",
