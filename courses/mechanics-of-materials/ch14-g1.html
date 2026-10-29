@@ -1,0 +1,794 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH14-G1] Energy Methods - 能量法探索：彈簧、橡皮筋與落錘衝擊</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+</style>
+<style>
+@keyframes puff{0%,100%{transform:scale(1)}50%{transform:scale(1.06,1.12)}}
+.puff{transform-box:fill-box;transform-origin:center;animation:puff 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+.sway{transform-origin:60px 86px;animation:sway 2.6s ease-in-out infinite}
+@keyframes blow{0%{transform:translateX(-8px);opacity:0}40%{opacity:1}100%{transform:translateX(10px);opacity:0}}
+.blow{animation:blow 1.8s linear infinite}
+@keyframes push{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.push{animation:push 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH14-G1</span>能量法探索：彈簧、橡皮筋與落錘衝擊</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 14 · Energy Methods · Game 1</span>
+      <h2>能量法探索：彈簧、橡皮筋與落錘衝擊</h2>
+      <p style="color:var(--muted);max-width:65ch">拉長橡皮筋、壓縮彈簧，你的手做的功並沒有消失，而是<b>以應變能的形式存在材料裡</b>。放手時它會把能量還給你。這一關我們認識<b>應變能 U = ½Pδ</b>、軸向桿的 <b>U = P²L/(2AE)</b>、單位體積應變能（彈性模數 ur = σy²/2E），以及利用<b>能量守恆</b>處理重物落下的<b>衝擊載重</b>。</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>能量法的四個核心觀念</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="應變能是 P-δ 曲線下的面積">
+          <line x1="30" y1="80" x2="30" y2="10" stroke="#1a3a5c" stroke-width="2"/><line x1="30" y1="80" x2="180" y2="80" stroke="#1a3a5c" stroke-width="2"/>
+          <polygon points="30,80 140,80 140,22" fill="#e8640a" opacity=".35" class="spread"/><line x1="30" y1="80" x2="140" y2="22" stroke="#e8640a" stroke-width="3"/>
+          <text x="38" y="20" font-size="9" fill="#5b6b7e">P</text><text x="170" y="90" font-size="9" fill="#5b6b7e">δ</text>
+          <text x="96" y="70" font-size="10" fill="#1a3a5c" font-weight="700">U = ½Pδ</text>
+        </svg>
+        <h3>應變能：曲線下的面積</h3><span class="formula">U = ∫P dδ = ½Pδ</span>
+        <p class="life">慢慢拉長橡皮筋，外力做的功等於 P–δ 圖下的面積；彈性範圍內是三角形，所以 U = ½Pδ。放手後這份能量全部還給你，像<b>彈弓</b>。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="軸向桿應變能">
+          <rect x="30" y="38" width="120" height="16" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2"/>
+          <polygon points="150,46 172,46 166,40 172,46 166,52" fill="none"/><line x1="152" y1="46" x2="184" y2="46" stroke="#e8640a" stroke-width="3"/><polygon points="188,46 180,41 180,51" fill="#e8640a"/>
+          <text x="100" y="22" font-size="9.5" fill="#e8640a" text-anchor="middle">U = P²L / (2AE)</text>
+          <text x="100" y="78" font-size="9" fill="#5b6b7e" text-anchor="middle">P 加倍 → U 變 4 倍</text>
+        </svg>
+        <h3>軸向桿的應變能</h3><span class="formula">U = P²L/(2AE)</span>
+        <p class="life">把 δ = PL/AE 代入 ½Pδ 就得到。<b>U 與 P² 成正比</b>，所以載重加倍，儲存能量變 4 倍；桿越長、越細，能儲存越多能量。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="單位體積應變能">
+          <rect x="20" y="20" width="60" height="52" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <path d="M20 72 L50 72 L80 20" fill="#e8640a" opacity=".35"/>
+          <text x="100" y="36" font-size="9.5" fill="#1a3a5c">ur = σy² / 2E</text>
+          <text x="100" y="54" font-size="9" fill="#5b6b7e">彈性模數 (resilience)</text>
+          <text x="100" y="70" font-size="9" fill="#5b6b7e">每 m³ 能吸收多少彈性能</text>
+        </svg>
+        <h3>單位體積應變能</h3><span class="formula">u = σ²/(2E)；ur = σy²/(2E)</span>
+        <p class="life">把應變能除以體積就與尺寸無關，只看材料。降伏時的 u 稱為<b>彈性模數 ur</b>：<b>σy 越高、E 越低</b>，越能儲存彈性能（彈簧鋼、橡膠都是如此）。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="落錘衝擊">
+          <rect x="82" y="6" width="36" height="16" rx="3" fill="#e8640a" class="push"/><text x="100" y="18" font-size="9" fill="#fff" text-anchor="middle">W</text>
+          <line x1="100" y1="26" x2="100" y2="40" stroke="#e8640a" stroke-dasharray="3 3"/><text x="124" y="36" font-size="9" fill="#e8640a">h</text>
+          <rect x="84" y="42" width="32" height="5" fill="#1a3a5c"/><line x1="100" y1="47" x2="100" y2="84" stroke="#1a3a5c" stroke-width="4"/>
+          <text x="124" y="70" font-size="9" fill="#5b6b7e">n = 1+√(1+2h/δst)</text>
+        </svg>
+        <h3>衝擊載重與能量守恆</h3><span class="formula">W(h+δmax) = ½kδmax²</span>
+        <p class="life">重物落下，減少的位能全部轉成桿的應變能。衝擊因子 <b>n = 1+√(1+2h/δst)</b>，即使 h = 0（突然放上），n 也有 <b>2</b>——同一個重量，突然加上去比慢慢放上去危險一倍！</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：拉一根鋼桿，看看能量怎麼存</h3>
+      <p class="note">選材料，調整拉力 P、桿長 L 與直徑 d。左圖為桿子伸長（已放大顯示），右圖是 P–δ 圖，橘色三角形面積就是應變能 U。</p>
+      <div class="row">
+        <label>材料 <select id="s1mat"><option value="0">鋼 E = 200 GPa，σy = 250 MPa</option><option value="1">鋁 E = 70 GPa，σy = 240 MPa</option><option value="2">銅 E = 110 GPa，σy = 70 MPa</option></select></label>
+      </div>
+      <div class="grid2">
+        <svg viewBox="0 0 460 300" class="ndiag" id="fig1" aria-label="軸向桿的 P-δ 圖與應變能"></svg>
+        <div class="stack">
+          <div class="slider"><span>拉力 P</span><input type="range" id="s1P" min="5" max="100" step="5" value="40"><span class="mono" id="v1P">40 kN</span></div>
+          <div class="slider"><span>桿長 L</span><input type="range" id="s1L" min="0.5" max="4" step="0.1" value="2"><span class="mono" id="v1L">2.0 m</span></div>
+          <div class="slider"><span>直徑 d</span><input type="range" id="s1d" min="10" max="40" step="2" value="20"><span class="mono" id="v1d">20 mm</span></div>
+          <div class="readout">
+            <div><small>伸長量 δ</small><b id="r1a">—</b></div>
+            <div><small>應變能 U</small><b id="r1b">—</b></div>
+            <div><small>單位體積 u</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note mono" id="r1e"></p>
+        </div>
+      </div>
+      <p class="note">觀察：把 P 加倍，U 變 4 倍；把直徑加倍，U 變 1/4（面積變 4 倍，同樣的 P 下 δ 變小）；桿長加倍，U 變 2 倍。</p>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個工程情境：吊掛鋼桿與落錘撞擊</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：工廠吊掛鋼桿儲存多少應變能？</h3>
+      <p style="color:var(--muted);margin-top:4px">一根鋼桿（E = 200 GPa，σy = 250 MPa）長 L = 2 m、直徑 d = 20 mm，下端吊掛設備產生軸向拉力 P = 50 kN。求應力 σ、伸長量 δ、應變能 U，並檢查是否仍在彈性範圍。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 300" class="ndiag" id="figA" aria-label="吊掛鋼桿的 P-δ 圖"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：調整參數，看 U 怎麼變</h3>
+        <div class="slider"><span>拉力 P</span><input type="range" id="sAP" min="5" max="120" step="5" value="50"><span class="mono" id="vAP">50 kN</span></div>
+        <div class="slider"><span>桿長 L</span><input type="range" id="sAL" min="0.5" max="4" step="0.1" value="2"><span class="mono" id="vAL">2.0 m</span></div>
+        <div class="slider"><span>直徑 d</span><input type="range" id="sAd" min="10" max="40" step="2" value="20"><span class="mono" id="vAd">20 mm</span></div>
+        <div class="readout">
+          <div><small>應力 σ</small><b id="rA1">—</b></div>
+          <div><small>伸長量 δ</small><b id="rA2">—</b></div>
+          <div><small>應變能 U</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：P 從 50 kN 加到 100 kN，U 由約 39.8 J 增為約 159.2 J；但 σ 也升到 318 MPa，已超過 σy，這時彈性公式就不能再用了。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：重物落在吊桿端點的撞擊板上</h3>
+      <p style="color:var(--muted);margin-top:4px">垂直鋼桿（E = 200 GPa，σy = 250 MPa）長 L = 1.5 m、直徑 d = 16 mm，下端有撞擊板。重物 W = 200 N 從撞擊板上方 h = 100 mm 處自由落下。求最大伸長量 δmax、衝擊因子 n 與最大應力 σmax。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 300" class="ndiag" id="figB" aria-label="重物落下撞擊桿"></svg>
+          <div class="slider"><span>落下高度 h</span><input type="range" id="sBh" min="0" max="300" step="10" value="100"><span class="mono" id="vBh">100 mm</span></div>
+          <div class="slider"><span>重量 W</span><input type="range" id="sBW" min="50" max="1000" step="50" value="200"><span class="mono" id="vBW">200 N</span></div>
+          <div class="slider"><span>直徑 d</span><input type="range" id="sBd" min="8" max="30" step="2" value="16"><span class="mono" id="vBd">16 mm</span></div>
+          <div class="readout">
+            <div><small>衝擊因子 n</small><b id="rB1">—</b></div>
+            <div><small>δmax</small><b id="rB2">—</b></div>
+            <div><small>σmax</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">觀察：把 h 拉到 0，n 剛好等於 2；把 d 變大，桿變硬、σst 變小，但撞擊因子的上限由 h/δst 控制，要仔細看 σmax 的變化。</p>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道能量法題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差；計算時統一用 N、mm、MPa，應變能的 N·mm 除以 1000 即為 J（1 GPa = 1000 MPa）。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：能量法工程師認證</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH14-G1] Energy Methods｜能量法探索：彈簧、橡皮筋與落錘衝擊</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-12 88 98)"><rect x="76" y="90" width="26" height="8" fill="#fff" stroke="#8a99ab" stroke-width="1.2"/><rect x="76" y="98" width="26" height="6" fill="#e8640a" opacity=".7"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+function near(val,q){return Number.isFinite(val)&&Math.abs(val-q.ans)<=Math.max(Math.abs(q.ans)*0.02,q.atol||0.005);}
+function yay(){const m=["太棒了！","完全正確！","能量守恆，答案也守恆！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+
+guide("#guide0","歡迎來到第 14 章！前面我們問「會不會壞、會彎多少」，現在換個角度：<b>能量</b>。先填好資料，從拉橡皮筋開始吧！");
+guide("#guide1","記住：<b>U = ½Pδ = P²L/(2AE)</b>。P 加倍、U 變 4 倍；衝擊載重用能量守恆，而且「突然放上去」就已經是 2 倍的靜載重！");
+guide("#guide2","A 是<b>吊掛鋼桿</b>（算 σ、δ、U），B 是<b>落錘撞擊</b>（用能量守恆解 δmax）。每一步都能點開，單位統一用 N、mm、MPa。");
+guide("#guide3","能量法 SOP：① 軸向桿 U = P²L/(2AE)，扭轉 U = T²L/(2GJ) ② 單位體積 u = σ²/2E ③ 衝擊：W(h+δ) = ½kδ²，其中 k = AE/L ④ 最後檢查 σmax 是否小於 σy。");
+guide("#guide4","能量法工程師認證開始！數值每人不同。小心：E 的 GPa 要乘 1000 變 MPa、m 要乘 1000 變 mm，應變能 N·mm 要除以 1000 才是 J。加油！");
+
+/* ---------- mechanics (N, mm, MPa; E given in GPa) ---------- */
+const MATS=[{n:"鋼",E:200,sy:250},{n:"鋁",E:70,sy:240},{n:"銅",E:110,sy:70}];
+const Acirc=d=>Math.PI*d*d/4;
+const Jcirc=d=>Math.PI*d**4/32;
+// axial rod: P N, L mm, d mm, E GPa -> {sigma MPa, delta mm, U N·mm, u MPa}
+function axial(P,L,d,E){const A=Acirc(d),sigma=P/A,delta=P*L/(A*E*1000),U=0.5*P*delta;return {A,sigma,delta,U,u:sigma*sigma/(2*E*1000)};}
+// impact: W N, h mm, L mm, d mm, E GPa -> {k, dst, dmax, n, sigmax}
+function impact(W,h,L,d,E){
+  const A=Acirc(d),k=A*E*1000/L,dst=W/k,dmax=(W+Math.sqrt(W*W+2*k*W*h))/k,n=1+Math.sqrt(1+2*h/dst);
+  return {A,k,dst,dmax,n,sst:W/A,smax:k*dmax/A};
+}
+
+/* ---------- drawing ---------- */
+function arrow(x1,y1,x2,y2,col,w=3){
+  const ang=Math.atan2(y2-y1,x2-x1),L=7,hx=x2-L*Math.cos(ang),hy=y2-L*Math.sin(ang);
+  const nx=-Math.sin(ang)*4,ny=Math.cos(ang)*4;
+  return `<line x1="${x1}" y1="${y1}" x2="${hx}" y2="${hy}" stroke="${col}" stroke-width="${w}"/><polygon points="${x2},${y2} ${hx+nx},${hy+ny} ${hx-nx},${hy-ny}" fill="${col}"/>`;
+}
+function hatch(x,y,w){let s=`<rect x="${x}" y="${y}" width="${w}" height="10" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2"/>`;for(let i=0;i<w;i+=8)s+=`<line x1="${x+i}" y1="${y}" x2="${x+i+6}" y2="${y-8}" stroke="#1a3a5c"/>`;return s;}
+/* P-δ figure: rod on the left, load-displacement triangle on the right. Pmax(kN)/dmax(mm) fix the plot scale. */
+function rodFig(sel,r,P,Pm,dm,lines){
+  const u=Math.min(r.sigma/250,1.3),stretch=10+36*Math.min(r.delta/dm,1);
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`;
+  s+=hatch(40,26,80);
+  s+=`<rect x="70" y="36" width="20" height="${120+stretch}" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2" class="grow" style="animation:none"/>`;
+  s+=`<rect x="56" y="${36+120+stretch}" width="48" height="16" rx="3" fill="#e8640a"/>`;
+  s+=arrow(80,36+120+stretch+16,80,36+120+stretch+52,"#e8640a",4)+`<text x="92" y="${36+120+stretch+46}" font-size="12" fill="#e8640a" font-weight="700">P</text>`;
+  const ox=220,oy=190,gw=210,gh=130,px=ox+gw*Math.min(r.delta/dm,1),py=oy-gh*Math.min(P/1000/Pm,1);
+  s+=`<line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy-gh-10}" stroke="#1a3a5c" stroke-width="2"/><line x1="${ox}" y1="${oy}" x2="${ox+gw+10}" y2="${oy}" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<text x="${ox-6}" y="${oy-gh-14}" font-size="10" fill="#5b6b7e">P (kN)</text><text x="${ox+gw-30}" y="${oy+16}" font-size="10" fill="#5b6b7e">δ (mm)</text>`;
+  s+=`<polygon points="${ox},${oy} ${px},${oy} ${px},${py}" fill="#e8640a" opacity=".35" class="spread" style="animation-duration:3s"/>`;
+  s+=`<line x1="${ox}" y1="${oy}" x2="${px}" y2="${py}" stroke="#e8640a" stroke-width="3"/><circle cx="${px}" cy="${py}" r="4" fill="#1a3a5c"/>`;
+  s+=`<line x1="${px}" y1="${py}" x2="${px}" y2="${oy}" stroke="#9aa8ba" stroke-dasharray="4 3"/><line x1="${ox}" y1="${py}" x2="${px}" y2="${py}" stroke="#9aa8ba" stroke-dasharray="4 3"/>`;
+  s+=`<text x="${Math.max(px,ox+60)+8}" y="${oy-10}" font-size="11" fill="#1a3a5c" font-weight="700">U = ½Pδ（橘色面積）</text>`;
+  lines.forEach((t,i)=>{s+=`<text x="12" y="${250+i*17}" font-size="10" fill="${i?"#1a3a5c":"#5b6b7e"}" ${i?'class="mono"':""}>${t}</text>`;});
+  $(sel).innerHTML=s;
+}
+/* impact figure: weight above collar, rod stretched by delta_max (exaggerated) */
+function impFig(sel,h,r,L,lines){
+  const top=34,rod=130,hs=Math.min(60,10+h*0.18),ext=8+36*Math.min(r.dmax/(r.dst+r.dmax),1),cx=150;
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`+hatch(cx-40,top-8,80);
+  s+=`<rect x="${cx-5}" y="${top+2}" width="10" height="${rod}" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2"/>`;
+  s+=`<rect x="${cx-5}" y="${top+rod}" width="10" height="${ext}" fill="#e8a40a" opacity=".55" stroke="#c62f2f" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+  const cy=top+rod+ext;
+  s+=`<rect x="${cx-24}" y="${cy}" width="48" height="8" fill="#1a3a5c"/>`;
+  s+=`<rect x="${cx-24}" y="${cy-hs-30}" width="48" height="30" rx="4" fill="#e8640a" class="push"/><text x="${cx}" y="${cy-hs-10}" font-size="12" fill="#fff" text-anchor="middle" font-weight="700">W</text>`;
+  s+=arrow(cx+34,cy-hs-14,cx+34,cy-2,"#e8640a",2)+`<text x="${cx+42}" y="${cy-hs/2}" font-size="11" fill="#e8640a" font-weight="700">h</text>`;
+  s+=`<text x="${cx+30}" y="${cy+30}" font-size="10" fill="#c62f2f">δmax（已放大）</text>`;
+  s+=`<g transform="translate(300,50)"><text x="0" y="0" font-size="11" fill="#1a3a5c" font-weight="700">能量守恆</text><text x="0" y="22" font-size="10" fill="#5b6b7e">落下位能 W(h+δ)</text><text x="0" y="40" font-size="10" fill="#5b6b7e">= 桿應變能 ½kδ²</text><text x="0" y="62" font-size="10" fill="#5b6b7e">k = AE/L</text></g>`;
+  lines.forEach((t,i)=>{s+=`<text x="12" y="${262+i*17}" font-size="10" fill="${i?"#1a3a5c":"#5b6b7e"}" ${i?'class="mono"':""}>${t}</text>`;});
+  $(sel).innerHTML=s;
+}
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 1 ---------- */
+function draw1(){
+  const m=MATS[+$("#s1mat").value],P=+$("#s1P").value*1000,L=+$("#s1L").value*1000,d=+$("#s1d").value;
+  $("#v1P").textContent=(P/1000)+" kN";$("#v1L").textContent=(L/1000).toFixed(1)+" m";$("#v1d").textContent=d+" mm";
+  const r=axial(P,L,d,m.E),ok=r.sigma<=m.sy,Pm=100;
+  const dm=1.6*Pm*1000*2000/(Acirc(20)*m.E*1000); // fixed plot scale
+  rodFig("#fig1",r,P,Pm,dm,["彈性範圍內：U = ½Pδ = P²L/(2AE)",`σ = ${fmt(r.sigma,1)} MPa；δ = ${fmt(r.delta,3)} mm`,`U = ${fmt(r.U/1000,2)} J；u = ${fmt(r.u*1e6,0)} J/m³`]);
+  $("#r1a").textContent=fmt(r.delta,3)+" mm";$("#r1b").textContent=fmt(r.U/1000,2)+" J";$("#r1c").textContent=fmt(r.u*1000,1)+" kJ/m³";
+  $("#r1d").innerHTML=gauge("σ / σy",Math.min(r.sigma/m.sy,9.99))+`<p style="margin-top:8px"><span class="badge ${ok?"ok":"no"}">${ok?"σ ≤ σy：彈性範圍，公式適用 ✓":"σ > σy：已降伏，U = ½Pδ 不再適用 ✗"}</span></p>`;
+  $("#r1e").textContent=`${m.n}：E = ${m.E} GPa，σy = ${m.sy} MPa；ur = σy²/2E = ${fmt(m.sy**2/(2*m.E*1000)*1000,1)} kJ/m³。`;
+}
+["#s1mat","#s1P","#s1L","#s1d"].forEach(k=>$(k).addEventListener("input",draw1));
+draw1();
+
+const P1Q=[
+  {q:"在彈性範圍內，同一根桿子的拉力 P 加倍，儲存的應變能 U 變成多少？",o:["2 倍","4 倍","8 倍","不變"],a:1,why:"U = P²L/(2AE) 與 P² 成正比，P 加倍 → U 變 4 倍。"},
+  {q:"一個重物「剛好碰到」彈性桿的撞擊板後立刻放手（h = 0，突然加載），桿內的最大應力是靜載重（慢慢放上）應力的幾倍？",o:["1 倍","1.5 倍","2 倍","4 倍"],a:2,why:"n = 1+√(1+2h/δst)，h = 0 時 n = 1+1 = 2。突然施加的載重造成靜載重 2 倍的應力與變形。"},
+  {q:"下列哪一種材料特性，最能讓材料在彈性範圍內儲存大量能量（彈性模數 ur = σy²/2E 大）？",o:["降伏強度高、彈性模數 E 低","降伏強度低、彈性模數 E 高","降伏強度與 E 都高到無限大","只和密度有關"],a:0,why:"ur = σy²/(2E)：σy 越高、E 越低，ur 越大。這就是彈簧鋼、橡膠能儲存大量彈性能的原因。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">⚡✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+
+/* ---------- Phase 2A: hanging steel rod ---------- */
+function drawA(){
+  const P=+$("#sAP").value*1000,L=+$("#sAL").value*1000,d=+$("#sAd").value;
+  $("#vAP").textContent=(P/1000)+" kN";$("#vAL").textContent=(L/1000).toFixed(1)+" m";$("#vAd").textContent=d+" mm";
+  const r=axial(P,L,d,200),ok=r.sigma<=250,Pm=120,dm=1.6*Pm*1000*2000/(Acirc(20)*200000);
+  rodFig("#figA",r,P,Pm,dm,["鋼桿 E = 200 GPa，σy = 250 MPa",`σ = ${fmt(r.sigma,1)} MPa；δ = ${fmt(r.delta,3)} mm`,`U = ½Pδ = ${fmt(r.U/1000,2)} J`]);
+  $("#rA1").textContent=fmt(r.sigma,1)+" MPa";$("#rA2").textContent=fmt(r.delta,3)+" mm";$("#rA3").textContent=fmt(r.U/1000,2)+" J";
+  $("#rA4").innerHTML=gauge("σ / σy",Math.min(r.sigma/250,9.99))+`<p style="margin-top:8px"><span class="badge ${ok?"ok":"no"}">${ok?"σ ≤ σy：彈性範圍 ✓":"σ > σy：已降伏，彈性公式不適用 ✗"}</span></p>`;
+}
+["#sAP","#sAL","#sAd"].forEach(k=>$(k).addEventListener("input",drawA));
+const rA=axial(50000,2000,20,200);
+const STEPS_A=[
+  {t:"算斷面積",d:`A = πd²/4 = π×20²/4 = ${fmt(rA.A,1)} mm²`},
+  {t:"軸向應力",d:`σ = P/A = 50000/${fmt(rA.A,1)} = ${fmt(rA.sigma,1)} MPa < σy = 250 MPa → 彈性範圍`},
+  {t:"伸長量",d:`δ = PL/(AE) = 50000×2000/(${fmt(rA.A,1)}×200000) = ${fmt(rA.delta,4)} mm`},
+  {t:"應變能 U",d:`U = ½Pδ = ½×50000×${fmt(rA.delta,4)} = ${fmt(rA.U,0)} N·mm = ${fmt(rA.U/1000,2)} J。也可用 U = P²L/(2AE) = 50000²×2000/(2×${fmt(rA.A,1)}×200000) 得到同樣結果`},
+  {t:"單位體積與延伸",d:`u = σ²/(2E) = ${fmt(rA.sigma,1)}²/(2×200000) = ${fmt(rA.u,4)} MPa = ${fmt(rA.u*1000,1)} kJ/m³；ur = 250²/(2×200000) = ${fmt(250**2/400000*1000,1)} kJ/m³，目前使用了 ${fmt(rA.u/(250**2/400000)*100,0)}%。若 P 加倍，U 變成 ${fmt(4*rA.U/1000,1)} J，但 σ = ${fmt(2*rA.sigma,0)} MPa 已超過 σy`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sAP").value=50;$("#sAL").value=2;$("#sAd").value=20;drawA();});
+drawA();
+
+/* ---------- Phase 2B: falling weight ---------- */
+function drawB(){
+  const h=+$("#sBh").value,W=+$("#sBW").value,d=+$("#sBd").value;
+  $("#vBh").textContent=h+" mm";$("#vBW").textContent=W+" N";$("#vBd").textContent=d+" mm";
+  const r=impact(W,h,1500,d,200),ok=r.smax<=250;
+  impFig("#figB",h,r,1500,["鋼桿 L = 1.5 m，E = 200 GPa，σy = 250 MPa",`k = AE/L = ${fmt(r.k/1000,1)} N/mm；δst = ${fmt(r.dst,4)} mm`,`δmax = ${fmt(r.dmax,3)} mm；σmax = ${fmt(r.smax,1)} MPa`]);
+  $("#rB1").textContent=fmt(r.n,2);$("#rB2").textContent=fmt(r.dmax,3)+" mm";$("#rB3").textContent=fmt(r.smax,1)+" MPa";
+  $("#rB4").innerHTML=gauge("σmax / σy",Math.min(r.smax/250,9.99))+`<p style="margin-top:8px"><span class="badge ${ok?"ok":"no"}">${ok?"σmax ≤ σy：桿子安全 ✓":"σmax > σy：撞擊會讓桿降伏 ✗"}</span></p>`;
+}
+["#sBh","#sBW","#sBd"].forEach(k=>$(k).addEventListener("input",drawB));
+const rB=impact(200,100,1500,16,200);
+const STEPS_B=[
+  {t:"算桿的剛度 k 與靜變形",d:`A = π×16²/4 = ${fmt(rB.A,1)} mm²；k = AE/L = ${fmt(rB.A,1)}×200000/1500 = ${fmt(rB.k,0)} N/mm；δst = W/k = 200/${fmt(rB.k,0)} = ${fmt(rB.dst,5)} mm`},
+  {t:"寫出能量守恆",d:`落下位能 = 桿應變能：W(h+δmax) = ½kδmax²。整理成 ½kδ² − Wδ − Wh = 0`},
+  {t:"解 δmax",d:`δmax = [W+√(W²+2kWh)]/k = [200+√(200²+2×${fmt(rB.k,0)}×200×100)]/${fmt(rB.k,0)} = ${fmt(rB.dmax,4)} mm`},
+  {t:"衝擊因子 n",d:`n = δmax/δst = ${fmt(rB.n,2)}；用公式驗算 n = 1+√(1+2h/δst) = 1+√(1+2×100/${fmt(rB.dst,5)}) = ${fmt(rB.n,2)}`},
+  {t:"最大應力與判斷",d:`σst = W/A = ${fmt(rB.sst,2)} MPa；σmax = nσst = ${fmt(rB.smax,1)} MPa ${rB.smax<=250?"< 250 MPa → 仍安全":"> 250 MPa → 超過降伏"}。若 h 改成 0（突然加載）則 n = 2，σmax = ${fmt(2*rB.sst,2)} MPa`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sBh").value=100;$("#sBW").value=200;$("#sBd").value=16;drawB();});
+drawB();
+
+/* ---------- Phase 3 practice ---------- */
+const c1=axial(60000,1800,25,200).U/1000;
+const c2=250**2/(2*200000)*1000;
+const J3=Jcirc(40),c3=(500000**2*1200/(2*80000*J3))/1000;
+const P3Q=[
+  {type:"num",q:"鋼製實心圓桿（E = 200 GPa）直徑 d = 25 mm，長 L = 1.8 m，承受軸向拉力 P = 60 kN（彈性範圍）。求儲存的應變能 U（J）。",ans:c1,unit:"J",dp:2,
+   hint:"U = P²L/(2AE)，A = πd²/4，單位用 N、mm、MPa，算出 N·mm 後再除以 1000 得 J。",
+   sol:[`A = π×25²/4 = ${fmt(Acirc(25),1)} mm²；E = 200000 MPa；L = 1800 mm`,`U = P²L/(2AE) = 60000²×1800/(2×${fmt(Acirc(25),1)}×200000) = ${fmt(c1*1000,0)} N·mm`,`= ${fmt(c1,2)} J`]},
+  {type:"num",q:"鋼材 E = 200 GPa、降伏強度 σy = 250 MPa。求彈性模數（modulus of resilience）ur，單位 kJ/m³。（1 MPa = 1 MJ/m³ = 1000 kJ/m³）",ans:c2,unit:"kJ/m³",dp:2,
+   hint:"ur = σy²/(2E)，先得 MPa（= N·mm/mm³），再乘 1000 換成 kJ/m³。",
+   sol:[`ur = σy²/(2E) = 250²/(2×200000)`,`= ${fmt(250**2/400000,5)} MPa = ${fmt(250**2/400000,5)} MJ/m³`,`= ${fmt(c2,2)} kJ/m³`]},
+  {type:"num",q:"實心圓軸直徑 d = 40 mm，長 L = 1.2 m，G = 80 GPa，承受固定扭矩 T = 500 N·m。求軸內扭轉應變能 U = T²L/(2GJ)（J）。",ans:c3,unit:"J",dp:3,
+   hint:"J = πd⁴/32；T = 500 N·m = 500000 N·mm；G = 80000 MPa；算出 N·mm 再除以 1000。",
+   sol:[`J = π×40⁴/32 = ${fmt(J3,0)} mm⁴；T = 500000 N·mm`,`U = T²L/(2GJ) = 500000²×1200/(2×80000×${fmt(J3,0)}) = ${fmt(c3*1000,0)} N·mm`,`= ${fmt(c3,3)} J`]},
+  {type:"mc",q:"一個重物剛好接觸到彈性桿的撞擊板（高度 h = 0），然後突然放手。桿內的最大應力是重物「慢慢放上去」時應力的幾倍？",
+   o:["1 倍","2 倍","3 倍","4 倍"],a:1,
+   hint:"n = 1+√(1+2h/δst)，h = 0 代入。",
+   sol:["能量守恆：W·δmax = ½kδmax²，所以 δmax = 2W/k = 2δst","衝擊因子 n = 1+√(1+0) = 2","最大應力 = 2 × 靜載重應力"]}
+];
+
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 12.5。";return;}
+  const ok=q.type==="num"?near(v,q):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">⚡</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+97)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 axial strain energy
+  {const P=vary(50,5),d=vary(20,2),L=vary(2,0.1),E=pick([200,70,110],r),a=axial(P*1000,L*1000,d,E),U=a.U/1000;
+   qs.push({type:"num",title:"軸向桿的應變能",q:`實心圓桿（E = ${E} GPa）直徑 d = ${d} mm，長 L = ${fmt(L,1)} m，承受軸向拉力 P = ${P} kN（彈性範圍）。求應變能 U（J）。`,ans:U,unit:"J",dp:2,
+    sol:`A = ${fmt(a.A,1)} mm²；U = P²L/(2AE) = ${P*1000}²×${fmt(L*1000,0)}/(2×${fmt(a.A,1)}×${E*1000}) = ${fmt(a.U,0)} N·mm = ${fmt(U,2)} J`});}
+  // Q2 impact: maximum stress
+  {const W=vary(200,10),h=vary(100,10),d=vary(16,2),L=vary(1.5,0.1),a=impact(W,h,L*1000,d,200);
+   qs.push({type:"num",title:"落錘衝擊的最大應力",q:`垂直鋼桿（E = 200 GPa）直徑 d = ${d} mm，長 L = ${fmt(L,1)} m。重物 W = ${W} N 從撞擊板上方 h = ${h} mm 自由落下。求桿內最大應力 σmax（MPa）。`,ans:a.smax,unit:"MPa",dp:1,
+    sol:`k = AE/L = ${fmt(a.k,0)} N/mm；δmax = [W+√(W²+2kWh)]/k = ${fmt(a.dmax,4)} mm；σmax = kδmax/A = ${fmt(a.smax,1)} MPa（n = ${fmt(a.n,2)}）`});}
+  // Q3 modulus of resilience
+  {const sy=vary(250,10),E=pick([200,70,110],r),ur=sy*sy/(2*E*1000)*1000;
+   qs.push({type:"num",title:"彈性模數 ur",q:`某金屬 E = ${E} GPa、降伏強度 σy = ${sy} MPa。求彈性模數 ur = σy²/(2E)（kJ/m³）。`,ans:ur,unit:"kJ/m³",dp:2,
+    sol:`ur = σy²/(2E) = ${sy}²/(2×${E*1000}) = ${fmt(sy*sy/(2*E*1000),5)} MPa = ${fmt(ur,2)} kJ/m³`});}
+  // Q4 impact factor from delta_st and h
+  {const h=vary(80,5),dst=vary(0.2,0.01),n=1+Math.sqrt(1+2*h/dst);
+   qs.push({type:"num",title:"衝擊因子 n",q:`重物從高度 h = ${h} mm 落下撞擊彈性桿，若重物以靜載重作用時桿的靜變形 δst = ${fmt(dst,2)} mm，求衝擊因子 n = 1+√(1+2h/δst)。`,ans:n,unit:"",dp:2,
+    sol:`n = 1+√(1+2×${h}/${fmt(dst,2)}) = 1+√${fmt(1+2*h/dst,2)} = ${fmt(n,2)}`});}
+  // Q5 concept
+  {const pool=[
+    {q:"在彈性範圍內，一根軸向桿的拉力不變而長度加倍（其他不變），儲存的應變能 U 變為？",o:["2 倍","4 倍","1/2","不變"],why:"U = P²L/(2AE) 與 L 成正比，長度加倍 → U 變 2 倍。"},
+    {q:"重物以高度 h = 0 突然放到彈性桿的撞擊板上，衝擊因子 n 等於？",o:["2","1","4","1.5"],why:"n = 1+√(1+2h/δst)，h = 0 時 n = 1+1 = 2。突然施加的載重造成 2 倍的靜載重應力。"},
+    {q:"桿的橫截面積加倍（P、L、E 不變，彈性範圍），應變能 U 變為？",o:["1/2","2 倍","1/4","不變"],why:"U = P²L/(2AE) 與 A 成反比，面積加倍 → U 變 1/2。"},
+    {q:"下列何者是單位體積的應變能（應變能密度）在彈性範圍的表達？",o:["σ²/(2E)","σE/2","σ/(2E)","E/(2σ²)"],why:"u = ½σε = σ²/(2E)；降伏時稱為彈性模數 ur = σy²/(2E)。"},
+    {q:"能量守恆法處理落錘衝擊時，假設重物落下減少的位能 W(h+δmax) 全部轉成？",o:["桿的應變能 ½kδmax²","桿的動能","摩擦熱","聲音能量"],why:"理想化假設沒有能量損失，位能全部轉成桿的彈性應變能 ½kδmax²。"}
+  ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"能量法觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"能量觀念非常穩！應變能、衝擊因子與彈性模數都掌握了。下一關我們會做更多能量法的計算應用。",B:"很不錯！再留意 GPa→MPa、m→mm 換算，以及 N·mm 要除以 1000 才是 J，下次就是 A。",C:"方向對了！回到 Phase 2 把吊桿與落錘的步驟卡再點一次，記住 U = P²L/(2AE) 與 n = 1+√(1+2h/δst)。",D:"別灰心！先記住：U 與 P² 成正比、突然加載就是 2 倍、衝擊用能量守恆，再挑戰一次一定會進步。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 14 章 Energy Methods · 遊戲 1（MOM-CH14-G1）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以 ±2% 誤差判定。</p>`;
+  S.summary=`[MOM-CH14-G1] Energy Methods 能量法探索 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>

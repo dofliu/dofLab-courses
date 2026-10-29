@@ -353,9 +353,18 @@ window.MOM_MANIFEST = {
    "full_title": "[MOM-CH13-G3] Buckling of Columns - 綜合挑戰：鋼管支撐柱與雙平面壓桿設計",
    "file": "ch13-g3.html",
    "published": "2026-10-29T02:30+08:00"
+  },
+  {
+   "ch": 14,
+   "game": 1,
+   "code": "MOM-CH14-G1",
+   "title": "能量法探索：彈簧、橡皮筋與落錘衝擊",
+   "full_title": "[MOM-CH14-G1] Energy Methods - 能量法探索：彈簧、橡皮筋與落錘衝擊",
+   "file": "ch14-g1.html",
+   "published": "2026-10-30T02:30+08:00"
   }
  ],
- "updated": "2026-10-29T02:30+08:00"
+ "updated": "2026-10-30T02:30+08:00"
 };
 window.MOM_CHAPTERS = [["Stress", "應力"], ["Strain", "應變"], ["Mechanical Properties", "材料力學性質"], ["Axial Load", "軸向載重"], ["Torsion", "扭轉"], ["Bending", "彎曲"], ["Transverse Shear", "橫向剪力"], ["Combined Loadings", "組合載重"], ["Stress Transformation", "應力轉換"], ["Strain Transformation", "應變轉換"], ["Design of Beams & Shafts", "梁與軸的設計"], ["Deflection of Beams & Shafts", "梁與軸的撓度"], ["Buckling of Columns", "柱的挫曲"], ["Energy Methods", "能量法"]];
 window.MOM_GAMES = ["核心概念探索", "公式應用與工程案例", "綜合挑戰與設計情境"];
