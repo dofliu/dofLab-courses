@@ -745,6 +745,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "029-teaching-ep02",
+      "no": 2,
+      "file": "ep02.html",
+      "path": "teaching/ep02.html",
+      "title": {
+       "zh": "教材製作",
+       "en": "Creating Materials"
+      },
+      "sub": {
+       "zh": "講義分級、簡報與圖解、例題、互動教具、著作權",
+       "en": "Tiered handouts, slides and diagrams, worked examples, interactive aids, copyright"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-10"
      }
     ],
     "overview": {
@@ -813,7 +834,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-29",
+  "updated": "2026-10-30",
   "languages": [
    "zh",
    "en"
@@ -1124,7 +1145,7 @@ window.CLAUDE_COURSE = {
    "no": 2,
    "title": "教材製作",
    "title_en": "Creating Materials",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "030-teaching-ep03",
@@ -1406,6 +1427,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 33,
+ "live": 34,
  "total": 65
 };

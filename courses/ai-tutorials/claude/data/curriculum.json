@@ -1038,10 +1038,14 @@
         "動畫與互動教具",
         "著作權注意事項"
       ],
-      "status": "in_progress",
-      "updated": "2026-10-30T01:41:42Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-10-30T01:44:45Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/ep02.html",
+        "src": "courses/ai-tutorials/claude/src/029-teaching-ep02.js",
+        "i18n": "courses/ai-tutorials/claude/src/029-teaching-ep02.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒，6/6 分鏡為圖解；查證：support.claude.com「Create and edit files with Claude」（Excel／PowerPoint／Word／PDF 產生，依方案與設定）、Artifacts，資訊截至 2026-10；情境：生活（電路與燈泡、手電筒歐姆定律）＋智慧自動化（PLC 輸入輸出模擬教具、感測器迴路電流例題）＋風能運維（齒輪箱檢測簡報、葉片檢測照片去識別）；數據皆為示意",
       "cases": {
         "life": "生活情境例題",
         "automation": "PLC 階梯圖與感測器應用例題",
