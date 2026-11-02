@@ -1066,10 +1066,14 @@
         "自動批改的界線",
         "題庫管理"
       ],
-      "status": "in_progress",
-      "updated": "2026-11-02T02:42:41Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-11-02T02:46:34Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/ep03.html",
+        "src": "courses/ai-tutorials/claude/src/030-teaching-ep03.js",
+        "i18n": "courses/ai-tutorials/claude/src/030-teaching-ep03.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒，6/6 分鏡為圖解；查證：support.claude.com Artifacts 相關文章（描述測驗等互動頁面，Claude 產生可操作版本並可修改、分享），資訊截至 2026-11；情境：生活（科學小測驗）＋智慧自動化（開迴路／閉迴路概念題、PLC 實作評分規準、題庫）＋風能運維（上鎖掛牌情境題，強調人逐步確認）；數據與題目皆為示意",
       "cases": {
         "life": "生活科學小測驗",
         "automation": "自動控制概念測驗與實作評分規準",

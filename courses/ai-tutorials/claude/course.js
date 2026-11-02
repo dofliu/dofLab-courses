@@ -766,6 +766,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-10"
+     },
+     {
+      "id": "030-teaching-ep03",
+      "no": 3,
+      "file": "ep03.html",
+      "path": "teaching/ep03.html",
+      "title": {
+       "zh": "測驗與評量規準",
+       "en": "Quizzes & Rubrics"
+      },
+      "sub": {
+       "zh": "題型、誘答選項、評分規準、自動批改的界線與題庫",
+       "en": "Question types, distractors, rubrics, limits of auto-grading and item banks"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-11"
      }
     ],
     "overview": {
@@ -834,7 +855,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-10-30",
+  "updated": "2026-11-02",
   "languages": [
    "zh",
    "en"
@@ -1154,7 +1175,7 @@ window.CLAUDE_COURSE = {
    "no": 3,
    "title": "測驗與評量規準",
    "title_en": "Quizzes & Rubrics",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "031-teaching-ep04",
@@ -1427,6 +1448,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 34,
+ "live": 35,
  "total": 65
 };
