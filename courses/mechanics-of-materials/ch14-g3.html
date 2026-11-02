@@ -1,0 +1,801 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<title>[MOM-CH14-G3] Energy Methods - 綜合挑戰：落錘衝擊、卡氏定理與桁架設計</title>
+<style>
+:root{
+  --navy:#1a3a5c; --navy-2:#24507d; --navy-ink:#0f2640;
+  --orange:#e8640a; --orange-soft:#fde9da;
+  --bg:#f5f6fa; --card:#ffffff; --line:#d9dfe8; --muted:#5b6b7e; --ink:#1c2733;
+  --ok:#1f8a4c; --ok-soft:#e3f4ea; --bad:#c62f2f; --bad-soft:#fbe6e6;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 32px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.45rem;color:var(--navy)}
+h3{font-size:1.1rem;color:var(--navy)}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 2px 8px rgba(15,38,64,.25)}
+.topbar .inner{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.02em;font-size:1rem;display:flex;align-items:center;gap:8px}
+.brand .tag{font-family:var(--mono);background:var(--orange);padding:1px 8px;border-radius:4px;font-size:.78rem}
+.who{margin-left:auto;font-size:.82rem;opacity:.9}
+.prog{height:6px;background:rgba(255,255,255,.18)}
+.prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .5s ease}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:1040px;margin:0 auto;padding:0 16px}
+.tab{flex:0 0 auto;background:transparent;border:0;color:#c9d6e5;font:inherit;font-size:.88rem;padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--orange);font-weight:700}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+section.phase{display:none;padding-top:24px}
+section.phase.active{display:block;animation:fade .45s ease}
+@keyframes fade{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+.phase-head{display:flex;gap:6px;flex-direction:column;margin-bottom:16px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;color:var(--orange);font-weight:700;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.guide{display:flex;gap:14px;align-items:flex-end}
+.guide svg{flex:0 0 96px;width:96px;height:auto}
+.bubble{position:relative;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:.95rem}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:18px;border:10px solid transparent;border-right-color:var(--navy);border-left:0}
+.bubble b{color:#ffc79e}
+@media (max-width:460px){.guide svg{flex-basis:64px;width:64px}}
+.formula{font-family:var(--mono);font-size:1rem;background:var(--orange-soft);color:var(--navy-ink);border-radius:6px;padding:4px 10px;display:inline-block;font-weight:600}
+.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:860px){.concepts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.concepts{grid-template-columns:1fr}}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept .life{font-size:.85rem;color:var(--muted)}
+.concept svg{width:100%;height:92px}
+.btn{font:inherit;font-weight:700;border-radius:8px;border:0;padding:9px 18px;cursor:pointer;background:var(--orange);color:#fff;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#cf5707}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.ghost:hover{background:#e9eef5}
+.btn.navy{background:var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{text-align:left;font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--navy-2)}
+.opt.sel{border-color:var(--navy);background:#e9eef5}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{margin-top:10px;border-radius:8px;padding:8px 12px;font-size:.92rem;display:none}
+.fb.show{display:block;animation:fade .3s}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.burst{display:inline-block;animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1)}}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{text-align:left;font:inherit;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.step .n{flex:0 0 26px;height:26px;border-radius:50%;background:#e9eef5;color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.step.on{border-color:var(--orange);background:#fff8f2}
+.step.on .n{background:var(--orange);color:#fff}
+.step .d{display:none;font-size:.88rem;color:var(--muted);margin-top:4px}
+.step.on .d{display:block}
+.ndiag{width:100%;height:auto;background:#fbfcfe;border:1px solid var(--line);border-radius:8px}
+.slider{display:grid;grid-template-columns:130px 1fr 96px;gap:10px;align-items:center;font-size:.9rem}
+@media (max-width:460px){.slider{grid-template-columns:1fr 86px}.slider input{grid-column:1/-1;grid-row:2}}
+.slider input{width:100%;accent-color:var(--orange)}
+select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:460px){.readout{grid-template-columns:1fr}}
+.readout div{background:#f0f3f8;border-radius:8px;padding:8px;text-align:center}
+.readout small{display:block;color:var(--muted);font-size:.75rem}
+.readout b{font-family:var(--mono);font-size:1.05rem;color:var(--navy)}
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.gline{display:grid;grid-template-columns:120px 1fr 64px;gap:10px;align-items:center;font-size:.85rem;margin-top:6px}
+.gauge{height:12px;background:#e6ebf2;border-radius:6px;overflow:hidden}
+.gauge i{display:block;height:100%;transition:width .3s,background .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--mono);color:var(--orange);font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ans input{font:inherit;font-family:var(--mono);width:150px;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px}
+.sol{display:none;margin-top:10px;background:#f0f3f8;border-left:4px solid var(--navy);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.9rem}
+.sol.show{display:block;animation:fade .3s}
+.scorebar{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.scorebar .meter{flex:1;height:10px;background:#e6ebf2;border-radius:5px;overflow:hidden}
+.scorebar .meter i{display:block;height:100%;background:var(--ok);width:0;transition:width .5s}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.form input{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+.err{color:var(--bad);font-size:.88rem}
+.timer{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2px 14px}
+.timer.warn{color:var(--bad);border-color:var(--bad)}
+.idcard{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.idcard span b{color:var(--navy)}
+.report table{width:100%;border-collapse:collapse;font-size:.9rem}
+.report th,.report td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.report th{color:var(--muted);font-weight:500;font-size:.8rem}
+.tablewrap{overflow-x:auto}
+.grade{font-size:3.2rem;font-weight:900;color:var(--orange);line-height:1}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.sumgrid{grid-template-columns:repeat(2,1fr)}}
+.sumgrid div{background:#f0f3f8;border-radius:8px;padding:10px;text-align:center}
+.sumgrid small{display:block;color:var(--muted);font-size:.78rem}
+.sumgrid b{font-family:var(--mono);font-size:1.4rem;color:var(--navy)}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--bad);font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 16px 12px;border-top:1px solid var(--line);margin-top:36px}
+@keyframes wob{50%{transform:translateY(-3px)}}
+.wob{animation:wob 2.4s ease-in-out infinite}
+@keyframes spread{0%{opacity:.15}50%{opacity:1}100%{opacity:.15}}
+.spread{animation:spread 2.4s ease-in-out infinite}
+@keyframes tilt{0%,100%{transform:rotate(0deg)}50%{transform:rotate(5deg)}}
+.tilt{transform-origin:14px 50px;animation:tilt 2.8s ease-in-out infinite}
+@keyframes grow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.08)}}
+.grow{transform-origin:10px 48px;animation:grow 2.6s ease-in-out infinite}
+@keyframes fill{0%{width:10%}100%{width:85%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  .topbar,.noprint{display:none!important}
+  body{background:#fff}
+  section.phase{display:none!important}
+  section#report{display:block!important;padding-top:0}
+  .card{border:1px solid #999}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2s linear infinite}
+@keyframes twirl{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-14deg)}}
+.twirl{transform-origin:100px 46px;animation:twirl 2.6s ease-in-out infinite}
+@keyframes rot{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+.rot{transform-box:fill-box;transform-origin:center;animation:rot 2.6s ease-in-out infinite}
+@keyframes sag{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.sag{animation:sag 2.4s ease-in-out infinite}
+.rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+@keyframes slip{0%,100%{transform:translateX(0)}50%{transform:translateX(9px)}}
+.slip{animation:slip 2.6s ease-in-out infinite}
+@keyframes slipb{0%,100%{transform:translateX(0)}50%{transform:translateX(-9px)}}
+.slipb{animation:slipb 2.6s ease-in-out infinite}
+</style>
+<style>
+@keyframes puff{0%,100%{transform:scale(1)}50%{transform:scale(1.06,1.12)}}
+.puff{transform-box:fill-box;transform-origin:center;animation:puff 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+.sway{transform-origin:60px 86px;animation:sway 2.6s ease-in-out infinite}
+@keyframes blow{0%{transform:translateX(-8px);opacity:0}40%{opacity:1}100%{transform:translateX(10px);opacity:0}}
+.blow{animation:blow 1.8s linear infinite}
+@keyframes push{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.push{animation:push 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="tag">MOM-CH14-G3</span>綜合挑戰：落錘衝擊、卡氏定理與桁架設計</div>
+    <div class="who" id="who">尚未登入</div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-go="login" aria-selected="true">開始</button>
+    <button class="tab" role="tab" data-go="p1" disabled>Phase 1 概念理解</button>
+    <button class="tab" role="tab" data-go="p2" disabled>Phase 2 範例遊戲</button>
+    <button class="tab" role="tab" data-go="p3" disabled>Phase 3 練習關卡</button>
+    <button class="tab" role="tab" data-go="p4" disabled>Phase 4 測試挑戰</button>
+    <button class="tab" role="tab" data-go="report" disabled>成績報告</button>
+  </nav>
+  <div class="prog"><i id="progbar"></i></div>
+</header>
+
+<main class="wrap">
+
+<section class="phase active" id="login">
+  <div class="stack">
+    <div class="phase-head">
+      <span class="eyebrow">Chapter 14 · Energy Methods · Game 3</span>
+      <h2>綜合挑戰：落錘衝擊、卡氏定理與桁架設計</h2>
+      <p style="color:var(--muted);max-width:65ch">前兩關學會了應變能與計算工具，這一關要<b>把它們組合起來解決設計問題</b>：重物從高處落下撞擊懸臂梁（<b>衝擊載重</b>）、用<b>卡氏定理加虛擬力偶</b>求梁端轉角、為桁架選擇截面積時比較<b>強度需求與剛度需求</b>。準備好接受綜合挑戰了嗎？</p>
+    </div>
+    <div class="guide" id="guide0"></div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">學生資料</h3>
+      <div class="form">
+        <label>姓名<input id="inName" autocomplete="name" placeholder="王小明"></label>
+        <label>學號<input id="inId" inputmode="numeric" placeholder="4A123045"></label>
+        <label>班級<input id="inCls" placeholder="智動二甲"></label>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="startBtn">開始遊戲</button>
+        <span class="err" id="loginErr"></span>
+      </div>
+      <p class="note" style="margin-top:10px">學號會決定 Phase 4 的題目數值與選項順序，每位同學拿到的題目都不一樣。</p>
+    </div>
+  </div>
+</section>
+
+<section class="phase" id="p1">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 1 · 約 10 分鐘</span><h2>綜合設計的四個思考步驟</h2></div>
+    <div class="guide" id="guide1"></div>
+    <div class="concepts">
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="落錘衝擊">
+          <rect x="82" y="8" width="36" height="20" rx="3" fill="#e8640a" class="push"/><line x1="100" y1="30" x2="100" y2="48" stroke="#e8640a" stroke-dasharray="3 3" stroke-width="2"/>
+          <rect x="20" y="62" width="160" height="8" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2"/>
+          <path d="M20 70 Q100 86 180 70" stroke="#1a3a5c" stroke-width="2" fill="none"/>
+          <text x="100" y="90" font-size="8.5" fill="#1a3a5c" text-anchor="middle" font-weight="700">W(H+Δ) = ½kΔ²</text>
+        </svg>
+        <h3>落錘衝擊</h3><span class="formula">n = 1+√(1+2H/Δst)</span>
+        <p class="life">重物從高處掉下，位能變成梁的應變能。像<b>從跳板跳到水池</b>，高度越高衝擊越大；H = 0 突然放手時 n = 2。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="卡氏虛擬力偶">
+          <rect x="20" y="40" width="120" height="8" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2" transform="rotate(8 20 44)"/>
+          <path d="M150 28 A18 18 0 1 1 150 64" stroke="#e8640a" stroke-width="3" fill="none" class="spread"/>
+          <text x="46" y="24" font-size="9" fill="#5b6b7e">端點無力偶？加 M₀</text>
+          <text x="100" y="86" font-size="9" fill="#1a3a5c" text-anchor="middle" font-weight="700">θ = ∂U/∂M₀ | M₀=0</text>
+        </svg>
+        <h3>卡氏：虛擬力偶</h3><span class="formula">θ = ∂U/∂M₀</span>
+        <p class="life">想知道<b>轉了多少角度</b>，就加一個虛擬力偶 M₀，U 對 M₀ 微分，最後令 M₀ = 0。像在<b>門把上假裝轉一下</b>看門怎麼動。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="強度與剛度">
+          <rect x="22" y="14" width="64" height="60" rx="6" fill="#fde9da" stroke="#e8640a" stroke-width="2"/>
+          <rect x="114" y="14" width="64" height="60" rx="6" fill="#e9eef5" stroke="#1a3a5c" stroke-width="2"/>
+          <text x="54" y="40" font-size="10" fill="#e8640a" text-anchor="middle" font-weight="700">強度</text><text x="54" y="56" font-size="8.5" fill="#5b6b7e" text-anchor="middle">σ ≤ σy</text>
+          <text x="146" y="40" font-size="10" fill="#1a3a5c" text-anchor="middle" font-weight="700">剛度</text><text x="146" y="56" font-size="8.5" fill="#5b6b7e" text-anchor="middle">Δ ≤ Δallow</text>
+        </svg>
+        <h3>強度 vs 剛度</h3><span class="formula">A = max(Aσ, AΔ)</span>
+        <p class="life">不斷、也不能彎太多。像<b>跳板</b>：不斷是強度，不會晃太大是剛度，兩項都過關才算設計完成。</p>
+      </div>
+      <div class="concept">
+        <svg viewBox="0 0 200 92" aria-label="設計流程">
+          <rect x="8" y="30" width="40" height="30" rx="5" fill="#e9eef5" stroke="#1a3a5c"/><text x="28" y="49" font-size="9" fill="#1a3a5c" text-anchor="middle">內力</text>
+          <rect x="80" y="30" width="40" height="30" rx="5" fill="#e9eef5" stroke="#1a3a5c"/><text x="100" y="49" font-size="9" fill="#1a3a5c" text-anchor="middle">能量 U</text>
+          <rect x="152" y="30" width="40" height="30" rx="5" fill="#fde9da" stroke="#e8640a"/><text x="172" y="49" font-size="9" fill="#e8640a" text-anchor="middle">位移</text>
+          <line x1="48" y1="45" x2="78" y2="45" stroke="#e8640a" stroke-width="2"/><line x1="120" y1="45" x2="150" y2="45" stroke="#e8640a" stroke-width="2"/>
+        </svg>
+        <h3>能量法 SOP</h3><span class="formula">N, M → U → Δ</span>
+        <p class="life">先求內力，寫出應變能，再用外力功、虛功或卡氏取得位移，最後和<b>容許值</b>比較。像<b>食譜</b>：照步驟，次序不能亂。</p>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h3>互動實驗：落錘撞擊鋼製懸臂梁</h3>
+      <p class="note">鋼梁 E = 200 GPa、σy = 250 MPa、b = 50 mm、L = 2 m。重物 W 從自由端上方 H 高度落下，橘色為最大撓曲（已放大）。</p>
+      <input type="hidden" id="s1mat" value="0">
+      <div class="grid2">
+        <svg viewBox="0 0 460 300" class="ndiag" id="fig1" aria-label="落錘衝擊撓曲"></svg>
+        <div class="stack">
+          <div class="slider"><span>重物 W</span><input type="range" id="s1P" min="100" max="2000" step="100" value="500"><span class="mono" id="v1P">500 N</span></div>
+          <div class="slider"><span>落下高度 H</span><input type="range" id="s1L" min="0" max="300" step="10" value="50"><span class="mono" id="v1L">50 mm</span></div>
+          <div class="slider"><span>斷面高度 h</span><input type="range" id="s1h" min="40" max="200" step="10" value="100"><span class="mono" id="v1h">100 mm</span></div>
+          <div class="readout">
+            <div><small>靜撓度 Δst</small><b id="r1a">—</b></div>
+            <div><small>衝擊係數 n</small><b id="r1b">—</b></div>
+            <div><small>最大撓度 Δmax</small><b id="r1c">—</b></div>
+          </div>
+          <div id="r1d"></div>
+          <p class="note mono" id="r1e"></p>
+        </div>
+      </div>
+      <p class="note">觀察：H = 0 時 n = 2（突然加載）；H 變大時 n 迅速增加。把 h 從 100 降到 60，Δst 與 σst 都大增，衝擊更危險。</p>
+    </div>
+
+    <div class="card">
+      <h3>你知道嗎？快問快答</h3>
+      <div id="p1quiz" class="stack" style="margin-top:10px"></div>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p2">前往 Phase 2 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p2">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 2 · 約 15 分鐘</span><h2>兩個設計情境：落錘容許高度與桁架選材</h2></div>
+    <div class="guide" id="guide2"></div>
+
+    <div class="card">
+      <h3>案例 A：懸臂梁最多能承受多高的落錘？</h3>
+      <p style="color:var(--muted);margin-top:4px">鋼梁（E = 200 GPa，σy = 250 MPa）b = 50 mm、h = 100 mm、L = 2 m，W = 1 kN 的重物落在自由端。要求最大彎曲應力不超過 σy，求容許落下高度 H。</p>
+      <div class="grid2" style="margin-top:14px">
+        <svg viewBox="0 0 460 300" class="ndiag" id="figA" aria-label="容許落高時的撓曲"></svg>
+        <div class="steps" id="stepsA"></div>
+      </div>
+      <div class="stack" style="margin-top:16px">
+        <h3 style="font-size:1rem">試試看：調整參數，看容許落高怎麼變</h3>
+        <div class="slider"><span>重物 W</span><input type="range" id="sAP" min="200" max="1500" step="100" value="1000"><span class="mono" id="vAP">1000 N</span></div>
+        <div class="slider"><span>梁長 L</span><input type="range" id="sAL" min="0.5" max="4" step="0.1" value="2"><span class="mono" id="vAL">2.0 m</span></div>
+        <div class="slider"><span>斷面高度 h</span><input type="range" id="sAh" min="40" max="200" step="10" value="100"><span class="mono" id="vAh">100 mm</span></div>
+        <div class="readout">
+          <div><small>靜應力 σst</small><b id="rA1">—</b></div>
+          <div><small>容許 n = σy/σst</small><b id="rA2">—</b></div>
+          <div><small>容許落高 H</small><b id="rA3">—</b></div>
+        </div>
+        <div id="rA4"></div>
+        <p class="note">觀察：梁越短、越高，σst 越小，容許的 n 越大，能承受的落高暴增。落高和 (n−1)² 成正比。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>案例 B：兩桿桁架選截面積（強度 vs 剛度）</h3>
+      <p style="color:var(--muted);margin-top:4px">水平桿 AB（L = 1.5 m）與斜桿 BC，節點 B 向下載重 P = 20 kN，鋼（E = 200 GPa，σy = 250 MPa）。兩桿同截面積 A，要求 B 點垂直位移不超過容許值 1.0 mm，且桿件不降伏。求最小 A。</p>
+      <div class="grid2" style="margin-top:14px">
+        <div class="steps" id="stepsB"></div>
+        <div class="stack">
+          <svg viewBox="0 0 460 300" class="ndiag" id="figB" aria-label="採用截面積時的桁架變形"></svg>
+          <div class="slider"><span>載重 P</span><input type="range" id="sBP" min="5" max="60" step="5" value="20"><span class="mono" id="vBP">20 kN</span></div>
+          <div class="slider"><span>斜桿角度 θ</span><input type="range" id="sBt" min="25" max="65" step="5" value="45"><span class="mono" id="vBt">45°</span></div>
+          <div class="slider"><span>容許位移 δ</span><input type="range" id="sBA" min="0.3" max="3" step="0.1" value="1"><span class="mono" id="vBA">1.0 mm</span></div>
+          <div class="readout">
+            <div><small>強度需求 Aσ</small><b id="rB1">—</b></div>
+            <div><small>剛度需求 Aδ</small><b id="rB2">—</b></div>
+            <div><small>採用 A（取大者）</small><b id="rB3">—</b></div>
+          </div>
+          <div id="rB4"></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">觀察：容許位移很嚴格時是<b>剛度控制</b>；放寬位移後才變成<b>強度控制</b>。Aδ 與 δ 成反比。</p>
+    </div>
+    <div class="row noprint"><button class="btn" data-next="p3">前往 Phase 3 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p3">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 3 · 約 20 分鐘</span><h2>練習關卡：四道綜合設計題</h2></div>
+    <div class="guide" id="guide3"></div>
+    <div class="scorebar"><b>練習得分</b><div class="meter"><i id="p3meter"></i></div><span class="mono" id="p3score">0 / 100</span></div>
+    <p class="note">第一次就答對得 25 分，修正後答對得 15 分，看過解答後答對得 5 分。計算題允許 ±2% 誤差；計算時統一用 N、mm、MPa（1 GPa = 1000 MPa，1 m = 1000 mm）。</p>
+    <div id="p3list" class="stack"></div>
+    <div class="row noprint"><button class="btn" data-next="p4">前往 Phase 4 測試 →</button></div>
+  </div>
+</section>
+
+<section class="phase" id="p4">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">Phase 4 · 15 分鐘</span><h2>測試挑戰：綜合挑戰認證</h2></div>
+    <div class="guide" id="guide4"></div>
+    <div class="card">
+      <div class="idcard" id="idcard"></div>
+      <p class="note" style="margin-top:6px">請確認資料正確。題目數值由學號產生，按下開始後計時 15 分鐘，時間到會自動交卷。</p>
+      <div class="row" style="margin-top:12px" id="p4start"><button class="btn" id="startTest">開始測試</button></div>
+    </div>
+    <div id="p4body" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <span class="timer" id="timer">15:00</span>
+        <span class="note" id="answered">已作答 0 / 5</span>
+      </div>
+      <div id="p4list" class="stack"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn navy" id="submitTest">交卷</button>
+        <span class="err" id="submitMsg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="phase report" id="report">
+  <div class="stack">
+    <div class="phase-head"><span class="eyebrow">成績報告</span><h2>[MOM-CH14-G3] Energy Methods｜綜合挑戰：落錘衝擊、卡氏定理與桁架設計</h2></div>
+    <div class="card stack" id="reportBody"></div>
+    <div class="row noprint">
+      <button class="btn" id="printBtn">列印 / 存成 PDF</button>
+      <button class="btn ghost" id="copyBtn">複製成績文字</button>
+      <span class="note" id="printTip"></span>
+    </div>
+  </div>
+</section>
+
+<footer>國立勤益科技大學 智慧自動化工程系 劉瑞弘老師研究室</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const S={name:"",id:"",cls:"",visited:{login:1},p3:[],p4:null,p4done:false};
+
+function engineer(){
+  return `<svg viewBox="0 0 100 130" aria-hidden="true" class="wob">
+  <ellipse cx="50" cy="126" rx="30" ry="4" fill="#1a3a5c" opacity=".15"/>
+  <rect x="24" y="72" width="52" height="50" rx="10" fill="#1a3a5c"/>
+  <rect x="38" y="72" width="24" height="34" fill="#24507d"/>
+  <rect x="30" y="80" width="8" height="30" fill="#e8640a"/><rect x="62" y="80" width="8" height="30" fill="#e8640a"/>
+  <circle cx="50" cy="48" r="24" fill="#f6cfa8"/>
+  <path d="M24 44 Q26 18 50 18 Q74 18 76 44 Z" fill="#e8640a"/>
+  <rect x="20" y="41" width="60" height="7" rx="3" fill="#cf5707"/>
+  <rect x="46" y="20" width="8" height="22" rx="2" fill="#ffa564"/>
+  <circle cx="41" cy="54" r="3" fill="#1c2733"/><circle cx="59" cy="54" r="3" fill="#1c2733"/>
+  <path d="M42 63 Q50 69 58 63" stroke="#1c2733" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="61" r="3" fill="#f3a38a" opacity=".6"/><circle cx="65" cy="61" r="3" fill="#f3a38a" opacity=".6"/>
+  <g transform="rotate(-12 88 98)"><rect x="76" y="90" width="26" height="8" fill="#fff" stroke="#8a99ab" stroke-width="1.2"/><rect x="76" y="98" width="26" height="6" fill="#e8640a" opacity=".7"/></g>
+</svg>`;
+}
+function guide(id,html){$(id).innerHTML=engineer()+`<div class="bubble"><b>阿力工程師：</b>${html}</div>`;}
+
+function go(id){
+  if(id==="report"&&!S.p4done)return;
+  document.querySelectorAll("section.phase").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.go===id?"true":"false"));
+  S.visited[id]=1;
+  if(id==="p4")renderIdCard();
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function updateProgress(){
+  let v=0;
+  if(S.name)v+=5;
+  if(S.visited.p1)v+=5; if(p1Answered()===3)v+=10;
+  if(S.visited.p2)v+=15;
+  v+=S.p3.filter(q=>q&&q.done).length*6.25;
+  if(S.p4&&S.p4.started)v+=10;
+  if(S.p4done)v+=30;
+  $("#progbar").style.width=Math.min(100,v)+"%";
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{if(!t.disabled)go(t.dataset.go);}));
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.next)));
+
+$("#startBtn").addEventListener("click",()=>{
+  const n=$("#inName").value.trim(),i=$("#inId").value.trim(),c=$("#inCls").value.trim();
+  if(!n||!i||!c){$("#loginErr").textContent="請填寫姓名、學號與班級三個欄位。";return;}
+  $("#loginErr").textContent="";
+  S.name=n;S.id=i;S.cls=c;
+  $("#who").textContent=`${c}｜${n}（${i}）`;
+  document.querySelectorAll(".tab").forEach(t=>{if(t.dataset.go!=="report")t.disabled=false;});
+  $("#startBtn").textContent="更新資料並繼續";
+  go("p1");
+});
+
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"—";
+function near(val,q){return Number.isFinite(val)&&Math.abs(val-q.ans)<=Math.max(Math.abs(q.ans)*0.02,q.atol||0.005);}
+function yay(){const m=["太棒了！","完全正確！","能量守恆，答案也守恆！","這就是工程師的直覺！","漂亮！"];return m[Math.floor(Math.random()*m.length)];}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function util(u){return u<=0.8?"#1f8a4c":u<=1?"#e8a40a":"#c62f2f";}
+function gauge(label,u){return `<div class="gline"><span>${label}</span><div class="gauge"><i style="width:${Math.min(100,u*100)}%;background:${util(u)}"></i></div><span class="mono">${fmt(u*100,0)}%</span></div>`;}
+
+guide("#guide0","歡迎來到綜合挑戰！這一關要把能量法用在<b>真正的設計問題</b>：落錘衝擊、梁端轉角、桁架選材。先填好資料，安全帽戴好！");
+guide("#guide1","三個綜合觀念：① <b>衝擊</b>：n = 1+√(1+2H/Δst)，Δmax = n·Δst ② <b>卡氏</b>：沒有力的地方加虛擬 Q，微分後令 Q = 0 ③ <b>設計</b>：強度與剛度都要過關，取大者。");
+guide("#guide2","A 是<b>衝擊設計</b>：最多能讓重物從多高落下？B 是<b>桁架設計</b>：強度與剛度，誰決定截面積？每一步都能點開。");
+guide("#guide3","SOP：① 先算靜態 Δst 與 σst ② 衝擊乘 n ③ 轉角用 ∂U/∂M₀ ④ 設計比較強度與剛度。單位統一 N、mm、MPa。");
+guide("#guide4","綜合認證開始！數值每人不同。小心：衝擊要用<b>靜載重</b>算 Δst；GPa×1000 = MPa；轉角答案要換成<b>度</b>。加油！");
+
+/* ---------- mechanics (N, mm, MPa; E given in GPa) ---------- */
+const MATS=[{n:"鋼",E:200,sy:250},{n:"鋁",E:70,sy:240},{n:"銅",E:110,sy:70}];
+function canti(P,L,b,h,E){const I=b*h**3/12,dl=P*L**3/(3*E*1000*I),U=P*P*L**3/(6*E*1000*I);return {I,delta:dl,U,smax:P*L*(h/2)/I};}
+// weight W dropped from height H (mm) onto the tip of a cantilever; energy balance W(H+D)=1/2 k D^2
+function impact(W,H,L,b,h,E){
+  const s=canti(W,L,b,h,E),n=1+Math.sqrt(1+2*H/s.delta);
+  return {I:s.I,dst:s.delta,sst:s.smax,n,dmax:n*s.delta,smax:n*s.smax,k:W/s.delta};
+}
+// largest drop height so that n*sst <= sy
+function hallow(W,L,b,h,E,sy){
+  const s=canti(W,L,b,h,E),na=sy/s.smax,v=(na-1)**2-1;
+  return {dst:s.delta,sst:s.smax,na,H:na>1?Math.max(0,s.delta/2*v):0,sudden:v<0};
+}
+// slope at tip of cantilever by Castigliano with dummy couple M0: theta = P L^2/(2EI)
+function slope(P,L,b,h,E){const I=b*h**3/12,th=P*L*L/(2*E*1000*I);return {I,th,deg:th*180/Math.PI};}
+// two-bar truss
+function truss(P,th,L,A,E){
+  const t=th*Math.PI/180,Nab=-P/Math.tan(t),Nbc=P/Math.sin(t),Lbc=L/Math.cos(t);
+  const nab=-1/Math.tan(t),nbc=1/Math.sin(t),EA=A*E*1000;
+  const sum=nab*Nab*L+nbc*Nbc*Lbc,dv=sum/EA,U=(Nab*Nab*L+Nbc*Nbc*Lbc)/(2*EA);
+  return {t,Nab,Nbc,Lbc,nab,nbc,sum,dv,U,sab:Nab/A,sbc:Nbc/A,EA};
+}
+// required area: strength (|N|max/sy) and stiffness (sum/(E*delta))
+function design(P,th,L,E,sy,dl){
+  const r=truss(P,th,L,1,E),As=Math.max(Math.abs(r.Nab),Math.abs(r.Nbc))/sy,Ad=r.sum/(E*1000*dl);
+  return {As,Ad,A:Math.max(As,Ad),stiff:Ad>=As,r};
+}
+
+/* ---------- drawing ---------- */
+function arrow(x1,y1,x2,y2,col,w=3){
+  const ang=Math.atan2(y2-y1,x2-x1),L=7,hx=x2-L*Math.cos(ang),hy=y2-L*Math.sin(ang);
+  const nx=-Math.sin(ang)*4,ny=Math.cos(ang)*4;
+  return `<line x1="${x1}" y1="${y1}" x2="${hx}" y2="${hy}" stroke="${col}" stroke-width="${w}"/><polygon points="${x2},${y2} ${hx+nx},${hy+ny} ${hx-nx},${hy-ny}" fill="${col}"/>`;
+}
+function wall(x,y0,y1){let s=`<rect x="${x-12}" y="${y0}" width="12" height="${y1-y0}" fill="#cfd9e6" stroke="#1a3a5c" stroke-width="2"/>`;for(let y=y0;y<y1;y+=9)s+=`<line x1="${x-12}" y1="${y+8}" x2="${x-20}" y2="${y}" stroke="#1a3a5c"/>`;return s;}
+function beamFig(sel,L,h,r,P,lines){
+  const x0=50,Lp=70+68*L,th=8+h/200*26,y0=110,sl=r.delta/(L*1000);
+  const drop=Math.min(115,Math.max(4,sl*Lp*9));
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`+wall(x0,y0-50,y0+60);
+  s+=`<rect x="${x0}" y="${y0-th/2}" width="${Lp}" height="${th}" fill="none" stroke="#9aa8ba" stroke-dasharray="5 4"/>`;
+  let d="";for(let i=0;i<=24;i++){const u=i/24,x=x0+Lp*u,y=y0+drop*(3*u*u-u**3)/2;d+=(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)+" ";}
+  s+=`<path d="${d}" stroke="#e8640a" stroke-width="${th}" fill="none" stroke-linecap="butt" opacity=".85"/><path d="${d}" stroke="#1a3a5c" stroke-width="2" fill="none"/>`;
+  s+=arrow(x0+Lp,y0+drop-48,x0+Lp,y0+drop-th/2-2,"#1a3a5c",4)+`<text x="${x0+Lp+8}" y="${y0+drop-34}" font-size="12" fill="#1a3a5c" font-weight="700">P</text>`;
+  s+=`<line x1="${x0+Lp+22}" y1="${y0}" x2="${x0+Lp+22}" y2="${y0+drop}" stroke="#c62f2f" stroke-width="1.5"/><text x="${Math.min(380,x0+Lp+28)}" y="${y0+drop/2+4}" font-size="11" fill="#c62f2f" font-weight="700">Δ</text>`;
+  s+=`<text x="12" y="20" font-size="10" fill="#5b6b7e">撓曲已放大顯示，虛線為未受力位置</text>`;
+  lines.forEach((t,i)=>{s+=`<text x="12" y="${236+i*17}" font-size="10" fill="${i?"#1a3a5c":"#5b6b7e"}" ${i?'class="mono"':""}>${t}</text>`;});
+  $(sel).innerHTML=s;
+}
+function trussFig(sel,th,r,P,lines){
+  const t=th*Math.PI/180,tn=Math.tan(t),Lp=Math.min(230,150/tn),xa=60,ya=215,xb=xa+Lp,yc=ya-Lp*tn;
+  const dp=Math.min(55,6+16*r.dv);
+  let s=`<rect width="460" height="300" fill="#fbfcfe"/>`+wall(xa,yc-20,ya+30);
+  s+=`<line x1="${xa}" y1="${ya}" x2="${xb}" y2="${ya}" stroke="#9aa8ba" stroke-width="4" stroke-dasharray="6 4"/><line x1="${xa}" y1="${yc}" x2="${xb}" y2="${ya}" stroke="#9aa8ba" stroke-width="4" stroke-dasharray="6 4"/>`;
+  s+=`<line x1="${xa}" y1="${ya}" x2="${xb}" y2="${ya+dp}" stroke="#1a3a5c" stroke-width="6"/><line x1="${xa}" y1="${yc}" x2="${xb}" y2="${ya+dp}" stroke="#e8640a" stroke-width="6"/>`;
+  s+=`<circle cx="${xb}" cy="${ya+dp}" r="6" fill="#1a3a5c"/>`+arrow(xb,ya+dp+4,xb,ya+dp+48,"#1a3a5c",4)+`<text x="${xb+8}" y="${ya+dp+40}" font-size="12" fill="#1a3a5c" font-weight="700">P</text>`;
+  s+=`<text x="${xa-6}" y="${ya+22}" font-size="11" fill="#5b6b7e" text-anchor="end">A</text><text x="${xa-6}" y="${yc+4}" font-size="11" fill="#5b6b7e" text-anchor="end">C</text><text x="${xb+8}" y="${ya-8}" font-size="11" fill="#5b6b7e">B</text>`;
+  s+=`<text x="${(xa+xb)/2}" y="${ya-8}" font-size="10" fill="#1a3a5c" text-anchor="middle">AB（壓）</text><text x="${(xa+xb)/2+8}" y="${(yc+ya)/2-6}" font-size="10" fill="#e8640a">BC（拉）</text>`;
+  s+=`<text x="${xb+60}" y="60" font-size="10" fill="#c62f2f">Δv（已放大）</text><line x1="${xb+54}" y1="${ya}" x2="${xb+54}" y2="${ya+dp}" stroke="#c62f2f" stroke-width="1.5"/>`;
+  lines.forEach((t2,i)=>{s+=`<text x="12" y="${262+i*15}" font-size="10" fill="${i?"#1a3a5c":"#5b6b7e"}" ${i?'class="mono"':""}>${t2}</text>`;});
+  $(sel).innerHTML=s;
+}
+function renderSteps(el,steps,onPick){
+  el.innerHTML=steps.map((s,i)=>`<button class="step" data-i="${i}"><span class="n">${i+1}</span><span><b>${s.t}</b><span class="d mono">${s.d}</span></span></button>`).join("");
+  el.querySelectorAll(".step").forEach(b=>b.addEventListener("click",()=>{b.classList.toggle("on");onPick&&onPick();}));
+}
+
+/* ---------- Phase 1 ---------- */
+function draw1(){
+  const W=+$("#s1P").value,H=+$("#s1L").value,h=+$("#s1h").value,L=2000;
+  $("#v1P").textContent=W+" N";$("#v1L").textContent=H+" mm";$("#v1h").textContent=h+" mm";
+  const r=impact(W,H,L,50,h,200),ok=r.smax<=250;
+  beamFig("#fig1",2,h,{delta:r.dmax},W,["鋼梁 b = 50 mm、L = 2 m；Δst = WL³/(3EI)",`n = 1+√(1+2H/Δst) = ${fmt(r.n,2)}；Δmax = nΔst`,`Δmax = ${fmt(r.dmax,2)} mm；σmax = n·σst = ${fmt(r.smax,1)} MPa`]);
+  $("#r1a").textContent=fmt(r.dst,2)+" mm";$("#r1b").textContent=fmt(r.n,2);$("#r1c").textContent=fmt(r.dmax,2)+" mm";
+  $("#r1d").innerHTML=gauge("σmax / σy",Math.min(r.smax/250,9.99))+`<p style="margin-top:8px"><span class="badge ${ok?"ok":"no"}">${ok?"σmax ≤ σy：彈性範圍，公式適用 ✓":"σmax > σy：已降伏，線彈性公式不再適用 ✗"}</span></p>`;
+  $("#r1e").textContent=`I = ${fmt(r.I,0)} mm⁴；σst = ${fmt(r.sst,1)} MPa；等效彈簧剛度 k = W/Δst = ${fmt(r.k,1)} N/mm。`;
+}
+["#s1P","#s1L","#s1h"].forEach(k=>$(k).addEventListener("input",draw1));
+draw1();
+
+const P1Q=[
+  {q:"重物「突然放手」（H = 0，但接觸瞬間才加載）時，衝擊係數 n = 1+√(1+2H/Δst) 等於多少？",o:["2","1","4","0.5"],a:0,why:"H = 0 時 √1 = 1，n = 2。突然加載的位移與應力是靜載重的 2 倍。"},
+  {q:"用卡氏第二定理求懸臂梁自由端的「轉角」，但那裡原本沒有力偶，應該怎麼做？",o:["加虛擬力偶 M₀，求 ∂U/∂M₀ 後令 M₀ = 0","直接用 ∂U/∂P","無法求解","把梁長加倍"],a:0,why:"要求哪個方向的位移，就加對應的虛擬載重：求轉角加力偶 M₀，求撓度加力 Q，微分後令其為 0。"},
+  {q:"桁架選截面積時，強度需求 Aσ 算出 113 mm²、剛度需求 Aδ 算出 574 mm²，應採用？",o:["574 mm²","113 mm²","兩者平均","兩者相加"],a:0,why:"強度與剛度兩項限制都要滿足，所以取較大者；此例由剛度控制。"}
+];
+const p1state=[null,null,null];
+function p1Answered(){return p1state.filter(x=>x===true).length;}
+(function renderP1(){
+  $("#p1quiz").innerHTML=P1Q.map((q,i)=>`<div><p><span class="qnum">Q${i+1}</span> ${q.q}</p><div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb" id="p1fb${i}"></div></div>`).join("");
+  $("#p1quiz").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o,q=P1Q[i],fb=$("#p1fb"+i);
+    if(p1state[i]===true)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    if(j===q.a){b.classList.add("right");p1state[i]=true;fb.className="fb show ok";fb.innerHTML=`<span class="burst">⚡✨</span> ✓ ${yay()} ${q.why}`;}
+    else{b.classList.add("wrong");fb.className="fb show no";fb.textContent="✗ 再想想：回到上面的概念卡片或互動實驗找找線索。";}
+    updateProgress();
+  }));
+})();
+
+/* ---------- Phase 2A: allowable drop height ---------- */
+function drawA(){
+  const W=+$("#sAP").value,L=+$("#sAL").value,h=+$("#sAh").value;
+  $("#vAP").textContent=W+" N";$("#vAL").textContent=L.toFixed(1)+" m";$("#vAh").textContent=h+" mm";
+  const a=hallow(W,L*1000,50,h,200,250),r=impact(W,a.H,L*1000,50,h,200);
+  beamFig("#figA",L,h,{delta:r.dmax},W,["鋼梁 b = 50 mm、E = 200 GPa、σy = 250 MPa",`Δst = ${fmt(a.dst,2)} mm；容許 H = ${fmt(a.H,1)} mm`,`此時 Δmax = ${fmt(r.dmax,2)} mm，σmax = ${fmt(r.smax,1)} MPa`]);
+  $("#rA1").textContent=fmt(a.sst,1)+" MPa";$("#rA2").textContent=fmt(a.na,2);$("#rA3").textContent=a.na<=1?"無法承受":fmt(a.H,1)+" mm";
+  $("#rA4").innerHTML=gauge("σst / σy",Math.min(a.sst/250,9.99))+`<p style="margin-top:8px"><span class="badge ${a.na<=1?"no":a.sudden?"no":"ok"}">${a.na<=1?"靜載重就已降伏 ✗":a.sudden?"連突然加載（n = 2）都超過 σy，容許落高為 0 ✗":"可承受從上方落下 ✓（再高就降伏）"}</span></p>`;
+}
+["#sAP","#sAL","#sAh"].forEach(k=>$(k).addEventListener("input",drawA));
+const rA=hallow(1000,2000,50,100,200,250),rA2=impact(1000,rA.H,2000,50,100,200),IA=50*100**3/12;
+const STEPS_A=[
+  {t:"算靜態撓度 Δst 與靜應力 σst",d:`I = 50×100³/12 = ${fmt(IA,0)} mm⁴；Δst = WL³/(3EI) = 1000×2000³/(3×200000×${fmt(IA,0)}) = ${fmt(rA.dst,3)} mm；σst = W·L·(h/2)/I = 1000×2000×50/${fmt(IA,0)} = ${fmt(rA.sst,2)} MPa`},
+  {t:"由降伏條件求容許衝擊係數",d:`σmax = n·σst ≤ σy → n ≤ 250/${fmt(rA.sst,2)} = ${fmt(rA.na,3)}`},
+  {t:"能量守恆導出 n 與 H 的關係",d:`W(H+Δmax) = ½kΔmax²，k = W/Δst → n = 1+√(1+2H/Δst)，所以 (n−1)² = 1+2H/Δst`},
+  {t:"解容許落高 H",d:`H = (Δst/2)[(n−1)²−1] = (${fmt(rA.dst,3)}/2)×[(${fmt(rA.na-1,3)})²−1] = ${fmt(rA.H,1)} mm`},
+  {t:"驗算",d:`H = ${fmt(rA.H,1)} mm → n = 1+√(1+2H/Δst) = ${fmt(rA2.n,3)}；Δmax = nΔst = ${fmt(rA2.dmax,2)} mm；σmax = ${fmt(rA2.smax,1)} MPa = σy ✓。注意：實務上還要乘安全係數`}
+];
+renderSteps($("#stepsA"),STEPS_A,()=>{$("#sAP").value=1000;$("#sAL").value=2;$("#sAh").value=100;drawA();});
+drawA();
+
+/* ---------- Phase 2B: truss sizing ---------- */
+function drawB(){
+  const P=+$("#sBP").value*1000,th=+$("#sBt").value,dl=+$("#sBA").value;
+  $("#vBP").textContent=(P/1000)+" kN";$("#vBt").textContent=th+"°";$("#vBA").textContent=dl.toFixed(1)+" mm";
+  const d=design(P,th,1500,200,250,dl),r=truss(P,th,1500,d.A,200);
+  trussFig("#figB",th,r,P,["AB 長 1.5 m，E = 200 GPa，σy = 250 MPa，兩桿同截面積",`採用 A = ${fmt(d.A,0)} mm² → Δv = ${fmt(r.dv,3)} mm`,`${d.stiff?"剛度":"強度"}控制；σBC = ${fmt(r.sbc,1)} MPa`]);
+  $("#rB1").textContent=fmt(d.As,0)+" mm²";$("#rB2").textContent=fmt(d.Ad,0)+" mm²";$("#rB3").textContent=fmt(d.A,0)+" mm²";
+  $("#rB4").innerHTML=gauge("σBC / σy",Math.min(Math.abs(r.sbc)/250,9.99))+`<p style="margin-top:8px"><span class="badge ok">${d.stiff?"剛度（位移限制）控制設計 ✓":"強度（降伏限制）控制設計 ✓"}</span></p>`;
+}
+["#sBP","#sBt","#sBA"].forEach(k=>$(k).addEventListener("input",drawB));
+const dB=design(20000,45,1500,200,250,1),rB=dB.r;
+const STEPS_B=[
+  {t:"求各桿真實內力",d:`N_BC = P/sin45° = ${fmt(rB.Nbc,0)} N（拉）；N_AB = −P/tan45° = ${fmt(rB.Nab,0)} N（壓）；L_BC = L/cos45° = ${fmt(rB.Lbc,1)} mm`},
+  {t:"強度需求 Aσ",d:`A ≥ |N|max/σy = ${fmt(Math.abs(rB.Nbc),0)}/250 = ${fmt(dB.As,1)} mm²`},
+  {t:"虛功法算位移（令 A = 1 mm²）",d:`n_BC = ${fmt(rB.nbc,4)}、n_AB = ${fmt(rB.nab,4)}；Σ nNL = (${fmt(rB.nab,3)})(${fmt(rB.Nab,0)})(1500)+(${fmt(rB.nbc,3)})(${fmt(rB.Nbc,0)})(${fmt(rB.Lbc,1)}) = ${fmt(rB.sum,0)} N·mm`},
+  {t:"剛度需求 Aδ",d:`Δv = ΣnNL/(AE) ≤ 1.0 mm → A ≥ ${fmt(rB.sum,0)}/(200000×1.0) = ${fmt(dB.Ad,1)} mm²`},
+  {t:"取大者並驗算",d:`A = max(${fmt(dB.As,1)}, ${fmt(dB.Ad,1)}) = ${fmt(dB.A,1)} mm² → ${dB.stiff?"剛度控制":"強度控制"}。此時 σBC = ${fmt(rB.Nbc/dB.A,1)} MPa（遠低於 250），Δv = 1.0 mm ✓`}
+];
+renderSteps($("#stepsB"),STEPS_B,()=>{$("#sBP").value=20;$("#sBt").value=45;$("#sBA").value=1;drawB();});
+drawB();
+
+/* ---------- Phase 3 practice ---------- */
+const c1=impact(500,60,1500,40,80,200).dmax;
+const c2=slope(4000,1800,60,100,200).deg;
+const c3d=design(30000,40,1200,200,250,0.8);
+const P3Q=[
+  {type:"num",q:"鋼製懸臂梁（E = 200 GPa）b = 40 mm、h = 80 mm、L = 1.5 m。W = 500 N 的重物從自由端上方 H = 60 mm 落下。求最大撓度 Δmax = n·Δst（mm）。",ans:c1,unit:"mm",dp:3,
+   hint:"先用靜載重 W 求 Δst = WL³/(3EI)，再算 n = 1+√(1+2H/Δst)，Δmax = nΔst。",
+   sol:[`I = 40×80³/12 = ${fmt(40*80**3/12,0)} mm⁴；Δst = 500×1500³/(3×200000×${fmt(40*80**3/12,0)}) = ${fmt(impact(500,60,1500,40,80,200).dst,4)} mm`,`n = 1+√(1+2×60/${fmt(impact(500,60,1500,40,80,200).dst,4)}) = ${fmt(impact(500,60,1500,40,80,200).n,3)}`,`Δmax = nΔst = ${fmt(c1,3)} mm`]},
+  {type:"num",q:"鋼製懸臂梁（E = 200 GPa）b = 60 mm、h = 100 mm、L = 1.8 m，自由端承受 P = 4 kN。在自由端加虛擬力偶 M₀，用卡氏定理 θ = ∂U/∂M₀（令 M₀ = 0）求自由端轉角，單位為度。",ans:c2,unit:"°",dp:4,
+   hint:"M(x) = −(Px+M₀)，∂M/∂M₀ = −1，θ = ∫(Px)/(EI)dx = PL²/(2EI)（弧度）；再乘 180/π。",
+   sol:[`I = 60×100³/12 = ${fmt(60*100**3/12,0)} mm⁴`,`θ = PL²/(2EI) = 4000×1800²/(2×200000×${fmt(60*100**3/12,0)}) = ${fmt(slope(4000,1800,60,100,200).th,5)} rad`,`= ${fmt(c2,4)}°`]},
+  {type:"num",q:"兩桿桁架：水平桿 AB 長 L = 1.2 m，斜桿 BC 與水平夾角 θ = 40°，兩桿同截面積 A，鋼（E = 200 GPa，σy = 250 MPa），B 點垂直載重 P = 30 kN，要求垂直位移不超過 0.8 mm。依剛度（位移）條件求最小 A（mm²）。",ans:c3d.Ad,unit:"mm²",dp:1,
+   hint:"令 A = 1 算 ΣnNL；Δv = ΣnNL/(AE) ≤ 0.8 → A ≥ ΣnNL/(E×0.8)。",
+   sol:[`N_BC = 30000/sin40° = ${fmt(c3d.r.Nbc,0)} N；N_AB = ${fmt(c3d.r.Nab,0)} N；L_BC = ${fmt(c3d.r.Lbc,1)} mm`,`ΣnNL = ${fmt(c3d.r.sum,0)} N·mm`,`A ≥ ${fmt(c3d.r.sum,0)}/(200000×0.8) = ${fmt(c3d.Ad,1)} mm²（強度需求僅 ${fmt(c3d.As,1)} mm²，剛度控制）`]},
+  {type:"mc",q:"同一重物，分別（甲）緩慢放上梁端，（乙）從 H 高度落下撞擊。若只看線彈性，兩者的最大應力關係為？",
+   o:["乙的最大應力是甲的 n 倍，n > 2","兩者相同","乙一定剛好是甲的 2 倍","乙一定比甲小"],a:0,
+   hint:"n = 1+√(1+2H/Δst)，H > 0 時 n 超過 2。",
+   sol:["靜載重（甲）應力 σst","落下撞擊（乙）σmax = n·σst，其中 n = 1+√(1+2H/Δst)","H = 0（突然加載）n = 2；H > 0 時 n > 2，所以乙的應力是甲的 n 倍且超過 2 倍"]}
+];
+
+S.p3=P3Q.map(()=>({tries:0,done:false,pts:0,peek:false}));
+function p3Score(){return S.p3.reduce((a,b)=>a+b.pts,0);}
+(function renderP3(){
+  $("#p3list").innerHTML=P3Q.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="p3in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span><button class="btn" data-chk="${i}">送出</button></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><div class="qhead"><span class="qnum">練習 ${i+1} · ${q.type==="num"?"計算題":"選擇題"}</span><span class="note" id="p3pts${i}">25 分</span></div><p style="margin-top:6px">${q.q}</p>${inp}<div class="fb" id="p3fb${i}"></div><div class="row" style="margin-top:10px"><button class="btn ghost" data-sol="${i}">查看解題步驟</button></div><div class="sol mono" id="p3sol${i}">${q.sol.map((s,k)=>`${k+1}. ${s}`).join("<br>")}</div></div>`;
+  }).join("");
+  $("#p3list").querySelectorAll("[data-chk]").forEach(b=>{
+    const i=+b.dataset.chk;
+    b.addEventListener("click",()=>judgeP3(i,parseFloat($("#p3in"+i).value)));
+    $("#p3in"+i).addEventListener("keydown",e=>{if(e.key==="Enter")judgeP3(i,parseFloat(e.target.value));});
+  });
+  $("#p3list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q,j=+b.dataset.o;if(S.p3[i].done)return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("wrong"));
+    b.classList.add(j===P3Q[i].a?"right":"wrong");
+    judgeP3(i,j);
+  }));
+  $("#p3list").querySelectorAll("[data-sol]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.sol;$("#p3sol"+i).classList.toggle("show");if(!S.p3[i].done)S.p3[i].peek=true;
+  }));
+})();
+function judgeP3(i,v){
+  const q=P3Q[i],st=S.p3[i],fb=$("#p3fb"+i);
+  if(st.done)return;
+  if(q.type==="num"&&!Number.isFinite(v)){fb.className="fb show no";fb.textContent="請輸入一個數字，例如 12.5。";return;}
+  const ok=q.type==="num"?near(v,q):v===q.a;
+  st.tries++;
+  if(ok){
+    st.done=true;st.pts=st.peek?5:(st.tries===1?25:15);
+    fb.className="fb show ok";fb.innerHTML=`<span class="burst">⚡</span> ✓ ${yay()} ${q.type==="num"?"正確答案 "+fmt(q.ans,q.dp)+" "+q.unit+"，":""}獲得 ${st.pts} 分。`;
+    const inp=$("#p3in"+i);if(inp)inp.disabled=true;
+  }else{
+    fb.className="fb show no";fb.textContent="✗ 還差一點。提示："+q.hint;
+  }
+  $("#p3pts"+i).textContent=st.done?`已得 ${st.pts} 分`:`已嘗試 ${st.tries} 次`;
+  const sc=p3Score();$("#p3score").textContent=`${sc} / 100`;$("#p3meter").style.width=sc+"%";
+  updateProgress();
+}
+
+function seedFrom(id){
+  const digits=id.replace(/\D/g,"");
+  const last4=parseInt(digits.slice(-4),10);
+  if(Number.isFinite(last4)&&last4>0)return last4;
+  let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;return h||1;
+}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr,r){return arr[Math.floor(r()*arr.length)];}
+
+function buildTest(){
+  const r=mulberry32((seedFrom(S.id)*2654435761+97)>>>0);
+  const vary=(b,step=1)=>{const v=Math.round(b*(0.8+0.4*r())/step)*step;return Math.max(step,+v.toFixed(6));};
+  const qs=[];
+  // Q1 drop impact deflection
+  {const W=vary(500,50),H=vary(60,5),L=vary(1.5,0.1),b=40,h=vary(80,10),E=pick([200,70,110],r),a=impact(W,H,L*1000,b,h,E);
+   qs.push({type:"num",title:"落錘衝擊的最大撓度",q:`懸臂梁（E = ${E} GPa）b = ${b} mm、h = ${h} mm、L = ${fmt(L,1)} m。W = ${W} N 的重物從自由端上方 H = ${H} mm 落下。求最大撓度 Δmax = n·Δst（mm）。`,ans:a.dmax,unit:"mm",dp:3,
+    sol:`I = ${fmt(a.I,0)} mm⁴；Δst = ${fmt(a.dst,4)} mm；n = 1+√(1+2H/Δst) = ${fmt(a.n,3)}；Δmax = ${fmt(a.dmax,3)} mm`});}
+  // Q2 allowable drop height
+  {const W=vary(800,50),L=vary(2,0.1),h=vary(100,10),a=hallow(W,L*1000,50,h,200,250);
+   qs.push({type:"num",title:"容許落下高度",q:`鋼製懸臂梁（E = 200 GPa，σy = 250 MPa）b = 50 mm、h = ${h} mm、L = ${fmt(L,1)} m。W = ${W} N 的重物從自由端上方落下，要求最大應力不超過 σy。求容許落下高度 H（mm）。`,ans:a.H,unit:"mm",dp:2,
+    sol:`Δst = ${fmt(a.dst,4)} mm；σst = ${fmt(a.sst,2)} MPa；n = σy/σst = ${fmt(a.na,3)}；H = (Δst/2)[(n−1)²−1] = ${fmt(a.H,2)} mm`});}
+  // Q3 Castigliano slope
+  {const P=vary(4,0.5),L=vary(1.8,0.1),h=vary(100,10),E=pick([200,70],r),s=slope(P*1000,L*1000,60,h,E);
+   qs.push({type:"num",title:"卡氏定理求端點轉角",q:`懸臂梁（E = ${E} GPa）b = 60 mm、h = ${h} mm、L = ${fmt(L,1)} m，自由端承受 P = ${fmt(P,1)} kN。在自由端加虛擬力偶 M₀，用卡氏定理 θ = ∂U/∂M₀（令 M₀ = 0）求自由端轉角（度）。`,ans:s.deg,unit:"°",dp:4,
+    sol:`I = ${fmt(s.I,0)} mm⁴；θ = PL²/(2EI) = ${fmt(s.th,5)} rad = ${fmt(s.deg,4)}°`});}
+  // Q4 truss sizing by stiffness
+  {const P=vary(30,2),th=pick([30,35,40,45,50],r),L=vary(1.2,0.1),dl=vary(0.8,0.1),d=design(P*1000,th,L*1000,200,250,dl);
+   qs.push({type:"num",title:"桁架截面積設計（剛度）",q:`兩桿桁架：水平桿 AB 長 L = ${fmt(L,1)} m，斜桿 BC 與水平夾角 θ = ${th}°，兩桿同截面積 A，E = 200 GPa，B 點垂直載重 P = ${P} kN。要求垂直位移不超過 ${fmt(dl,1)} mm，依剛度條件求最小 A（mm²）。`,ans:d.Ad,unit:"mm²",dp:1,
+    sol:`N_BC = ${fmt(d.r.Nbc,0)} N；N_AB = ${fmt(d.r.Nab,0)} N；L_BC = ${fmt(d.r.Lbc,1)} mm；ΣnNL = ${fmt(d.r.sum,0)} N·mm；A ≥ ΣnNL/(Eδ) = ${fmt(d.Ad,1)} mm²`});}
+  // Q5 concept
+  {const pool=[
+    {q:"重物從高度 H 落下撞擊梁，衝擊係數 n 的正確式子為？",o:["1+√(1+2H/Δst)","√(2H/Δst)","1+2H/Δst","H/Δst"],why:"由 W(H+Δ) = ½kΔ² 解出 Δmax = Δst[1+√(1+2H/Δst)]。"},
+    {q:"要用卡氏定理求梁端的轉角，但該處沒有力偶，應該？",o:["加虛擬力偶 M₀，微分後令 M₀ = 0","直接對 P 微分","無法求解","把 U 設為 0"],why:"要求轉角就加對應的力偶 M₀，求 ∂U/∂M₀，最後令 M₀ = 0。"},
+    {q:"同時有強度與剛度限制時，截面積應該如何決定？",o:["兩項需求取較大者","取較小者","取平均","只看強度"],why:"兩個限制都要滿足，所以取需求較大者。"},
+    {q:"重物突然放手加載（H = 0）時，位移與應力是同樣大小靜載重的？",o:["2 倍","1 倍","4 倍","1/2 倍"],why:"H = 0，n = 1+√1 = 2。"},
+    {q:"梁的設計中，哪一個量與慣性矩 I 成反比，因此提高斷面高度 h 最有效？",o:["撓度 Δ","梁的長度","重物重量","材料密度"],why:"Δ ∝ 1/(EI)，而 I = bh³/12，h 加倍 I 變 8 倍。"}
+  ];
+   const c=pick(pool,r),order=shuffle([0,1,2,3],r);
+   qs.push({type:"mc",title:"綜合觀念判斷",q:c.q,o:order.map(k=>c.o[k]),a:order.indexOf(0),sol:c.why});}
+  return qs;
+}
+
+function renderIdCard(){
+  $("#idcard").innerHTML=`<span>姓名：<b>${esc(S.name)}</b></span><span>學號：<b>${esc(S.id)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>題目種子：<b class="mono">${seedFrom(S.id)}</b></span>`;
+}
+let tick=null;
+$("#startTest").addEventListener("click",()=>{
+  if(S.p4&&S.p4.started)return;
+  S.p4={started:true,qs:buildTest(),ans:[null,null,null,null,null],left:15*60};
+  $("#p4start").hidden=true;$("#p4body").hidden=false;
+  document.querySelector('.tab[data-go="login"]').disabled=true;
+  renderP4();updateProgress();
+  tick=setInterval(()=>{
+    S.p4.left--;const m=Math.floor(S.p4.left/60),s=S.p4.left%60;
+    const t=$("#timer");t.textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    t.classList.toggle("warn",S.p4.left<=120);
+    if(S.p4.left<=0)submit(true);
+  },1000);
+});
+function renderP4(){
+  $("#p4list").innerHTML=S.p4.qs.map((q,i)=>{
+    const inp=q.type==="num"
+      ?`<div class="ans"><input id="t4in${i}" inputmode="decimal" placeholder="輸入數值"><span class="mono">${q.unit}</span></div>`
+      :`<div class="opts">${q.o.map((o,j)=>`<button class="opt" data-q="${i}" data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div>`;
+    return `<div class="card"><span class="qnum">第 ${i+1} 題 · ${q.title}（20 分）</span><p style="margin-top:6px">${q.q}</p>${inp}</div>`;
+  }).join("");
+  $("#p4list").querySelectorAll("input").forEach(el=>el.addEventListener("input",()=>{const i=+el.id.replace("t4in","");const v=parseFloat(el.value);S.p4.ans[i]=Number.isFinite(v)?v:null;countAns();}));
+  $("#p4list").querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.q;b.parentElement.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");S.p4.ans[i]=+b.dataset.o;countAns();
+  }));
+}
+function countAns(){const n=S.p4.ans.filter(x=>x!==null).length;$("#answered").textContent=`已作答 ${n} / 5`;return n;}
+$("#submitTest").addEventListener("click",()=>{
+  const n=countAns();
+  if(n<5){$("#submitMsg").textContent=`還有 ${5-n} 題未作答，請全部作答後再交卷。`;return;}
+  submit(false);
+});
+function submit(timeout){
+  if(S.p4done)return;
+  clearInterval(tick);S.p4done=true;S.p4.timeout=timeout;S.end=new Date();
+  S.p4.res=S.p4.qs.map((q,i)=>{const a=S.p4.ans[i];return q.type==="num"?near(a,q):a===q.a;});
+  document.querySelector('.tab[data-go="report"]').disabled=false;
+  document.querySelector('.tab[data-go="p4"]').disabled=true;
+  document.querySelector('.tab[data-go="p3"]').disabled=true;
+  renderReport();go("report");
+}
+function renderReport(){
+  const p3=p3Score(),p4=S.p4.res.filter(Boolean).length*20,total=Math.round(p3*0.3+p4*0.7);
+  const g=total>=90?"A":total>=80?"B":total>=70?"C":"D";
+  const cheer={A:"綜合能力很強！衝擊係數、卡氏定理和強度／剛度設計你都能整合運用，能量法學完了，恭喜完成材料力學系列。",B:"很不錯！再留意衝擊係數 n = 1+√(1+2H/Δst) 的 Δst 要先用靜載重算，以及強度與剛度要分開檢查，下次就是 A。",C:"方向對了！回到 Phase 2 把落錘設計與桁架設計的步驟卡再點一次，記住：先算靜態 Δst，再乘衝擊係數。",D:"別灰心！先記住三件事：① 衝擊 Δmax = n·Δst ② 卡氏定理沒有力的地方加虛擬力再令為 0 ③ 設計要同時滿足強度與剛度。回 Phase 2 再玩一次，你可以的。"}[g];
+  const d=S.end,pad=x=>String(x).padStart(2,"0");
+  const ds=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const used=15*60-Math.max(0,S.p4.left);
+  const rows=S.p4.qs.map((q,i)=>{
+    const a=S.p4.ans[i];
+    const mine=a===null?"未作答":q.type==="num"?`${a} ${q.unit}`:`${String.fromCharCode(65+a)}. ${q.o[a]}`;
+    const right=q.type==="num"?`${fmt(q.ans,q.dp)} ${q.unit}`:`${String.fromCharCode(65+q.a)}. ${q.o[q.a]}`;
+    return `<tr><td>${i+1}. ${q.title}</td><td>${esc(mine)}</td><td>${right}<div class="note mono">${q.sol}</div></td><td class="${S.p4.res[i]?"tick":"cross"}">${S.p4.res[i]?"✓":"✗"}</td></tr>`;
+  }).join("");
+  $("#reportBody").innerHTML=`
+   <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div class="idcard" style="flex-direction:column;gap:2px">
+       <span>姓名：<b>${esc(S.name)}</b></span><span>班級：<b>${esc(S.cls)}</b></span><span>學號：<b>${esc(S.id)}</b></span>
+       <span>日期時間：<b class="mono">${ds}</b></span><span>遊戲：<b>第 14 章 Energy Methods · 遊戲 3（MOM-CH14-G3）</b></span>
+     </div>
+     <div style="text-align:center"><div class="grade">${g}</div><div class="note">等第</div></div>
+   </div>
+   <div class="sumgrid">
+     <div><small>Phase 3 練習</small><b>${p3}</b><small>/ 100（占 30%）</small></div>
+     <div><small>Phase 4 測試</small><b>${p4}</b><small>/ 100（占 70%）</small></div>
+     <div><small>總分</small><b>${total}</b><small>/ 100</small></div>
+     <div><small>測試用時</small><b>${Math.floor(used/60)}:${pad(used%60)}</b><small>${S.p4.timeout?"時間到自動交卷":"分:秒"}</small></div>
+   </div>
+   <div class="tablewrap"><table><thead><tr><th>題目</th><th>你的答案</th><th>正確答案與解法</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <div class="guide">${engineer()}<div class="bubble"><b>阿力工程師：</b>${cheer}</div></div>
+   <p class="note">等第標準：A ≥ 90、B ≥ 80、C ≥ 70、D &lt; 70。總分 = 練習 × 30% + 測試 × 70%。計算題以 ±2% 誤差判定。</p>`;
+  S.summary=`[MOM-CH14-G3] Energy Methods 綜合挑戰 成績報告\n姓名：${S.name}\n班級：${S.cls}\n學號：${S.id}\n日期：${ds}\nPhase 3 練習：${p3}/100\nPhase 4 測試：${p4}/100（${S.p4.res.map((x,i)=>`Q${i+1}${x?"✓":"✗"}`).join(" ")}）\n總分：${total}　等第：${g}`;
+}
+$("#printBtn").addEventListener("click",()=>{
+  try{window.print();}catch(e){}
+  $("#printTip").textContent="若沒有跳出列印視窗，請在瀏覽器中開啟此頁後按 Ctrl+P（Mac 為 ⌘+P），或先複製成績文字。";
+});
+$("#copyBtn").addEventListener("click",()=>{
+  const done=()=>{$("#printTip").textContent="成績文字已複製。";};
+  try{navigator.clipboard.writeText(S.summary).then(done,fallbackCopy);}catch(e){fallbackCopy();}
+});
+function fallbackCopy(){
+  const ta=document.createElement("textarea");ta.value=S.summary;ta.style.width="100%";ta.rows=8;ta.readOnly=true;
+  $("#printTip").textContent="請手動選取下方文字複製：";$("#printTip").after(ta);ta.select();
+}
+updateProgress();
+})();
+</script>
+
+
+<!-- dofLab:back --><style>@media print{.doflab-back{display:none!important}}</style><a class="doflab-back" href="./" aria-label="回到材料力學課程目錄" style="position:fixed;z-index:9999;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#1a3a5c;color:#fff;font:600 13px/1 'Noto Sans TC',system-ui,sans-serif;padding:10px 14px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25)">← 課程目錄</a>
+</body></html>
+
