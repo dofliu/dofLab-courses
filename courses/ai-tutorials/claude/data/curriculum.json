@@ -1094,10 +1094,14 @@
         "鷹架式提示",
         "學習單"
       ],
-      "status": "in_progress",
-      "updated": "2026-11-03T02:42:09Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-11-03T02:44:40Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/ep04.html",
+        "src": "courses/ai-tutorials/claude/src/031-teaching-ep04.js",
+        "i18n": "courses/ai-tutorials/claude/src/031-teaching-ep04.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒，6/6 分鏡為圖解；查證：support.claude.com Projects 專屬指令（只作用於該專案內的對話）與個人化功能文章，資訊截至 2026-11；情境：生活（分級科普短文、特殊需求格式調整）＋智慧自動化（控制原理中英對照術語表、鷹架提示）＋風能運維（技師與新進人員版本，上鎖掛牌步驟由現場負責人確認）；數據與教材皆為示意",
       "cases": {
         "life": "分級閱讀改寫",
         "automation": "為不同程度學生改寫控制原理教材",

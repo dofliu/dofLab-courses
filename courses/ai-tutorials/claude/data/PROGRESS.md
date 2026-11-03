@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：36
+總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：37
 
 ## 單元清單
 
@@ -47,7 +47,7 @@
 | 028-teaching-ep01 | teaching | 逆向課程設計 | ✅ done | 2026-10-29 |
 | 029-teaching-ep02 | teaching | 教材製作 | ✅ done | 2026-10-30 |
 | 030-teaching-ep03 | teaching | 測驗與評量規準 | ✅ done | 2026-11-02 |
-| 031-teaching-ep04 | teaching | 差異化與適性教學 | todo | — |
+| 031-teaching-ep04 | teaching | 差異化與適性教學 | ✅ done | 2026-11-03 |
 | q06-teaching-1 | teaching | 🧪 課程教學測驗（一） | todo | — |
 | 032-teaching-ep05 | teaching | AI 家教：蘇格拉底式引導 | todo | — |
 | 033-teaching-ep06 | teaching | AI 素養與學術誠信 | todo | — |
@@ -110,3 +110,4 @@
 - 2026-10-29 UTC｜028-teaching-ep01｜✅ done｜teaching/ep01.html、src/028-teaching-ep01(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-10-30 UTC｜029-teaching-ep02｜✅ done｜teaching/ep02.html、src/029-teaching-ep02(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-11-02 UTC｜030-teaching-ep03｜✅ done｜teaching/ep03.html、src/030-teaching-ep03(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
+- 2026-11-03 UTC｜031-teaching-ep04｜✅ done｜teaching/ep04.html、src/031-teaching-ep04(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維

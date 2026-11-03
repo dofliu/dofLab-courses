@@ -787,6 +787,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-11"
+     },
+     {
+      "id": "031-teaching-ep04",
+      "no": 4,
+      "file": "ep04.html",
+      "path": "teaching/ep04.html",
+      "title": {
+       "zh": "差異化與適性教學",
+       "en": "Differentiated Instruction"
+      },
+      "sub": {
+       "zh": "分級改寫、多語教材、特殊需求調整、鷹架提示與學習單",
+       "en": "Leveled rewriting, multilingual materials, special-needs adjustments, scaffolded hints and worksheets"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-11"
      }
     ],
     "overview": {
@@ -855,7 +876,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-11-02",
+  "updated": "2026-11-03",
   "languages": [
    "zh",
    "en"
@@ -1184,7 +1205,7 @@ window.CLAUDE_COURSE = {
    "no": 4,
    "title": "差異化與適性教學",
    "title_en": "Differentiated Instruction",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "q06-teaching-1",
@@ -1448,6 +1469,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 35,
+ "live": 36,
  "total": 65
 };
