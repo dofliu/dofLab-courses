@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>課程教學測驗（一）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../../../assets/site.css">
+<style>
+.hero .lang{margin-left:auto}
+.hero .seg{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+.hero .seg button{color:#c5cbf0}
+.hero .seg button[aria-pressed="true"]{background:#4dd0c0;color:#0d1026}
+.qwrap{padding-block:28px 56px;display:grid;gap:16px}
+.prog{display:flex;justify-content:space-between;font:600 14px var(--f-mono);color:var(--muted)}
+.track{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.track i{display:block;height:100%;background:var(--accent-2);width:0;transition:width .3s}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.topic{font:600 12px var(--f-mono);letter-spacing:.08em;color:var(--accent-2)}
+.qtext{font-size:18px;font-weight:700;margin:0;line-height:1.6}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit;color:var(--fg);cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt .k{font:700 14px var(--f-mono);color:var(--accent);min-width:20px}
+.opt.ok{border-color:var(--live);background:var(--accent-2-soft)}
+.opt.bad{border-color:#d9534f;background:rgba(217,83,79,.12)}
+.opt[disabled]{cursor:default}
+.why{border-left:4px solid var(--accent-2);background:var(--surface-2);padding:12px 14px;border-radius:0 8px 8px 0;font-size:15px}
+.why b{display:block;margin-bottom:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.score{font:900 56px/1 var(--f-display);color:var(--accent)}
+.pass{color:var(--live)} .fail{color:#d9534f}
+.topics{display:grid;gap:8px}
+.tp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;font-size:15px;align-items:center}
+.tp .bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden;grid-column:1/-1}
+.tp .bar i{display:block;height:100%;background:var(--accent-2)}
+.disc{font-size:13px;color:var(--muted)}
+.rev{display:grid;gap:10px}
+.rev .qcard{padding:14px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="bar">
+      <a class="mark" href="../../../../"><i></i>dofLab courses</a>
+      <span class="org" data-zh="國立勤益科技大學 · 智慧自動化工程系" data-en="NCUT · Dept. of Intelligent Automation Engineering">國立勤益科技大學 · 智慧自動化工程系</span>
+      <div class="seg lang" role="group" aria-label="語言 Language"><button data-lang="zh" aria-pressed="true">中文</button><button data-lang="en" aria-pressed="false">EN</button></div>
+    </div>
+    <div class="hero-body">
+      <nav class="crumb"><a href="../" data-zh="← 課程目錄" data-en="← Course index">← 課程目錄</a></nav>
+      <div class="eyebrow" data-zh="CHECKPOINT · 測驗關卡" data-en="CHECKPOINT QUIZ">CHECKPOINT · 測驗關卡</div>
+      <h1 id="ttl">課程教學測驗（一）</h1>
+      <p class="lead" id="intro"></p>
+    </div>
+  </div>
+</header>
+<main class="wrap qwrap" id="main"></main>
+<footer data-zh="© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室" data-en="© Dr. Jui-Hung Liu Lab, Dept. of Intelligent Automation Engineering, NCUT">© 國立勤益科技大學 智慧自動化工程系 劉瑞弘 研究室</footer>
+<script>
+(function(){
+  var Q = {"id": "q06-teaching-1", "title": {"zh": "課程教學測驗（一）", "en": "Teaching Checkpoint 1"}, "intro": {"zh": "涵蓋逆向設計、教材製作、測驗與評量規準、差異化教學：檢查你知道哪些環節需要教師把關。80 分通過；本測驗為課程自編練習，非 Anthropic 官方認證。", "en": "Covers backward design, materials, quizzes and rubrics, and differentiated instruction: do you know where the teacher must stay in charge? Pass at 80. A course-made practice quiz, not an official Anthropic certification."}, "pass": 80, "asof": "2026-11", "covers": ["028-teaching-ep01", "029-teaching-ep02", "030-teaching-ep03", "031-teaching-ep04"], "questions": [{"id": "e01", "topic": {"zh": "逆向課程設計", "en": "Backward design"}, "ref": "028-teaching-ep01", "q": {"zh": "你要為「生活科技專題」設計一門課，採逆向設計。第一步最合理的是什麼？", "en": "You are designing a 'everyday technology project' course using backward design. What is the most sensible first step?"}, "opts": [{"zh": "先釐清學生學完要能做到什麼（學習目標），再設計怎麼評量", "en": "Clarify what students should be able to do (learning goals), then design how to assess it"}, {"zh": "先請 Claude 排出十八週的活動，最後再想目標", "en": "Have Claude schedule eighteen weeks of activities and think about goals last"}, {"zh": "先挑選喜歡的教材，目標等課程結束再補", "en": "Pick favorite materials first and add goals after the course ends"}, {"zh": "直接沿用去年的週次表，不需調整", "en": "Reuse last year's weekly plan with no changes"}], "ans": 0, "why": {"zh": "逆向設計先定學習目標與評量證據，再安排活動；Claude 可協助拆解，但目標由教師決定。", "en": "Backward design sets goals and assessment evidence first, then activities; Claude can help break it down, but the teacher decides the goals."}}, {"id": "e02", "topic": {"zh": "逆向課程設計", "en": "Backward design"}, "ref": "028-teaching-ep01", "q": {"zh": "風機維護課要加入「上鎖掛牌」安全評量，Claude 產出了一份評量草案。最適當的做法是？", "en": "A wind-turbine maintenance course adds a lockout-tagout safety assessment and Claude drafted it. What is the most appropriate handling?"}, "opts": [{"zh": "交給有現場經驗的教師與安全負責人審閱，確認步驟與用語後才使用", "en": "Have an instructor and safety officer with field experience review and confirm the steps and wording before use"}, {"zh": "Claude 寫的就是標準程序，直接發給學生", "en": "Treat Claude's text as the standard procedure and hand it to students"}, {"zh": "刪掉安全題以免出錯", "en": "Delete the safety items to avoid errors"}, {"zh": "只要題目夠多，內容不必審閱", "en": "Skip review as long as there are enough items"}], "ans": 0, "why": {"zh": "AI 提供草案與建議；涉及設備操作的安全程序一律由教師與現場人員確認。", "en": "AI provides drafts and suggestions; safety procedures involving equipment are always confirmed by instructors and field staff."}}, {"id": "e03", "topic": {"zh": "教材製作", "en": "Producing materials"}, "ref": "029-teaching-ep02", "q": {"zh": "你要用 Claude 做手電筒歐姆定律的講義與例題，並讓學生分級練習。下列哪個做法最好？", "en": "You want Claude to build a flashlight Ohm's-law handout with graded practice. Which approach is best?"}, "opts": [{"zh": "請它依難度產生例題與解答，教師再核對計算與單位", "en": "Ask for problems and solutions by difficulty, then verify the calculations and units yourself"}, {"zh": "全部照單全收，因為計算機器不會錯", "en": "Accept everything because machines never make mistakes"}, {"zh": "只問「做一份講義」，不說明對象與程度", "en": "Ask only 'make a handout' without audience or level"}, {"zh": "要求它省略解答，以免學生看到", "en": "Ask it to omit solutions so students never see them"}], "ans": 0, "why": {"zh": "給對象與程度能讓教材更貼切；例題數值與單位仍須教師核對。", "en": "Giving audience and level makes materials fit better; the teacher still checks values and units."}}, {"id": "e04", "topic": {"zh": "教材製作", "en": "Producing materials"}, "ref": "029-teaching-ep02", "q": {"zh": "你想把風機葉片檢測的現場照片放進教材，請 Claude 協助整理。上傳前最該注意什麼？", "en": "You want to put blade-inspection field photos into course material with Claude's help. What matters most before uploading?"}, "opts": [{"zh": "確認有權使用，並去除可辨識的案場、人員或客戶資訊", "en": "Confirm you may use them and remove identifiable site, personnel or client information"}, {"zh": "照片越高解析越好，其他不必處理", "en": "Higher resolution is all that matters"}, {"zh": "只要上傳的是 PDF 就沒有著作權問題", "en": "PDFs never raise copyright issues"}, {"zh": "讓 Claude 自行判斷哪些可以公開", "en": "Let Claude decide what is safe to publish"}], "ans": 0, "why": {"zh": "教材用的圖片要注意授權與去識別；是否可公開由人負責判斷。", "en": "Images in teaching material need permission and de-identification; people decide what can be shared."}}, {"id": "e05", "topic": {"zh": "測驗與評量規準", "en": "Quizzes and rubrics"}, "ref": "030-teaching-ep03", "q": {"zh": "電路單元的科學小測驗，選擇題有一題大家都選同一個錯誤選項。依誘答選項設計，最合理的解讀是？", "en": "In a circuits quiz, most students pick the same wrong option on one item. Using distractor design, what is the most sensible reading?"}, "opts": [{"zh": "這個誘答選項反映了常見迷思，可據此補充教學並修訂題目", "en": "That distractor reflects a common misconception; use it to adjust teaching and revise the item"}, {"zh": "學生都在亂猜，不必處理", "en": "Students are guessing, nothing to do"}, {"zh": "應把所有選項改成一樣長", "en": "Make all options identical"}, {"zh": "把正確答案固定放在第一個", "en": "Always place the correct answer first"}], "ans": 0, "why": {"zh": "好的誘答選項對應常見迷思，作答分布能幫助改進教學與題目。", "en": "Good distractors map to common misconceptions; response patterns help improve teaching and items."}}, {"id": "e06", "topic": {"zh": "測驗與評量規準", "en": "Quizzes and rubrics"}, "ref": "030-teaching-ep03", "q": {"zh": "PLC 實作課要請 Claude 協助評分。下列哪個做法最符合「自動批改的界線」？", "en": "In a PLC lab course you want Claude to help with grading. Which practice best fits the limits of automated grading?"}, "opts": [{"zh": "用明確的評分規準請它初評並說明理由，教師複核並保有最終評分權", "en": "Give a clear rubric for a first pass with reasons, while the instructor reviews and keeps final say"}, {"zh": "成績直接由 Claude 決定並公布", "en": "Claude decides and publishes grades directly"}, {"zh": "不提供規準，讓它自行決定標準", "en": "Give no rubric and let it set its own standard"}, {"zh": "PLC 程式只要能跑就一律滿分", "en": "Any PLC program that runs gets full marks"}], "ans": 0, "why": {"zh": "規準明確能提升一致性，但評分的責任與最終決定屬於教師。", "en": "A clear rubric improves consistency, but grading responsibility and final decisions stay with the teacher."}}, {"id": "e07", "topic": {"zh": "差異化與適性教學", "en": "Differentiated instruction"}, "ref": "031-teaching-ep04", "q": {"zh": "你把同一篇科普短文改成不同閱讀程度版本。哪個要求最能維持教學品質？", "en": "You adapt one science article to several reading levels. Which request best protects quality?"}, "opts": [{"zh": "要求保留核心概念不變，只調整詞彙與句子難度，並由教師審閱", "en": "Keep core concepts unchanged, adjust only vocabulary and sentence difficulty, and review as the teacher"}, {"zh": "為了簡單，把有難度的概念全部刪除", "en": "Delete every difficult concept to keep it simple"}, {"zh": "讓每個版本各自重新解釋、不必一致", "en": "Let each version re-explain freely with no consistency"}, {"zh": "不要審閱，直接發給學生", "en": "Skip review and distribute"}], "ans": 0, "why": {"zh": "分級改寫要保留核心概念；專有名詞與正確性由教師審閱。", "en": "Leveled rewriting keeps the core concepts; terminology and accuracy are checked by the teacher."}}, {"id": "e08", "topic": {"zh": "差異化與適性教學", "en": "Differentiated instruction"}, "ref": "031-teaching-ep04", "q": {"zh": "你想讓 Claude 在「控制原理」專案的所有對話都先給提示、不直接給答案，又不影響其他對話。依 Claude 支援文章，適合怎麼做？", "en": "You want Claude to give hints rather than answers in every 'control principles' conversation without affecting other chats. According to Claude's support articles, what fits best?"}, "opts": [{"zh": "把要求寫進該 Project 的專屬指令，只會作用於這個專案內的對話", "en": "Put it in that Project's instructions, which apply only to chats inside that project"}, {"zh": "改寫帳號層級的設定，讓所有對話都套用", "en": "Change account-level settings so every chat uses it"}, {"zh": "每次都手動重貼，因為指令無法儲存", "en": "Re-paste it every time because instructions cannot be saved"}, {"zh": "在 CLAUDE.md 寫一次，所有網頁對話就會遵守", "en": "Write it once in CLAUDE.md and all web chats obey it"}], "ans": 0, "why": {"zh": "Project 的專屬指令只作用於該專案內的對話；帳號層級設定則影響所有對話（資訊截至 2026-11，以官方最新說明為準）。", "en": "Project instructions apply only within that project, while account-level settings affect all chats (as of 2026-11; check official docs for updates)."}}]}, main = document.getElementById('main');
+  var LANG='zh';
+  try{ var q0=new URLSearchParams(location.search).get('lang'), sv=localStorage.getItem('rea-lang');
+    LANG=(q0==='en'||q0==='zh')?q0:(sv==='en'||sv==='zh')?sv:((navigator.language||'').toLowerCase().startsWith('zh')?'zh':'en'); }catch(e){}
+  var PASS = Q.pass||80, KEY='claude-quiz-'+Q.id;
+  var S = {order:[], i:0, ans:[], done:false, chosen:null};
+  var T = {
+    zh:{q:'題',of:' / ',next:'下一題',finish:'看結果',retry:'重新作答',review:'答錯的題目',score:'分',pass:'通過',fail:'未通過，建議回頭複習後再試',best:'最佳成績',topics:'各主題答對率',ref:'對應單元',ok:'答對了',bad:'答錯了',why:'解析',back:'回到課程目錄',asof:'資訊截至',unofficial:'本測驗為課程自編的練習題，並非 Anthropic 官方認證考試；功能與方案可能調整，請以官方說明為準。',start:'開始作答',nq:' 題 · 及格 '+PASS+' 分 · 約 '+Math.ceil(Q.questions.length*.7)+' 分鐘'},
+    en:{q:'Q',of:' / ',next:'Next',finish:'See results',retry:'Try again',review:'Questions you missed',score:'pts',pass:'Passed',fail:'Not passed yet — review the lessons and try again',best:'Best score',topics:'Accuracy by topic',ref:'Lesson',ok:'Correct',bad:'Incorrect',why:'Explanation',back:'Back to course index',asof:'Information as of',unofficial:'This quiz is self-authored practice for this course, not an official Anthropic certification exam. Features and plans may change; follow official documentation.',start:'Start',nq:' questions · pass at '+PASS+' · about '+Math.ceil(Q.questions.length*.7)+' min'}
+  };
+  function L(o){return o[LANG]||o.zh;} function tt(k){return T[LANG][k];}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function best(){try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){return null;}}
+  function save(pct){try{var b=best();if(!b||pct>b.best)localStorage.setItem(KEY,JSON.stringify({best:pct,passed:pct>=PASS||(b&&b.passed)||false,at:Date.now()}));else if(pct>=PASS&&!b.passed){b.passed=true;localStorage.setItem(KEY,JSON.stringify(b));}}catch(e){}}
+  function start(){
+    S.order=shuffle(Q.questions.map(function(_,i){return i;}));
+    S.opts=Q.questions.map(function(q){return shuffle(q.opts.map(function(_,i){return i;}));});
+    S.i=0;S.ans=[];S.done=false;S.chosen=null;draw();
+  }
+  function head(){
+    document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';
+    document.querySelectorAll('[data-zh]').forEach(function(el){el.textContent=el.dataset[LANG];});
+    document.querySelectorAll('[data-lang]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===LANG);});
+    document.getElementById('ttl').textContent=L(Q.title);document.getElementById('intro').textContent=L(Q.intro);
+    document.title=L(Q.title);
+  }
+  function qcard(q,qi,chosen,showWhy){
+    var h='<div class="qcard"><div class="topic">'+esc(L(q.topic))+(q.ref?' · '+esc(tt('ref'))+' '+esc(q.ref):'')+'</div><p class="qtext">'+esc(L(q.q))+'</p><div class="opts">';
+    S.opts[qi].forEach(function(oi,k){
+      var cls='opt',dis=chosen!==null&&chosen!==undefined?' disabled':'';
+      if(chosen!==null&&chosen!==undefined){if(oi===q.ans)cls+=' ok';else if(oi===chosen)cls+=' bad';}
+      h+='<button class="'+cls+'" data-o="'+oi+'"'+dis+'><span class="k">'+String.fromCharCode(65+k)+'</span><span>'+esc(L(q.opts[oi]))+'</span></button>';
+    });
+    h+='</div>';
+    if(showWhy)h+='<div class="why"><b>'+(chosen===q.ans?'✔ '+tt('ok'):'✘ '+tt('bad'))+' · '+tt('why')+'</b>'+esc(L(q.why))+'</div>';
+    return h+'</div>';
+  }
+  function draw(){
+    head();
+    if(!S.order.length)return intro();
+    if(S.done)return result();
+    var n=S.order.length,qi=S.order[S.i],q=Q.questions[qi];
+    var h='<div class="prog"><span>'+(S.i+1)+tt('of')+n+'</span><span>'+(best()?tt('best')+' '+best().best:'')+'</span></div><div class="track"><i style="width:'+(S.i/n*100)+'%"></i></div>';
+    h+=qcard(q,qi,S.chosen,S.chosen!==null);
+    if(S.chosen!==null)h+='<div class="row"><button class="btn" id="nx">'+(S.i+1<n?tt('next'):tt('finish'))+'</button></div>';
+    h+='<p class="disc">'+esc(tt('unofficial'))+' '+esc(tt('asof'))+' '+esc(Q.asof||'')+'</p>';
+    main.innerHTML=h;
+    main.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){
+      var qq=Q.questions[S.order[S.i]];S.chosen=+b.dataset.o;S.ans.push({qi:S.order[S.i],c:S.chosen,ok:S.chosen===qq.ans});draw();};});
+    var nx=document.getElementById('nx');
+    if(nx)nx.onclick=function(){if(S.i+1<n){S.i++;S.chosen=null;}else{S.done=true;}draw();window.scrollTo(0,0);};
+  }
+  function intro(){
+    main.innerHTML='<div class="qcard"><p class="qtext">'+esc(L(Q.title))+'</p><p>'+Q.questions.length+tt('nq')+'</p><p class="disc">'+esc(tt('unofficial'))+'</p><div class="row"><button class="btn" id="go">'+tt('start')+'</button></div></div>';
+    document.getElementById('go').onclick=start;
+  }
+  function result(){
+    var n=S.ans.length,ok=S.ans.filter(function(a){return a.ok;}).length,pct=Math.round(ok/n*100),pass=pct>=PASS;
+    save(pct);
+    var h='<div class="qcard"><div class="score '+(pass?'pass':'fail')+'">'+pct+'<small style="font-size:20px"> '+tt('score')+'</small></div><p class="qtext '+(pass?'pass':'fail')+'">'+(pass?'✔ '+tt('pass'):tt('fail'))+' ('+ok+tt('of')+n+')</p>';
+    var tp={};S.ans.forEach(function(a){var q=Q.questions[a.qi],k=L(q.topic);tp[k]=tp[k]||[0,0];tp[k][1]++;if(a.ok)tp[k][0]++;});
+    h+='<div class="topic">'+tt('topics')+'</div><div class="topics">';
+    Object.keys(tp).forEach(function(k){var v=tp[k];h+='<div class="tp"><span>'+esc(k)+'</span><b>'+v[0]+'/'+v[1]+'</b><div class="bar"><i style="width:'+(v[0]/v[1]*100)+'%"></i></div></div>';});
+    h+='</div><div class="row"><button class="btn" id="rt">'+tt('retry')+'</button><a class="btn ghost" href="../'+(LANG==='en'?'?lang=en':'')+'">'+tt('back')+'</a></div></div>';
+    var miss=S.ans.filter(function(a){return !a.ok;});
+    if(miss.length){h+='<h2>'+tt('review')+'</h2><div class="rev">';miss.forEach(function(a){h+=qcard(Q.questions[a.qi],a.qi,a.c,true);});h+='</div>';}
+    h+='<p class="disc">'+esc(tt('unofficial'))+' '+esc(tt('asof'))+' '+esc(Q.asof||'')+'</p>';
+    main.innerHTML=h;document.getElementById('rt').onclick=function(){start();window.scrollTo(0,0);};
+  }
+  document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(){LANG=b.dataset.lang;try{localStorage.setItem('rea-lang',LANG);}catch(e){}draw();};});
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -830,7 +830,30 @@ window.CLAUDE_COURSE = {
       "en"
      ],
      "asof": "2026-10"
-    }
+    },
+    "quizzes": [
+     {
+      "id": "q06-teaching-1",
+      "no": 1,
+      "file": "quiz1.html",
+      "path": "teaching/quiz1.html",
+      "title": {
+       "zh": "課程教學測驗（一）",
+       "en": "Teaching Checkpoint 1"
+      },
+      "sub": {
+       "zh": "涵蓋第 1–4 集：逆向設計、教材製作、測驗與評量規準、差異化教學",
+       "en": "Covers lessons 1–4: backward design, materials, quizzes and rubrics, differentiated instruction"
+      },
+      "questions": 8,
+      "pass": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-11"
+     }
+    ]
    },
    {
     "slug": "daily-life",
@@ -876,7 +899,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-11-03",
+  "updated": "2026-11-04",
   "languages": [
    "zh",
    "en"
@@ -1214,7 +1237,7 @@ window.CLAUDE_COURSE = {
    "no": 1,
    "title": "課程教學測驗（一）",
    "title_en": "Teaching Checkpoint 1",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "032-teaching-ep05",
@@ -1469,6 +1492,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 36,
+ "live": 37,
  "total": 65
 };
