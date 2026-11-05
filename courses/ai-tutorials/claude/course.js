@@ -808,6 +808,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-11"
+     },
+     {
+      "id": "032-teaching-ep05",
+      "no": 5,
+      "file": "ep05.html",
+      "path": "teaching/ep05.html",
+      "title": {
+       "zh": "AI 家教：蘇格拉底式引導",
+       "en": "AI Tutor: Socratic Guidance"
+      },
+      "sub": {
+       "zh": "學習風格、引導式提示詞、迷思概念診斷、逐步退場培養自主學習",
+       "en": "Learning style, guiding prompts, misconception diagnosis, fading support to build independence"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-11"
      }
     ],
     "overview": {
@@ -899,7 +920,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "languages": [
    "zh",
    "en"
@@ -1246,7 +1267,7 @@ window.CLAUDE_COURSE = {
    "no": 5,
    "title": "AI 家教：蘇格拉底式引導",
    "title_en": "AI Tutor: Socratic Guidance",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "033-teaching-ep06",
@@ -1492,6 +1513,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 37,
+ "live": 38,
  "total": 65
 };
