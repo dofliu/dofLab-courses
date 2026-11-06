@@ -829,6 +829,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-11"
+     },
+     {
+      "id": "033-teaching-ep06",
+      "no": 6,
+      "file": "ep06.html",
+      "path": "teaching/ep06.html",
+      "title": {
+       "zh": "AI 素養與學術誠信",
+       "en": "AI Literacy & Integrity"
+      },
+      "sub": {
+       "zh": "課堂 AI 政策、具體標示用法、過程性評量、查證練習、隱私與未成年界線",
+       "en": "Classroom AI policy, specific disclosure, process-based assessment, verification practice, privacy and minors"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-11"
      }
     ],
     "overview": {
@@ -920,7 +941,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "languages": [
    "zh",
    "en"
@@ -1276,7 +1297,7 @@ window.CLAUDE_COURSE = {
    "no": 6,
    "title": "AI 素養與學術誠信",
    "title_en": "AI Literacy & Integrity",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "034-teaching-ep07",
@@ -1513,6 +1534,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 38,
+ "live": 39,
  "total": 65
 };

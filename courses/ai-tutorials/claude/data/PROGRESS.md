@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：39
+總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：40
 
 ## 單元清單
 
@@ -50,7 +50,7 @@
 | 031-teaching-ep04 | teaching | 差異化與適性教學 | ✅ done | 2026-11-03 |
 | q06-teaching-1 | teaching | 🧪 課程教學測驗（一） | ✅ done | 2026-11-04 |
 | 032-teaching-ep05 | teaching | AI 家教：蘇格拉底式引導 | ✅ done | 2026-11-05 |
-| 033-teaching-ep06 | teaching | AI 素養與學術誠信 | todo | — |
+| 033-teaching-ep06 | teaching | AI 素養與學術誠信 | ✅ done | 2026-11-06 |
 | 034-teaching-ep07 | teaching | 回饋與學習分析 | todo | — |
 | q07-teaching-2 | teaching | 🧪 課程教學測驗（二） | todo | — |
 | 035-daily-life-overview | daily-life | 生活裡的 AI 小幫手 | todo | — |
@@ -113,3 +113,4 @@
 - 2026-11-03 UTC｜031-teaching-ep04｜✅ done｜teaching/ep04.html、src/031-teaching-ep04(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維
 - 2026-11-04 UTC｜q06-teaching-1｜✅ done｜teaching/quiz1.html、data/quizzes/q06-teaching-1.json｜8 題、80 分通過，Playwright 實測無錯誤；情境：生活＋智慧自動化＋風能運維
 - 2026-11-05 UTC｜032-teaching-ep05｜✅ done｜teaching/ep05.html、src/032-teaching-ep05(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維；support.claude.com 學習風格條文未取得，以媒體報導與 Claude Code 官方文件查證，note 已註明
+- 2026-11-06 UTC｜033-teaching-ep06｜✅ done｜teaching/ep06.html、src/033-teaching-ep06(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維；年齡規定依 support.claude.com 查證

@@ -1177,10 +1177,14 @@
         "查證練習",
         "隱私與未成年保護"
       ],
-      "status": "in_progress",
-      "updated": "2026-11-06T02:41:48Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-11-06T02:44:47Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/ep06.html",
+        "src": "courses/ai-tutorials/claude/src/033-teaching-ep06.js",
+        "i18n": "courses/ai-tutorials/claude/src/033-teaching-ep06.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒；圖解約 5/6；查證：support.claude.com 年齡規定與 Age assurance on Claude（18 歲以上、註冊確認、可能未成年訊號會要求年齡驗證），資訊截至 2026-11；情境：生活（作業標示、過程性評量、年齡規定）＋智慧自動化（專題 AI 揭露聲明）＋風能運維（實習報告數據查證）",
       "cases": {
         "life": "作業標示 AI 使用",
         "automation": "專題報告的 AI 使用揭露",
