@@ -1205,10 +1205,14 @@
         "個別化建議",
         "親師溝通"
       ],
-      "status": "in_progress",
-      "updated": "2026-11-09T02:41:53Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-11-09T02:44:29Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/ep07.html",
+        "src": "courses/ai-tutorials/claude/src/034-teaching-ep07.js",
+        "i18n": "courses/ai-tutorials/claude/src/034-teaching-ep07.i18n.js"
+      },
+      "notes": "QA zh/en 全通過（runtime errors none、untranslated none）；6 分鏡 83 秒；圖解比例約 5/6（表格、長條圖、能力指標、流程）；查證：support.claude.com 上傳檔案、建立與編輯檔案（CSV 分析、單檔 30MB）、Projects 說明（資訊截至 2026-11）；情境：生活（作文回饋、成績分析、親師溝通）＋智慧自動化（PLC 實作報告批次回饋）＋風能運維（實習紀錄能力分析）；數據皆為示意",
       "cases": {
         "life": "作文批次回饋",
         "automation": "實作報告批次回饋",

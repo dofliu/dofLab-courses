@@ -850,6 +850,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-11"
+     },
+     {
+      "id": "034-teaching-ep07",
+      "no": 7,
+      "file": "ep07.html",
+      "path": "teaching/ep07.html",
+      "title": {
+       "zh": "回饋與學習分析",
+       "en": "Feedback & Learning Analytics"
+      },
+      "sub": {
+       "zh": "作文回饋框架、批次回饋、成績資料分析、個別化建議、親師溝通",
+       "en": "Feedback framework, batch feedback, score analysis, individualized advice, parent communication"
+      },
+      "shots": 6,
+      "dur": 83,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-11"
      }
     ],
     "overview": {
@@ -941,7 +962,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-11-06",
+  "updated": "2026-11-09",
   "languages": [
    "zh",
    "en"
@@ -1306,7 +1327,7 @@ window.CLAUDE_COURSE = {
    "no": 7,
    "title": "回饋與學習分析",
    "title_en": "Feedback & Learning Analytics",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "q07-teaching-2",
@@ -1534,6 +1555,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 39,
+ "live": 40,
  "total": 65
 };
