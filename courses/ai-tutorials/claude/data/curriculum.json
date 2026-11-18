@@ -1232,10 +1232,13 @@
         "034-teaching-ep07"
       ],
       "questions": 8,
-      "status": "in_progress",
-      "updated": "2026-11-18T02:41:53Z",
-      "files": {},
-      "notes": "",
+      "status": "done",
+      "updated": "2026-11-18T02:45:15Z",
+      "files": {
+        "html": "courses/ai-tutorials/claude/teaching/quiz2.html",
+        "quiz": "courses/ai-tutorials/claude/data/quizzes/q07-teaching-2.json"
+      },
+      "notes": "8 題（第 5 集 3 題、第 6 集 3 題、第 7 集 2 題）、80 分通過，Playwright 實測載入、作答、中英切換、結果頁無錯誤；依第 5–7 集內容與當次單元查證（support.claude.com 年齡規定、上傳檔案與 Projects 說明，資訊截至 2026-11）；情境：生活（天空為何是藍的家教提問、家長訊息去識別化）＋智慧自動化（PLC 自保持助教提示詞、專題報告 AI 揭露、40 份實作報告批次回饋）＋風能運維（齒輪箱溫度警報推理、SCADA 可利用率數字核對）；題目為示意",
       "cases": {
         "life": "題目情境至少一題為生活案例",
         "automation": "至少一題為智慧自動化案例",

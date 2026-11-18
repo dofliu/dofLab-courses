@@ -915,6 +915,27 @@ window.CLAUDE_COURSE = {
        "en"
       ],
       "asof": "2026-11"
+     },
+     {
+      "id": "q07-teaching-2",
+      "no": 2,
+      "file": "quiz2.html",
+      "path": "teaching/quiz2.html",
+      "title": {
+       "zh": "課程教學測驗（二）",
+       "en": "Teaching Checkpoint 2"
+      },
+      "sub": {
+       "zh": "涵蓋第 5–7 集：蘇格拉底式家教、AI 素養與學術誠信、回饋與學習分析",
+       "en": "Covers lessons 5–7: Socratic tutoring, AI literacy and academic integrity, feedback and learning analytics"
+      },
+      "questions": 8,
+      "pass": 80,
+      "langs": [
+       "zh",
+       "en"
+      ],
+      "asof": "2026-11"
      }
     ]
    },
@@ -962,7 +983,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-11-09",
+  "updated": "2026-11-18",
   "languages": [
    "zh",
    "en"
@@ -1336,7 +1357,7 @@ window.CLAUDE_COURSE = {
    "no": 2,
    "title": "課程教學測驗（二）",
    "title_en": "Teaching Checkpoint 2",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "035-daily-life-overview",
@@ -1555,6 +1576,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 40,
+ "live": 41,
  "total": 65
 };

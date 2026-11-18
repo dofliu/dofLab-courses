@@ -1,0 +1,300 @@
+{
+ "id": "q07-teaching-2",
+ "title": {
+  "zh": "課程教學測驗（二）",
+  "en": "Teaching Checkpoint 2"
+ },
+ "intro": {
+  "zh": "涵蓋蘇格拉底式家教、AI 素養與學術誠信、回饋與學習分析：檢查你知道哪些環節需要教師把關。80 分通過；本測驗為課程自編練習，非 Anthropic 官方認證。",
+  "en": "Covers Socratic tutoring, AI literacy and academic integrity, and feedback and learning analytics: do you know where the teacher must stay in charge? Pass at 80. A course-made practice quiz, not an official Anthropic certification."
+ },
+ "pass": 80,
+ "asof": "2026-11",
+ "covers": [
+  "032-teaching-ep05",
+  "033-teaching-ep06",
+  "034-teaching-ep07"
+ ],
+ "questions": [
+  {
+   "id": "e01",
+   "topic": {
+    "zh": "蘇格拉底式家教",
+    "en": "Socratic tutoring"
+   },
+   "ref": "032-teaching-ep05",
+   "q": {
+    "zh": "學生問「為什麼天空是藍的？」。想讓 Claude 當家教、培養學生自己思考，哪種做法最合適？",
+    "en": "A student asks 'why is the sky blue?'. To have Claude tutor and build the student's own thinking, which approach fits best?"
+   },
+   "opts": [
+    {
+     "zh": "請 Claude 直接給出完整答案，讓學生抄下來之後拿去複習",
+     "en": "Have Claude give the full answer directly for the student to copy down and review later"
+    },
+    {
+     "zh": "一律禁止學生使用，改成只能看課本與講義的內容",
+     "en": "Ban student use entirely and allow only textbook and handout content"
+    },
+    {
+     "zh": "請 Claude 用提問引導，例如反問夕陽為什麼是紅的，讓學生自己接起線索",
+     "en": "Ask Claude to guide with questions, such as why sunsets are red, so the student connects the clues"
+    },
+    {
+     "zh": "請 Claude 一次列出所有相關知識，由學生自行挑選",
+     "en": "Have Claude list all related knowledge at once for the student to pick from"
+    }
+   ],
+   "ans": 2,
+   "why": {
+    "zh": "引導式提問讓學生自己把線索接起來；何時給答案、何時引導，由教師決定。",
+    "en": "Guiding questions let students connect the clues themselves; the teacher decides when to give answers and when to guide."
+   }
+  },
+  {
+   "id": "e02",
+   "topic": {
+    "zh": "蘇格拉底式家教",
+    "en": "Socratic tutoring"
+   },
+   "ref": "032-teaching-ep05",
+   "q": {
+    "zh": "PLC 課學生說「馬達不會自保持，為什麼？」。要讓 Claude 當助教，提示詞比較適合怎麼寫？",
+    "en": "A PLC student says 'my motor won't latch, why?'. How should the prompt for Claude as a teaching assistant be written?"
+   },
+   "opts": [
+    {
+     "zh": "要求一次給出完整梯形圖與逐行解說",
+     "en": "Ask for the full ladder diagram with a line-by-line explanation at once"
+    },
+    {
+     "zh": "說明助教角色、不直接給答案、一次只問一個問題、學生卡住才給一級提示",
+     "en": "State the assistant role, no direct answers, one question at a time, and a first-level hint only when the student is stuck"
+    },
+    {
+     "zh": "要求 Claude 直接把程式修好，並自動下載到 PLC 執行",
+     "en": "Ask Claude to fix the program itself and automatically download it to the PLC"
+    },
+    {
+     "zh": "只寫「幫我看看」，其他由 Claude 自行判斷",
+     "en": "Write only 'take a look' and leave everything else to Claude"
+    }
+   ],
+   "ans": 1,
+   "why": {
+    "zh": "明確限定角色與提問節奏，Claude 才會帶學生一步步找出問題；下載程式到設備由人員確認。",
+    "en": "Defining the role and pacing makes Claude lead students step by step; downloading programs to equipment is confirmed by people."
+   }
+  },
+  {
+   "id": "e03",
+   "topic": {
+    "zh": "蘇格拉底式家教",
+    "en": "Socratic tutoring"
+   },
+   "ref": "032-teaching-ep05",
+   "q": {
+    "zh": "學生看到風機齒輪箱溫度警報就說「換感測器吧」。教師請 Claude 協助時，較合適的做法是？",
+    "en": "A student sees a turbine gearbox temperature alarm and says 'just replace the sensor'. What is a better way to use Claude?"
+   },
+   "opts": [
+    {
+     "zh": "請 Claude 直接宣布是冷卻系統故障並建議立即停機",
+     "en": "Have Claude declare a cooling fault and recommend immediate shutdown"
+    },
+    {
+     "zh": "同意學生的說法，直接開立工單去更換該感測器",
+     "en": "Agree with the student and directly open a work order to swap that sensor"
+    },
+    {
+     "zh": "不進行討論，改要求學生把整張警報代碼表背下來",
+     "en": "Skip discussion and require students to memorize the whole alarm code table"
+    },
+    {
+     "zh": "先請 Claude 反問溫度何時上升、風速功率有無變化、鄰近測點如何，讓學生自己推理",
+     "en": "Have Claude ask when the temperature rose, whether wind and power changed, and what neighboring sensors show, so the student reasons it out"
+    }
+   ],
+   "ans": 3,
+   "why": {
+    "zh": "先診斷迷思再用反例修正；停機與檢修決定一律由現場人員確認。",
+    "en": "Diagnose the misconception first, then correct it with counterexamples; shutdown and repair decisions are always confirmed by field staff."
+   }
+  },
+  {
+   "id": "e04",
+   "topic": {
+    "zh": "AI 素養與學術誠信",
+    "en": "AI literacy and integrity"
+   },
+   "ref": "033-teaching-ep06",
+   "q": {
+    "zh": "下列哪一個課堂 AI 使用政策寫法最清楚、最有助於學生遵守？",
+    "en": "Which classroom AI policy is clearest and most helpful for students to follow?"
+   },
+   "opts": [
+    {
+     "zh": "分成可用、限用並標示、不可用三級，寫進課程大綱並舉例",
+     "en": "Three levels (allowed, limited with disclosure, not allowed), written in the syllabus with examples"
+    },
+    {
+     "zh": "只寫一句「請同學自行判斷是否適合使用 AI」，不舉例說明",
+     "en": "One line, 'students judge for themselves whether AI is appropriate', with no examples"
+    },
+    {
+     "zh": "全校統一同一條規則，各課程與作業都不得自行調整",
+     "en": "One school-wide rule that no course or assignment may adjust"
+    },
+    {
+     "zh": "課程中不事先說明界線，等發現違規之後再個案處理",
+     "en": "Give no boundaries during the course and handle violations case by case once found"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "規則事先寫清楚比事後抓違規有效，且各課程、作業可以不同；內容由教師與學校制定。",
+    "en": "Clear rules up front work better than catching violations later, and they can differ by course and assignment; teachers and schools set the content."
+   }
+  },
+  {
+   "id": "e05",
+   "topic": {
+    "zh": "AI 素養與學術誠信",
+    "en": "AI literacy and integrity"
+   },
+   "ref": "033-teaching-ep06",
+   "q": {
+    "zh": "智慧自動化專題報告要求學生揭露 AI 使用。下列哪一份揭露最具體、可供教師判斷？",
+    "en": "A smart-automation project report requires AI disclosure. Which disclosure is specific enough for the teacher to judge?"
+   },
+   "opts": [
+    {
+     "zh": "工具、用途、採用了什麼、修改了什麼，例如「用來整理輸出入點表格式，已對照圖面並刪除錯誤地址」",
+     "en": "Tool, purpose, what was kept and what was changed, e.g. 'used for I/O table layout; checked against drawings and removed wrong addresses'"
+    },
+    {
+     "zh": "「本報告在整理與撰寫過程中有使用 AI 工具協助」",
+     "en": "'AI tools were used to help organize and write this report'"
+    },
+    {
+     "zh": "「部分內容參考網路資料與 AI 的建議，已自行整合完成」",
+     "en": "'Some content draws on online sources and AI suggestions, integrated by me'"
+    },
+    {
+     "zh": "不另外寫揭露聲明，只把完成的成品依期限交出",
+     "en": "Write no disclosure statement and just hand in the finished work by the deadline"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "具體揭露才能看出學生自己的貢獻；是否構成違規由教師依政策判斷。",
+    "en": "Specific disclosure shows the student's own contribution; whether it is a violation is judged by the teacher under the policy."
+   }
+  },
+  {
+   "id": "e06",
+   "topic": {
+    "zh": "AI 素養與學術誠信",
+    "en": "AI literacy and integrity"
+   },
+   "ref": "033-teaching-ep06",
+   "q": {
+    "zh": "實習報告草稿寫「機組可利用率約 98%」，但原始 SCADA 匯出為 96.4%。最合適的處理是？",
+    "en": "An internship report draft says 'availability about 98%', but the raw SCADA export shows 96.4%. What is the best handling?"
+   },
+   "opts": [
+    {
+     "zh": "回頭核對原始資料的數字、單位與來源，修正後再署名",
+     "en": "Check numbers, units and sources against the raw data, correct, then sign"
+    },
+    {
+     "zh": "Claude 整理出來的內容應該是對的，直接交出去",
+     "en": "Claude compiled it so it should be right; hand it in directly"
+    },
+    {
+     "zh": "把責任推給 AI，只在報告中註明「由 AI 產生」就算交代",
+     "en": "Blame the AI; simply note 'generated by AI' and call that accountability"
+    },
+    {
+     "zh": "把數字改成看起來更漂亮的整數 100%，讓報告更好看",
+     "en": "Change it to a tidier-looking 100% so the report looks better"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "AI 可能把典型值寫成實際值；報告署名的是作者，責任也在作者。",
+    "en": "AI may write a typical value as if it were actual; the report carries the author's name, and so does the responsibility."
+   }
+  },
+  {
+   "id": "e07",
+   "topic": {
+    "zh": "回饋與學習分析",
+    "en": "Feedback and learning analytics"
+   },
+   "ref": "034-teaching-ep07",
+   "q": {
+    "zh": "四十份 PLC 實作報告要給回饋。下列哪種流程最合適？",
+    "en": "Forty PLC lab reports need feedback. Which workflow is most appropriate?"
+   },
+   "opts": [
+    {
+     "zh": "讓 Claude 評分後直接把成績與回饋寄給學生",
+     "en": "Let Claude grade and send scores and feedback straight to students"
+    },
+    {
+     "zh": "不提供規準與範例，請 Claude 依整體感覺逐份評分",
+     "en": "Provide no rubric or sample and ask Claude to grade each report by overall feel"
+    },
+    {
+     "zh": "把評分規準與範例回饋交給 Claude 逐份產生草稿，教師逐份確認、修改後才發回",
+     "en": "Give Claude the rubric and a sample comment to draft each one; the teacher checks and edits each before returning it"
+    },
+    {
+     "zh": "只挑前五份看，其餘沿用同一則回饋",
+     "en": "Read only the first five and reuse one comment for the rest"
+    }
+   ],
+   "ans": 2,
+   "why": {
+    "zh": "草稿加快初稿，評分與最終回饋仍由教師把關。",
+    "en": "Drafts speed up the first pass; grading and final feedback remain the teacher's responsibility."
+   }
+  },
+  {
+   "id": "e08",
+   "topic": {
+    "zh": "回饋與學習分析",
+    "en": "Feedback and learning analytics"
+   },
+   "ref": "034-teaching-ep07",
+   "q": {
+    "zh": "老師要寫訊息給家長說明學生近況，並請 Claude 擬稿。哪種做法最妥當？",
+    "en": "A teacher wants Claude to draft a message to a parent about a student's progress. Which practice is most appropriate?"
+   },
+   "opts": [
+    {
+     "zh": "以「學生 A」等代號去識別化後再貼上，擬稿經老師確認並自行發送",
+     "en": "Use a code like 'Student A' to de-identify, then have the teacher review and send it personally"
+    },
+    {
+     "zh": "貼上學生完整姓名與整份成績單，這樣才能寫得精準",
+     "en": "Paste the student's full name and whole grade sheet so the message is accurate"
+    },
+    {
+     "zh": "請 Claude 擬完稿後直接代替老師把訊息寄給家長",
+     "en": "Have Claude draft it and then send it to the parent on the teacher's behalf"
+    },
+    {
+     "zh": "擬稿不必再檢查內容，只要語氣友善就可以寄出",
+     "en": "Skip checking the draft; a friendly tone is enough to send it"
+    }
+   ],
+   "ans": 0,
+   "why": {
+    "zh": "學生姓名與成績等個資不貼進對話；訊息由老師確認並自行發送。",
+    "en": "Do not paste student names or grades into the chat; the teacher confirms and sends the message."
+   }
+  }
+ ]
+}
