@@ -5,7 +5,7 @@
 
 ## 總覽
 
-總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：42
+總單元數：66（kit 1、總覽片 6、單集 45、測驗關卡 11、認證模擬 3）　已完成：43
 
 ## 單元清單
 
@@ -53,7 +53,7 @@
 | 033-teaching-ep06 | teaching | AI 素養與學術誠信 | ✅ done | 2026-11-06 |
 | 034-teaching-ep07 | teaching | 回饋與學習分析 | ✅ done | 2026-11-09 |
 | q07-teaching-2 | teaching | 🧪 課程教學測驗（二） | ✅ done | 2026-11-18 |
-| 035-daily-life-overview | daily-life | 生活裡的 AI 小幫手 | todo | — |
+| 035-daily-life-overview | daily-life | 生活裡的 AI 小幫手 | ✅ done | 2026-11-25 |
 | 036-daily-life-ep01 | daily-life | 旅遊規劃 | todo | — |
 | 037-daily-life-ep02 | daily-life | 料理與飲食 | todo | — |
 | 038-daily-life-ep03 | daily-life | 個人理財入門 | todo | — |
@@ -116,3 +116,4 @@
 - 2026-11-06 UTC｜033-teaching-ep06｜✅ done｜teaching/ep06.html、src/033-teaching-ep06(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維；年齡規定依 support.claude.com 查證
 - 2026-11-09 UTC｜034-teaching-ep07｜✅ done｜teaching/ep07.html、src/034-teaching-ep07(.i18n).js｜6 分鏡 83 秒，QA zh/en 全通過；情境：生活＋智慧自動化＋風能運維；依 support.claude.com 上傳檔案與 Projects 說明查證
 - 2026-11-18 UTC｜q07-teaching-2｜✅ done｜teaching/quiz2.html、data/quizzes/q07-teaching-2.json｜8 題（第 5–7 集）、80 分通過，Playwright 實測無錯誤；情境：生活＋智慧自動化＋風能運維
+- 2026-11-25T02:44:33Z｜035-daily-life-overview 生活裡的 AI 小幫手｜完成｜daily-life/overview.html｜QA zh/en 通過，7 分鏡 88 秒；情境：生活＋智慧自動化（智慧家電）＋風能運維（風場參訪）

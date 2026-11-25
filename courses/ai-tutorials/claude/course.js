@@ -951,7 +951,28 @@ window.CLAUDE_COURSE = {
     },
     "icon": "🏡",
     "color": "#2a6b4a",
-    "episodes": []
+    "episodes": [],
+    "overview": {
+     "id": "035-daily-life-overview",
+     "no": 0,
+     "file": "overview.html",
+     "path": "daily-life/overview.html",
+     "title": {
+      "zh": "生活裡的 AI 小幫手",
+      "en": "Daily Life: Overview"
+     },
+     "sub": {
+      "zh": "旅遊、料理、理財、健康、語言學習、家務文件、手機使用",
+      "en": "Travel, cooking, finance, health, language learning, household paperwork, mobile"
+     },
+     "shots": 7,
+     "dur": 88,
+     "langs": [
+      "zh",
+      "en"
+     ],
+     "asof": "2026-11"
+    }
    },
    {
     "slug": "agents",
@@ -983,7 +1004,7 @@ window.CLAUDE_COURSE = {
     "quizzes": []
    }
   ],
-  "updated": "2026-11-18",
+  "updated": "2026-11-25",
   "languages": [
    "zh",
    "en"
@@ -1366,7 +1387,7 @@ window.CLAUDE_COURSE = {
    "no": 0,
    "title": "生活裡的 AI 小幫手",
    "title_en": "Daily Life: Overview",
-   "status": "todo"
+   "status": "done"
   },
   {
    "id": "036-daily-life-ep01",
@@ -1576,6 +1597,6 @@ window.CLAUDE_COURSE = {
    "status": "todo"
   }
  ],
- "live": 41,
+ "live": 42,
  "total": 65
 };
